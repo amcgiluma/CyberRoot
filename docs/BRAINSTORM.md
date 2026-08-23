@@ -55,10 +55,13 @@ Origen (shell) → navegación y ficheros → permisos/usuarios → procesos/red
 De cero absoluto hasta hardening/exploit avanzado, dificultad creciente.
 
 ## 7. Ideas abiertas / pendientes de decidir
+> ℹ️ Varias decisiones ya se cerraron en el AGENTS-PLAN (el juego es un roguelite
+> HÍBRIDO 'estilo Hades' + dopamina tipo Balatro; ver AGENTS-PLAN §6.5). Los
+> detalles de historia/capítulos/niveles viven en el futuro `docs/DESIGN.md`
+> que produce la Fase 0.
 - Nombre definitivo del juego (candidatos: CyberRoot, sudo: Ghost Protocol,
   NEON//cron, BlackShell).
-- Stack técnico (¿Python + curses/rich? ¿JS? ¿terminal simulado web?).
-- Motor de nivel: sandbox de comandos reales vs simulador.
+- Motor de nivel: sandbox de comandos reales vs simulador (a concretar en la Fase 0).
 - Sistema de logros/reputación/ganancias in-game.
 - Grado de detalle del pixel-art.
 

@@ -23,7 +23,7 @@
 backlog/            → LA COLA DE TRABAJO. Lo que hay que hacer, lo que se hace.
   TODO.md           → tareas con estado (pendiente/curso/hecho/descartado) ← LEER
   PLAN-del-dia.md   → plan del día redactado por el planificador (11:00)
-  historia/         → borradores de la historiadora (03:00) = materia narrativa
+  historia/         → borradores de Manus (03:00) = materia narrativa
 docs/               → el conocimiento permanente.
   PROJECT-MAP.md    → ESTE fichero (índice maestro).
   AGENTES.md        → roles del concilio: qué hace cada agente (coordinación).
@@ -39,12 +39,12 @@ src/                → el código del juego (módulos).
 ## 2. Cómo se atribuye trabajo (quién escribe DÓNDE)
 | Agente (hora) | Modelo | Escritura/Entregas DÓNDE (obligatorio) |
 |---|---|---|
-| **Historiadora** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story). Marca en TODO las piezas narrativas listas. |
-| **Havel (07:00)** | deepseek-v4-flash | `backlog/TODO.md` (bugs encontrados + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
-| **Planificador** (11:00) | deepseek-v4-pro | `backlog/PLAN-del-dia.md` + reparte tareas en `backlog/TODO.md`. |
-| **Ejecutores ×3** (13/16/19) | deepseek-v4-flash | Código en `src/<su modulo>/`. Marca hecho en `backlog/TODO.md`. README del módulo. |
-| **Revisor filtro** (21:00) | deepseek-v4-flash | Resultado en `backlog/TODO.md` (💥 rechazado / ✅ pasa) + comentario. |
-| **Revisor diseño** (23:00) | gpt-5.6-luna | Reporte final en `docs/worklog/` (día actual) / `backlog/TODO.md` + aviso a Juanma. |
+| **Manus** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story, humanizer). Marca en TODO las piezas narrativas listas. |
+| **Havel** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (bugs + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
+| **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/PLAN-del-dia.md` + reparte tareas en `backlog/TODO.md`. Aplica auto-mejoras. |
+| **Ornstein/Smough/Seath** (13/16/19) | deepseek-v4-flash | Código en su RAMA `feat/<modulo>` + PR a main. Marca `[HECHO]` en `backlog/TODO.md`. README del módulo. Ornstein: + harness de playtest. |
+| **Artorias** (21:00) | deepseek-v4-flash | 💥/✅ de las ramas/PRs + NOTAS DE GUSTO + "qué no mergear" + ideas, en `backlog/TODO.md`. |
+| **Gwyn** (23:00) | gpt-5.6-luna | VALIDA diseño + MERGE final (solo él). Si no mergea: por qué + cómo arreglar en `backlog/TODO.md`. + sus notas de gusto + reporte a Juanma. |
 | **Juanma** (feedback) | — | Escribe en la libreta (TODO/DESIGN) o me dice a mí. ← EL CONTROL |
 
 ## 3. Tabla de módulos

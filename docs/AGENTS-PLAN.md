@@ -223,25 +223,32 @@ src/<modulo>/
 
 ---
 
-## 6. Fase 0 — Arranque (primeros 3-4 días) — CRONS DISTINTOS ⚡⚠️
-> **IMPORTANTE: la Fase 0 NO usa los crons del bucle diario (sección 4).**
-> Son crons temporales/provisionales solo para diseñar. Se eliminan al
-> terminar la Fase 0 y se instalan los del bucle diario. El objetivo de la
-> Fase 0 es PRODUCIR el `DESIGN.md` + plot, no escribir código del juego.
+## 6. Fase 0 — Arranque (primeros 4 días) — CRONS DISTINTOS ⚡⚠️
+> **IMPORTANTE: la Fase 0 NO usa los crons del Concilio (sección 4).** Son
+> crons one-shot/temporales solo para diseñar. El objetivo: producir el
+> `DESIGN.md` + plot + mapa de módulos. NO escribir código del juego.
+> **Modelo de Fase 0: `opencode-go/ox-alpha-free`** (potente, gratis ~1 semana).
 
-### Crons de Fase 0 (provisionales)
-| Hora | Agente | Modelo | Entrega DÓNDE |
-|---|---|---|---|
-| (03:00) | **Research stack** | deepseek-v4-flash | `docs/INVESTIGACION-STACK.md` (validar/ampliar Pyxel y arquitectura) |
-| (05:00) | **Manus: research skills anti-slop** | deepseek-v4-flash | `docs/SKILLS-ANTISLOP.md` (skills reales para narrativa y niveles del juego) |
-| (07:00) | **Research mecánicas + dopamina** | deepseek-v4-flash | `docs/RESEARCH-MECANICAS.md` (aprender sin deberes, bucles dopaminérgicos tipo Balatro) |
-| (11:00) | **Diseñador jefe** (caro) | deepseek-v4-pro | `docs/DESIGN.md` (historia, plot, capítulos, niveles, stack, mapa + roguelite) |
-| (16:00) | **Arquitectura** | deepseek-v4-pro | `src/<modulo>/README.md` + `ARCHITECTURE.md` + rellenar tabla del PROJECT-MAP |
+### Pipeline de Fase 0 (10 one-shot, tareas largas descompuestas en pasadas)
+| Día | Hora | Job one-shot | Producción |
+|-----|------|--------------|------------|
+| 1 (24/08) | 03:00 | Research Stack | `docs/INVESTIGACION-STACK.md` |
+| 1 (24/08) | 05:00 | Research anti-slop (Manus) | `docs/SKILLS-ANTISLOP.md` |
+| 1 (24/08) | 07:00 | Research mecánicas + dopamina | `docs/RESEARCH-MECANICAS.md` |
+| 2 (25/08) | 11:00 | Diseñador P1 | `docs/DESIGN.md` (concepto+historia/plot) |
+| 2 (25/08) | 16:00 | Diseñador P2 | `docs/DESIGN.md` (revisión + roguelite) |
+| 3 (26/08) | 09:00 | Diseñador P3 | `docs/DESIGN.md` (capítulos/niveles) |
+| 3 (26/08) | 14:00 | Diseñador P4 | `docs/DESIGN.md` (dopamina/UX) |
+| 3 (26/08) | 18:00 | Diseñador P5 | `docs/DESIGN.md` (revisión final) |
+| 4 (27/08) | 11:00 | Arquitecto | módulos `src/<mod>/README.md` + tabla PROJECT-MAP |
+| 4 (27/08) | 18:00 | Coordinador de cierre | resumen + pide el gate a Juanma |
 
-- El **gate de Juanma** ocurre al final de la Fase 0: él revisa `DESIGN.md`
-  y el mapa de módulos, da el visto bueno (o pide cambios).
-- Con el OK, se ELIMINAN estos crons provisionales y se instalan los del
-  comité diario (sección 4).
+- **Gate de Juanma** al final de la Fase 0: revisa `DESIGN.md` + mapa de módulos,
+  da el visto bueno (o pide cambios).
+- Con el OK, los one-shot de Fase 0 ya habrán corrido; se activa el **Concilio**.
+
+> Nota: los jobs de diseño se nombran como "Diseñador Jefe" en varios prompts;
+> todos usan `ox-alpha-free`. El "Diseñador Jefe" = el rol que produce DESIGN.md.
 
 ## 6.5 DISEÑO DEL JUEGO — dos norteas confirmadas (decisión de Juanma)
 
@@ -314,20 +321,23 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - Mantener MUY friki/organizado: la documentación ES parte del producto.
 
 ## 9. Pendiente para arrancar
-- [x] Verificar identificadores de modelo (deepseek-v4-pro, deepseek-v4-flash, gpt-5.6-luna — ✅ confirmados via `opencode models`).
+- [x] Verificar identificadores de modelo (deepseek-v4-pro, deepseek-v4-flash, gpt-5.6-luna, ox-alpha-free — ✅ confirmados via `opencode models`).
 - [x] Autenticar `gh` con la cuenta de Juanma (✅ amcgiluma, lista).
 - [x] Crear repo público + estructura git + PROJECT-MAP (✅ `amcgiluma/CyberRoot`).
-- [x] Decidir el 6º agente historiadora → **Manus**, deepseek-v4-flash, 03:00.
+- [x] Concilio nombrado y definido → Manus, Havel, Gwyndolin, Ornstein, Smough, Seath, Artorias, Gwyn.
 - [x] Crear base del registro diario → `docs/worklog/` (por fechas: index + 2026/08/23).
 - [x] Modelo `ox-alpha-free` para Fase 0 (gratis ~1 semana, decisión Juanma) — aplicado a los 10 jobs.
 - [x] Flujo 100% autónomo: ideas de Havel → Gwyndolin directamente, sin aprobación humana.
-- [x] Relevo del tester reforzado: Havel deja "🔮 Para el plan de mañana" en `backlog/TODO.md`.
-- [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`).
-- [ ] Configurar crons de Fase 0 (research/diseño) → USE `ox-alpha-free`; producen DESIGN.md + plot + mapa de módulos.
+- [x] Notas de gusto para mañana → las dejan LOS REVISORES (Artorias + Gwyn), no Havel.
+- [x] Flujo de ramas: ejecutores en rama, solo Gwyn mergea, ramas rechazadas con por qué + cómo arreglar.
+- [x] Auto-mejora del comité (`docs/AGENTES.md` + `backlog/MEJORAS.md`).
+- [x] Visto bueno final del Concilio + firma por agente en git + README documentado.
+- [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`) — ya existe el panel (00:00), falta el formato del doc.
+- [ ] **Fase 0** (arranca 24/08 03:00): los 10 one-shot producen DESIGN.md + plot + mapa de módulos.
 - [ ] Gate de Juanma al final de Fase 0.
-- [ ] Configurar crons del concilio diario (Manus 3, Havel 7, Gwyndolin 11, Ornstein/Smough/Seath 13/16/19, Artorias 21, Gwyn 23+merge) + cadena de PRs.
-- [ ] Harness de playtest automático: Ornstein lo construye para que Havel y el comité "jueguen" runs headless y midan balance (resolubilidad, duración).
-- [ ] Diseñar roguelite + mecánicas dopaminérgicas en concreto (dentro de Fase 0).
+- [ ] Tras el gate → `resume` de los 8 agentes del Concilio.
+- [ ] Harness de playtest automático: Ornstein lo construye para que Havel y el comité jueguen runs headless y midan balance.
+- [ ] Fijar nombre definitivo del juego (candidatos en BRAINSTORM).
 
 ---
 *Este documento pasará por humanizer en su versión final dentro del repo.*
