@@ -37,7 +37,7 @@ docs/PROJECT-MAP.md      → mapa de módulos (qué es cada cosa, dónde) ← GU
 docs/DESIGN.md           → el diseño del juego (vivo, se actualiza)
 docs/ADR/                → decisiones de arquitectura (incl. las de IA/eficiencia)
 backlog/TODO.md          → tareas con estado (pendiente/curso/hecho/descartado)
-docs/WORKLOG.md          → registro diario: qué se hizo, qué queda, raciocinio
+worklog/             → registro diario: qué se hizo, qué queda, raciocinio — por fechas en docs/worklog/
 docs/USAGE.md            → panel de uso/coste de IA (ver sección 7)
 ```
 **Regla de oro:** ninguna IA vuelve a leer todo el proyecto. Leen el
@@ -54,7 +54,7 @@ Lee SIEMPRE, en este orden, al arrancar:
 1. `docs/PROJECT-MAP.md` → mapa de módulos y quién escribe dónde.
 2. `backlog/TODO.md` → qué hay pendiente/en curso/hecho.
 3. `docs/DESIGN.md` → la visión que NO puedes romper.
-4. (Si eres planificador) `backlog/historia/` + `docs/WORKLOG.md` de ayer.
+4. (Si eres planificador) `backlog/historia/` + el día de ayer de `docs/worklog/`.
 5. (Si eres ejecutor) `backlog/PLAN-del-dia.md` → tu tarea asignada.
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
@@ -73,7 +73,8 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
 
 1. **Marca el estado en `backlog/TODO.md`** SIEMPRE → `[HECHO]` | `[EN CURSO]`
    | `[DESCARTADO]`. Nunca dejes una tarea "en el aire" sin estado.
-2. **Actualiza `docs/WORKLOG.md`** (append): qué hice, decidí, y POR QUÉ.
+2. **Actualiza el WORKLOG** (append en `docs/worklog/YYYY/MM/DD.md` del día): qué
+   hice, decidí, y POR QUÉ.
    El "porqué" es tan importante como el "qué" (es el razonamiento del comité).
 3. **Actualiza el README del módulo** que tocaste (si cambió su comportamiento).
 4. **Deja el entregable en su sitio:** historia → `backlog/historia/<fecha>.md`;
@@ -125,7 +126,7 @@ src/<modulo>/
   README, dependencias y quién lo toca. Un agente lee SOLO el map + el módulo
   de su tarea, nunca el código entero.
 - **Tras cada tarea, el agente documenta**: actualiza el README del módulo,
-  el TODO (marca hecho/descartado) y el WORKLOG (qué y por qué). Documentar es
+  el TODO (marca hecho/descartado) y el WORKLOG (qué y por qué, en la ruta del día). Documentar es
   obligatorio y forma parte de "tarea terminada".
 - La guía de navegación para agentes también se documenta en el
   `PROJECT-MAP.md` y en el README público del repo (autoexplicativo para el
@@ -284,7 +285,7 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [x] Autenticar `gh` con la cuenta de Juanma (✅ amcgiluma, lista).
 - [x] Crear repo público + estructura git + PROJECT-MAP (✅ `amcgiluma/CyberRoot`).
 - [x] Decidir el 6º agente historiadora → **Manus**, deepseek-v4-flash, 03:00.
-- [ ] Crear `docs/WORKLOG.md` inicial (registro diario del comité).
+- [x] Crear base del registro diario → `docs/worklog/` (por fechas: index + 2026/08/23).
 - [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`).
 - [ ] Configurar crons de Fase 0 (research/diseño) → DESIGN.md + plot + mapa de módulos.
 - [ ] Gate de Juanma al final de Fase 0.

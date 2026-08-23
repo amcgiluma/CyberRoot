@@ -43,7 +43,7 @@ vive en el propio repo (público) como valor añadido.
 Cada cron arranca en sesión limpia SIN memoria conversacional. El puente es
 un fichero de estado que se lee y se escribe:
 - `TODO.md` — backlog con estados (pendiente / en curso / hecho / descartado).
-- `WORKLOG.md` — registro diario: qué se hizo, qué queda, decisiones y razón.
+- `worklog/` → registro diario por fechas (`docs/worklog/YYYY/MM/DD.md`): qué se hizo, decisiones y razón.
 - ADR en `docs/` — decisiones de arquitectura con fecha y motivo.
 La libreta es la fuente de verdad única entre sesiones.
 

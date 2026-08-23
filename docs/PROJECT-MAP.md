@@ -14,7 +14,7 @@
 4. Localiza tu tarea → **lee SOLO la guía del módulo** (`src/<modulo>/README.md`)
    antes de tocar nada.
 5. **NO leas el código entero del repo.** Solo lo necesario para tu tarea.
-6. **Al terminar**: documenta (README/WORKLOG/TODO) — "tarea terminada" = hecho + documentado.
+6. **Al terminar**: documenta (README/WORKLOG/TODO) — "tarea terminada" = hecho + documentado. (WORKLOG vive en `docs/worklog/`, por fechas.)
 
 ## 1. Top-level (estado vivo, se actualiza cada día)
 ```
@@ -25,7 +25,7 @@ backlog/            → LA COLA DE TRABAJO. Lo que hay que hacer, lo que se hace
 docs/               → el conocimiento permanente.
   PROJECT-MAP.md    → ESTE fichero (índice maestro).
   DESIGN.md         → diseño del juego (historia, capítulos, niveles, stack).
-  WORKLOG.md        → registro diario: qué se hizo, qué queda, decisión y porqué.
+  worklog/           → registro diario por fechas: index.md + YYYY/MM/DD.md
   ADR/              → decisiones de arquitectura (fecha + motivo) — públicas.
   USAGE.md          → panel de uso/coste de IA diario.
   AGENTS-PLAN.md    → este mismo sistema, documentado públicamente.
@@ -37,12 +37,12 @@ src/                → el código del juego (módulos).
 | Agente (hora) | Modelo | Escritura/Entregas DÓNDE (obligatorio) |
 |---|---|---|
 | **Historiadora** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story). Marca en TODO las piezas narrativas listas. |
-| **Tester ideas** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (nuevas ideas, bugs encontrados). Notas en `docs/WORKLOG.md`. |
+| **Tester ideas** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (nuevas ideas, bugs encontrados). Notas en `docs/worklog/` (día actual). |
 | **Planificador** (11:00) | deepseek-v4-pro | `backlog/PLAN-del-dia.md` + reparte tareas en `backlog/TODO.md`. |
 | **Ejecutores ×3** (13/16/19) | deepseek-v4-flash | Código en `src/<su modulo>/`. Marca hecho en `backlog/TODO.md`. README del módulo. |
 | **Revisor filtro** (21:00) | deepseek-v4-flash | Resultado en `backlog/TODO.md` (💥 rechazado / ✅ pasa) + comentario. |
-| **Revisor diseño** (23:00) | gpt-5.6-luna | Reporte final en `docs/WORKLOG.md` / `backlog/TODO.md` + aviso a Juanma. |
-| **Juanma** (feedback) | — | Escribe en la libreta (TODO/DESIGN) o me dice a mí. ← EL CONTROLeador |
+| **Revisor diseño** (23:00) | gpt-5.6-luna | Reporte final en `docs/worklog/` (día actual) / `backlog/TODO.md` + aviso a Juanma. |
+| **Juanma** (feedback) | — | Escribe en la libreta (TODO/DESIGN) o me dice a mí. ← EL CONTROL |
 
 ## 3. Tabla de módulos
 *(Rellena en la Fase 0, cuando la arquitectura se cierre)*

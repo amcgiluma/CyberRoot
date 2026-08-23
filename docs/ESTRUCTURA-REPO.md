@@ -13,7 +13,7 @@ CyberRoot/
 │   ├── DESIGN.md             # Documento de diseño del juego (historia, niveles)
 │   ├── BRAINSTORM.md         # Ideas y exploración
 │   ├── ADR/                  # Decisiones de arquitectura (fecha + razón)
-│   └── WORKLOG.md            # Registro diario del desarrollo
+│   └── worklog/          # Registro diario por fechas (YYYY/MM/DD.md)
 ├── agents/
 │   ├── planificador.prompt   # Prompt/cron del planificador (Grok 4.6)
 │   ├── ejecutor-A.prompt     # Ejecutor de módulo A (DeepSeek)
@@ -34,11 +34,11 @@ subconjunto de `src/` cuasi-disjunto para no pisarse en git.)
 
 ## Zonas privadas vs públicas
 - TODO, agentes y diseño también se suben (transparencia decidida por Juanma),
-  pero jamas credenciales ni tokens (ver `.gitignore`).
+  pero jamás credenciales ni tokens (ver `.gitignore`).
 
 ## Proceso diario (resumen)
-1. Idees cron recoge dirección.
+1. Cron de ideas recoge dirección.
 2. Planificador convierte en plan ordenado dividido por módulos.
 3. Ejecutores implementan cada uno en su franja y zona.
 4. Revisores (2 modelos) validan y cierran el PR.
-5. Todo queda reflejado en `WORKLOG.md` y `TODO.md`.
+5. Todo queda reflejado en `worklog/` (día actual) y `TODO.md`.
