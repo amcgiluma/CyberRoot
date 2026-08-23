@@ -9,7 +9,7 @@
 |---|---|---|---|---|
 | 03:00 | **Manus** (historiador) | flash | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
 | 07:00 | **Havel** (vidente-creativo) | flash | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/TODO.md` |
-| 11:00 | **Gwyndolin** (planificador) | pro | Convierte TODO/log-ideas en `PLAN-del-dia.md` con tareas por módulo. Reparte trabajo. | `backlog/PLAN-del-dia.md` |
+| 11:00 | **Gwyndolin** (planificador) | pro | Convierte TODO/log-ideas en `backlog/planes/YYYY/MM/DD.md` (HOY) con tareas por módulo. Reparte trabajo. | `backlog/planes/YYYY/MM/DD.md` |
 | 13:00 | **Ornstein** (ejecutor 1) | flash | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |
 | 16:00 | **Smough** (ejecutor 2) | flash | Implementa SU módulo. | `src/<modulo>` |
 | 19:00 | **Seath** (ejecutor 3) | flash | Implementa SU módulo. | `src/<modulo>` |
@@ -19,7 +19,7 @@
 ## Cómo te ayudan a TI (cualquier agente)
 - **Antes de actuar, mira qué toca cada uno** → no hagas el trabajo de otro.
 - **Si crees que un rol podría hacer algo mejor**, NO lo implementes tú: proponlo en `backlog/MEJORAS.md` (ver sección Auto-mejora abajo).
-- **Si tu turno depende de otro** (p.ej. ejecutor de una tarea que puso el planificador), léelo bien en el `PLAN-del-dia.md`.
+- **Si tu turno depende de otro** (p.ej. ejecutor de una tarea que puso el planificador), léelo bien en el `backlog/planes/YYYY/MM/DD.md` de HOY.
 
 ## Cómo coordinarse (resumen del protocolo, AGENTS-PLAN §2.5)
 - Paso 0: lee PROJECT-MAP, TODO, DESIGN, PLAN. Paso 3: deja tu huella SIEMPRE (estado+worklog). Paso 4: deja el relevo para el siguiente.

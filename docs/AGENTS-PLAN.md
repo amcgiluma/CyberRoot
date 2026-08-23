@@ -37,12 +37,17 @@ docs/PROJECT-MAP.md      → mapa de módulos (qué es cada cosa, dónde) ← GU
 docs/DESIGN.md           → el diseño del juego (vivo, se actualiza)
 docs/ADR/                → decisiones de arquitectura (incl. las de IA/eficiencia)
 backlog/TODO.md          → tareas con estado (pendiente/curso/hecho/descartado)
-worklog/             → registro diario: qué se hizo, qué queda, raciocinio — por fechas en docs/worklog/
+backlog/planes/          → HISTÓRICO de planes diarios: planes/YYYY/MM/DD.md (hoy = fecha actual)
+backlog/historia/        → la narrativa de Manus (con índice, personajes, capítulos)
+docs/worklog/            → registro diario por fechas: worklog/YYYY/MM/DD.md
 docs/AGENTES.md          → roles del concilio: qué hace cada agente (supervisión mutua)
 backlog/MEJORAS.md       → auto-mejora del comité: los agentes proponen mejoras a su rol/flujo
 ```
 **Regla de oro:** ninguna IA vuelve a leer todo el proyecto. Leen el
 `PROJECT-MAP.md` + la guía del módulo relevante + las tareas que les tocan.
+**Planes por fecha:** en vez de un único `PLAN-del-dia.md`, cada día guarda su
+plan en `backlog/planes/YYYY/MM/DD.md`. El planificador escribe el de hoy; los
+ejecutores leen "el plan de hoy" (fecha actual). Se conserva el histórico completo.
 
 ## 2.5 PROTOCOLO DE COMUNICACIÓN — CÓMO SE SABE QUÉ HACER Y QUÉ SE HIZO ⭐
 
@@ -56,15 +61,15 @@ Lee SIEMPRE, en este orden, al arrancar:
 2. `docs/AGENTES.md` → QUÉ hace cada agente del concilio (sabes con quién coordinas).
 3. `backlog/TODO.md` → qué hay pendiente/en curso/hecho.
 4. `docs/DESIGN.md` → la visión que NO puedes romper.
-5. (Si eres planificador) `backlog/historia/` + el día de ayer de `docs/worklog/`.
-6. (Si eres ejecutor) `backlog/PLAN-del-dia.md` → tu tarea asignada.
+5. (Si eres planificador) `backlog/historia/` (para saber la historia) + el día de ayer de `docs/worklog/`.
+6. (Si eres ejecutor) `backlog/planes/YYYY/MM/DD.md` (HOY) → tu tarea asignada.
 7. `backlog/MEJORAS.md` → revisa si hay propuestas de auto-mejora pendientes que te afecten.
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
 - Manus/Havel: leen lo de ayer y generan (Manus = historia, Havel = ideas frescas + jugar).
 - Planificador: coge lo `[PENDIENTE]` del TODO (incluidas las ideas de Havel)
-  → redacta `PLAN-del-dia.md` sin esperar aprobación humana (flujo autónomo).
+  → redacta `backlog/planes/YYYY/MM/DD.md` (hoy) sin esperar aprobación humana.
 - Ejecutores: cogen SU tarea del plan (la que les asignó el planificador).
 - Revisores: revisan los PR/diff de hoy.
 
@@ -80,15 +85,14 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
    hice, decidí, y POR QUÉ.
    El "porqué" es tan importante como el "qué" (es el razonamiento del comité).
 3. **Actualiza el README del módulo** que tocaste (si cambió su comportamiento).
-4. **Deja el entregable en su sitio:** historia → `backlog/historia/<fecha>.md`;
-   plan → `backlog/PLAN-del-dia.md`; ADR → `docs/ADR/<fecha>-<tema>.md`.
+4. **Deja el entregable en su sitio:** historia → `backlog/historia/...`; plan → `backlog/planes/YYYY/MM/DD.md`; ADR → `docs/ADR/<fecha>-<tema>.md`.
 5. **Commit + push.** El repo es la memoria física del comité.
 
 ### Paso 4: el RELEVO (cómo sigue el sistema)
 Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
-- **Historiadora →** deja historia en `backlog/historia/` para planificador/ejecutores.
+- **Manus →** deja historia en `backlog/historia/` para planificador/ejecutores.
 - **Havel →** deja ideas frescas y bugs en TODO; Gwyndolin las planifica directamente (fuente creativa autónoma).
-- **Planificador →** deja `PLAN-del-dia.md` para que los ejecutores lo lean.
+- **Planificador →** deja el plan en `backlog/planes/YYYY/MM/DD.md` (fecha de hoy) para que los ejecutores lo lean.
 - **Ejecutores →** marcan `[HECHO]` para que los revisores validen ese PR.
 - **Artorias →** marca 💥/✅ y deja NOTAS DE GUSTO + "qué no mergear" para mañana.
 - **Gwyn →** escribe el reporte final, deja SUS notas de gusto/ideas, y avisa a Juanma en Telegram.
@@ -173,7 +177,7 @@ src/<modulo>/
 
 ### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
 - **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
-- Redacta `backlog/PLAN-del-dia.md`: tareas concretas {módulo, descripción, aceptación}.
+- Redacta `backlog/planes/YYYY/MM/DD.md` (HOY): tareas concretas {módulo, descripción, aceptación}.
 - Reparte trabajo entre Ornstein/Smough/Seath para no colisionar.
 - Si requiere decisión importante: mensaje urgente a Juanma (Telegram) → ejecutarla
   al día siguiente. Solo casos excepcionales.
@@ -249,6 +253,25 @@ src/<modulo>/
 
 > Nota: los jobs de diseño se nombran como "Diseñador Jefe" en varios prompts;
 > todos usan `ox-alpha-free`. El "Diseñador Jefe" = el rol que produce DESIGN.md.
+
+### 6.1 Estructura de CARPETAS por agente (a decidir en Fase 0) ⭐
+Durante la Fase 0, el Diseñador/Arquitecto debe definir la estructura de CARPETAS
+DE TRABAJO de cada agente del Concilio (dónde guarda cada uno sus entregas
+internas), no solo los módulos de código. Ejemplo orientativo para Manus:
+```
+backlog/historia/
+  INDICE.md               → índice del arco narrativo
+  PERSONAJES.md           → descripciones de cada personaje, motivaciones, arcos
+  ESCENARIOS.md           → descripciones de cada escenario/lugar (la Base, las redes...)
+  CAPITULOS/
+    00-piloto.md          → resumen/esquema del capítulo 0 por hacer
+    01-<nombre>.md        → lo escrito del capítulo 1...
+  (por capítulo: esquema primero, texto después)
+```
+Otros agentes, si necesitan su carpeta de trabajo (Havel ideas, Manus historia,
+Gwyndolin planes fundiendo el histórico, etc.), también se definen aquí.
+Regla: cada agente sabe su carpeta como parte de `PROJECT-MAP.md`. Esto se
+concreta en la Fase 0 y se registra en `docs/PROJECT-MAP.md`.
 
 ## 6.5 DISEÑO DEL JUEGO — dos norteas confirmadas (decisión de Juanma)
 
@@ -334,8 +357,9 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [x] Visto bueno final del Concilio + firma por agente en git + README documentado.
 - [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`) — ya existe el panel (00:00), falta el formato del doc.
 - [ ] **Fase 0** (arranca 24/08 03:00): los 10 one-shot producen DESIGN.md + plot + mapa de módulos.
+- [ ] En Fase 0: definir la estructura de CARPETAS por agente (ej. historia/ con INDICE, PERSONAJES, ESCENARIOS, CAPITULOS/ por capítulo) → se registra en PROJECT-MAP.
 - [ ] Gate de Juanma al final de Fase 0.
-- [ ] Tras el gate → `resume` de los 8 agentes del Concilio.
+- [ ] Tras el gate → `resume` de los 8 agentes del Concilio; planes diarios en `backlog/planes/YYYY/MM/DD.md`.
 - [ ] Harness de playtest automático: Ornstein lo construye para que Havel y el comité jueguen runs headless y midan balance.
 - [ ] Fijar nombre definitivo del juego (candidatos en BRAINSTORM).
 

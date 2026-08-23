@@ -22,8 +22,8 @@
 ```
 backlog/            → LA COLA DE TRABAJO. Lo que hay que hacer, lo que se hace.
   TODO.md           → tareas con estado (pendiente/curso/hecho/descartado) ← LEER
-  PLAN-del-dia.md   → plan del día redactado por el planificador (11:00)
-  historia/         → borradores de Manus (03:00) = materia narrativa
+  planes/           → HISTÓRICO de planes diarios: planes/YYYY/MM/DD.md (hoy = fecha actual)
+  historia/         → la narrativa de Manus (INDICE, PERSONAJES, ESCENARIOS, CAPITULOS/...)
 docs/               → el conocimiento permanente.
   PROJECT-MAP.md    → ESTE fichero (índice maestro).
   AGENTES.md        → roles del concilio: qué hace cada agente (coordinación).
@@ -41,7 +41,7 @@ src/                → el código del juego (módulos).
 |---|---|---|
 | **Manus** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story, humanizer). Marca en TODO las piezas narrativas listas. |
 | **Havel** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (bugs + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
-| **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/PLAN-del-dia.md` + reparte tareas en `backlog/TODO.md`. Aplica auto-mejoras. |
+| **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/planes/YYYY/MM/DD.md` (HOY) + reparte tareas en `backlog/TODO.md`. Aplica auto-mejoras. |
 | **Ornstein/Smough/Seath** (13/16/19) | deepseek-v4-flash | Código en su RAMA `feat/<modulo>` + PR a main. Marca `[HECHO]` en `backlog/TODO.md`. README del módulo. Ornstein: + harness de playtest. |
 | **Artorias** (21:00) | deepseek-v4-flash | 💥/✅ de las ramas/PRs + NOTAS DE GUSTO + "qué no mergear" + ideas, en `backlog/TODO.md`. |
 | **Gwyn** (23:00) | gpt-5.6-luna | VALIDA diseño + MERGE final (solo él). Si no mergea: por qué + cómo arreglar en `backlog/TODO.md`. + sus notas de gusto + reporte a Juanma. |
@@ -55,11 +55,12 @@ src/                → el código del juego (módulos).
 
 ## 4. Cómo se entera un agente de "qué se ha hecho y qué toca"
 1. Lee `backlog/TODO.md` → ve estados `pendiente/curso/hecho/descartado`.
-2. Si es el planificador, lee `backlog/historia/` (para nutrir el plan) y el
-   `WORKLOG` de ayer (saber qué se hizo) → redacta `PLAN-del-dia.md`.
-3. Si es un ejecutor, lee `PLAN-del-dia.md` → coge SU tarea asignada.
+2. Si es el planificador, lee `backlog/historia/` (para nutrir el plan con la
+   historia) y el `WORKLOG` de ayer (saber qué se hizo) → redacta
+   `backlog/planes/YYYY/MM/DD.md` (HOY).
+3. Si es un ejecutor, lee `backlog/planes/YYYY/MM/DD.md` (HOY) → coge SU tarea.
 4. Al terminar su tarea, SIEMPRE escribe su resultado y marca el estado.
-Ese ciclo de "leer algó → hacer → escribir dónde lo he dejado" es lo que
+Ese ciclo de "leer algo → hacer → escribir dónde lo he dejado" es lo que
 mantiene a todo el sistema sincronizado SIN memoria compartida.
 
 ---

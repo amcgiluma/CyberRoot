@@ -24,7 +24,8 @@
 1. Havel (07:00) AÑADE ideas/bugs aquí (como `[PENDIENTE]`) — sin filtro humano.
 2. El planificador (11:00) coge lo `[PENDIENTE]` (incluidas las ideas de Havel),
    las convierte en tareas concretas con módulo y las deja `[EN CURSO]` en
-   `PLAN-del-dia.md`. FLUJO 100% AUTÓNOMO: no espera aprobación de Juanma.
+   `backlog/planes/YYYY/MM/DD.md` (plan de hoy). FLUJO 100% AUTÓNOMO: no espera
+   aprobación de Juanma.
 3. Los ejecutores (13/16/19) implementan y marcan `[HECHO]` + documentan.
 4. Revisores (21/23) validan, marcan `[HECHO]` si pasan o lo devuelven.
 5. Fin de día → todo queda escrito para que al día siguiente se lea y siga.

@@ -34,7 +34,7 @@ Cada uno firma su trabajo con su nombre.
 Havel (07:00) juega e idea
    │  ideas + bugs → backlog/TODO.md
 Gwyndolin (11:00) planifica (autónomo, sin aprobación humana)
-   │  plan → backlog/PLAN-del-dia.md
+   │  plan → backlog/planes/YYYY/MM/DD.md (por fecha)
 Ornstein / Smough / Seath implementan (13/16/19h)
    │  cada uno en su RAMA feat/<módulo> → abre PR a main
 Artorias (21:00) revisa técnicamente y deja notas de gusto
@@ -63,9 +63,8 @@ docs/AGENTES.md        → roles del Concilio (todos saben qué hace cada uno)
 docs/DESIGN.md         → el diseño del juego (vivo)
 docs/ADR/              → decisiones de arquitectura (públicas)
 backlog/TODO.md        → la cola de trabajo con estados
-backlog/PLAN-del-dia.md→ el plan de cada día
-backlog/MEJORAS.md     → auto-mejora: los agentes proponen cambios a su propio rol
-backlog/historia/      → la narrativa de Manus
+backlog/planes/YYYY/MM/DD.md → el plan de cada día (histórico por fecha)
+backlog/historia/      → la narrativa de Manus (índice, personajes, escenarios, capítulos)
 docs/worklog/YYYY/MM/DD.md → registro diario por fechas
 ```
 
