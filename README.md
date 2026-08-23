@@ -1,26 +1,114 @@
 # CyberRoot (nombre de trabajo)
 
-> Proyecto de desarrollo de un videojuego construido por un sistema de
-> agentes autónomos. Esta es la fase de **diseño**: concepto, historia,
-> mecánicas y arquitectura del sistema que lo desarrollará.
+> **Un juego de hacking construido por un Concilio de IAs autónomas.**
+> RPG de terminal cyberpunk que enseña Linux y seguridad (Blue/Red Team)
+> de forma orgánica y divertida — sin que se sienta como deberes.
+
+Desarrollado de forma 100% autónoma por un comité de agentes de inteligencia
+artificial que se organiza, se planifica, se critica, se corrige y mejora él
+mismo día a día. El humano decide el "qué" (dirección y gusto); el Concilio
+ejecuta el "cómo".
+
+---
+
+## 🧙 EL CONCILIO
+
+Ocho agentes inspirados en Dark Souls coordinan el desarrollo del juego.
+Cada uno firma su trabajo con su nombre.
+
+| Avatar | Agente | Hora | Rol | Modelo |
+|--------|--------|------|-----|--------|
+| 🖤 | **Manus, Padre del Abismo** | 03:00 | Historiador — escribe la historia del día | deepseek-v4-flash |
+| ☀️ | **Havel la Roca** | 07:00 | Vidente-creativo — juega e idea | deepseek-v4-flash |
+| 🌙 | **Gwyndolin, Dark Sun** | 11:00 | Planificador — organiza el día | deepseek-v4-pro |
+| ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | deepseek-v4-flash |
+| 🔨 | **Smough** | 16:00 | Ejecutor 2 — implementa su módulo | deepseek-v4-flash |
+| 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | deepseek-v4-flash |
+| 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | deepseek-v4-flash |
+| 👑 | **Gwyn, Señor de la Ceniza** | 23:00 | Revisor de diseño + **MERGE final** | gpt-5.6-luna |
+
+> **Sobre las "fotos":** cada agente firma su trabajo con su nombre en el
+> historial (mensajes de commit, WORKLOG, entregas). Al ser un único repositorio
+> bajo una cuenta, GitHub muestra su avatar de cuenta sobre todos los commits,
+> pero la autoría de cada pieza queda atribuida al agente por nombre.
+
+---
+
+## 🔄 EL FLUJO DIARIO
+
+```
+Havel (07:00) juega e idea
+   │  ideas + bugs → backlog/TODO.md
+Gwyndolin (11:00) planifica (autónomo, sin aprobación humana)
+   │  plan → backlog/PLAN-del-dia.md
+Ornstein / Smough / Seath implementan (13/16/19h)
+   │  cada uno en su RAMA feat/<módulo> → abre PR a main
+Artorias (21:00) revisa técnicamente y deja notas de gusto
+   │  💥/✅ + qué no mergear + ideas
+Gwyn (23:00) revisa diseño y hace el MERGE final
+   │  si NO mergea: deja por qué + cómo arreglarlo
+Manus (03:00) escribe la historia mientras el ciclo se repite
+```
+
+- **Flujo 100% autónomo**: las ideas fluyen de Havel a Gwyndolin sin aprobación
+  humana. Juanma interviene solo de forma excepcional.
+- **Solo Gwyn mergea** a `main`. Las ramas rechazadas se mantienen vivas y Gwyn
+  deja documentado `por qué` no se mergeó y `cómo` arreglarla.
+- **Notas de gusto para mañana**: Artorias y Gwyn dejan el criterio de juego
+  (qué mola, qué no) que Gwyndolin usa para planificar el día siguiente.
+
+---
+
+## 🗂 LA LIBRETA (cómo se comunica el Concilio)
+
+Cada agente arranca sin memoria; la **libreta en el repo es la fuente de verdad**:
+
+```
+docs/PROJECT-MAP.md    → índice maestro y mapa de módulos
+docs/AGENTES.md        → roles del Concilio (todos saben qué hace cada uno)
+docs/DESIGN.md         → el diseño del juego (vivo)
+docs/ADR/              → decisiones de arquitectura (públicas)
+backlog/TODO.md        → la cola de trabajo con estados
+backlog/PLAN-del-dia.md→ el plan de cada día
+backlog/MEJORAS.md     → auto-mejora: los agentes proponen cambios a su propio rol
+backlog/historia/      → la narrativa de Manus
+docs/worklog/YYYY/MM/DD.md → registro diario por fechas
+```
+
+Regla de oro: *ningún agente termina su turno sin haber escrito dónde ha dejado
+su trabajo.* Y **nadie relee el proyecto entero**: cada uno lee la libreta y la
+guía de su módulo.
+
+## ♻️ AUTO-MEJORA
+
+El Concilio puede mejorarse a sí mismo: si un agente ve que su tarea no se puede
+hacer bien o que el flujo no funciona, propone un cambio en `backlog/MEJORAS.md`
+que luego se aplica. Los horarios y la cadena de merge no se alteran sin permiso.
+
+---
+
+## 📐 FASE 0 — Investigación y diseño (primera semana)
+
+La Fase 0 es la construcción del plano antes de escribir código del juego:
+
+| Día | Trabajo |
+|-----|---------|
+| Día 1 | Research: stack técnico, mecánicas/dopamina, skills anti-slop |
+| Día 2-3 | Diseño en **5 pasadas** (concepto/historia → roguelite → capítulos → dopamina → revisión) |
+| Día 4 | Arquitectura de módulos + coordinador de cierre + **gate de Juanma** |
+
+La Fase 0 usa el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 semana).
+
+---
 
 ## Estado actual
-- **Fase:** Diseño / Brainstorm (sin código aún)
+- **Fase:** 0 — investigación y diseño en marcha (arranca 24/08)
 - **Última actualización:** 23/08/2026
 
-## Concepto (1 línea)
-Un RPG de terminal cyberpunk que enseña Linux y seguridad
-(Blue Team vs Red Team) de forma orgánica y divertida — sin parecer deberes.
+## Cómo se construye
+1. **Fase 0** (en curso): los agentes investigan y diseñan el juego → `DESIGN.md`.
+2. **Gate de Juanma**: revisa el diseño y da el visto bueno.
+3. **Fase 1+ (el Concilio)**: los 8 agentes construyen el juego día a día hasta que esté terminado.
 
-## Estructura
-- `docs/BRAINSTORM.md` — ideas crudas y desarrolladas del juego.
-- `docs/DISENO-SISTEMA.md` — arquitectura del sistema de agentes autónomos.
-- `docs/ESTRUCTURA-REPO.md` — organización del repo y de los agentes.
-
-## Avance
-- [x] Brainstorm inicial
-- [ ] Fijar nombre definitivo
-- [ ] Documento de diseño detallado (historia, niveles, stack técnico)
-- [ ] Aprobación de Juanma
-- [ ] Setup del repositorio (Git local + GitHub público)
-- [ ] Setup del sistema de agentes (crons, modelos, revisores)
+---
+*Desarrollado por un comité de IAs autónomo y transparente. El proceso es la feature.*
