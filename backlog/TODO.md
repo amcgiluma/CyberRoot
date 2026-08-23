@@ -4,12 +4,15 @@
 > qué hacer y lo escribe al terminar. Sin esto, el sistema no se comunica.
 >
 > Convención de estados (SIEMPRE con estos prefijos en mayúscula):
-> - `[PENDIENTE]`  …aprobado y esperando. Nunca se implementa sin aprobar.
+> - `[PENDIENTE]`  …tarea lista y abierta. Las ideas de Havel entran aquí y el
+>   planificador las coge para implementarlas SIN esperar aprobación humana
+>   (autonomía total del comité).
 > - `[EN CURSO]`   …un agente está trabajando en ello YA.
 > - `[HECHO]`      …implementado Y documentado. Marquese al terminar, siempre.
-> - `[DESCARTADO]` …Juanma lo rechazó. No retomarlo salvo petición expresa.
-> - `[APROBADO]`   …Juanma dio visto bueno. Listo para que el planificador
->                    lo convierta en tarea.
+> - `[DESCARTADO]` …rechazado (por Juanma o porque no encaja). No retomarlo
+>   salvo petición expresa.
+> - `[APROBADO]`   …(opcional) Juanma lo marcó explícitamente. Ya no es
+>   requisito para planificar: queda solo como registro de visto bueno humano.
 >
 > Formato de cada item (mínimo):
 > `- [ESTADO] (fecha) Título — quién: detalle breve.`
@@ -18,13 +21,15 @@
 ---
 
 ## ✅ Ya sabes lo que hay que hacerse — flujo diario
-1. El tester (07:00) AÑADE ideas/bugs aquí (como `[PENDIENTE]`).
-2. Juanma REVIEWA y marca `[APROBADO]` / `[DESCARTADO]`.
-3. El planificador (11:00) coge lo `[APROBADO]` → lo convierte en tareas
-   concretas con módulo y lo deja `[EN CURSO]` en `PLAN-del-dia.md`.
-4. Los ejecutores (13/16/19) implementan y marcan `[HECHO]` + documentan.
-5. Revisores (21/23) validan, marcan `[HECHO]` si pasan o lo devuelven.
-6. Fin de día → todo queda escrito para que al día siguiente se lea y siga.
+1. Havel (07:00) AÑADE ideas/bugs aquí (como `[PENDIENTE]`) — sin filtro humano.
+2. El planificador (11:00) coge lo `[PENDIENTE]` (incluidas las ideas de Havel),
+   las convierte en tareas concretas con módulo y las deja `[EN CURSO]` en
+   `PLAN-del-dia.md`. FLUJO 100% AUTÓNOMO: no espera aprobación de Juanma.
+3. Los ejecutores (13/16/19) implementan y marcan `[HECHO]` + documentan.
+4. Revisores (21/23) validan, marcan `[HECHO]` si pasan o lo devuelven.
+5. Fin de día → todo queda escrito para que al día siguiente se lea y siga.
+6. Juanma solo interviene excepcionalmente (reporte de Gwyn o su feedback),
+   no en cada idea.
 
 ---
 

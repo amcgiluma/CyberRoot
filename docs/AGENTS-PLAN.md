@@ -60,8 +60,8 @@ Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
 - Havel/historiadora: leen lo de ayer, generan ideas nuevas (Havel) e historia (Manus).
-- Planificador: coge lo `[APROBADO]` del TODO → redacta `PLAN-del-dia.md`
-  con tareas concretas, cada una = {módulo, descripción clara, aceptación}.
+- Planificador: coge lo `[PENDIENTE]` del TODO (incluidas las ideas de Havel)
+  → redacta `PLAN-del-dia.md` sin esperar aprobación humana (flujo autónomo).
 - Ejecutores: cogen SU tarea del plan (la que les asignó el planificador).
 - Revisores: revisan los PR/diff de hoy.
 
@@ -84,7 +84,7 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
 ### Paso 4: el RELEVO (cómo sigue el sistema)
 Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
 - **Historiadora →** deja historia en `backlog/historia/` para planificador/ejecutores.
-- **Havel →** deja ideas nuevas (capítulos/mecánicas/comandos) en TODO para que Gwyndolin las planifique; es la fuente creativa del juego.
+- **Havel →** deja ideas nuevas (capítulos/mecánicas/comandos) en TODO; Gwyndolin las planifica directamente (fuente creativa autónoma del juego).
 - **Planificador →** deja `PLAN-del-dia.md` para que los ejecutores lo lean.
 - **Ejecutores →** marcan `[HECHO]` para que los revisores validen ese PR.
 - **Revisor filtro →** marca 💥/✅ en el TODO para el revisor de diseño.
