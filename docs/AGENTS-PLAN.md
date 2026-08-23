@@ -220,7 +220,11 @@ src/<modulo>/
 ### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
 - **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
 - Redacta `backlog/planes/YYYY/MM/DD.md` (HOY): tareas concretas {módulo, descripción, aceptación}.
-- Reparte trabajo entre Ornstein/Smough/Seath para no colisionar.
+- **REGLA DE TAMAÑO:** cada tarea debe ser una pieza pequeña y AUTÓNOMA que un
+  ejecutor (o sus sub-agentes) complete en un turno, sin llenar su contexto.
+  Si una idea es grande, la FRACCIONA en varias tareas con orden. Criterio:
+  "un ejecutor la entiende sin releer todo y la acaba en su franja".
+- Reparte trabajo entre Ornstein/Smough/Seath en módulos que NO colisionen.
 - Si requiere decisión importante: mensaje urgente a Juanma (Telegram) → ejecutarla
   al día siguiente. Solo casos excepcionales.
 
@@ -228,6 +232,9 @@ src/<modulo>/
 ### 16:00 — 🔨 SMOUGH · Ejecutor 2 · deepseek-v4-flash
 ### 19:00 — 💛 SEATH el Descamado · Ejecutor 3 · deepseek-v4-flash
 - Implementan tareas en SU módulo; **conscientes de los otros 2** → no colisionar.
+- **Si una tarea es demasiado grande → la PARTEN y DELEGAN** en sub-agentes
+  (`delegate_task`, baratos flash) para las piezas independientes; coordinan y
+  **verifican el resultado real** de cada sub-agente. No lo hacen todo en su contexto.
 - Verifican su pieza con tests reales. Documentan y marcan `[HECHO]` al terminar.
 
 ### 21:00 — 🐺 ARTORIAS del Abismo · Revisor filtro · deepseek-v4-flash
