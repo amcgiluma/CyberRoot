@@ -1,9 +1,20 @@
 # AGENTS-PLAN — Estructura del sistema de agentes (CyberRoot)
 
 > Fecha: 23/08/2026 · Estado: **definitivo v1.0 (decisiones de Juanma cerradas).**
-> Pendiente solo: verificar identificadores de modelo en config y maquetar crons.
+> Repo: `amcgiluma/CyberRoot` (público) — creado y conectado (commit `9d4c0f9`).
 > Este documento y todo el sistema fueron diseñados para ser **públicos**: esta
 > estructura es de la que "fardamos" en GitHub. Somos lo más transparentes posible.
+
+## 🧙 NOMBRES DE LOS AGENTES (lore Dark Souls — decisión de Juanma)
+El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
+- 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — deepseek-v4-flash
+- ☀️ **Solaire de Astora** · 07:00 · Tester de ideas — deepseek-v4-flash
+- 🌙 **Gwyndolin** · 11:00 · Planificador — deepseek-v4-pro
+- ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — deepseek-v4-flash
+- 🔨 **Smough** · 16:00 · Ejecutor 2 — deepseek-v4-flash
+- 💛 **Gwynevere** · 19:00 · Ejecutor 3 — deepseek-v4-flash
+- 🐺 **Artorias del Abismo** · 21:00 · Revisor filtro — deepseek-v4-flash
+- 👑 **Gwyn, Señor de la Ceniza** · 23:00 · Revisor de diseño + MERGE FINAL — gpt-5.6-luna
 
 ---
 
@@ -122,60 +133,59 @@ src/<modulo>/
 
 ---
 
-## 4. CRONS DE AGENTES (horario Madrid)
+## 4. CRONS DE AGENTES (horario Madrid) — el CONCILIO
 
-### 07:00 — Cron tester de ideas · DeepSeek V4 Flash (barato)
-- Revisa el código, ve lo que hay, **prueba el juego como jugador**.
-- Busca qué está mal en lo nuevo del día anterior; toma capturas/progresos.
-- Anota ideas generales que NO estén ya apuntadas (en la libreta, sin ejecutar).
-- Debe trabajar **arduamente y durante un buen rato de testing**.
-- Rol: "¿qué tal lo que se hizo ayer y qué se nos ocurre?"
+### 03:00 — 🖤 MANUS, Padre del Abismo · Historiador · deepseek-v4-flash
+- Escribe la HISTORIA del día desde el **plot general** (Fase 0).
+- Entrega narrativa en `backlog/historia/<fecha>.md` para planificador/ejecutores.
+- Su prosa pasa criterio `humanizer`. En Fase 0 además investiga skills anti-slop.
 
-### 11:00 — Cron planificador · DeepSeek V4 Pro (caro) ⚠️
-- **Explicito: NO gastar demasiados tokens.** Es el modelo caro del comité.
-- Las ideas le llegan "mascadas": él NO explora; **estructura**.
-- Monta un plan ordenado con **código claro y guías explícitas** para que los
-  ejecutores no se pierdan. Decide qué hace cada uno y en qué módulo.
-- Si necesita tomar una decisión importante, envía a Juanma un **mensaje
-  urgente a Telegram** para ejecutarla **al día siguiente**. Solo casos muy
-  excepcionales. La idea es que el bucle fluya cuasi-autónomo.
+### 07:00 — ☀️ SOLAIRE de Astora · Tester de ideas · deepseek-v4-flash
+- Prueba el juego como jugador: ve qué está mal de lo nuevo de ayer, capturas.
+- Anota ideas/bugs en `backlog/TODO.md` como `[PENDIENTE]` (sin ejecutar).
+- Trabaja arduamente y un buen rato de testing. "¿Qué tal lo de ayer y qué se nos ocurre?"
 
-### 13:00 / 16:00 / 19:00 — Cron ejecutores · DeepSeek V4 Flash ×3
-- Rápidos, baratos, buenos. Implementan tareas del plan en su módulo.
-- **Conscientes de que hay otros ejecutores trabajando**: solo tocan su zona
-  (definida por el planificador), para no colisionar en git.
-- Verifican su pieza con tests reales (resolver el nivel / test unitario),
-  no "compila y ya". Documentan sus cambios al terminar.
+### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
+- **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
+- Redacta `backlog/PLAN-del-dia.md`: tareas concretas {módulo, descripción, aceptación}.
+- Reparte trabajo entre Ornstein/Smough/Gwynevere para no colisionar.
+- Si requiere decisión importante: mensaje urgente a Juanma (Telegram) → ejecutarla
+  al día siguiente. Solo casos excepcionales.
 
-### 21:00 — Cron revisor FILTRA · DeepSeek V4 Flash
-- Se **toma su tiempo probando cosas** (juego + tests + lint + smoke).
-- Rechaza lo roto con comentario accionable. Filtro para no meter mierda.
+### 13:00 — ⚔️ ORNSTEIN · Ejecutor 1 · deepseek-v4-flash
+### 16:00 — 🔨 SMOUGH · Ejecutor 2 · deepseek-v4-flash
+### 19:00 — 💛 GWYNEVERE · Ejecutor 3 · deepseek-v4-flash
+- Implementan tareas en SU módulo; **conscientes de los otros 2** → no colisionar.
+- Verifican su pieza con tests reales. Documentan y marcan `[HECHO]` al terminar.
 
-### 23:00 — Cron revisor de DISEÑO · GPT 5.6 Luna (caro) ⚠️
-- Revisión profunda que **el plan sigue la visión** (no solo que "compila").
+### 21:00 — 🐺 ARTORIAS del Abismo · Revisor filtro · deepseek-v4-flash
+- Se toma su tiempo probando (juego + tests + lint + smoke).
+- Marca 💥 / ✅ en `backlog/TODO.md`. Rechaza lo roto con comentario accionable.
+
+### 23:00 — 👑 GWYN, Señor de la Ceniza · Revisor de diseño + MERGE · gpt-5.6-luna
+- Revisión profunda: ¿el PR sigue la visión del `DESIGN.md`? (no solo que "compila").
 - Modelo distinto al constructor → no se auto-aprueba.
-- **Cuidado con el uso de tokens; no excedernos.**
-- **NO hay gate de humanización obligatorio** (rompe el ciclo). En su lugar,
-  al terminar envía a Juanma un **reporte**. Si Juanma ve algo mal, le avisa.
+- **Cuidado con tokens; no excedernos.**
+- **Es el encargado del MERGE FINAL:** tras ver la revisión de Artorias (21:00),
+  da el visto bueno y **mergea** el PR. Luego envía a Juanma un **reporte**.
+- Sin gate de humanización obligatorio (rompe ciclo) — reporta y Juanma avisa si ve algo.
 
-### Nota de PRs
-Los PR los revisan los agentes 21:00 (filtro) y 23:00 (diseño), en cadena.
-
-### 03:00 — 🔥 6º agente HISTORIADORA · DeepSeek V4 Flash [CONFIRMADO]
-- Escribe la HISTORIA del día en base al **plot general definido en la Fase 0**.
-- Produce texto narrativo (diálogos, sabor, descripciones) antes de que los
-  ejecutores codifiquen, para que tengan materia que integrar.
-- Modelo barato; su prosa pasa criterio `humanizer` (regla de ejecutores).
+### 🔄 Cadena de PRs (decisión confirmada)
+1. Ejecutores hacen branch/PR.
+2. **Artorias** (21:00) revisa y valida/filtra.
+3. **Gwyn** (23:00) revisa en profundidad y, tras ver lo de Artorias, **hace el merge**.
+4. Gwyn reporta a Juanma.
 
 ---
 
-## 5. Humanizer (regla + 6º agente de historia)
-- **Regla en todos los ejecutores** (ya asentada): la prosa del juego pasar
-  criterio del skill `humanizer` para que no suene a AI-slop.
-- **[PROPUESTA] 6º agente — historiadora**: un agente que escribe la HISTORIA a
-  diario en base al **plot general definido durante los primeros 3-4 días**
-  (Fase 0). Así la narrativa florece sin saturar a los ejecutores de código.
-  ⚡ Pendiente: Juanma confirma si lo activamos y con qué modelo/hora.
+## 5. Humanizer (regla + Manus) ✅ confirmado
+- **Regla en todos los agentes** (decisión cerrada): la prosa del juego pasa
+  criterio del skill `humanizer` (34 patrones anti-AI-slop de Wikipedia) para
+  que no suene a AI-slop.
+- **Manus** (historiador) es quien produce la narrativa, con humanizer aplicado.
+- **En la Fase 0, Manus investiga skills anti-slop** que sirvan de verdad para
+  escribir la narrativa y los niveles del juego (no solo el humanizer base);
+  los hallazgos se documentan como skill/guía para el comité.
 
 ---
 
@@ -189,14 +199,37 @@ Los PR los revisan los agentes 21:00 (filtro) y 23:00 (diseño), en cadena.
 | Hora | Agente | Modelo | Entrega DÓNDE |
 |---|---|---|---|
 | (03:00) | **Research stack** | deepseek-v4-flash | `docs/INVESTIGACION-STACK.md` (validar/ampliar Pyxel y arquitectura) |
-| (07:00) | **Research mecánicas** | deepseek-v4-flash | `docs/RESEARCH-MECANICAS.md` (aprender sin deberes, referencias) |
-| (11:00) | **Diseñador jefe** (caro) | deepseek-v4-pro | `docs/DESIGN.md` (historia, plot, capítulos, niveles, stack, mapa) |
+| (05:00) | **Manus: research skills anti-slop** | deepseek-v4-flash | `docs/SKILLS-ANTISLOP.md` (skills reales para narrativa y niveles del juego) |
+| (07:00) | **Research mecánicas + dopamina** | deepseek-v4-flash | `docs/RESEARCH-MECANICAS.md` (aprender sin deberes, bucles dopaminérgicos tipo Balatro) |
+| (11:00) | **Diseñador jefe** (caro) | deepseek-v4-pro | `docs/DESIGN.md` (historia, plot, capítulos, niveles, stack, mapa + roguelite) |
 | (16:00) | **Arquitectura** | deepseek-v4-pro | `src/<modulo>/README.md` + `ARCHITECTURE.md` + rellenar tabla del PROJECT-MAP |
 
 - El **gate de Juanma** ocurre al final de la Fase 0: él revisa `DESIGN.md`
   y el mapa de módulos, da el visto bueno (o pide cambios).
 - Con el OK, se ELIMINAN estos crons provisionales y se instalan los del
   comité diario (sección 4).
+
+## 6.5 DISEÑO DEL JUEGO — dos norteas confirmadas (decisión de Juanma)
+
+### 🎰 Dopamina ("estilo Balatro")
+El juego debe ser **super dopaminérgico**: muchísimos números, estadísticas,
+combinaciones, decisiones rápidas adictivas y feedback numérico constante.
+Cada acción debe "cosquillear" el cerebro del jugador (puntos que suben,
+combos, desbloqueos, contadores). Esto es un objetivo de diseño EXPLÍCITO que
+el DISEÑADOR JEFE (Fase 0) debe convertir en mecánicas concretas. No un
+"nice-to-have": es una decisión de diseño cerrada.
+
+### ☠️ ROGUELITE de hackers (idea estrella ★)
+**La pregunta de Juanma: ¿cómo encajaría un roguelite aquí? → SÍ, encaja bomba.**
+Un roguelite encaja PERFECTO con un juego de hacking: cada "run" es una
+penetración/sesión en una red distinta (generada proceduralmente). Morirse
+= te pillan/EIC, pierdes el equipo/avance de esa run, pero conservas
+progreso permanente (perks, unlocks, reputación, karma meta). El loop
+roguelite (run corta → build → muerte → progresión meta) + el loop educativo
+(aprender un comando que te salva el run) se refuerzan mutuamente: la
+adrenalina de "esta run me muero si no recuerdo `chmod`" ES dopamina pura.
+Este es un diseño candidato que Gwyndolin y el diseñador jefe deben evaluar
+y concretar en la Fase 0 (estructura roguelite: runs, metaprogresión, karma).
 
 ## 7. Panel de uso / coste de IA (DIARIO) ⚡
 - **Objetivo:** monitorizar que la suscripción mensual cubre el gasto del
@@ -216,14 +249,16 @@ Los PR los revisan los agentes 21:00 (filtro) y 23:00 (diseño), en cadena.
 - Mantener MUY friki/organizado: la documentación ES parte del producto.
 
 ## 9. Pendiente para arrancar
-- [ ] Verificar identificadores de modelo (deepseek v4 pro, deepseek v4 flash,
-      gpt 5.6 luna) en config OpenCode.
-- [ ] Decidir el 6º agente historiadora (Sí/No, modelo, hora).
-- [ ] Definir fuente de métricas del panel de uso y su cron.
-- [ ] Autenticar `gh` con la cuenta de Juanma (única acción manual suya).
-- [ ] Crear repo público + estructura git + PROJECT-MAP.
-- [ ] Configurar crons (7/11/13/16/19/21/23) + PRs.
-- [ ] Fase 0: lanzar research dirigido por agentes → DESIGN.md + plot.
+- [x] Verificar identificadores de modelo (deepseek-v4-pro, deepseek-v4-flash, gpt-5.6-luna — ✅ confirmados via `opencode models`).
+- [x] Autenticar `gh` con la cuenta de Juanma (✅ amcgiluma, lista).
+- [x] Crear repo público + estructura git + PROJECT-MAP (✅ `amcgiluma/CyberRoot`).
+- [x] Decidir el 6º agente historiadora → **Manus**, deepseek-v4-flash, 03:00.
+- [ ] Crear `docs/WORKLOG.md` inicial (registro diario del comité).
+- [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`).
+- [ ] Configurar crons de Fase 0 (research/diseño) → DESIGN.md + plot + mapa de módulos.
+- [ ] Gate de Juanma al final de Fase 0.
+- [ ] Configurar crons del concilio diario (Manus 3, Solaire 7, Gwyndolin 11, Ornstein/Smough/Gwynevere 13/16/19, Artorias 21, Gwyn 23+merge) + cadena de PRs.
+- [ ] Diseñar roguelite + mecánicas dopaminérgicas en concreto (dentro de Fase 0).
 
 ---
 *Este documento pasará por humanizer en su versión final dentro del repo.*
