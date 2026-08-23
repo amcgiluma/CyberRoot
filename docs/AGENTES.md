@@ -8,13 +8,13 @@
 | Hora | Agente | Modelo | Función | Dónde entrega |
 |---|---|---|---|---|
 | 03:00 | **Manus** (historiador) | flash | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
-| 07:00 | **Havel** (vidente-creativo) | flash | REVISA+critica lo de ayer, y GENERA ideas nuevas (capítulos/mecánicas/comandos). Deja relevo "🔮 para mañana". | `backlog/TODO.md` |
+| 07:00 | **Havel** (vidente-creativo) | flash | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/TODO.md` |
 | 11:00 | **Gwyndolin** (planificador) | pro | Convierte TODO/log-ideas en `PLAN-del-dia.md` con tareas por módulo. Reparte trabajo. | `backlog/PLAN-del-dia.md` |
 | 13:00 | **Ornstein** (ejecutor 1) | flash | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |
 | 16:00 | **Smough** (ejecutor 2) | flash | Implementa SU módulo. | `src/<modulo>` |
 | 19:00 | **Seath** (ejecutor 3) | flash | Implementa SU módulo. | `src/<modulo>` |
-| 21:00 | **Artorias** (revisor filtro) | flash | Revisa técnicamente (tests/lint/juego), marca 💥/✅ en el TODO. | `backlog/TODO.md` |
-| 23:00 | **Gwyn** (revisor diseño+merge) | luna | Validación de diseño, MERGE final, reporta a Juanma. | `backlog/TODO.md` + Telegram |
+| 21:00 | **Artorias** (revisor filtro) | flash | Revisa técnicamente (tests/lint/juego), marca 💥/✅, y DEJA NOTAS DE GUSTO + "qué no mergear" para mañana. | `backlog/TODO.md` |
+| 23:00 | **Gwyn** (revisor diseño+merge) | luna | Validación de diseño, MERGE final, DEJA SUS NOTAS DE GUSTO/ideas, y reporta a Juanma. | `backlog/TODO.md` + Telegram |
 
 ## Cómo te ayudan a TI (cualquier agente)
 - **Antes de actuar, mira qué toca cada uno** → no hagas el trabajo de otro.

@@ -62,7 +62,7 @@ Lee SIEMPRE, en este orden, al arrancar:
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
-- Havel/historiadora: leen lo de ayer, generan ideas nuevas (Havel) e historia (Manus).
+- Manus/Havel: leen lo de ayer y generan (Manus = historia, Havel = ideas frescas + jugar).
 - Planificador: coge lo `[PENDIENTE]` del TODO (incluidas las ideas de Havel)
   → redacta `PLAN-del-dia.md` sin esperar aprobación humana (flujo autónomo).
 - Ejecutores: cogen SU tarea del plan (la que les asignó el planificador).
@@ -87,11 +87,11 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
 ### Paso 4: el RELEVO (cómo sigue el sistema)
 Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
 - **Historiadora →** deja historia en `backlog/historia/` para planificador/ejecutores.
-- **Havel →** deja ideas nuevas (capítulos/mecánicas/comandos) en TODO; Gwyndolin las planifica directamente (fuente creativa autónoma del juego).
+- **Havel →** deja ideas frescas y bugs en TODO; Gwyndolin las planifica directamente (fuente creativa autónoma).
 - **Planificador →** deja `PLAN-del-dia.md` para que los ejecutores lo lean.
 - **Ejecutores →** marcan `[HECHO]` para que los revisores validen ese PR.
-- **Revisor filtro →** marca 💥/✅ en el TODO para el revisor de diseño.
-- **Revisor diseño →** escribe el reporte final y avisa a Juanma en Telegram.
+- **Artorias →** marca 💥/✅ y deja NOTAS DE GUSTO + "qué no mergear" para mañana.
+- **Gwyn →** escribe el reporte final, deja SUS notas de gusto/ideas, y avisa a Juanma en Telegram.
 
 ### La regla que NUNCA se rompe
 > **"Ningún agente termina su turno sin haber escrito dónde ha dejado su
@@ -160,15 +160,16 @@ src/<modulo>/
 - Entrega narrativa en `backlog/historia/<fecha>.md` para planificador/ejecutores.
 - Su prosa pasa criterio `humanizer`. En Fase 0 además investiga skills anti-slop.
 
-### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (ideas + testeo) · deepseek-v4-flash
-- **Doble rol:** 1) PRUEBA lo nuevo de ayer (testing) y 2) — más importante —
-  **genera ideas NUEVAS constantemente** para que el juego crezca solo.
-- Ideas: nuevos CAPÍTULOS, misiones, MECÁNICAS, objetos/boons de conocimiento,
-  COMANDOS de Linux a enseñar, bifurcaciones de historia/karma, enemigos, logros.
-- Las anota en `backlog/TODO.md` como `[PENDIENTE]` (sin implementar: eso lo hacen
-  los ejecutores tras el planificador). Es la **chispa creativa del comité**:
-  Havel propone → Gwyndolin planifica → ejecutores implementan → revisores validan.
-- Distingue hechos (lo que prueba) de opiniones. Trabaja ardúamente.
+### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (jugar + idear) · deepseek-v4-flash
+- **Rol enfocado y ligero (2 cosas, no más):**
+  1. **JUEGA** lo nuevo del día anterior (testing real del juego/core).
+  2. **GENERA ideas nuevas** constantemente (capítulos, mecánicas, objetos, boons,
+     comandos Linux, bifurcaciones, enemigos, logros) para que el juego crezca solo.
+- Anota bugs y las nuevas ideas en `backlog/TODO.md` como `[PENDIENTE]` (sin implementar:
+  eso lo hacen los ejecutores tras el planificador). Es la **chispa creativa**.
+- **NO** lleva la crítica de diseño ni las notas de gusto para mañana: eso es de los
+  revisores (Artorias y Gwyn) para no sobrecargarlo. Él siembra, ellos deciden.
+- Distingue hechos (lo que prueba) de opiniones.
 
 ### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
 - **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
