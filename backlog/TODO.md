@@ -35,9 +35,9 @@
   Decisión tomada; se está documentando en AGENTS-PLAN.md.
 
 ### Fase 0 (research y diseño)
-- `[PENDIENTE]` (23/08) Lanzar research dirigido por agentes → validar stack,
-  mecánicas, capítulos/niveles y producir `docs/DESIGN.md` + plot general.
-  ↩ pendiente de aprobar por Juanma para arrancar.
+- `[EN CURSO]` (23/08) Crons de Fase 0 configurados y activos (research stack/anti-slop/mecánicas 03-07h, diseño 11h, arquitectura 16h). →Mañana 24/08 empiezan a producir DESIGN.md + plot.
+- `[PENDIENTE]` (23/08) Gate de Juanma sobre `docs/DESIGN.md` al cerrar la Fase 0.
+- `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** creados y PAUSADOS (Manus/Havel/Gwyndolin/Ornstein/Smough/Seath/Artorias/Gwyn). Se activan tras el gate.
 
 ### Backlog de ejecución
 *(se llena en Fase 0 / al aprobar ideas)*
