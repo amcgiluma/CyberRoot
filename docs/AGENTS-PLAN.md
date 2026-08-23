@@ -38,7 +38,8 @@ docs/DESIGN.md           → el diseño del juego (vivo, se actualiza)
 docs/ADR/                → decisiones de arquitectura (incl. las de IA/eficiencia)
 backlog/TODO.md          → tareas con estado (pendiente/curso/hecho/descartado)
 worklog/             → registro diario: qué se hizo, qué queda, raciocinio — por fechas en docs/worklog/
-docs/USAGE.md            → panel de uso/coste de IA (ver sección 7)
+docs/AGENTES.md          → roles del concilio: qué hace cada agente (supervisión mutua)
+backlog/MEJORAS.md       → auto-mejora del comité: los agentes proponen mejoras a su rol/flujo
 ```
 **Regla de oro:** ninguna IA vuelve a leer todo el proyecto. Leen el
 `PROJECT-MAP.md` + la guía del módulo relevante + las tareas que les tocan.
@@ -52,10 +53,12 @@ docs/USAGE.md            → panel de uso/coste de IA (ver sección 7)
 ### Paso 0 de TODO agente: "¿DÓNDE ESTÁN LAS COSAS?"
 Lee SIEMPRE, en este orden, al arrancar:
 1. `docs/PROJECT-MAP.md` → mapa de módulos y quién escribe dónde.
-2. `backlog/TODO.md` → qué hay pendiente/en curso/hecho.
-3. `docs/DESIGN.md` → la visión que NO puedes romper.
-4. (Si eres planificador) `backlog/historia/` + el día de ayer de `docs/worklog/`.
-5. (Si eres ejecutor) `backlog/PLAN-del-dia.md` → tu tarea asignada.
+2. `docs/AGENTES.md` → QUÉ hace cada agente del concilio (sabes con quién coordinas).
+3. `backlog/TODO.md` → qué hay pendiente/en curso/hecho.
+4. `docs/DESIGN.md` → la visión que NO puedes romper.
+5. (Si eres planificador) `backlog/historia/` + el día de ayer de `docs/worklog/`.
+6. (Si eres ejecutor) `backlog/PLAN-del-dia.md` → tu tarea asignada.
+7. `backlog/MEJORAS.md` → revisa si hay propuestas de auto-mejora pendientes que te afecten.
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
@@ -95,6 +98,21 @@ Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
 > trabajo."** Si un turno no deja huella (estado, entregable o registro),
 > el sistema se rompe al día siguiente. Documentar NO es opcional: es parte
 > de "tarea terminada". Esto es una regla HARD en cada prompt de cron.
+
+## 2.6 AUTO-MEJORA del comité (los agentes pueden mejorarse a sí mismos) ⭐
+El comité no es estático: puede mejorar su propio funcionamiento.
+
+- **Visión:** si un agente detecta que su tarea no se puede hacer bien, que el
+  flujo tiene un cuello de botella, que su prompt es ineficiente o que otro rol
+  podría hacer algo mejor, puede proponer un cambio.
+- **DÓNDE:** `backlog/MEJORAS.md` — formato `[PROPUESTA]` (problema/propuesta/
+  impacto/estado). Ver `docs/AGENTES.md` (sección AUTO-MEJORA) para las reglas.
+- **QUIÉN APLICA:** Gwyndolin (planificador) o un humano (Raiden/Juanma) revisa
+  y aplica. Un agente NO debe auto-cambiarse el rol si afecta a otros.
+- **Esqueleto protegido:** horarios del concilio y cadena de PRs/merge NO se
+  cambian sin aprobación (se pueden PROPONER, no auto-aplicar si afectan a otros).
+- **Cada agente sabe qué hace el resto** (lee `docs/AGENTES.md` arriba), lo que
+  le da contexto para proponer mejoras con criterio.
 
 ---
 

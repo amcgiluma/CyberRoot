@@ -9,12 +9,14 @@
 
 ## 0. Cómo se navega este proyecto (para agentes)
 1. **Lee este `PROJECT-MAP.md`** → sabrás qué módulos existen y qué hace cada uno.
-2. **Lee `backlog/TODO.md`** → sabrás qué hay pendiente, en curso y hecho.
-3. **Lee `docs/DESIGN.md`** → la visión/reglas del juego que nunca debes romper.
-4. Localiza tu tarea → **lee SOLO la guía del módulo** (`src/<modulo>/README.md`)
+2. **Lee `docs/AGENTES.md`** → sabrás QUÉ hace cada agente del concilio (coordinación).
+3. **Lee `backlog/TODO.md`** → sabrás qué hay pendiente, en curso y hecho.
+4. **Lee `docs/DESIGN.md`** → la visión/reglas del juego que nunca debes romper.
+5. Localiza tu tarea → **lee SOLO la guía del módulo** (`src/<modulo>/README.md`)
    antes de tocar nada.
-5. **NO leas el código entero del repo.** Solo lo necesario para tu tarea.
-6. **Al terminar**: documenta (README/WORKLOG/TODO) — "tarea terminada" = hecho + documentado. (WORKLOG vive en `docs/worklog/`, por fechas.)
+6. **NO leas el código entero del repo.** Solo lo necesario para tu tarea.
+7. **Revisa `backlog/MEJORAS.md`** → propuestas de auto-mejora que te afecten.
+8. **Al terminar**: documenta (README/WORKLOG/TODO) — "tarea terminada" = hecho + documentado. (WORKLOG vive en `docs/worklog/`, por fechas.)
 
 ## 1. Top-level (estado vivo, se actualiza cada día)
 ```
@@ -24,6 +26,7 @@ backlog/            → LA COLA DE TRABAJO. Lo que hay que hacer, lo que se hace
   historia/         → borradores de la historiadora (03:00) = materia narrativa
 docs/               → el conocimiento permanente.
   PROJECT-MAP.md    → ESTE fichero (índice maestro).
+  AGENTES.md        → roles del concilio: qué hace cada agente (coordinación).
   DESIGN.md         → diseño del juego (historia, capítulos, niveles, stack).
   worklog/           → registro diario por fechas: index.md + YYYY/MM/DD.md
   ADR/              → decisiones de arquitectura (fecha + motivo) — públicas.
