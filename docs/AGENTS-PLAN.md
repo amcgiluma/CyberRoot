@@ -8,11 +8,11 @@
 ## 🧙 NOMBRES DE LOS AGENTES (lore Dark Souls — decisión de Juanma)
 El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
 - 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — deepseek-v4-flash
-- ☀️ **Solaire de Astora** · 07:00 · Tester de ideas — deepseek-v4-flash
+- ☀️ **Havel la Roca** · 07:00 · Tester de ideas — deepseek-v4-flash
 - 🌙 **Gwyndolin** · 11:00 · Planificador — deepseek-v4-pro
 - ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — deepseek-v4-flash
 - 🔨 **Smough** · 16:00 · Ejecutor 2 — deepseek-v4-flash
-- 💛 **Gwynevere** · 19:00 · Ejecutor 3 — deepseek-v4-flash
+- 💛 **Seath el Descamado** · 19:00 · Ejecutor 3 — deepseek-v4-flash
 - 🐺 **Artorias del Abismo** · 21:00 · Revisor filtro — deepseek-v4-flash
 - 👑 **Gwyn, Señor de la Ceniza** · 23:00 · Revisor de diseño + MERGE FINAL — gpt-5.6-luna
 
@@ -140,7 +140,7 @@ src/<modulo>/
 - Entrega narrativa en `backlog/historia/<fecha>.md` para planificador/ejecutores.
 - Su prosa pasa criterio `humanizer`. En Fase 0 además investiga skills anti-slop.
 
-### 07:00 — ☀️ SOLAIRE de Astora · Tester de ideas · deepseek-v4-flash
+### 07:00 — ☀️ HAVEL la Roca · Tester de ideas · deepseek-v4-flash
 - Prueba el juego como jugador: ve qué está mal de lo nuevo de ayer, capturas.
 - Anota ideas/bugs en `backlog/TODO.md` como `[PENDIENTE]` (sin ejecutar).
 - Trabaja arduamente y un buen rato de testing. "¿Qué tal lo de ayer y qué se nos ocurre?"
@@ -148,13 +148,13 @@ src/<modulo>/
 ### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
 - **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
 - Redacta `backlog/PLAN-del-dia.md`: tareas concretas {módulo, descripción, aceptación}.
-- Reparte trabajo entre Ornstein/Smough/Gwynevere para no colisionar.
+- Reparte trabajo entre Ornstein/Smough/Seath para no colisionar.
 - Si requiere decisión importante: mensaje urgente a Juanma (Telegram) → ejecutarla
   al día siguiente. Solo casos excepcionales.
 
 ### 13:00 — ⚔️ ORNSTEIN · Ejecutor 1 · deepseek-v4-flash
 ### 16:00 — 🔨 SMOUGH · Ejecutor 2 · deepseek-v4-flash
-### 19:00 — 💛 GWYNEVERE · Ejecutor 3 · deepseek-v4-flash
+### 19:00 — 💛 SEATH el Descamado · Ejecutor 3 · deepseek-v4-flash
 - Implementan tareas en SU módulo; **conscientes de los otros 2** → no colisionar.
 - Verifican su pieza con tests reales. Documentan y marcan `[HECHO]` al terminar.
 
@@ -257,7 +257,7 @@ y concretar en la Fase 0 (estructura roguelite: runs, metaprogresión, karma).
 - [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`).
 - [ ] Configurar crons de Fase 0 (research/diseño) → DESIGN.md + plot + mapa de módulos.
 - [ ] Gate de Juanma al final de Fase 0.
-- [ ] Configurar crons del concilio diario (Manus 3, Solaire 7, Gwyndolin 11, Ornstein/Smough/Gwynevere 13/16/19, Artorias 21, Gwyn 23+merge) + cadena de PRs.
+- [ ] Configurar crons del concilio diario (Manus 3, Havel 7, Gwyndolin 11, Ornstein/Smough/Seath 13/16/19, Artorias 21, Gwyn 23+merge) + cadena de PRs.
 - [ ] Diseñar roguelite + mecánicas dopaminérgicas en concreto (dentro de Fase 0).
 
 ---
