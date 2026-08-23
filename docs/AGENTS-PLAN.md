@@ -103,6 +103,7 @@ Listados con `opencode models opencode-go`:
 - `opencode-go/deepseek-v4-flash` — tester, ejecutores, revisor filtro, historiadora
 - `opencode-go/deepseek-v4-pro` — planificador
 - `opencode-go/gpt-5.6-luna` — revisor de diseño
+- `opencode-go/ox-alpha-free` — **Fase 0 (research + diseño + arquitectura + coordinador)**: modelo potente, GRATIS durante ~1 semana (decisión de Juanma). Los 10 jobs de Fase 0 usan este modelo. Cuando caduque la gratuidad, volver a los modelos estándar.
 (Disponibles además: grok-4.5, glm-5.2, kimi-k2.7-code, qwen3.8-max… si algún día se decide un cambio de modelo.)
 
 ## 3.2 Panel de uso — fuente de verdad REAL (verificado)
@@ -291,10 +292,14 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [x] Crear repo público + estructura git + PROJECT-MAP (✅ `amcgiluma/CyberRoot`).
 - [x] Decidir el 6º agente historiadora → **Manus**, deepseek-v4-flash, 03:00.
 - [x] Crear base del registro diario → `docs/worklog/` (por fechas: index + 2026/08/23).
+- [x] Modelo `ox-alpha-free` para Fase 0 (gratis ~1 semana, decisión Juanma) — aplicado a los 10 jobs.
+- [x] Flujo 100% autónomo: ideas de Havel → Gwyndolin directamente, sin aprobación humana.
+- [x] Relevo del tester reforzado: Havel deja "🔮 Para el plan de mañana" en `backlog/TODO.md`.
 - [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`).
-- [ ] Configurar crons de Fase 0 (research/diseño) → DESIGN.md + plot + mapa de módulos.
+- [ ] Configurar crons de Fase 0 (research/diseño) → USE `ox-alpha-free`; producen DESIGN.md + plot + mapa de módulos.
 - [ ] Gate de Juanma al final de Fase 0.
 - [ ] Configurar crons del concilio diario (Manus 3, Havel 7, Gwyndolin 11, Ornstein/Smough/Seath 13/16/19, Artorias 21, Gwyn 23+merge) + cadena de PRs.
+- [ ] Harness de playtest automático: Ornstein lo construye para que Havel y el comité "jueguen" runs headless y midan balance (resolubilidad, duración).
 - [ ] Diseñar roguelite + mecánicas dopaminérgicas en concreto (dentro de Fase 0).
 
 ---
