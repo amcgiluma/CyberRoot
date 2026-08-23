@@ -37,7 +37,7 @@ src/                → el código del juego (módulos).
 | Agente (hora) | Modelo | Escritura/Entregas DÓNDE (obligatorio) |
 |---|---|---|
 | **Historiadora** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story). Marca en TODO las piezas narrativas listas. |
-| **Tester ideas** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (nuevas ideas, bugs encontrados). Notas en `docs/worklog/` (día actual). |
+| **Havel (07:00)** | deepseek-v4-flash | `backlog/TODO.md` (bugs encontrados + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
 | **Planificador** (11:00) | deepseek-v4-pro | `backlog/PLAN-del-dia.md` + reparte tareas en `backlog/TODO.md`. |
 | **Ejecutores ×3** (13/16/19) | deepseek-v4-flash | Código en `src/<su modulo>/`. Marca hecho en `backlog/TODO.md`. README del módulo. |
 | **Revisor filtro** (21:00) | deepseek-v4-flash | Resultado en `backlog/TODO.md` (💥 rechazado / ✅ pasa) + comentario. |

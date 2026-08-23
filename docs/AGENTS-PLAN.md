@@ -8,7 +8,7 @@
 ## 🧙 NOMBRES DE LOS AGENTES (lore Dark Souls — decisión de Juanma)
 El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
 - 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — deepseek-v4-flash
-- ☀️ **Havel la Roca** · 07:00 · Tester de ideas — deepseek-v4-flash
+- ☀️ **Havel la Roca** · 07:00 · Vidente-creativo (ideas + testeo) — deepseek-v4-flash
 - 🌙 **Gwyndolin** · 11:00 · Planificador — deepseek-v4-pro
 - ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — deepseek-v4-flash
 - 🔨 **Smough** · 16:00 · Ejecutor 2 — deepseek-v4-flash
@@ -59,7 +59,7 @@ Lee SIEMPRE, en este orden, al arrancar:
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
-- Tester/historiadora: leen lo de ayer y generan (ideas / historia).
+- Havel/historiadora: leen lo de ayer, generan ideas nuevas (Havel) e historia (Manus).
 - Planificador: coge lo `[APROBADO]` del TODO → redacta `PLAN-del-dia.md`
   con tareas concretas, cada una = {módulo, descripción clara, aceptación}.
 - Ejecutores: cogen SU tarea del plan (la que les asignó el planificador).
@@ -84,7 +84,7 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
 ### Paso 4: el RELEVO (cómo sigue el sistema)
 Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
 - **Historiadora →** deja historia en `backlog/historia/` para planificador/ejecutores.
-- **Tester →** deja ideas en TODO para que Juanma apruebe y el planificador coja.
+- **Havel →** deja ideas nuevas (capítulos/mecánicas/comandos) en TODO para que Gwyndolin las planifique; es la fuente creativa del juego.
 - **Planificador →** deja `PLAN-del-dia.md` para que los ejecutores lo lean.
 - **Ejecutores →** marcan `[HECHO]` para que los revisores validen ese PR.
 - **Revisor filtro →** marca 💥/✅ en el TODO para el revisor de diseño.
@@ -141,10 +141,15 @@ src/<modulo>/
 - Entrega narrativa en `backlog/historia/<fecha>.md` para planificador/ejecutores.
 - Su prosa pasa criterio `humanizer`. En Fase 0 además investiga skills anti-slop.
 
-### 07:00 — ☀️ HAVEL la Roca · Tester de ideas · deepseek-v4-flash
-- Prueba el juego como jugador: ve qué está mal de lo nuevo de ayer, capturas.
-- Anota ideas/bugs en `backlog/TODO.md` como `[PENDIENTE]` (sin ejecutar).
-- Trabaja arduamente y un buen rato de testing. "¿Qué tal lo de ayer y qué se nos ocurre?"
+### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (ideas + testeo) · deepseek-v4-flash
+- **Doble rol:** 1) PRUEBA lo nuevo de ayer (testing) y 2) — más importante —
+  **genera ideas NUEVAS constantemente** para que el juego crezca solo.
+- Ideas: nuevos CAPÍTULOS, misiones, MECÁNICAS, objetos/boons de conocimiento,
+  COMANDOS de Linux a enseñar, bifurcaciones de historia/karma, enemigos, logros.
+- Las anota en `backlog/TODO.md` como `[PENDIENTE]` (sin implementar: eso lo hacen
+  los ejecutores tras el planificador). Es la **chispa creativa del comité**:
+  Havel propone → Gwyndolin planifica → ejecutores implementan → revisores validan.
+- Distingue hechos (lo que prueba) de opiniones. Trabaja ardúamente.
 
 ### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
 - **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
