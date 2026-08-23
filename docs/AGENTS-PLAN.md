@@ -196,11 +196,19 @@ src/<modulo>/
   da el visto bueno y **mergea** el PR. Luego envía a Juanma un **reporte**.
 - Sin gate de humanización obligatorio (rompe ciclo) — reporta y Juanma avisa si ve algo.
 
-### 🔄 Cadena de PRs (decisión confirmada)
-1. Ejecutores hacen branch/PR.
-2. **Artorias** (21:00) revisa y valida/filtra.
-3. **Gwyn** (23:00) revisa en profundidad y, tras ver lo de Artorias, **hace el merge**.
-4. Gwyn reporta a Juanma.
+### 🔄 Cadena de PRs y ramas (decisión confirmada) ★
+1. **Ejecutor** (Ornstein/Smough/Seath) crea su RAMA (`feat/<modulo>`), trabaja ahí,
+   abre P.R. a `main`. Nunca toca `main` directamente.
+2. **Artorias** (21:00) revisa las ramas/PRs, prueba técnicamente, marca 💥/✅
+   y avisa a Gwyn qué NO mergear (+ notas de gusto para mañana).
+3. **Gwyn** (23:00) — el ÚNICO que mergea — revisa en profundidad y:
+   - Si está bien y sigue el diseño y Artorias lo aprobó → **mergea** a `main`.
+   - Si NO se debe mergear → NO la mergea, NO borra la rama, y deja documentado:
+     **POR QUÉ no se ha mergeado** y **CÓMO arreglarlo** (para que el ejecutor lo coja).
+     Registrado en `backlog/TODO.md` (+ comentario del PR). La tarea vuelve a `[EN CURSO]`.
+4. Gwyn reporta a Juanma (qué se mergeó, qué no y por qué, cómo arreglarlo).
+5. Al día siguiente, el ejecutor cuya rama fue rechazada la arregla PRIMERO (lo dejo
+   marcado como máxima prioridad en su prompt).
 
 ---
 
