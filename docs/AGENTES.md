@@ -35,6 +35,13 @@
 
 **Cada sub-agente es una ejecución más** → úsalo con criterio para no disparar el coste. Prefiere delegar cuando aporte: tareas extensas, independientes o que ensuciarían tu contexto.
 
+## 🧠 SKILLS: puedes crear/mejorar skills de proyecto (importante) ⭐
+Tienes el toolset `skills` (`skill_manage`): **puedes crear y actualizar skills locales** que estandarizan el trabajo del proyecto y codifican su conocimiento (ver AGENTS-PLAN §2.8).
+
+- **Úsalas cuando:** una tarea se repite y conviene hacerla siempre igual (escribir niveles, limpiar AI-slop, revisar PRs del Concilio, generar runs del harness...).
+- **Créalas y mejóralas:** si falta una skill o la que hay no sirve, crea/actualiza con `skill_manage`. Es el mismo mecanismo que la auto-mejora, aplicado a los procedimientos.
+- **NO dependas solo del AGENTS.md**: el índice (PROJECT-MAP + libreta) cubre la navegación; las skills complementan con procedimientos reutilizables.
+
 ## Cómo coordinarse (resumen del protocolo, AGENTS-PLAN §2.5)
 - Paso 0: lee PROJECT-MAP, TODO, DESIGN, PLAN. Paso 3: deja tu huella SIEMPRE (estado+worklog). Paso 4: deja el relevo para el siguiente.
 

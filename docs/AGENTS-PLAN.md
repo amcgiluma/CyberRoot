@@ -137,6 +137,29 @@ coordinando trabajo de forma más eficiente. Detalle completo en `AGENTES.md`
   no pueden volver a delegar). Para tareas grandes, repetir el ciclo, no anidar.
 - Coste: cada sub-agente es una ejecución más → usar con criterio.
 
+## 2.8 SKILLS DE PROYECTO — los agentes pueden crear skills locales ⭐
+Los agentes del proyecto tienen el toolset `skills` (pueden usar `skill_manage` para
+cerrar/actualizar skills). Esto les permite crear **skills locales a nivel de proyecto**
+que estandarizan tareas repetitivas y codifican el conocimiento propio del proyecto.
+
+- **Qué es una skill aquí:** un documento markdown reutilizable que cualquier agente
+  carga antes de una tarea para hacerla bien y consistente (p.ej. "cómo escribir
+  niveles de CyberRoot", "cómo limpiar AI-slop en la historia", "cómo revisar un PR
+  del Concilio", "cómo generar una run del harness").
+- **Por qué importa:** el HERMES crea skills automáticamente cuando lo necesita, pero
+  podemos adelantarnos: la Fase 0 debe planear las skills iniciales que estandaricen
+  el trabajo, y el proyecto las va MEJORANDO conforme avanza (mismo mecanismo que la
+  auto-mejora: si una skill queda obsoleta o floja, se actualiza).
+- **Dónde viven:** en la carpeta de skills de la sesión del proyecto. NO se suben al repo
+  sin revisión (o si se suben, como referencia). Lo importante es que el agente las
+  carga y las mejora.
+- **Regla de mejora:** igual que los agentes se mejoran a sí mismos, las skills se
+  mejoran: si una skill no sirve o falta una, proponer/crear una (skill_manage).
+
+**Nota (decisión de Juanma):** NO hace falta un `AGENTS.md` de proyecto porque el
+índice (PROJECT-MAP + libreta) ya cubre la navegación; las skills complementan eso
+con procedimientos estandarizados reutilizables.
+
 ---
 
 ## 3.1 Modelos VERIFICADOS (proveedor opencode-go, 100% confirmados)
@@ -377,6 +400,7 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`) — ya existe el panel (00:00), falta el formato del doc.
 - [ ] **Fase 0** (arranca 24/08 03:00): los 10 one-shot producen DESIGN.md + plot + mapa de módulos.
 - [ ] En Fase 0: definir la estructura de CARPETAS por agente (ej. historia/ con INDICE, PERSONAJES, ESCENARIOS, CAPITULOS/ por capítulo) → se registra en PROJECT-MAP.
+- [ ] En Fase 0: PLANEAR las skills de proyecto iniciales (skills con `skill_manage` que estandaricen tareas: escribir niveles, limpiar AI-slop, revisar PRs, harness). Se mejoran conforme avanza el proyecto (mismo mecanismo que la auto-mejora).
 - [ ] Gate de Juanma al final de Fase 0.
 - [ ] Tras el gate → `resume` de los 8 agentes del Concilio; planes diarios en `backlog/planes/YYYY/MM/DD.md`.
 - [ ] Harness de playtest automático: Ornstein lo construye para que Havel y el comité jueguen runs headless y midan balance.
