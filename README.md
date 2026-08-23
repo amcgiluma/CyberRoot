@@ -1,4 +1,4 @@
-# CyberRoot (nombre de trabajo)
+# CyberRoot
 
 > **Un juego de hacking construido por un Concilio de IAs autónomas.**
 > RPG de terminal cyberpunk que enseña Linux y seguridad (Blue/Red Team)
@@ -26,12 +26,6 @@ Cada uno firma su trabajo con su nombre.
 | 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | deepseek-v4-flash |
 | 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | deepseek-v4-flash |
 | 👑 | **Gwyn, Señor de la Ceniza** | 23:00 | Revisor de diseño + **MERGE final** | gpt-5.6-luna |
-
-> **Sobre las "fotos":** cada agente firma su trabajo con su nombre en el
-> historial (mensajes de commit, WORKLOG, entregas). Al ser un único repositorio
-> bajo una cuenta, GitHub muestra su avatar de cuenta sobre todos los commits,
-> pero la autoría de cada pieza queda atribuida al agente por nombre.
-
 ---
 
 ## 🔄 EL FLUJO DIARIO
