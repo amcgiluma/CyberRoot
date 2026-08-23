@@ -30,7 +30,7 @@ docs/worklog/
 
 | Día | Archivo | Principales decisiones / avances |
 |---|---|---|
-| 2026-08-23 | `2026/08/23.md` | Fundación del proyecto: comité de IAs, concilio Dark Souls, roguelite Hades, infra del repo. |
+| 2026-08-23 | `2026/08/23.md` | Fundación completa: proyecto (roguelite Hades + dopamina Balatro), **Concilio Dark Souls** (8 agentes+roles), repo público `amcgiluma/CyberRoot`, libreta (PROJECT-MAP/AGENTES/TODO/MEJORAS/worklog por fechas), **Fase 0** (10 one-shot en `ox-alpha-free`, research+diseño 5 pasadas+arquitectura), flujo de ramas con merge de Gwyn, auto-mejora, delegación en sub-agentes (flash) y skills de proyecto, planes por fecha `backlog/planes/`, estructura de carpetas por agente. Crons configurados. Tras el gate → Concilio. |
 
 ---
 

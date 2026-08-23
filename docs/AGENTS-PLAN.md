@@ -20,7 +20,7 @@ El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
 
 ## 0. El mensaje público (por qué existe esto)
 Un "comité de IA diario" te hace un juego: planificador, ejecutores, revisores,
-testers e historiadora, coordinados por una libreta que es la fuente de verdad.
+testers e historiador (el Concilio), coordinados por una libreta que es la fuente.
 No hay nada que ocultar: se explica, se documenta y se presume. El proceso
 es la feature además del producto.
 
@@ -164,7 +164,7 @@ con procedimientos estandarizados reutilizables.
 
 ## 3.1 Modelos VERIFICADOS (proveedor opencode-go, 100% confirmados)
 Listados con `opencode models opencode-go`:
-- `opencode-go/deepseek-v4-flash` — tester, ejecutores, revisor filtro, historiadora
+- `opencode-go/deepseek-v4-flash` — Manus, Havel, ejecutores, revisor filtro
 - `opencode-go/deepseek-v4-pro` — planificador
 - `opencode-go/gpt-5.6-luna` — revisor de diseño
 - `opencode-go/ox-alpha-free` — **Fase 0 (research + diseño + arquitectura + coordinador)**: modelo potente, GRATIS durante ~1 semana (decisión de Juanma). Los 10 jobs de Fase 0 usan este modelo. Cuando caduque la gratuidad, volver a los modelos estándar.
