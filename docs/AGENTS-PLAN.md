@@ -219,17 +219,48 @@ combos, desbloqueos, contadores). Esto es un objetivo de diseño EXPLÍCITO que
 el DISEÑADOR JEFE (Fase 0) debe convertir en mecánicas concretas. No un
 "nice-to-have": es una decisión de diseño cerrada.
 
-### ☠️ ROGUELITE de hackers (idea estrella ★)
-**La pregunta de Juanma: ¿cómo encajaría un roguelite aquí? → SÍ, encaja bomba.**
-Un roguelite encaja PERFECTO con un juego de hacking: cada "run" es una
-penetración/sesión en una red distinta (generada proceduralmente). Morirse
-= te pillan/EIC, pierdes el equipo/avance de esa run, pero conservas
-progreso permanente (perks, unlocks, reputación, karma meta). El loop
-roguelite (run corta → build → muerte → progresión meta) + el loop educativo
-(aprender un comando que te salva el run) se refuerzan mutuamente: la
-adrenalina de "esta run me muero si no recuerdo `chmod`" ES dopamina pura.
-Este es un diseño candidato que Gwyndolin y el diseñador jefe deben evaluar
-y concretar en la Fase 0 (estructura roguelite: runs, metaprogresión, karma).
+### ☠️ ROGUELITE HÍBRIDO "estilo Hades" ★ (decisión de Juanma — confirmada)
+Juanma ha decidido el modelo de referencia: **Hades**. No es un roguelite puro
+ni una historia lineal: es exactamente la fórmula de Hades, vuelta a un
+contexto de hacking + aprendizaje de Linux. La clave de Hades que lo hace útil
+aquí: **la muerte no corta el avance, lo alimenta.** Eso resuelve la trampa
+educativa (que fallar no sea frustrante, sino parte de aprender).
+
+**Cómo se traduce "Hades" a este juego:**
+- **La Run = infiltrar una red/servidor** generada proceduralmente (permisos,
+  puertos, servicios, trampas varían en cada Run). Objetivo: robar/defender el
+  objetivo (dato, flag, root…).
+- **La Muerte = te detectan / el sistema te echa.** No es game-over: vuelves
+  a la base y la historia AVANZA. Cada muerte trae diálogo/consecuencia nueva.
+- **La Base (equivalente a la casa de Zagreus)** = el Hub donde vives entre
+  Runs: hablas con aliados (avanza la narrativa), mejoras tu equipo, gastas
+  recursos, ves tu progresión permanente. El corazón del avance narrativo.
+- **Boons/Mejoras** = boons de CONOCIMIENTO: cada Run (o muerte) te deja
+  aprender/desbloquear comandos, exploits, perks. "Descubrir comandos y
+  poderes nuevos" al estilo del NPC que te regala un boon.
+- **Karma Blue/Red = los caminos**: decisiones DENTRO y ENTRE Runs inclinan
+  tu karma y abren finales distintos. Muchos finales según lo que elijas hacer.
+- **Metaprogresión (toque de Hades)**: mejoras permanentes entre Runs que se
+  conservan al morir (el "espejo" de Zagreus). El aprendizaje DE VERDAD es la
+  metaprogresión: cada comando aprendido te hace más fuerte para la siguiente.
+- **Visual/UX**: aquí ABANDONAMOS el "todo en terminal". Necesita un MAPA DE
+  NODOS (a qué sala/Run ir), HUD de estado, selector de equipo/objetivos y
+  feedback numérico chillón. La interacción de RESOLVER cada sala puede ser
+  terminal (escribes comandos reales), pero el mapa/HUD/equip son visuales
+  (pixel-art). Lo mejor de ambos mundos: parece un hacker, se siente un juego.
+
+**Marcos cerrados para el Diseñador Jefe (Fase 0):**
+1. Loop maestra: Run → (muerte/éxito) → Base (historia + mejoras + metaprogresión) → Run.
+2. Historia artificial ramificada por karma (caminos/finales) + roguelite como vehículo.
+3. Generación procedural de redes ENSEÑANTE (no sacrifica el aprendizaje por variedad).
+4. Muerte = herramienta pedagógica (cada fallo deja lección), no castigo.
+5. Dopamina constante (números, combos, unlocks) en cada sistema.
+
+**Por qué esto NO es "demasiado":** porque la historia (heart), el learning
+(heart) y el roguelite (vehículo/adrenalina) comparten el MISMO loop y se
+reparten el mismo motor. Hades demostró que se puede tener trama profunda +
+roguelite adictivo sin que uno mate al otro. Escoge: lo dejamos como "la
+referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 
 ## 7. Panel de uso / coste de IA (DIARIO) ⚡
 - **Objetivo:** monitorizar que la suscripción mensual cubre el gasto del
