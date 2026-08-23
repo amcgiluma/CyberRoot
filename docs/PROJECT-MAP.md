@@ -17,6 +17,7 @@
 6. **NO leas el código entero del repo.** Solo lo necesario para tu tarea.
 7. **Revisa `backlog/MEJORAS.md`** → propuestas de auto-mejora que te afecten.
 8. **Al terminar**: documenta (README/WORKLOG/TODO) — "tarea terminada" = hecho + documentado. (WORKLOG vive en `docs/worklog/`, por fechas.)
+9. **Puedes delegar**: tienes `delegate_task` (sub-agentes baratos, flash). Ver `docs/AGENTES.md` (sección DELEGACIÓN). Usa sub-agentes para tareas extensas y verifica el resultado real.
 
 ## 1. Top-level (estado vivo, se actualiza cada día)
 ```

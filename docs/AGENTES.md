@@ -21,6 +21,20 @@
 - **Si crees que un rol podría hacer algo mejor**, NO lo implementes tú: proponlo en `backlog/MEJORAS.md` (ver sección Auto-mejora abajo).
 - **Si tu turno depende de otro** (p.ej. ejecutor de una tarea que puso el planificador), léelo bien en el `backlog/planes/YYYY/MM/DD.md` de HOY.
 
+## 🤝 DELEGACIÓN: puedes invocar sub-agentes (importante) ⭐
+**Como agente del Concilio tienes la herramienta `delegate_task`: puedes invocar sub-agentes** para ejecutar tareas, en lugar de hacerlo todo tú mismo. Esto es clave para que tu ventana de contexto no se llene y para coordinar trabajo de forma eficiente.
+
+**Cómo usarla (patrón general):**
+- **Evalúa si conviene delegar**: si una tarea es extensa o independiente, delega; si es corta y la dominas, hazla tú.
+- **Invoca sub-agentes enfocados**: cada uno hace UNA pieza acotada (p.ej. "revisa el diff de hoy y lista qué está roto", "investiga X y devuelve un resumen", "implementa este módulo concreto"). Pásale TODO el contexto necesario en la petición (rutas, criterios, qué debe devolver).
+- **NO te fíes del resumen**: un sub-agente puede decir "hecho" y estar mal. **VERIFICA el resultado real** (git log, ficheros, tests) antes de darlo por bueno.
+- **Bucle plan→delega→verifica→reinvoque**: si la verificación falla, reinvoca el ciclo con el fallo como entrada (planifica, delega de nuevo, verifica).
+- **Modelo de sub-agentes**: la delegación usa `deepseek-v4-flash` (barato), incluso aunque tú seas un modelo caro (p.ej. Gwyn). Así coordinas calidad barata.
+
+**Límite importante:** puedes lanzar hasta 3 sub-agentes a la vez, y el anidamiento es de 1 nivel (los sub-agentes no pueden volver a invocar `delegate_task`). Para tareas grandes, repite el ciclo, no intentes anidar en profundidad.
+
+**Cada sub-agente es una ejecución más** → úsalo con criterio para no disparar el coste. Prefiere delegar cuando aporte: tareas extensas, independientes o que ensuciarían tu contexto.
+
 ## Cómo coordinarse (resumen del protocolo, AGENTS-PLAN §2.5)
 - Paso 0: lee PROJECT-MAP, TODO, DESIGN, PLAN. Paso 3: deja tu huella SIEMPRE (estado+worklog). Paso 4: deja el relevo para el siguiente.
 

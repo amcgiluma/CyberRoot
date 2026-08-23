@@ -118,6 +118,25 @@ El comité no es estático: puede mejorar su propio funcionamiento.
 - **Cada agente sabe qué hace el resto** (lee `docs/AGENTES.md` arriba), lo que
   le da contexto para proponer mejoras con criterio.
 
+## 2.7 DELEGACIÓN — los agentes pueden invocar sub-agentes (coordinadores) ⭐
+Los 8 agentes del Concilio tienen la herramienta `delegate_task`: pueden invocar
+**sub-agentes** para ejecutar tareas y así NO llenar su ventana de contexto,
+coordinando trabajo de forma más eficiente. Detalle completo en `AGENTES.md`
+(sección "DELEGACIÓN").
+
+**Resumen del patrón (plan → delega → verifica → reinvoque):**
+1. **Evalúa si conviene delegar** (tarea extensa/independiente → delega; corta → hazla tú).
+2. **Invoca sub-agentes enfocados** (1 pieza acotada cada uno, con todo el contexto).
+3. **VERIFICA el resultado real** (git log, tests, ficheros) — no te fíes del resumen.
+4. **Si falla la verificación**, reinvoca el ciclo con el fallo como entrada.
+
+**Config:**
+- Modelo de sub-agentes = `deepseek-v4-flash` (barato) fijado en `delegation.model` — incluso
+  si el coordinador es Gwyn (caro), los sub-agentes son baratos.
+- Límites: 3 sub-agentes simultáneos; anidamiento de 1 nivel (sub-agentes son hojas,
+  no pueden volver a delegar). Para tareas grandes, repetir el ciclo, no anidar.
+- Coste: cada sub-agente es una ejecución más → usar con criterio.
+
 ---
 
 ## 3.1 Modelos VERIFICADOS (proveedor opencode-go, 100% confirmados)
