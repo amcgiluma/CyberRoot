@@ -111,10 +111,12 @@ El comité no es estático: puede mejorar su propio funcionamiento.
   podría hacer algo mejor, puede proponer un cambio.
 - **DÓNDE:** `backlog/MEJORAS.md` — formato `[PROPUESTA]` (problema/propuesta/
   impacto/estado). Ver `docs/AGENTES.md` (sección AUTO-MEJORA) para las reglas.
-- **QUIÉN APLICA:** Gwyndolin (planificador) o un humano (Raiden/Juanma) revisa
-  y aplica. Un agente NO debe auto-cambiarse el rol si afecta a otros.
+- **QUIÉN APLICA: Gwyn (revisor final, 23:00) ejecuta las mejoras** aprobadas en
+  los prompts/procesos, junto al humano (Raiden/Juanma) que revisa. Cualquier
+  agente propone en `MEJORAS.md`; Gwyn decide y aplica. Un agente NO debe
+  auto-cambiarse el rol si afecta a otros (lo aplica Gwyn).
 - **Esqueleto protegido:** horarios del concilio y cadena de PRs/merge NO se
-  cambian sin aprobación (se pueden PROPONER, no auto-aplicar si afectan a otros).
+  cambian sin aprobación de Juanma (se pueden PROPONER en MEJORAS, no auto-aplicar).
 - **Cada agente sabe qué hace el resto** (lee `docs/AGENTES.md` arriba), lo que
   le da contexto para proponer mejoras con criterio.
 

@@ -81,8 +81,9 @@ guía de su módulo.
 ## ♻️ AUTO-MEJORA
 
 El Concilio puede mejorarse a sí mismo: si un agente ve que su tarea no se puede
-hacer bien o que el flujo no funciona, propone un cambio en `backlog/MEJORAS.md`
-que luego se aplica. Los horarios y la cadena de merge no se alteran sin permiso.
+hacer bien o que el flujo no funciona, propone un cambio en `backlog/MEJORAS.md`.
+Lo revisa y **aplica Gwyn** (el revisor final, 23:00), con el humano supervisando.
+Los horarios y la cadena de merge no se alteran sin permiso.
 
 ---
 

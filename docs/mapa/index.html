@@ -528,9 +528,9 @@ const A = [
   {
     id:"gwyn", name:"Gwyn", title:"Señor de la Ceniza", role:"Revisor diseño + merge",
     hour:"23:00", model:"luna", img:"assets/gwyn.webp",
-    mission:"Valida el DISEÑO, hace el MERGE final de las PRs aprobadas, deja sus propias notas de gusto e ideas, y reporta a Juanma. La última llama del día.",
-    read:[["backlog/TODO.md","los veredictos de Artorias"],["PRs y ramas feat/*","lo que merece entrar"],["docs/DESIGN.md","¿se respetó la visión?"]],
-    write:[["main","merge final de las PRs"],["backlog/TODO.md","validación de diseño y notas"],["Telegram de Juanma","informe diario"]],
+    mission:"Valida el DISEÑO, hace el MERGE final de las PRs aprobadas, deja sus propias notas de gusto e ideas, reporta a Juanma, y APLICA la auto-mejora del Concilio. La última llama del día.",
+    read:[["backlog/TODO.md","los veredictos de Artorias"],["PRs y ramas feat/*","lo que merece entrar"],["docs/DESIGN.md","¿se respetó la visión?"],["backlog/historia/","¿encaja con la narrativa?"],["backlog/MEJORAS.md","propuestas de auto-mejora"]],
+    write:[["main","merge final de las PRs"],["backlog/TODO.md","validación de diseño y notas"],["backlog/MEJORAS.md","aplica/descarta las mejoras"],["Telegram de Juanma","informe diario"]],
     handoff:"El informe vuela a Juanma. El Concilio duerme; la hoguera sigue encendida."
   }
 ];
@@ -540,7 +540,7 @@ const ZONES = [
     { f:"TODO.md", d:"estados de tareas: pendiente / en curso / hecho", rd:["gwyndolin"], wr:["havel","artorias","gwyn"] },
     { f:"planes/YYYY/MM/DD.md", d:"plan del HOY (histórico por fecha)", rd:["ornstein","smough","seath"], wr:["gwyndolin"] },
     { f:"historia/", d:"ÍNDICE · PERSONAJES · ESCENARIOS · CAPITULOS", rd:["gwyndolin","havel"], wr:["manus"] },
-    { f:"MEJORAS.md", d:"buzón de auto-mejora del Concilio", rd:[], wr:["todos"] }
+    { f:"MEJORAS.md", d:"buzón de auto-mejora del Concilio — Gwyn la aplica", rd:["gwyn"], wr:["todos"] }
   ]},
   { code:"docs/", desc:"EL CONOCIMIENTO (permanente)", color:"#4a78a0", files:[
     { f:"PROJECT-MAP.md", d:"índice maestro — lectura obligada (Paso 0)", rd:["todos"], wr:[] },
