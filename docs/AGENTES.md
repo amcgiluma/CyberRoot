@@ -48,11 +48,12 @@ Tienes el toolset `skills` (`skill_manage`): **puedes crear y actualizar skills 
 ## AUTO-MEJORA del comité (cómo los agentes pueden mejorarse a sí mismos)
 - Cualquier agente que detecte que **su rol, su prompt o el flujo no funcionan** (tarea imposible, cuello de botella, paso confuso, solapamiento) puede proponer una mejora.
 - **DÓNDE:** escribe en `backlog/MEJORAS.md` una entrada: `[LÍNEA] Proponer + fecha + quién + problema + propuesta + impacto esperado`.
-- **CÓMO SE APLICA:** **Gwyn (revisor final, 23:00) decide y redacta** la mejora
-  aprobada (texto de prompt/rol NUEVO COMPLETO), la deja en `MEJORAS.md` con estado
-  `[APLICAR]`; **Raiden/Juanma aplican** validando (Gwyn como cron NO edita
-  jobs.json directamente: reescribirlo a mano rompería el programador). No te
-  cambies el rol a ti mismo unilateralmente si afecta a la coordinación con otros.
+- **CÓMO SE APLICA:** **Gwyn (revisor final, 23:00) decide y APLICA** la mejora
+  aprobada con el CLI oficial `hermes cron edit --prompt "<nuevo>" <job_id>`
+  (válido, con respaldo — NUNCA edites `jobs.json` a mano). Actualiza el prompt
+  del job correspondiente, marca `[APLICADA]` en MEJORAS y documenta. Juanma
+  supervisa. No te cambies el rol a ti mismo unilateralmente para afectar la
+  coordinación con otros sin pasarlo por MEJORAS.
 - **Regla:** mejorar el sistema es tan válido como mejorar el juego. Un agente que propone una buena mejora al flujo está haciendo su trabajo.
 
 ## Límites del auto-mejora (para no romper el sistema)

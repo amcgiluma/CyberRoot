@@ -111,11 +111,10 @@ El comité no es estático: puede mejorar su propio funcionamiento.
   podría hacer algo mejor, puede proponer un cambio.
 - **DÓNDE:** `backlog/MEJORAS.md` — formato `[PROPUESTA]` (problema/propuesta/
   impacto/estado). Ver `docs/AGENTES.md` (sección AUTO-MEJORA) para las reglas.
-- **QUIÉN APLICA: Gwyn (revisor final, 23:00) decide y redacta** las mejoras
-  aprobadas (prompt/rol nuevo COMPLETO en `MEJORAS.md` marcado `[APLICAR]`);
-  Raiden/Juanma las aplican a los cron-jobs validando. Cualquier agente propone
-  en `MEJORAS.md`; Gwyn decide el contenido; Raiden/Juanma la aplicación. Un
-  agente NO debe auto-cambiarse el rol si afecta a otros (lo hace Gwyn).
+- **QUIÉN APLICA: Gwyn (revisor final, 23:00) decide y APLICA** las mejoras
+  aprobadas usando el CLI OFICIAL (`hermes cron edit --prompt ... <job_id>`),
+  que es válido y con respaldo — NO edita `jobs.json` a mano. Cualquier agente
+  propone en `MEJORAS.md`; Gwyn decide el contenido Y lo aplica; Juanma supervisa.
 - **Esqueleto protegido:** horarios del concilio y cadena de PRs/merge NO se
   cambian sin aprobación de Juanma (se pueden PROPONER en MEJORAS, no auto-aplicar).
 - **Cada agente sabe qué hace el resto** (lee `docs/AGENTES.md` arriba), lo que
