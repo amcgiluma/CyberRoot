@@ -49,6 +49,18 @@
   core/render CONFIRMADA y reforzada (reglas de frontera + RNG seedeada).
   Riesgos documentados: bus factor=1 de Pyxel (plan B pygame-ce), fuente
   bitmap para terminal in-game. Pendiente de ratificar por Juanma en el gate.
+- `[HECHO]` (24/08) **Research Mecánicas + Dopamina completado** — agente Research
+  Mecánicas: `docs/RESEARCH-MECANICAS.md` definitivo con fuentes verificadas.
+  Cubre: aprender-sin-deberes (Bandit/Terminus/Root-Me/Hacknet + meta-análisis
+  Clark 2016/Wouters 2013; vetado el antipatrón quiz-con-skin), dopamina Balatro
+  descompuesta en 5 palancas (puntuación compuesta datos×combo, ciclos cortos,
+  juice proporcional a magnitud, riesgo/recompensa, cascadas de unlocks) con
+  traducción directa a mecánicas CyberRoot, loop Hades (muerte=lección,
+  post-mortem automático, metaprogresión dual donde el Linux real del jugador ES
+  la progresión), procedural enseñante (piel aleatoria / médula curricular, RNG
+  jamás decide semántica de comandos) y UX dual (eventos compartidos core→HUD/
+  terminal, mapa diegético estilo Slay the Spire, legibilidad>espectáculo).
+  Incluye checklist de 8 directrices para el Diseñador Jefe (P1–P5).
 - `[PENDIENTE]` (24/08) Validar fuente bitmap legible para la terminal in-game
   (5×7 aprox., paleta CRT) con capturas reales en Pyxel — Research Stack:
   es EL riesgo visual detectado; resolverlo ANTES del Diseñador P4 (dopamina/UX
