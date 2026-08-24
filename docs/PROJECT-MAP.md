@@ -42,10 +42,10 @@ src/                → el código del juego (módulos).
 |---|---|---|
 | **Manus** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story, humanizer). Marca en TODO las piezas narrativas listas. |
 | **Havel** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (bugs + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
-| **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/planes/YYYY/MM/DD.md` (HOY) + reparte tareas en `backlog/TODO.md`. Aplica auto-mejoras. |
+| **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/planes/YYYY/MM/DD.md` (HOY) + reparte tareas en `backlog/TODO.md`. Propone mejoras en MEJORAS (las aplica Gwyn). |
 | **Ornstein/Smough/Seath** (13/16/19) | deepseek-v4-flash | Código en su RAMA `feat/<modulo>` + PR a main. Marca `[HECHO]` en `backlog/TODO.md`. README del módulo. Ornstein: + harness de playtest. |
 | **Artorias** (21:00) | deepseek-v4-flash | 💥/✅ de las ramas/PRs + NOTAS DE GUSTO + "qué no mergear" + ideas, en `backlog/TODO.md`. |
-| **Gwyn** (23:00) | gpt-5.6-luna | VALIDA diseño + MERGE final (solo él). Si no mergea: por qué + cómo arreglar en `backlog/TODO.md`. + sus notas de gusto + reporte a Juanma. |
+| **Gwyn** (23:00) | gpt-5.6-luna | VALIDA diseño + MERGE final (solo él). Si no mergea: por qué + cómo arreglar en `backlog/TODO.md`. + sus notas de gusto + reporte a Juanma. APLICA la auto-mejora (via `hermes cron edit`, registra `[APLICADA]` en MEJORAS). |
 | **Juanma** (feedback) | — | Escribe en la libreta (TODO/DESIGN) o me dice a mí. ← EL CONTROL |
 
 ## 3. Tabla de módulos
