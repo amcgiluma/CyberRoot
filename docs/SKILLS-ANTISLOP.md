@@ -258,6 +258,81 @@ Dónde entra esto en el trabajo diario:
 - Craft de base (consolidado, sin URL): Hemingway (iceberg), Vonnegut ("pity the
   reader; he is in a lot of trouble more often than you think"), Strunk & White.
 
+---
+
+## Señales sutiles que NO son obvias (lecciones empíricas)
+
+Además de las palabras trampa y la prosa inflada, hay **patrones estructurales** que
+delatan a un modelo incluso cuando el texto es "limpio" por palabras. Estos saltan
+menos a la vista pero un humano con buen oído los pilla al leer. Registrados aquí
+porque Juanma los señaló de primera mano revisando un texto real.
+
+> **LEE ESTO SIEMPRE al autopasar un texto.** Si ninguna de estas 4 se da, ya estás
+> por delante del 90% del slop.
+
+### 1. "Concepto:" antes de la idea — anunciar con dos puntos antes de explicar (patrón rótulo)
+El modelo tiende a escribir `concepto:` seguido de dos puntos y luego la definición,
+como si estuviera anunciando un rótulo. En inglés se ve en `The thing that holds it
+together:` `Full honesty:` `The cool part is...`. Es un *signposting* débil: anuncia
+el contenido antes de darlo. Un humano no escribe eso; escribe la idea directamente.
+
+> ❌ "The golden rule makes it work: no agent finishes its shift without writing
+>    down where it left its work."
+> ✅ "No agent finishes its shift without writing down where it left its work. That
+>    simple rule is what makes the whole thing work."
+
+Momento de cazar: si al releer ves `palabra:` que introduce una ORACIÓN (no una
+lista), eso es un rótulo → elimina los dos puntos y di la idea de corrido.
+EXCEPCIÓN legítima: los dos puntos delante de una LISTA real de varios elementos
+("three files: a, b, c") — eso lo escribe la gente.
+
+### 2. Abertura en fórmula de checklist comercial ("There is no X, no Y, no Z... just W")
+El modelo adora la construcción de "aquí no hay esto, ni aquello, ni lo otro...
+solo lo bueno". La versión cortada en frases nominales ("No memory service. No
+database. No central controller. Just a notebook...") suena muy a plantilla de
+marketing, no a persona.
+
+> ❌ "There is no memory service, no database, no central controller. Just a
+>    notebook of files every agent knows."
+> ✅ "There is no memory service, no database, no central controller, just a
+>    notebook of files every agent knows." (prosa de corrido, sin troceo)
+
+El troceo en frases cortas sin sujeto (para "impacto") es la señal. En prosa
+continua con comas, la misma idea ya no delata.
+
+### 3. Repetición de sintagma para enfatizar ("The cool part is not X. The cool part is Y.")
+Repetir el mismo arranque dos veces para dar énfasis es un tic de modelo (imita el
+paralelismo forzado). Un humano lo hace a veces, pero el modelo lo hace en exceso.
+
+> ❌ "The cool part is not the game. The cool part is that the project coordinates
+>    itself."
+> ✅ "The game matters less than this: the project coordinates itself." (una sola
+>    mención, la segunda idea se mantiene por el contraste, no por la repetición)
+
+Regla para auto-pasar: si el texto tiene dos cláusulas que empiezan con LAS MISMAS
+palabras, elimina el primer anuncio y suelta directamente la segunda idea.
+
+### 4. Regla de tres descafeinada (enumerar para sonar completo)
+El modelo fuerza tríos para "sonar exhaustivo" cuando conceptualmente son más o
+menos lo mismo. Vigila "A, B, and C" donde C no aporta nada nuevo que B.
+
+> ❌ "All the reviewers leave their verdicts, the cycle repeats, and the game grows
+>    day by day."
+> ✅ dejar solo las dos primeras, o convertir en dos partes distintas de verdad.
+
+Regla: si el tercer elemento ("and ... runs every day", "and the future looks
+bright") es puramente conclusión genérica, córtalo.
+
+### Cómo seleccionar a la hora de usar esto
+Estas 4 señales se aplican en **todas las superficies** (narrador, diálogo,
+descripción, docs del repo, incluso anuncios/web). Son aún más críticas que las
+palabras trampa porque pasan desapercibidas: un texto sin "testamento" ni
+"panorama" puede seguir sonando a IA por estas estructuras. El oído humano (el de
+Juanma o Manus en revisión) es el detector: pregúntate "¿leería así una persona,
+o es un folleto?".
+
+---
+
 ## Límites honestos
 
 - Ninguna técnica garantiza texto con alma; garantizan eliminar lo peor. La
