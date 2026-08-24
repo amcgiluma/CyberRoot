@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CyberRoot · El Concilio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0a08;
+  --panel:#15120d;
+  --panel2:#1c1811;
+  --line:#3a3122;
+  --gold:#c8a24a;
+  --gold-bright:#e9c876;
+  --ember:#e8862e;
+  --ember-bright:#ffb35c;
+  --ash:#a89f8d;
+  --ash-dim:#6b6355;
+  --read:#6f9ec4;
+  --write:#e8862e;
+  --blood:#8f2f2a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,134,46,.13), transparent),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(143,47,42,.08), transparent),
+    var(--bg);
+  color:var(--ash);
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:17px;
+  line-height:1.5;
+  min-height:100vh;
+}
+h1,h2,h3,.cz{font-family:"Cinzel",serif}
+a{color:var(--gold);text-decoration:none}
+
+header{
+  text-align:center;
+  padding:56px 20px 28px;
+  position:relative;
+}
+header .sigil{
+  width:54px;height:54px;margin:0 auto 18px;
+  border:1px solid var(--gold);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 24px rgba(232,134,46,.25), inset 0 0 12px rgba(232,134,46,.15);
+  animation:breathe 4s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{box-shadow:0 0 18px rgba(232,134,46,.2), inset 0 0 10px rgba(232,134,46,.12)}
+  50%{box-shadow:0 0 34px rgba(232,134,46,.45), inset 0 0 16px rgba(232,134,46,.25)}
+}
+header h1{
+  font-size:clamp(26px,4.5vw,44px);
+  font-weight:900;
+  letter-spacing:.14em;
+  color:var(--gold-bright);
+  text-shadow:0 0 30px rgba(233,200,118,.25);
+}
+header .sub{
+  margin-top:10px;
+  font-style:italic;
+  color:var(--ash);
+  font-size:19px;
+}
+header .rule{
+  width:min(420px,70%);
+  height:14px;margin:22px auto 0;
+  background:
+    linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold) 80%,transparent) center/100% 1px no-repeat;
+  position:relative;
+}
+header .rule::after{
+  content:"";position:absolute;left:50%;top:50%;
+  width:9px;height:9px;background:var(--ember);
+  transform:translate(-50%,-50%) rotate(45deg);
+  box-shadow:0 0 12px var(--ember);
+}
+
+nav.tabs{
+  display:flex;justify-content:center;gap:10px;
+  padding:18px 16px 8px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(var(--bg) 75%,transparent);
+}
+nav.tabs button{
+  font-family:"Cinzel",serif;font-size:14px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  background:var(--panel);
+  color:var(--ash);
+  border:1px solid var(--line);
+  padding:11px 24px;cursor:pointer;
+  transition:all .25s;
+}
+nav.tabs button:hover{border-color:var(--gold);color:var(--gold-bright)}
+nav.tabs button.on{
+  border-color:var(--ember);
+  color:var(--ember-bright);
+  background:linear-gradient(180deg,#241a0e,var(--panel));
+  box-shadow:0 0 18px rgba(232,134,46,.2), inset 0 -2px 0 var(--ember);
+}
+
+main{max-width:1080px;margin:0 auto;padding:26px 18px 90px}
+.view{display:none;animation:fade .45s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.view-intro{
+  text-align:center;font-style:italic;color:var(--ash-dim);
+  max-width:640px;margin:0 auto 34px;font-size:18px;
+}
+
+.legend{
+  display:flex;justify-content:center;gap:26px;flex-wrap:wrap;
+  margin-bottom:30px;font-size:15px;color:var(--ash-dim)
+}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.legend .lr{background:var(--read)}
+.legend .lw{background:var(--write)}
+
+.timeline{
+  position:relative;max-width:760px;margin:0 auto;
+}
+.timeline::before{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;
+  transform:translateX(-50%);
+  background:linear-gradient(180deg,transparent,var(--line) 8%,var(--line) 92%,transparent);
+}
+.step{
+  position:relative;display:flex;align-items:center;
+  margin-bottom:38px;width:100%;
+}
+.step:nth-child(even){flex-direction:row-reverse}
+.step .time{
+  position:absolute;left:50%;transform:translateX(-50%);z-index:2;
+  font-family:"Cinzel",serif;font-weight:700;font-size:15px;
+  color:var(--gold-bright);
+  background:var(--bg);
+  border:1px solid var(--gold);
+  padding:5px 14px;border-radius:999px;
+  white-space:nowrap;
+  box-shadow:0 0 14px rgba(232,134,46,.25);
+}
+.portrait-wrap{width:46%;display:flex;justify-content:flex-end;padding-right:34px}
+.step:nth-child(even) .portrait-wrap{justify-content:flex-start;padding-right:0;padding-left:34px}
+.portrait{
+  position:relative;width:132px;height:132px;cursor:pointer;flex-shrink:0;
+  transition:transform .25s;
+}
+.portrait:hover{transform:scale(1.05)}
+.portrait img{
+  width:100%;height:100%;object-fit:cover;object-position:top center;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  filter:saturate(.85) contrast(1.05);
+  box-shadow:0 0 22px rgba(0,0,0,.7), 0 0 16px rgba(232,134,46,.18);
+}
+.portrait::after{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  border:1px dashed rgba(200,162,74,.4);
+}
+.step-info{width:54%;padding-left:8px}
+.step:nth-child(even) .step-info{text-align:right;padding-left:0;padding-right:8px}
+.step-info .name{
+  font-family:"Cinzel",serif;font-weight:700;font-size:21px;
+  color:var(--gold-bright);letter-spacing:.06em;
+}
+.step-info .role{font-style:italic;color:var(--ember-bright);font-size:16px;margin-top:2px}
+.step-info .desc{margin-top:7px;font-size:15.5px;color:var(--ash)}
+.step-info .chips{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.step:nth-child(even) .chips{justify-content:flex-end}
+.chip{
+  font-size:12.5px;padding:3px 10px;border-radius:999px;
+  border:1px solid;white-space:nowrap;
+}
+.chip.r{color:var(--read);border-color:rgba(111,158,196,.45);background:rgba(111,158,196,.07)}
+.chip.w{color:var(--ember-bright);border-color:rgba(232,134,46,.45);background:rgba(232,134,46,.07)}
+
+.relay{max-width:720px;margin:0 auto;position:relative}
+.relay-node{
+  display:flex;gap:20px;align-items:flex-start;
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:20px 22px;margin-bottom:0;
+  position:relative;
+  transition:border-color .25s;
+}
+.relay-node:hover{border-color:var(--gold)}
+.relay-node img{
+  width:86px;height:86px;object-fit:cover;object-position:top center;
+  border-radius:50%;border:2px solid var(--gold);cursor:pointer;flex-shrink:0;
+  filter:saturate(.85);
+}
+.relay-body{flex:1}
+.relay-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.relay-head .name{font-family:"Cinzel",serif;font-weight:700;font-size:19px;color:var(--gold-bright)}
+.relay-head .role{font-style:italic;color:var(--ember-bright);font-size:15px}
+.relay-head .model{
+  margin-left:auto;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ash-dim);border:1px solid var(--line);padding:2px 9px;border-radius:999px;
+}
+.relay-mission{font-size:15.5px;margin-top:6px}
+.io{display:flex;flex-direction:column;gap:4px;margin-top:12px;font-size:14.5px}
+.io div{display:flex;gap:8px;align-items:baseline}
+.io b{font-family:"Cinzel",serif;font-size:11px;letter-spacing:.12em;font-weight:700;width:64px;flex-shrink:0}
+.io .lb{color:var(--read)}
+.io .wb{color:var(--ember-bright)}
+.io code{
+  font-family:ui-monospace,Menlo,monospace;font-size:13px;
+  background:#000;border:1px solid var(--line);
+  padding:1px 7px;border-radius:4px;color:var(--gold);
+}
+.handoff{
+  display:flex;align-items:center;gap:14px;
+  padding:4px 0 4px 52px;
+}
+.handoff .arrow-line{
+  flex-shrink:0;width:2px;height:34px;
+  background:linear-gradient(var(--ember),transparent);
+  position:relative;
+}
+.handoff .arrow-line::before{
+  content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--ember);
+}
+.handoff .txt{
+  font-style:italic;font-size:14.5px;color:var(--ash-dim);padding-bottom:14px
+}
+.final-report{
+  margin:26px auto 0;max-width:520px;text-align:center;
+  border:1px dashed rgba(51,102,51,.8);
+  background:rgba(40,66,40,.12);
+  padding:16px 22px;border-radius:8px;
+}
+.final-report .who{font-family:"Cinzel",serif;color:#8fc48f;font-weight:700;letter-spacing:.08em}
+
+.zones{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;margin-bottom:34px;
+}
+.zone{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-top:2px solid var(--zone-c,var(--gold));
+  padding:0 0 14px;
+}
+.zone-head{
+  padding:14px 18px 10px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap
+}
+.zone-head code{
+  font-family:"Cinzel",serif;font-weight:700;font-size:17px;
+  color:var(--zone-c,var(--gold));
+}
+.zone-head small{font-style:italic;color:var(--ash-dim)}
+.filerow{
+  padding:9px 18px;
+  border-left:2px solid transparent;
+  transition:all .2s;
+}
+.filerow:hover{background:var(--panel2)}
+.filerow.dim{opacity:.22}
+.filerow.match{border-left-color:var(--gold);background:var(--panel2)}
+.filerow .fname{
+  font-family:ui-monospace,Menlo,monospace;font-size:13.5px;color:var(--gold);
+}
+.filerow .fdesc{font-size:13.5px;font-style:italic;color:var(--ash-dim)}
+.avatars{display:flex;gap:5px;margin-top:7px}
+.avatar{
+  width:30px;height:30px;border-radius:50%;overflow:hidden;
+  cursor:pointer;position:relative;border:1.5px solid var(--line);
+  opacity:.55;transition:all .2s;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.avatar.rd:hover,.avatar.rd.hl{border-color:var(--read);opacity:1;box-shadow:0 0 10px rgba(111,158,196,.5)}
+.avatar.wr:hover,.avatar.wr.hl{border-color:var(--ember);opacity:1;box-shadow:0 0 10px rgba(232,134,46,.5)}
+
+.agentbar{
+  display:flex;justify-content:center;gap:14px;flex-wrap:wrap;
+  margin-bottom:26px;padding:18px 12px;
+  background:var(--panel);border:1px solid var(--line);
+}
+.agentbar .ab-agent{
+  display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;
+  transition:transform .2s;
+}
+.agentbar .ab-agent:hover{transform:translateY(-3px)}
+.agentbar img{
+  width:58px;height:58px;border-radius:50%;object-fit:cover;object-position:top;
+  border:2px solid var(--line);filter:saturate(.7) brightness(.85);
+  transition:all .2s;
+}
+.agentbar .ab-agent.on img,.agentbar img:hover{border-color:var(--gold);filter:none}
+.agentbar .ab-name{font-family:"Cinzel",serif;font-size:11px;color:var(--ash-dim);letter-spacing:.05em}
+.agentbar .ab-agent.on .ab-name{color:var(--gold-bright)}
+
+.golden{
+  max-width:760px;margin:0 auto 30px;
+  border:1px solid rgba(143,47,42,.55);
+  background:linear-gradient(180deg,rgba(143,47,42,.09),transparent 60%),var(--panel);
+  padding:18px 24px;
+}
+.golden h3{color:#d98a85;font-size:15px;letter-spacing:.14em;text-transform:uppercase}
+.golden ol{margin:10px 0 0 22px;font-size:15.5px}
+.golden ol li{margin:3px 0}
+.golden code{font-family:ui-monospace,monospace;font-size:13px;color:var(--gold)}
+.golden .never{margin-top:10px;font-style:italic;color:var(--ash-dim);font-size:14.5px}
+
+.drawer-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;transition:opacity .3s;z-index:90;
+}
+.drawer-bg.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(430px,92vw);
+  background:linear-gradient(180deg,#1a150e,var(--panel));
+  border-left:1px solid var(--gold);
+  transform:translateX(105%);transition:transform .35s cubic-bezier(.2,.8,.25,1);
+  z-index:100;overflow-y:auto;
+  box-shadow:-20px 0 50px rgba(0,0,0,.6);
+}
+.drawer.open{transform:none}
+.drawer-close{
+  position:absolute;top:14px;right:14px;z-index:2;
+  background:none;border:1px solid var(--line);color:var(--ash);
+  width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:17px;
+  transition:all .2s;
+}
+.drawer-close:hover{border-color:var(--ember);color:var(--ember-bright)}
+.drawer-hero{position:relative;height:230px;overflow:hidden;border-bottom:1px solid var(--line)}
+.drawer-hero img{
+  width:100%;height:100%;object-fit:cover;object-position:top center;
+  filter:saturate(.9);
+  mask-image:linear-gradient(180deg,#000 55%,transparent);
+  -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);
+}
+.drawer-hero .dh-name{
+  position:absolute;left:22px;bottom:12px;
+  font-family:"Cinzel",serif;font-weight:900;font-size:27px;color:var(--gold-bright);
+  text-shadow:0 2px 14px #000;
+}
+.drawer-body{padding:20px 24px 40px}
+.d-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.d-meta span{
+  font-family:"Cinzel",serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--gold);color:var(--gold-bright);padding:4px 12px;border-radius:999px;
+}
+.d-sec{margin-top:18px}
+.d-sec h4{
+  font-family:"Cinzel",serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ash-dim);margin-bottom:8px;
+}
+.d-sec.mission p{font-style:italic;font-size:16.5px;color:var(--ash)}
+.d-list{list-style:none}
+.d-list li{
+  padding:7px 0 7px 18px;position:relative;font-size:15px;
+  border-bottom:1px solid rgba(58,49,34,.5);
+}
+.d-list li::before{
+  content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;transform:rotate(45deg);
+}
+.d-list.read li::before{background:var(--read)}
+.d-list.write li::before{background:var(--ember)}
+.d-list code{font-family:ui-monospace,monospace;font-size:13px;color:var(--gold)}
+
+footer{
+  text-align:center;padding:34px 20px 44px;border-top:1px solid var(--line);
+  color:var(--ash-dim);font-size:14px;
+}
+footer p{margin:4px 0}
+footer .souls{
+  font-family:"Cinzel",serif;letter-spacing:.3em;color:var(--gold);opacity:.6;
+  font-size:12px;margin-bottom:10px;
+}
+
+@media(max-width:640px){
+  .timeline::before{left:24px}
+  .step,.step:nth-child(even){flex-direction:row;align-items:flex-start}
+  .step .time{left:24px;top:-14px;transform:none;font-size:13px}
+  .portrait-wrap,.step:nth-child(even) .portrait-wrap{width:auto;justify-content:flex-start;padding:26px 16px 0 0}
+  .portrait{width:84px;height:84px}
+  .step-info,.step:nth-child(even) .step-info{width:auto;text-align:left;padding:0}
+  .step:nth-child(even) .chips{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="sigil">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2 L14.5 9 L22 12 L14.5 15 L12 22 L9.5 15 L2 12 L9.5 9 Z" fill="#e8862e" opacity=".9"/>
+    </svg>
+  </div>
+  <h1>CYBERROOT · EL CONCILIO</h1>
+  <p class="sub">Ocho guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.</p>
+  <div class="rule"></div>
+</header>
+
+<nav class="tabs">
+  <button data-view="concilio" class="on">I · El Concilio</button>
+  <button data-view="flujo">II · Flujo del Día</button>
+  <button data-view="mapa">III · Mapa del Reino</button>
+</nav>
+
+<main>
+
+  <section class="view on" id="view-concilio">
+    <p class="view-intro">Los ocho agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.</p>
+    <div class="legend">
+      <span><i class="lr"></i> Lee / interpreta</span>
+      <span><i class="lw"></i> Escribe / entrega</span>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <section class="view" id="view-flujo">
+    <p class="view-intro">El relevo completo de una jornada: qué recibe cada guardián, qué hace y qué deja tras de sí para el siguiente.</p>
+    <div class="relay" id="relay"></div>
+    <div class="final-report">
+      <div class="who">GWYN → JUANMA</div>
+      <p style="margin-top:6px;font-size:15.5px">Al cierre de cada día, el informe final llega a Telegram: qué se hizo, qué se rompió y qué aguarda en el alba.</p>
+    </div>
+  </section>
+
+  <section class="view" id="view-mapa">
+    <p class="view-intro">Las tres regiones del repositorio y quién pisa cada rincón. Pasa el cursor por un agente para iluminar su territorio; haz clic para ver su ficha.</p>
+    <div class="agentbar" id="agentbar"></div>
+    <div class="golden">
+      <h3>La Regla de Oro — Paso 0</h3>
+      <ol>
+        <li><code>docs/PROJECT-MAP.md</code> → visión general</li>
+        <li><code>docs/AGENTES.md</code> → qué hace cada agente</li>
+        <li><code>backlog/TODO.md</code> → estados</li>
+        <li><code>docs/DESIGN.md</code> → la visión que no puedes romper</li>
+        <li>(según tu rol) planes · historia · investigación</li>
+        <li><code>backlog/MEJORAS.md</code> → auto-mejora pendiente</li>
+      </ol>
+      <p class="never">Nunca leas el código entero del repo. Solo lo que tu tarea demande.</p>
+    </div>
+    <div class="zones" id="zones"></div>
+  </section>
+
+</main>
+
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="drawer">
+  <button class="drawer-close" id="drawerClose" aria-label="Cerrar">✕</button>
+  <div id="drawerContent"></div>
+</aside>
+
+<footer>
+  <p class="souls">◆ PREPARE TO MERGE ◆</p>
+  <p>CyberRoot — El Concilio de los Ocho</p>
+  <p>Retratos © FromSoftware / darksouls.fandom.com — uso decorativo sin ánimo de lucro</p>
+</footer>
+
+<script>
+const A = [
+  {
+    id:"manus", name:"Manus", title:"El Padre del Abismo", role:"Historiador",
+    hour:"03:00", model:"flash", img:"assets/manus.webp",
+    mission:"Despierta antes que nadie y escribe la HISTORIA del día desde el plot, en prosa humanizada. El pasado de cada jornada queda sellado bajo su pluma.",
+    read:[["docs/DESIGN.md","la visión que narra"],["docs/SKILLS-ANTISLOP.md","guía de estilo anti-AI-slop"],["backlog/TODO.md","contexto del día"]],
+    write:[["backlog/historia/<fecha>.md","la crónica del día"]],
+    handoff:"Deja la crónica escrita. El sueño del abismo guarda el registro."
+  },
+  {
+    id:"havel", name:"Havel", title:"La Roca", role:"Vidente-creativo",
+    hour:"07:00", model:"flash", img:"assets/havel.webp",
+    mission:"JUEGA el juego con sus propias manos, GENERA ideas nuevas (capítulos, mecánicas, comandos) y anota los bugs que encuentra. La crítica de diseño no es suya: eso lo firman Artorias y Gwyn.",
+    read:[["docs/worklog/","la bitácora de ayer"],["build jugable de src/","juega el juego real"]],
+    write:[["backlog/TODO.md","ideas, bugs e inspiraciones"],["backlog/historia/","chispas narrativas"]],
+    handoff:"Su lista de ideas y bugs alimenta el plan de mediodía."
+  },
+  {
+    id:"gwyndolin", name:"Gwyndolin", title:"Sol Oscuro", role:"Planificador",
+    hour:"11:00", model:"pro", img:"assets/gwyndolin.webp",
+    mission:"Convierte TODO y las log-ideas en el PLAN DE HOY con tareas repartidas por módulo. Es la mano invisible que ordena la fila del Concilio.",
+    read:[["backlog/TODO.md","tareas e ideas pendientes"],["backlog/historia/","contexto narrativo"],["docs/DESIGN.md","la visión intocable"],["docs/AGENTES.md","quién es quién"]],
+    write:[["backlog/planes/YYYY/MM/DD.md","el plan de HOY, tarea a tarea"],["backlog/TODO.md","estados actualizados"]],
+    handoff:"Publica el plan. Los tres ejecutores ya tienen su misión."
+  },
+  {
+    id:"ornstein", name:"Ornstein", title:"Mata-Dragones", role:"Ejecutor 1",
+    hour:"13:00", model:"flash", img:"assets/ornstein.webp",
+    mission:"Implementa SU módulo del plan. Además construye y mantiene el harness de playtest: el campo de pruebas donde todo debe sobrevivir.",
+    read:[["backlog/planes/YYYY/MM/DD.md","SU tarea del plan"],["src/","el código que toca extender"]],
+    write:[["src/<módulo>/","implementación + tests"],["tools/ · harness","playtest automatizado"]],
+    handoff:"PR abierta con tests. La lanza deja el primer trofeo del día."
+  },
+  {
+    id:"smough", name:"Smough", title:"El Verdugo", role:"Ejecutor 2",
+    hour:"16:00", model:"flash", img:"assets/smough.webp",
+    mission:"Implementa SU módulo del plan, sobre los hombros de lo que Ornstein dejó a mediodía.",
+    read:[["backlog/planes/YYYY/MM/DD.md","SU tarea del plan"],["src/","el estado del código a las 16:00"]],
+    write:[["src/<módulo>/","implementación + tests"]],
+    handoff:"Segunda PR del relevo. El martillo cae pesado pero limpio."
+  },
+  {
+    id:"seath", name:"Seath", title:"El Carente de Escamas", role:"Ejecutor 3",
+    hour:"19:00", model:"flash", img:"assets/seath.webp",
+    mission:"Cierra la tanda de ejecución con SU módulo. El último empuje de implementación antes del juicio nocturno.",
+    read:[["backlog/planes/YYYY/MM/DD.md","SU tarea del plan"],["src/","el código heredado del día"]],
+    write:[["src/<módulo>/","implementación + tests"]],
+    handoff:"Tercera PR. El conocimiento acumulado queda listo para ser juzgado."
+  },
+  {
+    id:"artorias", name:"Artorias", title:"El Abismoal Caminante", role:"Revisor-filtro",
+    hour:"21:00", model:"flash", img:"assets/artorias.webp",
+    mission:"Revisa técnicamente (tests, lint, juego), marca 💥 o ✅, y deja NOTAS DE GUSTO más la lista de \"qué no mergear\" para el día siguiente.",
+    read:[["backlog/TODO.md","qué había pendiente"],["PRs y ramas feat/*","el trabajo del día"],["src/ + tests","verificación real"]],
+    write:[["backlog/TODO.md","veredictos 💥/✅ y notas de gusto"],["docs/worklog/","su huella diaria"]],
+    handoff:"El filtro está hecho: lo digno pasa, lo roto queda señalado."
+  },
+  {
+    id:"gwyn", name:"Gwyn", title:"Señor de la Ceniza", role:"Revisor diseño + merge",
+    hour:"23:00", model:"luna", img:"assets/gwyn.webp",
+    mission:"Valida el DISEÑO, hace el MERGE final de las PRs aprobadas, deja sus propias notas de gusto e ideas, y reporta a Juanma. La última llama del día.",
+    read:[["backlog/TODO.md","los veredictos de Artorias"],["PRs y ramas feat/*","lo que merece entrar"],["docs/DESIGN.md","¿se respetó la visión?"]],
+    write:[["main","merge final de las PRs"],["backlog/TODO.md","validación de diseño y notas"],["Telegram de Juanma","informe diario"]],
+    handoff:"El informe vuela a Juanma. El Concilio duerme; la hoguera sigue encendida."
+  }
+];
+
+const ZONES = [
+  { code:"backlog/", desc:"LA COLA DE TRABAJO (vivo)", color:"#2f7a4a", files:[
+    { f:"TODO.md", d:"estados de tareas: pendiente / en curso / hecho", rd:["gwyndolin"], wr:["havel","artorias","gwyn"] },
+    { f:"planes/YYYY/MM/DD.md", d:"plan del HOY (histórico por fecha)", rd:["ornstein","smough","seath"], wr:["gwyndolin"] },
+    { f:"historia/", d:"ÍNDICE · PERSONAJES · ESCENARIOS · CAPITULOS", rd:["gwyndolin","havel"], wr:["manus"] },
+    { f:"MEJORAS.md", d:"buzón de auto-mejora del Concilio", rd:[], wr:["todos"] }
+  ]},
+  { code:"docs/", desc:"EL CONOCIMIENTO (permanente)", color:"#4a78a0", files:[
+    { f:"PROJECT-MAP.md", d:"índice maestro — lectura obligada (Paso 0)", rd:["todos"], wr:[] },
+    { f:"AGENTES.md", d:"roles del Concilio + delegación + skills", rd:["todos"], wr:[] },
+    { f:"DESIGN.md", d:"diseño del juego — la visión que no se rompe", rd:["todos"], wr:[] },
+    { f:"SKILLS-ANTISLOP.md", d:"guía anti-AI-slop", rd:["manus"], wr:[] },
+    { f:"worklog/YYYY/MM/DD.md", d:"bitácora diaria — la huella de cada uno", rd:["havel"], wr:["todos"] }
+  ]},
+  { code:"src/ · git", desc:"EL JUEGO (construido)", color:"#a04a4a", files:[
+    { f:"core/ render/", d:"lógica + tests · Pyxel — creado en Fase 0", rd:["havel","artorias"], wr:["ornstein","smough","seath"] },
+    { f:"ramas feat/* · PRs", d:"una rama por tarea, un juicio por rama", rd:["artorias","gwyn"], wr:["ornstein","smough","seath"] },
+    { f:"main", d:"tras el merge final de Gwyn", rd:[], wr:["gwyn"] },
+    { f:"Telegram → Juanma", d:"el informe nocturno", rd:[], wr:["gwyn"] }
+  ]}
+];
+
+const byId = Object.fromEntries(A.map(a=>[a.id,a]));
+const $ = s=>document.querySelector(s);
+
+function chip(kind,label){
+  const cls = kind==="r"?"chip r":"chip w";
+  return `<span class="${cls}">${label}</span>`;
+}
+
+function buildTimeline(){
+  $("#timeline").innerHTML = A.map(a=>`
+    <div class="step">
+      <div class="time">${a.hour}</div>
+      <div class="portrait-wrap">
+        <div class="portrait" data-open="${a.id}">
+          <img src="${a.img}" alt="${a.name}" loading="lazy">
+        </div>
+      </div>
+      <div class="step-info">
+        <div class="name">${a.name}</div>
+        <div class="role">${a.title} — ${a.role}</div>
+        <div class="desc">${a.mission.split(". ").slice(0,2).join(". ")}.</div>
+        <div class="chips">
+          ${a.write.slice(0,2).map(w=>chip("w",w[0])).join("")}
+          ${a.read.slice(0,1).map(r=>chip("r",r[0])).join("")}
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function buildRelay(){
+  $("#relay").innerHTML = A.map((a,i)=>`
+    ${i>0?`<div class="handoff"><div class="arrow-line"></div><div class="txt">${A[i-1].handoff}</div></div>`:""}
+    <div class="relay-node">
+      <img src="${a.img}" alt="${a.name}" data-open="${a.id}">
+      <div class="relay-body">
+        <div class="relay-head">
+          <span class="name">${a.hour} · ${a.name}</span>
+          <span class="role">${a.role}</span>
+          <span class="model">${a.model}</span>
+        </div>
+        <p class="relay-mission">${a.mission}</p>
+        <div class="io">
+          <div><b class="lb">LEE</b><span>${a.read.map(r=>`<code>${r[0]}</code>`).join(" ")}</span></div>
+          <div><b class="wb">ESCRIBE</b><span>${a.write.map(w=>`<code>${w[0]}</code>`).join(" ")}</span></div>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function avatar(id,kind){
+  const a = byId[id];
+  return `<span class="avatar ${kind}" data-open="${id}" title="${a.name} (${kind==="rd"?"lee":"escribe"})"><img src="${a.img}" alt="${a.name}"></span>`;
+}
+
+function buildZones(){
+  $("#zones").innerHTML = ZONES.map(z=>`
+    <div class="zone" style="--zone-c:${z.color}">
+      <div class="zone-head"><code>${z.code}</code><small>${z.desc}</small></div>
+      ${z.files.map(f=>`
+        <div class="filerow" data-rd="${f.rd.join(" ")}" data-wr="${f.wr.join(" ")}">
+          <div class="fname">${f.f}</div>
+          <div class="fdesc">${f.d}</div>
+          <div class="avatars">
+            ${f.rd.filter(x=>x!=="todos").map(x=>avatar(x,"rd")).join("")}
+            ${f.wr.filter(x=>x!=="todos").map(x=>avatar(x,"wr")).join("")}
+            ${f.rd.includes("todos")?`<span class="fdesc" style="align-self:center;margin-left:4px">todos lo leen (Paso 0)</span>`:""}
+            ${f.wr.includes("todos")?`<span class="fdesc" style="align-self:center;margin-left:4px">cualquiera puede proponer</span>`:""}
+          </div>
+        </div>`).join("")}
+    </div>`).join("");
+
+  $("#agentbar").innerHTML = A.map(a=>`
+    <div class="ab-agent" data-focus="${a.id}">
+      <img src="${a.img}" alt="${a.name}">
+      <span class="ab-name">${a.name}</span>
+    </div>`).join("");
+
+  document.querySelectorAll("#agentbar .ab-agent").forEach(el=>{
+    el.addEventListener("mouseenter",()=>focusAgent(el.dataset.focus));
+    el.addEventListener("click",()=>openDrawer(el.dataset.focus));
+  });
+  document.querySelectorAll("#agentbar .ab-agent").forEach(el=>{
+    el.addEventListener("mouseleave",clearFocus);
+  });
+}
+
+let focusLock = null;
+function focusAgent(id){
+  if(focusLock && focusLock!==id) clearFocus(true);
+  focusLock = id;
+  document.querySelectorAll("#agentbar .ab-agent").forEach(x=>x.classList.toggle("on",x.dataset.focus===id));
+  document.querySelectorAll(".filerow").forEach(row=>{
+    const hit = row.dataset.rd.split(" ").includes(id) || row.dataset.wr.split(" ").includes(id);
+    row.classList.toggle("match",hit);
+    row.classList.toggle("dim",!hit);
+    row.querySelectorAll(".avatar").forEach(av=>{
+      av.classList.toggle("hl",av.dataset.open===id);
+    });
+  });
+}
+function clearFocus(force){
+  if(!force && focusLock===null) return;
+  focusLock = null;
+  document.querySelectorAll("#agentbar .ab-agent").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".filerow").forEach(row=>{
+    row.classList.remove("match","dim");
+    row.querySelectorAll(".avatar").forEach(av=>av.classList.remove("hl"));
+  });
+}
+
+function openDrawer(id){
+  const a = byId[id];
+  $("#drawerContent").innerHTML = `
+    <div class="drawer-hero">
+      <img src="${a.img}" alt="${a.name}">
+      <div class="dh-name">${a.name}</div>
+    </div>
+    <div class="drawer-body">
+      <div class="d-meta">
+        <span>${a.hour} Madrid</span>
+        <span>${a.model}</span>
+        <span>${a.role}</span>
+      </div>
+      <p style="font-style:italic;color:var(--ember-bright)">&ldquo;${a.title}&rdquo;</p>
+      <div class="d-sec mission"><h4>Misión</h4><p>${a.mission}</p></div>
+      <div class="d-sec"><h4>Lee · interpreta</h4>
+        <ul class="d-list read">${a.read.map(r=>`<li><code>${r[0]}</code> — ${r[1]}</li>`).join("")}</ul>
+      </div>
+      <div class="d-sec"><h4>Escribe · entrega</h4>
+        <ul class="d-list write">${a.write.map(w=>`<li><code>${w[0]}</code> — ${w[1]}</li>`).join("")}</ul>
+      </div>
+    </div>`;
+  $("#drawer").classList.add("open");
+  $("#drawerBg").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeDrawer(){
+  $("#drawer").classList.remove("open");
+  $("#drawerBg").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+document.addEventListener("click",e=>{
+  const t = e.target.closest("[data-open]");
+  if(t) openDrawer(t.dataset.open);
+});
+$("#drawerClose").addEventListener("click",closeDrawer);
+$("#drawerBg").addEventListener("click",closeDrawer);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeDrawer(); });
+
+document.querySelectorAll("nav.tabs button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.remove("on"));
+    btn.classList.add("on");
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+    $("#view-"+btn.dataset.view).classList.add("on");
+  });
+});
+
+buildTimeline();
+buildRelay();
+buildZones();
+</script>
+</body>
+</html>

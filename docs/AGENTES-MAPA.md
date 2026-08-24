@@ -7,6 +7,11 @@
 > - **En GitHub**: el repo los renderiza solo (`.md` con bloques ```mermaid```).
 > - **En Obsidian**: instala el plugin *Mermaid* (o soporte nativo) para verlos.
 > - En local, abre este archivo en cualquier visor de Markdown con Mermaid.
+>
+> 🔥 **VERSIÓN INTERACTIVA:** este Mermaid es el respaldo en texto. La versión
+> visual completa (retratos, flujo animado, 3 niveles de detalle) está en
+> **`docs/mapa/index.html`** — ábrelo en cualquier navegador. También sirve en
+> GitHub Pages (`/docs/mapa/`).
 
 ---
 
