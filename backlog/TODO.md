@@ -61,6 +61,14 @@
   jamás decide semántica de comandos) y UX dual (eventos compartidos core→HUD/
   terminal, mapa diegético estilo Slay the Spire, legibilidad>espectáculo).
   Incluye checklist de 8 directrices para el Diseñador Jefe (P1–P5).
+- `[HECHO]` (24/08) **Skills anti-slop documentados** — Manus: `docs/SKILLS-ANTISLOP.md`
+  definitivo (relanzado tras 2 fallos 503 del proveedor). 3 capas: filtro humanizer
+  (34 patrones + equivalencias españolas + grep de palabras trampa), craft por
+  superficie (narrativa ambiental Souls para niveles, diálogo reactivo Hades/GDC
+  2021, barks ≤12 palabras, ficha de voz obligatoria por NPC con fila "nunca
+  diría", item descriptions dato técnico + grieta humana) e integración en el
+  concilio (auto-pass anti-slop documentado en cada commit, checklist de 10
+  puntos, revisión Ornstein/Smough cita patrón+línea al rechazar).
 - `[PENDIENTE]` (24/08) Validar fuente bitmap legible para la terminal in-game
   (5×7 aprox., paleta CRT) con capturas reales en Pyxel — Research Stack:
   es EL riesgo visual detectado; resolverlo ANTES del Diseñador P4 (dopamina/UX
