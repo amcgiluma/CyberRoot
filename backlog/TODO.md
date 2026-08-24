@@ -73,6 +73,13 @@
   (5×7 aprox., paleta CRT) con capturas reales en Pyxel — Research Stack:
   es EL riesgo visual detectado; resolverlo ANTES del Diseñador P4 (dopamina/UX
   del 26/08) para que el diseño de HUD parta de un texto que se lee bien.
+- `[PENDIENTE]` (24/08) **Definir el protocolo de TESTEO DIARIO del Concilio** en
+  la Fase 0 (→ `docs/TESTEO-DIARIO.md`, lo plantea el Diseñador P5). Tres tester
+  con CAPA distinta: Havel 07:00 (lo nuevo por git diff + smoke del conjunto +
+  ideas, "¿mola?"), Artorias 21:00 (PRs/ramas técnicamente: tests/lint/juego,
+  "¿está bien hecho?"), Gwyn 23:00 (diseño y sabor en conjunto + coherencia,
+  "¿es buen juego?"). La ZONA de testeo del día la deja Gwyn al cierre (23:00)
+  → Havel la lee a las 07:00. Evitar pisarse entre los 3.
 - `[PENDIENTE]` (23/08) Gate de Juanma sobre `docs/DESIGN.md` al cerrar la Fase 0.
   ↩ (24/08) El gate debe incluir también ratificar Pyxel como stack definitivo
   (recomendación del research: SÍ).
