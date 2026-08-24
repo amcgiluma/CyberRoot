@@ -384,6 +384,18 @@ footer .souls{
   font-size:12px;margin-bottom:10px;
 }
 
+.lang-switch{
+  position:fixed;top:14px;right:14px;z-index:60;display:flex;
+  border:1px solid var(--line);background:var(--panel);
+  box-shadow:0 0 14px rgba(0,0,0,.5);
+}
+.lang-switch button{
+  font-family:"Cinzel",serif;font-size:12px;font-weight:700;letter-spacing:.1em;
+  background:none;border:none;color:var(--ash-dim);
+  padding:8px 13px;cursor:pointer;transition:all .2s;
+}
+.lang-switch button.on{color:var(--ember-bright);background:rgba(232,134,46,.12)}
+
 @media(max-width:640px){
   .timeline::before{left:50px}
   .step,.step:nth-child(even){grid-template-columns:100px 1fr}
@@ -398,57 +410,62 @@ footer .souls{
 </head>
 <body>
 
+<div class="lang-switch">
+  <button id="langEs">ES</button>
+  <button id="langEn">EN</button>
+</div>
+
 <header>
   <div class="sigil">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
       <path d="M12 2 L14.5 9 L22 12 L14.5 15 L12 22 L9.5 15 L2 12 L9.5 9 Z" fill="#e8862e" opacity=".9"/>
     </svg>
   </div>
-  <h1>CYBERROOT · EL CONCILIO</h1>
-  <p class="sub">Ocho guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.</p>
+  <h1 data-i18n="title">CYBERROOT · EL CONCILIO</h1>
+  <p class="sub" data-i18n="subtitle">Ocho guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.</p>
   <div class="rule"></div>
 </header>
 
 <nav class="tabs">
-  <button data-view="concilio" class="on">I · El Concilio</button>
-  <button data-view="flujo">II · Flujo del Día</button>
-  <button data-view="mapa">III · Mapa del Reino</button>
+  <button data-view="concilio" class="on" data-i18n="tab1">I · El Concilio</button>
+  <button data-view="flujo" data-i18n="tab2">II · Flujo del Día</button>
+  <button data-view="mapa" data-i18n="tab3">III · Mapa del Reino</button>
 </nav>
 
 <main>
 
   <section class="view on" id="view-concilio">
-    <p class="view-intro">Los ocho agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.</p>
+    <p class="view-intro" data-i18n="intro1">Los ocho agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.</p>
     <div class="legend">
-      <span><i class="lr"></i> Lee / interpreta</span>
-      <span><i class="lw"></i> Escribe / entrega</span>
+      <span><i class="lr"></i> <em data-i18n="legendR">Lee / interpreta</em></span>
+      <span><i class="lw"></i> <em data-i18n="legendW">Escribe / entrega</em></span>
     </div>
     <div class="timeline" id="timeline"></div>
   </section>
 
   <section class="view" id="view-flujo">
-    <p class="view-intro">El relevo completo de una jornada: qué recibe cada guardián, qué hace y qué deja tras de sí para el siguiente.</p>
+    <p class="view-intro" data-i18n="intro2">El relevo completo de una jornada: qué recibe cada guardián, qué hace y qué deja tras de sí para el siguiente.</p>
     <div class="relay" id="relay"></div>
     <div class="final-report">
       <div class="who">GWYN → JUANMA</div>
-      <p style="margin-top:6px;font-size:15.5px">Al cierre de cada día, el informe final llega a Telegram: qué se hizo, qué se rompió y qué aguarda en el alba.</p>
+      <p style="margin-top:6px;font-size:15.5px" data-i18n="finalReport">Al cierre de cada día, el informe final llega a Telegram: qué se hizo, qué se rompió y qué aguarda en el alba.</p>
     </div>
   </section>
 
   <section class="view" id="view-mapa">
-    <p class="view-intro">Las tres regiones del repositorio y quién pisa cada rincón. Pasa el cursor por un agente para iluminar su territorio; haz clic para ver su ficha.</p>
+    <p class="view-intro" data-i18n="intro3">Las tres regiones del repositorio y quién pisa cada rincón. Pasa el cursor por un agente para iluminar su territorio; haz clic para ver su ficha.</p>
     <div class="agentbar" id="agentbar"></div>
     <div class="golden">
-      <h3>La Regla de Oro — Paso 0</h3>
+      <h3 data-i18n="goldenTitle">La Regla de Oro — Paso 0</h3>
       <ol>
-        <li><code>docs/PROJECT-MAP.md</code> → visión general</li>
-        <li><code>docs/AGENTES.md</code> → qué hace cada agente</li>
-        <li><code>backlog/TODO.md</code> → estados</li>
-        <li><code>docs/DESIGN.md</code> → la visión que no puedes romper</li>
-        <li>(según tu rol) planes · historia · investigación</li>
-        <li><code>backlog/MEJORAS.md</code> → auto-mejora pendiente</li>
+        <li data-i18n="g1"><code>docs/PROJECT-MAP.md</code> → visión general</li>
+        <li data-i18n="g2"><code>docs/AGENTES.md</code> → qué hace cada agente</li>
+        <li data-i18n="g3"><code>backlog/TODO.md</code> → estados</li>
+        <li data-i18n="g4"><code>docs/DESIGN.md</code> → la visión que no puedes romper</li>
+        <li data-i18n="g5">(según tu rol) planes · historia · investigación</li>
+        <li data-i18n="g6"><code>backlog/MEJORAS.md</code> → auto-mejora pendiente</li>
       </ol>
-      <p class="never">Nunca leas el código entero del repo. Solo lo que tu tarea demande.</p>
+      <p class="never" data-i18n="goldenNever">Nunca leas el código entero del repo. Solo lo que tu tarea demande.</p>
     </div>
     <div class="zones" id="zones"></div>
   </section>
@@ -463,97 +480,209 @@ footer .souls{
 
 <footer>
   <p class="souls">◆ PREPARE TO MERGE ◆</p>
-  <p>CyberRoot — El Concilio de los Ocho</p>
-  <p>Retratos © FromSoftware / darksouls.fandom.com — uso decorativo sin ánimo de lucro</p>
+  <p data-i18n="footerLine">CyberRoot — El Concilio de los Ocho</p>
+  <p data-i18n="footerCredit">Retratos © FromSoftware / darksouls.fandom.com — uso decorativo sin ánimo de lucro</p>
 </footer>
 
 <script>
+let lang = localStorage.getItem("cyberroot-lang") || "es";
+const L = o => o[lang];
+
+const UI = {
+  title:{es:"CYBERROOT · EL CONCILIO",en:"CYBERROOT · THE COUNCIL"},
+  subtitle:{es:"Ocho guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.",en:"Eight guardians keep watch over the realm in shifts. None rest; none tread on another."},
+  tab1:{es:"I · El Concilio",en:"I · The Council"},
+  tab2:{es:"II · Flujo del Día",en:"II · Daily Flow"},
+  tab3:{es:"III · Mapa del Reino",en:"III · Map of the Realm"},
+  intro1:{es:"Los ocho agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.",en:"The eight agents, in shift order (Madrid time). Click any portrait to open their full card."},
+  intro2:{es:"El relevo completo de una jornada: qué recibe cada guardián, qué hace y qué deja tras de sí para el siguiente.",en:"The full relay of a day: what each guardian receives, what they do, and what they leave behind for the next."},
+  intro3:{es:"Las tres regiones del repositorio y quién pisa cada rincón. Pasa el cursor por un agente para iluminar su territorio; haz clic para ver su ficha.",en:"The three regions of the repository and who walks every corner. Hover an agent to light up their territory; click to see their card."},
+  legendR:{es:"Lee / interpreta",en:"Reads / interprets"},
+  legendW:{es:"Escribe / entrega",en:"Writes / delivers"},
+  finalReport:{es:"Al cierre de cada día, el informe final llega a Telegram: qué se hizo, qué se rompió y qué aguarda en el alba.",en:"At the close of each day, the final report reaches Telegram: what was done, what broke, and what awaits at dawn."},
+  goldenTitle:{es:"La Regla de Oro — Paso 0",en:"The Golden Rule — Step 0"},
+  g1:{es:'<code>docs/PROJECT-MAP.md</code> → visión general',en:'<code>docs/PROJECT-MAP.md</code> → big-picture view'},
+  g2:{es:'<code>docs/AGENTES.md</code> → qué hace cada agente',en:'<code>docs/AGENTES.md</code> → what each agent does'},
+  g3:{es:'<code>backlog/TODO.md</code> → estados',en:'<code>backlog/TODO.md</code> → statuses'},
+  g4:{es:'<code>docs/DESIGN.md</code> → la visión que no puedes romper',en:'<code>docs/DESIGN.md</code> → the vision you must not break'},
+  g5:{es:'(según tu rol) planes · historia · investigación',en:'(per your role) plans · story · research'},
+  g6:{es:'<code>backlog/MEJORAS.md</code> → auto-mejora pendiente',en:'<code>backlog/MEJORAS.md</code> → pending self-improvement'},
+  goldenNever:{es:"Nunca leas el código entero del repo. Solo lo que tu tarea demande.",en:"Never read the whole repo's code. Only what your task demands."},
+  reads:{es:"LEE",en:"READS"},
+  writes:{es:"ESCRIBE",en:"WRITES"},
+  mission:{es:"Misión",en:"Mission"},
+  drawerReads:{es:"Lee · interpreta",en:"Reads · interprets"},
+  drawerWrites:{es:"Escribe · entrega",en:"Writes · delivers"},
+  madrid:{es:"Madrid",en:"Madrid"},
+  allRead:{es:"todos lo leen (Paso 0)",en:"everyone reads it (Step 0)"},
+  allWrite:{es:"cualquiera puede proponer",en:"anyone may propose"},
+  readsHint:{es:"lee",en:"reads"},
+  writesHint:{es:"escribe",en:"writes"},
+  footerLine:{es:"CyberRoot — El Concilio de los Ocho",en:"CyberRoot — The Council of Eight"},
+  footerCredit:{es:"Retratos © FromSoftware / darksouls.fandom.com — uso decorativo sin ánimo de lucro",en:"Portraits © FromSoftware / darksouls.fandom.com — decorative, non-commercial use"}
+};
+
 const A = [
   {
-    id:"manus", name:"Manus", title:"El Padre del Abismo", role:"Historiador",
-    hour:"03:00", model:"flash", img:"assets/manus.webp",
-    mission:"Despierta antes que nadie y escribe la HISTORIA del día desde el plot, en prosa humanizada. El pasado de cada jornada queda sellado bajo su pluma.",
-    read:[["docs/DESIGN.md","la visión que narra"],["docs/SKILLS-ANTISLOP.md","guía de estilo anti-AI-slop"],["backlog/TODO.md","contexto del día"]],
-    write:[["backlog/historia/<fecha>.md","la crónica del día"]],
-    handoff:"Deja la crónica escrita. El sueño del abismo guarda el registro."
+    id:"manus", name:"Manus", hour:"03:00", model:"flash", img:"assets/manus.webp",
+    title:{es:"El Padre del Abismo",en:"Father of the Abyss"},
+    role:{es:"Historiador",en:"Historian"},
+    mission:{
+      es:"Despierta antes que nadie y escribe la HISTORIA del día desde el plot, en prosa humanizada. El pasado de cada jornada queda sellado bajo su pluma.",
+      en:"Wakes before anyone else and writes the day's STORY from the plot, in humanized prose. Each day's past is sealed under his quill."},
+    read:[
+      ["docs/DESIGN.md",{es:"la visión que narra",en:"the vision he narrates"}],
+      ["docs/SKILLS-ANTISLOP.md",{es:"guía de estilo anti-AI-slop",en:"anti-AI-slop style guide"}],
+      ["backlog/TODO.md",{es:"contexto del día",en:"context for the day"}]],
+    write:[
+      ["backlog/historia/<fecha>.md",{es:"la crónica del día",en:"the day's chronicle"}]],
+    handoff:{
+      es:"Deja la crónica escrita. El sueño del abismo guarda el registro.",
+      en:"He leaves the chronicle written. The abyss's dream keeps the record."}
   },
   {
-    id:"havel", name:"Havel", title:"La Roca", role:"Vidente-creativo",
-    hour:"07:00", model:"flash", img:"assets/havel.webp",
-    mission:"JUEGA el juego con sus propias manos, GENERA ideas nuevas (capítulos, mecánicas, comandos) y anota los bugs que encuentra. La crítica de diseño no es suya: eso lo firman Artorias y Gwyn.",
-    read:[["docs/worklog/","la bitácora de ayer"],["build jugable de src/","juega el juego real"]],
-    write:[["backlog/TODO.md","ideas, bugs e inspiraciones"],["backlog/historia/","chispas narrativas"]],
-    handoff:"Su lista de ideas y bugs alimenta el plan de mediodía."
+    id:"havel", name:"Havel", hour:"07:00", model:"flash", img:"assets/havel.webp",
+    title:{es:"La Roca",en:"The Rock"},
+    role:{es:"Vidente-creativo",en:"Seer-creator"},
+    mission:{
+      es:"JUEGA el juego con sus propias manos, GENERA ideas nuevas (capítulos, mecánicas, comandos) y anota los bugs que encuentra. La crítica de diseño no es suya: eso lo firman Artorias y Gwyn.",
+      en:"PLAYS the game with his own hands, GENERATES new ideas (chapters, mechanics, commands) and notes the bugs he finds. Design critique is not his call: Artorias and Gwyn sign that."},
+    read:[
+      ["docs/worklog/",{es:"la bitácora de ayer",en:"yesterday's log"}],
+      ["build jugable de src/",{es:"juega el juego real",en:"plays the real game"}]],
+    write:[
+      ["backlog/TODO.md",{es:"ideas, bugs e inspiraciones",en:"ideas, bugs and inspirations"}],
+      ["backlog/historia/",{es:"chispas narrativas",en:"narrative sparks"}]],
+    handoff:{
+      es:"Su lista de ideas y bugs alimenta el plan de mediodía.",
+      en:"His list of ideas and bugs feeds the noon plan."}
   },
   {
-    id:"gwyndolin", name:"Gwyndolin", title:"Sol Oscuro", role:"Planificador",
-    hour:"11:00", model:"pro", img:"assets/gwyndolin.webp",
-    mission:"Convierte TODO y las log-ideas en el PLAN DE HOY con tareas repartidas por módulo. Es la mano invisible que ordena la fila del Concilio.",
-    read:[["backlog/TODO.md","tareas e ideas pendientes"],["backlog/historia/","contexto narrativo"],["docs/DESIGN.md","la visión intocable"],["docs/AGENTES.md","quién es quién"]],
-    write:[["backlog/planes/YYYY/MM/DD.md","el plan de HOY, tarea a tarea"],["backlog/TODO.md","estados actualizados"]],
-    handoff:"Publica el plan. Los tres ejecutores ya tienen su misión."
+    id:"gwyndolin", name:"Gwyndolin", hour:"11:00", model:"pro", img:"assets/gwyndolin.webp",
+    title:{es:"Sol Oscuro",en:"Dark Sun"},
+    role:{es:"Planificador",en:"Planner"},
+    mission:{
+      es:"Convierte TODO y las log-ideas en el PLAN DE HOY con tareas repartidas por módulo. Es la mano invisible que ordena la fila del Concilio.",
+      en:"Turns TODO and log-ideas into TODAY'S PLAN with tasks split by module. The invisible hand that lines up the Council."},
+    read:[
+      ["backlog/TODO.md",{es:"tareas e ideas pendientes",en:"pending tasks and ideas"}],
+      ["backlog/historia/",{es:"contexto narrativo",en:"narrative context"}],
+      ["docs/DESIGN.md",{es:"la visión intocable",en:"the untouchable vision"}],
+      ["docs/AGENTES.md",{es:"quién es quién",en:"who is who"}]],
+    write:[
+      ["backlog/planes/YYYY/MM/DD.md",{es:"el plan de HOY, tarea a tarea",en:"TODAY's plan, task by task"}],
+      ["backlog/TODO.md",{es:"estados actualizados",en:"updated statuses"}]],
+    handoff:{
+      es:"Publica el plan. Los tres ejecutores ya tienen su misión.",
+      en:"He publishes the plan. The three executors already have their mission."}
   },
   {
-    id:"ornstein", name:"Ornstein", title:"Mata-Dragones", role:"Ejecutor 1",
-    hour:"13:00", model:"flash", img:"assets/ornstein.webp",
-    mission:"Implementa SU módulo del plan. Además construye y mantiene el harness de playtest: el campo de pruebas donde todo debe sobrevivir.",
-    read:[["backlog/planes/YYYY/MM/DD.md","SU tarea del plan"],["src/","el código que toca extender"]],
-    write:[["src/<módulo>/","implementación + tests"],["tools/ · harness","playtest automatizado"]],
-    handoff:"PR abierta con tests. La lanza deja el primer trofeo del día."
+    id:"ornstein", name:"Ornstein", hour:"13:00", model:"flash", img:"assets/ornstein.webp",
+    title:{es:"Mata-Dragones",en:"Dragonslayer"},
+    role:{es:"Ejecutor 1",en:"Executor 1"},
+    mission:{
+      es:"Implementa SU módulo del plan. Además construye y mantiene el harness de playtest: el campo de pruebas donde todo debe sobrevivir.",
+      en:"Implements HIS module of the plan. Also builds and maintains the playtest harness: the proving ground everything must survive."},
+    read:[
+      ["backlog/planes/YYYY/MM/DD.md",{es:"SU tarea del plan",en:"HIS task from the plan"}],
+      ["src/",{es:"el código que toca extender",en:"the code he is to extend"}]],
+    write:[
+      ["src/<módulo>/",{es:"implementación + tests",en:"implementation + tests"}],
+      ["tools/ · harness",{es:"playtest automatizado",en:"automated playtest"}]],
+    handoff:{
+      es:"PR abierta con tests. La lanza deja el primer trofeo del día.",
+      en:"PR opened with tests. The spear claims the day's first trophy."}
   },
   {
-    id:"smough", name:"Smough", title:"El Verdugo", role:"Ejecutor 2",
-    hour:"16:00", model:"flash", img:"assets/smough.webp",
-    mission:"Implementa SU módulo del plan, sobre los hombros de lo que Ornstein dejó a mediodía.",
-    read:[["backlog/planes/YYYY/MM/DD.md","SU tarea del plan"],["src/","el estado del código a las 16:00"]],
-    write:[["src/<módulo>/","implementación + tests"]],
-    handoff:"Segunda PR del relevo. El martillo cae pesado pero limpio."
+    id:"smough", name:"Smough", hour:"16:00", model:"flash", img:"assets/smough.webp",
+    title:{es:"El Verdugo",en:"The Executioner"},
+    role:{es:"Ejecutor 2",en:"Executor 2"},
+    mission:{
+      es:"Implementa SU módulo del plan, sobre los hombros de lo que Ornstein dejó a mediodía.",
+      en:"Implements HIS module of the plan, on the shoulders of what Ornstein left at noon."},
+    read:[
+      ["backlog/planes/YYYY/MM/DD.md",{es:"SU tarea del plan",en:"HIS task from the plan"}],
+      ["src/",{es:"el estado del código a las 16:00",en:"the state of the code at 16:00"}]],
+    write:[
+      ["src/<módulo>/",{es:"implementación + tests",en:"implementation + tests"}]],
+    handoff:{
+      es:"Segunda PR del relevo. El martillo cae pesado pero limpio.",
+      en:"Second PR of the relay. The hammer falls heavy but clean."}
   },
   {
-    id:"seath", name:"Seath", title:"El Carente de Escamas", role:"Ejecutor 3",
-    hour:"19:00", model:"flash", img:"assets/seath.webp",
-    mission:"Cierra la tanda de ejecución con SU módulo. El último empuje de implementación antes del juicio nocturno.",
-    read:[["backlog/planes/YYYY/MM/DD.md","SU tarea del plan"],["src/","el código heredado del día"]],
-    write:[["src/<módulo>/","implementación + tests"]],
-    handoff:"Tercera PR. El conocimiento acumulado queda listo para ser juzgado."
+    id:"seath", name:"Seath", hour:"19:00", model:"flash", img:"assets/seath.webp",
+    title:{es:"El Carente de Escamas",en:"The Scaleless"},
+    role:{es:"Ejecutor 3",en:"Executor 3"},
+    mission:{
+      es:"Cierra la tanda de ejecución con SU módulo. El último empuje de implementación antes del juicio nocturno.",
+      en:"Closes the execution round with HIS module. The final implementation push before the night's judgement."},
+    read:[
+      ["backlog/planes/YYYY/MM/DD.md",{es:"SU tarea del plan",en:"HIS task from the plan"}],
+      ["src/",{es:"el código heredado del día",en:"the code inherited from the day"}]],
+    write:[
+      ["src/<módulo>/",{es:"implementación + tests",en:"implementation + tests"}]],
+    handoff:{
+      es:"Tercera PR. El conocimiento acumulado queda listo para ser juzgado.",
+      en:"Third PR. The gathered knowledge stands ready for judgement."}
   },
   {
-    id:"artorias", name:"Artorias", title:"El Abismoal Caminante", role:"Revisor-filtro",
-    hour:"21:00", model:"flash", img:"assets/artorias.webp",
-    mission:"Revisa técnicamente (tests, lint, juego), marca 💥 o ✅, y deja NOTAS DE GUSTO más la lista de \"qué no mergear\" para el día siguiente.",
-    read:[["backlog/TODO.md","qué había pendiente"],["PRs y ramas feat/*","el trabajo del día"],["src/ + tests","verificación real"]],
-    write:[["backlog/TODO.md","veredictos 💥/✅ y notas de gusto"],["docs/worklog/","su huella diaria"]],
-    handoff:"El filtro está hecho: lo digno pasa, lo roto queda señalado."
+    id:"artorias", name:"Artorias", hour:"21:00", model:"flash", img:"assets/artorias.webp",
+    title:{es:"El Abismoal Caminante",en:"The Abysswalker"},
+    role:{es:"Revisor-filtro",en:"Gatekeeper reviewer"},
+    mission:{
+      es:"Revisa técnicamente (tests, lint, juego), marca 💥 o ✅, y deja NOTAS DE GUSTO más la lista de \u201cqué no mergear\u201d para el día siguiente.",
+      en:"Reviews technically (tests, lint, game), marks 💥 or ✅, and leaves TASTE NOTES plus the \u201cwhat not to merge\u201d list for the next day."},
+    read:[
+      ["backlog/TODO.md",{es:"qué había pendiente",en:"what was pending"}],
+      ["PRs y ramas feat/*",{es:"el trabajo del día",en:"the day's work"}],
+      ["src/ + tests",{es:"verificación real",en:"real verification"}]],
+    write:[
+      ["backlog/TODO.md",{es:"veredictos 💥/✅ y notas de gusto",en:"💥/✅ verdicts and taste notes"}],
+      ["docs/worklog/",{es:"su huella diaria",en:"his daily trace"}]],
+    handoff:{
+      es:"El filtro está hecho: lo digno pasa, lo roto queda señalado.",
+      en:"The filtering is done: the worthy pass, the broken are marked."}
   },
   {
-    id:"gwyn", name:"Gwyn", title:"Señor de la Ceniza", role:"Revisor diseño + merge",
-    hour:"23:00", model:"luna", img:"assets/gwyn.webp",
-    mission:"Valida el DISEÑO, hace el MERGE final de las PRs aprobadas, deja sus propias notas de gusto e ideas, reporta a Juanma, y APLICA la auto-mejora del Concilio. La última llama del día.",
-    read:[["backlog/TODO.md","los veredictos de Artorias"],["PRs y ramas feat/*","lo que merece entrar"],["docs/DESIGN.md","¿se respetó la visión?"],["backlog/historia/","¿encaja con la narrativa?"],["backlog/MEJORAS.md","propuestas de auto-mejora"]],
-    write:[["main","merge final de las PRs"],["backlog/TODO.md","validación de diseño y notas"],["backlog/MEJORAS.md","decide y aplica (hermes cron edit)"],["Telegram de Juanma","informe diario"]],
-    handoff:"El informe vuela a Juanma. El Concilio duerme; la hoguera sigue encendida."
+    id:"gwyn", name:"Gwyn", hour:"23:00", model:"luna", img:"assets/gwyn.webp",
+    title:{es:"Señor de la Ceniza",en:"Lord of Cinder"},
+    role:{es:"Revisor diseño + merge",en:"Design reviewer + merge"},
+    mission:{
+      es:"Valida el DISEÑO, hace el MERGE final de las PRs aprobadas, deja sus propias notas de gusto e ideas, y reporta a Juanma. La última llama del día.",
+      en:"Validates the DESIGN, performs the final MERGE of approved PRs, leaves his own taste notes and ideas, and reports to Juanma. The day's last flame."},
+    read:[
+      ["backlog/TODO.md",{es:"los veredictos de Artorias",en:"Artorias's verdicts"}],
+      ["PRs y ramas feat/*",{es:"lo que merece entrar",en:"what deserves to land"}],
+      ["docs/DESIGN.md",{es:"¿se respetó la visión?",en:"was the vision honored?"}]],
+    write:[
+      ["main",{es:"merge final de las PRs",en:"final PR merge"}],
+      ["backlog/TODO.md",{es:"validación de diseño y notas",en:"design validation and notes"}],
+      ["Telegram de Juanma",{es:"informe diario",en:"daily report"}]],
+    handoff:{
+      es:"El informe vuela a Juanma. El Concilio duerme; la hoguera sigue encendida.",
+      en:"The report flies to Juanma. The Council sleeps; the bonfire stays lit."}
   }
 ];
 
 const ZONES = [
-  { code:"backlog/", desc:"LA COLA DE TRABAJO (vivo)", color:"#2f7a4a", files:[
-    { f:"TODO.md", d:"estados de tareas: pendiente / en curso / hecho", rd:["gwyndolin"], wr:["havel","artorias","gwyn"] },
-    { f:"planes/YYYY/MM/DD.md", d:"plan del HOY (histórico por fecha)", rd:["ornstein","smough","seath"], wr:["gwyndolin"] },
-    { f:"historia/", d:"ÍNDICE · PERSONAJES · ESCENARIOS · CAPITULOS", rd:["gwyndolin","havel"], wr:["manus"] },
-    { f:"MEJORAS.md", d:"buzón de auto-mejora del Concilio — Gwyn la aplica", rd:["gwyn"], wr:["todos"] }
+  { code:"backlog/", color:"#2f7a4a", desc:{es:"LA COLA DE TRABAJO (vivo)",en:"THE WORK QUEUE (alive)"}, files:[
+    { f:"TODO.md", rd:["gwyndolin"], wr:["havel","artorias","gwyn"], d:{es:"estados de tareas: pendiente / en curso / hecho",en:"task statuses: pending / in progress / done"} },
+    { f:"planes/YYYY/MM/DD.md", rd:["ornstein","smough","seath"], wr:["gwyndolin"], d:{es:"plan del HOY (histórico por fecha)",en:"TODAY's plan (historical by date)"} },
+    { f:"historia/", rd:["gwyndolin","havel"], wr:["manus"], d:{es:"ÍNDICE · PERSONAJES · ESCENARIOS · CAPITULOS",en:"INDEX · CHARACTERS · SCENARIOS · CHAPTERS"} },
+    { f:"MEJORAS.md", rd:[], wr:["todos"], d:{es:"buzón de auto-mejora del Concilio",en:"the Council's self-improvement mailbox"} }
   ]},
-  { code:"docs/", desc:"EL CONOCIMIENTO (permanente)", color:"#4a78a0", files:[
-    { f:"PROJECT-MAP.md", d:"índice maestro — lectura obligada (Paso 0)", rd:["todos"], wr:[] },
-    { f:"AGENTES.md", d:"roles del Concilio + delegación + skills", rd:["todos"], wr:[] },
-    { f:"DESIGN.md", d:"diseño del juego — la visión que no se rompe", rd:["todos"], wr:[] },
-    { f:"SKILLS-ANTISLOP.md", d:"guía anti-AI-slop", rd:["manus"], wr:[] },
-    { f:"worklog/YYYY/MM/DD.md", d:"bitácora diaria — la huella de cada uno", rd:["havel"], wr:["todos"] }
+  { code:"docs/", color:"#4a78a0", desc:{es:"EL CONOCIMIENTO (permanente)",en:"THE KNOWLEDGE (permanent)"}, files:[
+    { f:"PROJECT-MAP.md", rd:["todos"], wr:[], d:{es:"índice maestro — lectura obligada (Paso 0)",en:"master index — mandatory reading (Step 0)"} },
+    { f:"AGENTES.md", rd:["todos"], wr:[], d:{es:"roles del Concilio + delegación + skills",en:"Council roles + delegation + skills"} },
+    { f:"DESIGN.md", rd:["todos"], wr:[], d:{es:"diseño del juego — la visión que no se rompe",en:"game design — the vision that must not break"} },
+    { f:"SKILLS-ANTISLOP.md", rd:["manus"], wr:[], d:{es:"guía anti-AI-slop",en:"anti-AI-slop guide"} },
+    { f:"worklog/YYYY/MM/DD.md", rd:["havel"], wr:["todos"], d:{es:"bitácora diaria — la huella de cada uno",en:"daily log — everyone's trace"} }
   ]},
-  { code:"src/ · git", desc:"EL JUEGO (construido)", color:"#a04a4a", files:[
-    { f:"core/ render/", d:"lógica + tests · Pyxel — creado en Fase 0", rd:["havel","artorias"], wr:["ornstein","smough","seath"] },
-    { f:"ramas feat/* · PRs", d:"una rama por tarea, un juicio por rama", rd:["artorias","gwyn"], wr:["ornstein","smough","seath"] },
-    { f:"main", d:"tras el merge final de Gwyn", rd:[], wr:["gwyn"] },
-    { f:"Telegram → Juanma", d:"el informe nocturno", rd:[], wr:["gwyn"] }
+  { code:"src/ · git", color:"#a04a4a", desc:{es:"EL JUEGO (construido)",en:"THE GAME (built)"}, files:[
+    { f:"core/ render/", rd:["havel","artorias"], wr:["ornstein","smough","seath"], d:{es:"lógica + tests · Pyxel — creado en Fase 0",en:"logic + tests · Pyxel — created in Phase 0"} },
+    { f:"ramas feat/* · PRs", rd:["artorias","gwyn"], wr:["ornstein","smough","seath"], d:{es:"una rama por tarea, un juicio por rama",en:"one branch per task, one judgement per branch"} },
+    { f:"main", rd:[], wr:["gwyn"], d:{es:"tras el merge final de Gwyn",en:"after Gwyn's final merge"} },
+    { f:"Telegram → Juanma", rd:[], wr:["gwyn"], d:{es:"el informe nocturno",en:"the nightly report"} }
   ]}
 ];
 
@@ -576,8 +705,8 @@ function buildTimeline(){
       <div class="step-info">
         <div class="time">${a.hour}</div>
         <div class="name">${a.name}</div>
-        <div class="role">${a.title} — ${a.role}</div>
-        <div class="desc">${a.mission.split(". ").slice(0,2).join(". ")}.</div>
+        <div class="role">${L(a.title)} — ${L(a.role)}</div>
+        <div class="desc">${L(a.mission).split(". ").slice(0,2).join(". ")}.</div>
         <div class="chips">
           ${a.write.slice(0,2).map(w=>chip("w",w[0])).join("")}
           ${a.read.slice(0,1).map(r=>chip("r",r[0])).join("")}
@@ -588,19 +717,19 @@ function buildTimeline(){
 
 function buildRelay(){
   $("#relay").innerHTML = A.map((a,i)=>`
-    ${i>0?`<div class="handoff"><div class="arrow-line"></div><div class="txt">${A[i-1].handoff}</div></div>`:""}
+    ${i>0?`<div class="handoff"><div class="arrow-line"></div><div class="txt">${L(A[i-1].handoff)}</div></div>`:""}
     <div class="relay-node">
       <img src="${a.img}" alt="${a.name}" data-open="${a.id}">
       <div class="relay-body">
         <div class="relay-head">
           <span class="name">${a.hour} · ${a.name}</span>
-          <span class="role">${a.role}</span>
+          <span class="role">${L(a.role)}</span>
           <span class="model">${a.model}</span>
         </div>
-        <p class="relay-mission">${a.mission}</p>
+        <p class="relay-mission">${L(a.mission)}</p>
         <div class="io">
-          <div><b class="lb">LEE</b><span>${a.read.map(r=>`<code>${r[0]}</code>`).join(" ")}</span></div>
-          <div><b class="wb">ESCRIBE</b><span>${a.write.map(w=>`<code>${w[0]}</code>`).join(" ")}</span></div>
+          <div><b class="lb">${UI.reads[lang]}</b><span>${a.read.map(r=>`<code>${r[0]}</code>`).join(" ")}</span></div>
+          <div><b class="wb">${UI.writes[lang]}</b><span>${a.write.map(w=>`<code>${w[0]}</code>`).join(" ")}</span></div>
         </div>
       </div>
     </div>`).join("");
@@ -608,22 +737,23 @@ function buildRelay(){
 
 function avatar(id,kind){
   const a = byId[id];
-  return `<span class="avatar ${kind}" data-open="${id}" title="${a.name} (${kind==="rd"?"lee":"escribe"})"><img src="${a.img}" alt="${a.name}"></span>`;
+  const hint = kind==="rd"?UI.readsHint[lang]:UI.writesHint[lang];
+  return `<span class="avatar ${kind}" data-open="${id}" title="${a.name} (${hint})"><img src="${a.img}" alt="${a.name}"></span>`;
 }
 
 function buildZones(){
   $("#zones").innerHTML = ZONES.map(z=>`
     <div class="zone" style="--zone-c:${z.color}">
-      <div class="zone-head"><code>${z.code}</code><small>${z.desc}</small></div>
+      <div class="zone-head"><code>${z.code}</code><small>${L(z.desc)}</small></div>
       ${z.files.map(f=>`
         <div class="filerow" data-rd="${f.rd.join(" ")}" data-wr="${f.wr.join(" ")}">
           <div class="fname">${f.f}</div>
-          <div class="fdesc">${f.d}</div>
+          <div class="fdesc">${L(f.d)}</div>
           <div class="avatars">
             ${f.rd.filter(x=>x!=="todos").map(x=>avatar(x,"rd")).join("")}
             ${f.wr.filter(x=>x!=="todos").map(x=>avatar(x,"wr")).join("")}
-            ${f.rd.includes("todos")?`<span class="fdesc" style="align-self:center;margin-left:4px">todos lo leen (Paso 0)</span>`:""}
-            ${f.wr.includes("todos")?`<span class="fdesc" style="align-self:center;margin-left:4px">cualquiera puede proponer</span>`:""}
+            ${f.rd.includes("todos")?`<span class="fdesc" style="align-self:center;margin-left:4px">${UI.allRead[lang]}</span>`:""}
+            ${f.wr.includes("todos")?`<span class="fdesc" style="align-self:center;margin-left:4px">${UI.allWrite[lang]}</span>`:""}
           </div>
         </div>`).join("")}
     </div>`).join("");
@@ -636,10 +766,8 @@ function buildZones(){
 
   document.querySelectorAll("#agentbar .ab-agent").forEach(el=>{
     el.addEventListener("mouseenter",()=>focusAgent(el.dataset.focus));
-    el.addEventListener("click",()=>openDrawer(el.dataset.focus));
-  });
-  document.querySelectorAll("#agentbar .ab-agent").forEach(el=>{
     el.addEventListener("mouseleave",clearFocus);
+    el.addEventListener("click",()=>openDrawer(el.dataset.focus));
   });
 }
 
@@ -676,17 +804,17 @@ function openDrawer(id){
     </div>
     <div class="drawer-body">
       <div class="d-meta">
-        <span>${a.hour} Madrid</span>
+        <span>${a.hour} ${UI.madrid[lang]}</span>
         <span>${a.model}</span>
-        <span>${a.role}</span>
+        <span>${L(a.role)}</span>
       </div>
-      <p style="font-style:italic;color:var(--ember-bright)">&ldquo;${a.title}&rdquo;</p>
-      <div class="d-sec mission"><h4>Misión</h4><p>${a.mission}</p></div>
-      <div class="d-sec"><h4>Lee · interpreta</h4>
-        <ul class="d-list read">${a.read.map(r=>`<li><code>${r[0]}</code> — ${r[1]}</li>`).join("")}</ul>
+      <p style="font-style:italic;color:var(--ember-bright)">&ldquo;${L(a.title)}&rdquo;</p>
+      <div class="d-sec mission"><h4>${UI.mission[lang]}</h4><p>${L(a.mission)}</p></div>
+      <div class="d-sec"><h4>${UI.drawerReads[lang]}</h4>
+        <ul class="d-list read">${a.read.map(r=>`<li><code>${r[0]}</code> — ${L(r[1])}</li>`).join("")}</ul>
       </div>
-      <div class="d-sec"><h4>Escribe · entrega</h4>
-        <ul class="d-list write">${a.write.map(w=>`<li><code>${w[0]}</code> — ${w[1]}</li>`).join("")}</ul>
+      <div class="d-sec"><h4>${UI.drawerWrites[lang]}</h4>
+        <ul class="d-list write">${a.write.map(w=>`<li><code>${w[0]}</code> — ${L(w[1])}</li>`).join("")}</ul>
       </div>
     </div>`;
   $("#drawer").classList.add("open");
@@ -697,6 +825,28 @@ function closeDrawer(){
   $("#drawer").classList.remove("open");
   $("#drawerBg").classList.remove("open");
   document.body.style.overflow="";
+}
+
+function applyStatic(){
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.dataset.i18n;
+    if(UI[k]) el.innerHTML = UI[k][lang];
+  });
+  document.documentElement.lang = lang;
+  document.title = lang==="es" ? "CyberRoot · El Concilio" : "CyberRoot · The Council";
+  $("#langEs").classList.toggle("on",lang==="es");
+  $("#langEn").classList.toggle("on",lang==="en");
+}
+
+function setLang(l){
+  lang = l;
+  localStorage.setItem("cyberroot-lang",l);
+  applyStatic();
+  buildTimeline();
+  buildRelay();
+  buildZones();
+  closeDrawer();
+  clearFocus(true);
 }
 
 document.addEventListener("click",e=>{
@@ -716,6 +866,10 @@ document.querySelectorAll("nav.tabs button").forEach(btn=>{
   });
 });
 
+$("#langEs").addEventListener("click",()=>setLang("es"));
+$("#langEn").addEventListener("click",()=>setLang("en"));
+
+applyStatic();
 buildTimeline();
 buildRelay();
 buildZones();
