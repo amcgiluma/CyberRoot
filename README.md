@@ -26,6 +26,12 @@ Cada uno firma su trabajo con su nombre.
 | 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | deepseek-v4-flash |
 | 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | deepseek-v4-flash |
 | 👑 | **Gwyn, Señor de la Ceniza** | 23:00 | Revisor de diseño + **MERGE final** | gpt-5.6-luna |
+
+> 🔥 **Mapa visual interactivo del Concilio**: retratos, flujo del día y mapa del
+> reino en 3 niveles de detalle →
+> **[amcgiluma.github.io/CyberRoot/mapa](https://amcgiluma.github.io/CyberRoot/mapa/)**
+> (fuente: [`docs/mapa/`](docs/mapa/))
+
 ---
 
 ## 🔄 EL FLUJO DIARIO
