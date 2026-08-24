@@ -132,10 +132,10 @@ main{max-width:1080px;margin:0 auto;padding:26px 18px 90px}
   background:linear-gradient(180deg,transparent,var(--line) 8%,var(--line) 92%,transparent);
 }
 .step{
-  position:relative;display:flex;align-items:center;
-  margin-bottom:38px;width:100%;
+  position:relative;display:grid;
+  grid-template-columns:1fr 72px 1fr;align-items:center;
+  margin-bottom:38px;
 }
-.step:nth-child(even){flex-direction:row-reverse}
 .step::after{
   content:"";position:absolute;left:50%;top:50%;z-index:2;
   width:9px;height:9px;background:var(--ember);
@@ -153,8 +153,8 @@ main{max-width:1080px;margin:0 auto;padding:26px 18px 90px}
   box-shadow:0 0 14px rgba(232,134,46,.25);
   margin-bottom:6px;
 }
-.portrait-wrap{width:45%;display:flex;justify-content:flex-end;padding-right:44px}
-.step:nth-child(even) .portrait-wrap{justify-content:flex-start;padding-right:0;padding-left:44px}
+.portrait-wrap{grid-column:1;grid-row:1;justify-self:end;display:flex}
+.step:nth-child(even) .portrait-wrap{grid-column:3;justify-self:start}
 .portrait{
   position:relative;width:132px;height:132px;cursor:pointer;flex-shrink:0;
   transition:transform .25s;
@@ -171,8 +171,8 @@ main{max-width:1080px;margin:0 auto;padding:26px 18px 90px}
   content:"";position:absolute;inset:-7px;border-radius:50%;
   border:1px dashed rgba(200,162,74,.4);
 }
-.step-info{width:55%;padding-left:36px}
-.step:nth-child(even) .step-info{text-align:right;padding-left:0;padding-right:36px}
+.step-info{grid-column:3;grid-row:1;max-width:100%}
+.step:nth-child(even) .step-info{grid-column:1;grid-row:1;text-align:right;justify-self:end}
 .step-info .name{
   font-family:"Cinzel",serif;font-weight:700;font-size:21px;
   color:var(--gold-bright);letter-spacing:.06em;
@@ -386,11 +386,12 @@ footer .souls{
 
 @media(max-width:640px){
   .timeline::before{left:24px}
-  .step,.step:nth-child(even){flex-direction:row;align-items:flex-start}
+  .step,.step:nth-child(even){grid-template-columns:56px 1fr}
   .step::after{left:24px}
-  .portrait-wrap,.step:nth-child(even) .portrait-wrap{width:auto;justify-content:flex-start;padding:0 16px 0 0}
+  .portrait-wrap,.step:nth-child(even) .portrait-wrap{grid-column:1;justify-self:start}
+  .step-info,.step:nth-child(even) .step-info{grid-column:2;text-align:left;justify-self:start}
   .portrait{width:84px;height:84px}
-  .step-info,.step:nth-child(even) .step-info{width:auto;text-align:left;padding:0}
+  .step-info,.step:nth-child(even) .step-info{padding:0;justify-self:start}
   .step:nth-child(even) .chips{justify-content:flex-start}
 }
 </style>
