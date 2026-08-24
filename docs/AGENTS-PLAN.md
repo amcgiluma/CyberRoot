@@ -224,6 +224,15 @@ src/<modulo>/
   ejecutor (o sus sub-agentes) complete en un turno, sin llenar su contexto.
   Si una idea es grande, la FRACCIONA en varias tareas con orden. Criterio:
   "un ejecutor la entiende sin releer todo y la acaba en su franja".
+- **INICIATIVA DE CURACIÓN:** decide TÚ qué toca hoy del TODO completo (da igual
+  la antigüedad de la tarea). Elige lo más valioso/interesante/urgente; no
+  repitas mecánicamente lo pendiente. Si algo antiguo sigue siendo importante,
+  tráelo; si no aporta, propón descartarlo.
+- **RAMAS HUÉRFANAS (regla explícita):** comprueba `git branch -a` y `gh pr list`.
+  Si hay una rama/PR de días atrás que quedó SIN cerrar (sin merge de Gwyn Y sin
+  rechazo), inclúyela en el plan de HOY: dale a su ejecutor un mini-plan para
+  terminarla y cerrarla. Ninguna rama muere en el limbo. Las correcciones de
+  ramas rechazadas por Gwyn también (el ejecutor las arregla primero).
 - Reparte trabajo entre Ornstein/Smough/Seath en módulos que NO colisionen.
 - Si requiere decisión importante: mensaje urgente a Juanma (Telegram) → ejecutarla
   al día siguiente. Solo casos excepcionales.
