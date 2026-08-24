@@ -42,7 +42,20 @@
 
 ### Fase 0 (research y diseño)
 - `[EN CURSO]` (23/08) Crons de Fase 0 configurados y activos (research stack/anti-slop/mecánicas 03-07h, diseño 11h, arquitectura 16h). →Mañana 24/08 empiezan a producir DESIGN.md + plot.
+- `[HECHO]` (24/08) **Research Stack completado** — agente Research Stack:
+  `docs/INVESTIGACION-STACK.md` pasado de preliminar a definitivo con fuentes
+  primarias verificadas. Pyxel CONFIRMADO (MIT, 17.7k★, v2.9.9, wasm OK,
+  `init(headless=True)` oficial = testeo autónomo garantizado). Separación
+  core/render CONFIRMADA y reforzada (reglas de frontera + RNG seedeada).
+  Riesgos documentados: bus factor=1 de Pyxel (plan B pygame-ce), fuente
+  bitmap para terminal in-game. Pendiente de ratificar por Juanma en el gate.
+- `[PENDIENTE]` (24/08) Validar fuente bitmap legible para la terminal in-game
+  (5×7 aprox., paleta CRT) con capturas reales en Pyxel — Research Stack:
+  es EL riesgo visual detectado; resolverlo ANTES del Diseñador P4 (dopamina/UX
+  del 26/08) para que el diseño de HUD parta de un texto que se lee bien.
 - `[PENDIENTE]` (23/08) Gate de Juanma sobre `docs/DESIGN.md` al cerrar la Fase 0.
+  ↩ (24/08) El gate debe incluir también ratificar Pyxel como stack definitivo
+  (recomendación del research: SÍ).
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** creados y PAUSADOS (Manus/Havel/Gwyndolin/Ornstein/Smough/Seath/Artorias/Gwyn). Se activan tras el gate.
 
 ### Backlog de ejecución
