@@ -136,15 +136,22 @@ main{max-width:1080px;margin:0 auto;padding:26px 18px 90px}
   margin-bottom:38px;width:100%;
 }
 .step:nth-child(even){flex-direction:row-reverse}
+.step::after{
+  content:"";position:absolute;left:50%;top:50%;z-index:2;
+  width:9px;height:9px;background:var(--ember);
+  transform:translate(-50%,-50%) rotate(45deg);
+  box-shadow:0 0 10px var(--ember);
+}
 .step .time{
-  position:absolute;left:50%;transform:translateX(-50%);z-index:2;
-  font-family:"Cinzel",serif;font-weight:700;font-size:15px;
+  display:inline-block;
+  font-family:"Cinzel",serif;font-weight:700;font-size:14px;
   color:var(--gold-bright);
   background:var(--bg);
   border:1px solid var(--gold);
-  padding:5px 14px;border-radius:999px;
+  padding:3px 12px;border-radius:999px;
   white-space:nowrap;
   box-shadow:0 0 14px rgba(232,134,46,.25);
+  margin-bottom:6px;
 }
 .portrait-wrap{width:46%;display:flex;justify-content:flex-end;padding-right:34px}
 .step:nth-child(even) .portrait-wrap{justify-content:flex-start;padding-right:0;padding-left:34px}
@@ -380,8 +387,8 @@ footer .souls{
 @media(max-width:640px){
   .timeline::before{left:24px}
   .step,.step:nth-child(even){flex-direction:row;align-items:flex-start}
-  .step .time{left:24px;top:-14px;transform:none;font-size:13px}
-  .portrait-wrap,.step:nth-child(even) .portrait-wrap{width:auto;justify-content:flex-start;padding:26px 16px 0 0}
+  .step::after{left:24px}
+  .portrait-wrap,.step:nth-child(even) .portrait-wrap{width:auto;justify-content:flex-start;padding:0 16px 0 0}
   .portrait{width:84px;height:84px}
   .step-info,.step:nth-child(even) .step-info{width:auto;text-align:left;padding:0}
   .step:nth-child(even) .chips{justify-content:flex-start}
@@ -560,13 +567,13 @@ function chip(kind,label){
 function buildTimeline(){
   $("#timeline").innerHTML = A.map(a=>`
     <div class="step">
-      <div class="time">${a.hour}</div>
       <div class="portrait-wrap">
         <div class="portrait" data-open="${a.id}">
           <img src="${a.img}" alt="${a.name}" loading="lazy">
         </div>
       </div>
       <div class="step-info">
+        <div class="time">${a.hour}</div>
         <div class="name">${a.name}</div>
         <div class="role">${a.title} — ${a.role}</div>
         <div class="desc">${a.mission.split(". ").slice(0,2).join(". ")}.</div>
