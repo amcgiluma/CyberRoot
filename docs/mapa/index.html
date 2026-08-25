@@ -397,14 +397,24 @@ footer .souls{
 .lang-switch button.on{color:var(--ember-bright);background:rgba(232,134,46,.12)}
 
 @media(max-width:640px){
-  .timeline::before{left:50px}
+  /* El Concilio: alineamos la línea temporal y el rombo al borde del retrato (84px, columna 100px),
+     no al centro de la pantalla — el retrato justificado a la izquierda ocupaba el rombo. */
+  .timeline::before{left:92px}
   .step,.step:nth-child(even){grid-template-columns:100px 1fr}
-  .step::after{left:50px}
+  .step::after{left:92px}
   .portrait-wrap,.step:nth-child(even) .portrait-wrap{grid-column:1;justify-self:start}
   .step-info,.step:nth-child(even) .step-info{grid-column:2;text-align:left;justify-self:start;padding-left:6px}
   .portrait{width:84px;height:84px}
   .step-info,.step:nth-child(even) .step-info{padding-top:4px;justify-self:start}
   .step:nth-child(even) .chips{justify-content:flex-start}
+  /* Flujo: evitamos que las rutas en code desborden la caja en móvil */
+  .relay{max-width:100%}
+  .relay-node{flex-wrap:wrap}
+  .relay-body{min-width:0;flex:1 1 220px}
+  .relay-head{flex-wrap:wrap}
+  .relay-mission,.io code,.relay-head .role{overflow-wrap:anywhere;word-break:break-word}
+  .io b{width:auto;min-width:64px}
+  .handoff{padding-left:0}
 }
 </style>
 </head>
