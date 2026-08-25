@@ -85,6 +85,9 @@
   Hades y dopamina-Balatro (ya en research), que los boons/objetos/perks sinergien
   de forma chula y den variedad de runs, sin multiplicar contenido. Lo investiga
   el **Diseñador P2** (11:00 del 25/08) en su sección de sinergias/rejugabilidad.
+  ↩ (25/08 09:00) `[HECHO]` — Diseñado en `DESIGN.md` §5 (principio «sinergia
+  nace de Unix», 6 tipos, presupuesto ~60 boons + 25–35 sinergias manuales,
+  rejugabilidad por fases). Balance numérico → P4; reparto por capítulos → P3.
 - `[PENDIENTE]` (23/08) Gate de Juanma sobre `docs/DESIGN.md` al cerrar la Fase 0.
   ↩ (24/08) El gate debe incluir también ratificar Pyxel como stack definitivo
   (recomendación del research: SÍ).

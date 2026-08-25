@@ -1,8 +1,8 @@
 # DESIGN — CyberRoot
 
 > Documento vivo de diseño de Fase 0. Se construye en cinco pases:
-> - **PASE 1 (este)** — concepto, historia, plot general, caminos y finales.
-> - Pase 2 — loop roguelite (Hades) + dopamina (Balatro). 11:00 del 25/08.
+> - Pase 1 — concepto, historia, plot general, caminos y finales. ✅
+> - **PASE 2 (este)** — loop roguelite Hades, karma operativo, sinergias y rejugabilidad.
 > - Pase 3 — capítulos y niveles. 15:00 del 25/08.
 > - Pase 4 — dopamina fina y UX. 21:00 del 25/08.
 > - Pase 5 — revisión final. 09:00 del 26/08.
@@ -10,6 +10,10 @@
 > Marcos cerrados que este documento no discute: `AGENTS-PLAN.md` §6.5.
 > Insumos: `docs/RESEARCH-MECANICAS.md` · `docs/INVESTIGACION-STACK.md` ·
 > `docs/SKILLS-ANTISLOP.md` · `docs/BRAINSTORM.md`.
+>
+> Convención heredada del research: [HECHO] = verificable en fuente citada ·
+> [OPINIÓN] = juicio de diseño nuestro · ⚠️ = aproximado o sin verificar a fondo.
+> Las citas «RM §n» remiten a `RESEARCH-MECANICAS.md`.
 
 ---
 
@@ -102,6 +106,10 @@ completas se escriben antes de dar diálogo a cada uno — regla §2.6.5):
 - **La Directora Vela** — antagonista (§2.4). Al principio solo es voz en
   pantallas y avisos públicos.
 
+> **Nota P2:** Gris vende el hardware (§4.3) y Zeta asigna los Pactos (§4.6);
+> ambos papeles ya estaban plantados en la Pase 1 y ahora tienen función
+> mecánica sin cambiar un rasgo de carácter.
+
 ### 2.4 El antagonista: Lumen y la Oficina de Continuidad
 
 - **Lumen Holding** restauró la luz tras los Apagones y quedó de facto como
@@ -168,7 +176,7 @@ completas se escriben antes de dar diálogo a cada uno — regla §2.6.5):
 **ACTO 3 — CONTINUIDAD**
 
 10. **La Lista al alcance.** Dos usos posibles y un tercio negociable. Cadena de
-    elecciones finales (§3.3).
+    elecciones finales (§3.4).
 11. **Confrontación con Vela.** No tiene por qué ser un jefe de combate: duelo
     de pruebas (camino azul), persecución (rojo) o mesa de negociación (mixto).
     El formato lo decide el karma acumulado.
@@ -235,9 +243,76 @@ El medidor existe internamente como variable serializable (guardado y tests),
 pero no se dibuja como barra ética.
 
 Deriva: pesan más las últimas N decisiones que el histórico. Redimirse cuesta;
-traicionar es rápido. El valor exacto de N lo fija el Pase 2 con datos.
+traicionar es rápido. **Fijado en P2: N = 8.** Justificación: una incursión
+genera 1–3 micro-decisiones con peso kármico y un encargo del Hub es otra; con
+N = 8, las últimas dos o tres runs definen tu reputación presente sin borrar
+del todo lo anterior. Es un valor inicial de diseño, no un dato: se calibra en
+Fase 1 con el harness (Ornstein) midiendo cuántas runs limpias hacen falta para
+que un operador sangriento reciba encargos azules otra vez. ⚠️ Sin evidencia
+externa que cite aquí: es criterio propio, y así queda registrado.
 
-### 3.3 Finales (esbozo — condiciones exactas en P3/P5)
+### 3.3 Karma operativo (nuevo — escrito en Pase 2)
+
+La Pase 1 definió qué mueve la aguja y cómo se lee. Falta el mecanismo exacto:
+cómo se decide Blue/Red dentro y entre runs, y cómo llega eso al jugador sin
+medidores morales.
+
+**Contabilidad (invisible por diseño).** Cada decisión kármica escribe una
+entrada `{momento, acción, peso, timestamp}`. El valor de karma es la suma
+ponderada de las últimas 8 entradas (§3.2); positivo = azul, negativo = rojo.
+Los umbrales que leen los sistemas (encargos que llegan, formato del final,
+tono de Vela) son comparaciones contra ese valor; nada más. La variable existe,
+es serializable y está testeada; no se dibuja nunca como barra ética (§3.2).
+
+**Dentro de las runs (micro).** Los momentos kármicos viven donde ya hay
+decisión técnica, no en eventos scriptados:
+
+| Momento | Azul | Rojo |
+|---|---|---|
+| Datos civiles cruzados en la extracción | los borras antes de salir | los copias (palanca o botín) |
+| Credencial admin comprometida | la rotas y registras el uso | la conservas para reutilizarla |
+| Puerta trasera accesible | la cierras parcheando | la dejas abierta para volver |
+| Logs que te delatan | los corriges dejando rastro mínimo | los quemas enteros |
+
+La asimetría es intencional [OPINIÓN]: lo rojo siempre es lo fácil ahora y lo
+caro después; lo azul exige un comando extra con coste de tiempo/alerta. Así
+el karma mide prioridades reales bajo presión, no opiniones marcadas en un
+diálogo. Y cada fila es también práctica curricular: rotar credenciales, hacer
+`shred` de logs, cerrar permisos — el mismo Linux con lentes distintas, como
+exige §3.1.
+
+**Entre runs (macro).** Tres fuentes, todas diegéticas:
+- **Encargos tintados.** Cada encargo de los Apagados nace azul, rojo o gris;
+  el tinte es visible en la descripción del trabajo (quién pide qué), no en un
+  icono moral. Aceptar suma poco; COMPLETAR suma según cómo lo resolvió el
+  jugador (las micro-decisiones de la run mandan).
+- **Decisiones de Hub.** A quién cuentas qué, cómo tratas la grieta de Ceniza
+  (§2.5 beat 6), si vendes información a Gris. Diálogo con consecuencias
+  serializadas, igual que las micro.
+- **Reputación emergente.** El mundo ya reacciona (§3.2); esa reacción alimenta
+  los encargos siguientes: un perfil rojo recibe ofertas más sucias, un perfil
+  azul recibe filtraciones de denunciantes. Bucle de reputación auto-reforzante,
+  barato de producir porque reutiliza el generador de encargos.
+
+**Cómo se entera el jugador (sin medidor).** Cuatro canales, todos ya
+previstos en §3.2, ahora con dueño mecánico:
+1. **El mercado de Gris cambia de stock**: ofertas de hardware ofensivo
+   aparecen para perfiles rojos; herramientas de auditoría y cifrado para
+   azules. Nadie te dice «eres malo»: la tienda habla.
+2. **El tono del Auditor** en el informe post-mortem: registra tu patrón («el
+   Expediente 000 muestra preferencia por la destrucción de registros») con su
+   precisión burocrática habitual.
+3. **Los encargos que llegan** (ver arriba).
+4. **Las reacciones de aliados** a hechos concretos, jamás a promesas (§2.6.3).
+
+⚠️ Riesgo abierto que hereda §3.5: si estos cuatro canales no contrastan lo
+suficiente entre perfiles, el jugador no percibirá agencia. La validación con
+runs headless del harness (ya anotada en §3.5 para P4/P5) debe medir contraste
+de stock de Gris y de cola de encargos entre un perfil azul forzado y uno rojo
+forzado, no solo «textos distintos».
+
+---
+### 3.4 Finales (esbozo — condiciones exactas en P3/P5)
 
 | Final | Condición | Qué pasa | Coste |
 |---|---|---|---|
@@ -253,7 +328,7 @@ producir (texto reutilizado) y muy Hades.
 Presupuesto honesto: cuatro finales + una variante, no diez. La rejugabilidad
 sale del loop, no de multiplicar contenido ramificado (juego objetivo 10–15 h).
 
-### 3.4 Riesgos y salvaguardas del karma
+### 3.5 Riesgos y salvaguardas del karma
 
 - **Ramificación inflacionaria:** cada rama multiplica coste. Salvaguarda ya
   fijada en §3.1: rama solo en texto/contexto; el gameplay técnico es uno.
@@ -268,7 +343,263 @@ sale del loop, no de multiplicar contenido ramificado (juego objetivo 10–15 h)
 
 ---
 
-## 4. Decisiones abiertas (para P2/P3/P5/Juanma)
+## 4. Estructura roguelite estilo Hades (Pase 2)
+
+Todo lo que sigue concreta `AGENTS-PLAN.md` §6.5 sobre la evidencia de
+`RESEARCH-MECANICAS.md`. Donde este doc dice algo distinto al research, manda
+el research salvo decisión explícita aquí anotada.
+
+### 4.1 El loop maestro
+
+```
+        ┌────────────────────────── SUBESTACIÓN (Hub) ◄─────────────┐
+        │  post-mortem · historia · Espejo · tienda · encargos      │
+        └──────────────┬────────────────────────────────────────────┘
+                       │ eliges encargo + Pacto + equipo
+                       ▼
+   INCURSIÓN = run en una red generada (10–20 min)
+   mapa de nodos → salas (explorar / firewall / datos / elite / evento)
+   terminal real: cada comando es una acción con coste
+                       │
+        ┌──────────────┴───────────────┐
+        ▼ ÉXITO                        ▼ DETECCIÓN (= muerte, nunca game over)
+   extracción del botín           expulsión por el Auditor
+   regreso con datos/créditos     pierdes el botín de la run; conservas:
+   + fragmentos si los hubo       lecciones, créditos parciales,
+        │                         unlocks y karma; la historia SIEMPRE avanza
+        └────────────► vuelta al Hub ◄────────────────────────┘
+```
+
+Ciclos anidados (RM §2.2–2.3): comando (~segundos, tick de sala) → sala
+(1–2 min) → run (10–20 min) → capítulo → acto. Siempre hay un contador cerca
+de cerrarse: % de detección subiendo, combo activo, alerta del nodo.
+
+**La muerte es el método de estudio** [HECHO RM §3.1–3.2]: Hades existe para
+«quitarle el dolor a morir y reiniciar» (Kasavin); la narrativa avanza en cada
+muerte con contenido nuevo. Traducción nuestra: cada expulsión dispara
+post-mortem automático (§4.7), línea nueva del Auditor y avance del plot
+(§2.6.2). El marco pedagógico ya estaba cerrado (§6.5.4: muerte = herramienta);
+esto define el cómo.
+
+### 4.2 Dos progresiones, y cuál manda
+
+[OPINIÓN fuerte, heredada de RM §3.2] En Hades hay dos progresiones: la del
+personaje (Espejo, keepsakes) y la del jugador (dominio real del gameplay).
+En CyberRoot la segunda ES competencia Linux literal y no se pierde jamás.
+Regla dura resultante: **el espejo in-game da conveniencia e identidad de
+build, nunca conocimiento**. Ninguna compra del Hub sustituye a un comando que
+el jugador no sabe usar; el espejo acelera, personaliza y exprime lo que ya
+sabes hacer. Si el jugador llega al final sin haber aprendido, el juego ha
+fallado aunque haya ganado.
+
+### 4.3 Metaprogresión: el Espejo de Gris
+
+El equivalente del Espejo de la Noche vive diegéticamente en la Subestación:
+**el espejo de Gris**, paneles del equipo de Cero que se reescriben con
+créditos y favores. Ramas iniciales (números ⚠️ orientativos, calibra harness):
+
+| Rama | Qué da | Ejemplos |
+|---|---|---|
+| **Hardware** | ventajas físicas de equipo | más buffer de alertas, escáner previo de nodos |
+| **Oficio** | comodidades de operación | historial de comandos entre salas, alias propios, 1 reintentos de sala |
+| **Red** | acceso temprano a rutas | nodos extra visibles en el mapa, atajos entre anillos |
+
+Coste doble (créditos de run + favores narrativos a Gris) para que la mejora
+permanente también deje historia. Nada de esta tabla enseña ni sustituye
+comandos: cumple la regla de §4.2. Los keepsakes-equivalentes son los
+**recuerdos**: objetos ligados a NPCs (la libreta de Ceniza, la chapa de Zeta)
+que sesgan qué boons aparecen en la próxima incursión — igual que en Hades
+atanzas al dios cuyo boon quieres.
+
+### 4.4 Boons de CONOCIMIENTO
+
+El poder nuevo es saber nuevo (marco §6.5; RM §3.2 fila «boons»). Un boon
+desbloquea una capacidad técnica REAL que el sandbox soporta desde el primer
+día — desbloquear es progresión de personaje, saber usarlo es progresión de
+jugador. Tres fuentes:
+
+1. **Boons de currículo** — el comando nuevo del capítulo llega como momento
+   de juego: aparece en un prompt de máquina comprometida, en el `history` de
+   un admin descuidado o en las manos de un aliado; lo pruebas en esa run bajo
+   necesidad (Bandit: objetivo primero, RM §1). Queda para siempre.
+2. **Boons de hallazgo** — botín raro de run: scripts, flags de comandos,
+   técnicas (`find -perm`, pipes con `tee`, variables de entorno). Entran al
+   inventario de conocimiento y pueden salir en futuras runs.
+3. **Boons de post-mortem** — tras ciertas expulsiones, Ceniza extrae del
+   fallo una técnica anti-fracaso («eso te habría dado la salida»: `lsof`,
+   `journalctl`). La lección nace del error concreto del jugador, no de un
+   temario (regla §1.4: obstáculo primero).
+
+Catálogo objetivo v0: ~60 comandos/techniques repartidos en familias —
+navegación, permisos, texto/pipes, procesos, red, empaquetado, escalada,
+auditoría/defensa. El reparto fino por capítulos es del Pase 3; el Pase 4
+define cómo se presenta cada uno (tarjeta de boon, juice, RM §2.3).
+
+### 4.5 Generación procedural ENSEÑANTE
+
+Directrices fijadas en RM §3.3; aquí su forma operativa:
+
+- **Piel aleatoria, médula curricular** [RM §3.3.1]: nombres de ficheros,
+  usuarios, IPs, puertos, topología del grafo y orden relativo de salas
+  cambian por run; los CONCEPTOS que exige la sala los fija el currículo del
+  capítulo. Consecuencia anti-walkthrough gratis: copiar una solución concreta
+  no funciona dos veces (RM §1.3).
+- **Muestreo por grafo de prerequisitos** [RM §3.3.2]: cada sala instancia
+  conceptos ya dominados + exactamente 1 concepto nuevo o en práctica. El
+  generador lee del mismo grafo que el currículo — una sola fuente de verdad,
+  cero contenidos duplicados.
+- **El RNG jamás decide si tu comando funciona** [regla dura, RM §3.3.3]:
+  semántica determinista siempre. La incertidumbre vive en el mapa y en la
+  vigilancia, nunca en la física del sandbox.
+- **Contrato de generador (para Pase 3):** entrada = {capítulo, Pacto activo,
+  karma, boons del jugador, seed}; salida = grafo de salas + instancias de
+  piel. Determinista ante la misma seed → testeable headless por el harness
+  (INVESTIGACION-STACK: core sin motor, RNG seedeada).
+- **Salida garantizada:** toda sala generada debe tener solución dentro de los
+  comandos disponibles del jugador + validación automática (el generador
+  resuelve su propia sala con una secuencia canónica antes de ofrecerla).
+  Sala irresoluble = bug de generación, no reto.
+
+### 4.6 El Pacto de Vela (Heat)
+
+Sistema Heat estilo Hades para replay post-victoria, diegetizado como
+**Pacto de Vela**: condiciones de endurecimiento que la propia Oficina impone
+a sus sistemas tras tus ataques (subir sensibilidad, añadir tripulación de
+auditoría, cifrar rutas). Cada condición sube el multiplicador de recompensa.
+Zeta es quien te los propone y apuesta contigo — su papel ya anunciado en
+§2.3. Restricción dura heredada de §3.1/§4.2: **ningún Pacto introduce
+conceptos técnicos nuevos ni fuera de currículo**; endurecen lo conocido
+(más permisos que revisar, menos tiempo de sesión, logs que rotan antes).
+Sirve para rejugabilidad end-game y para que el harness tenga perfiles de
+dificultad medibles.
+
+### 4.7 El Hub: Subestación como casa de Zagreus
+
+Orden de prioridades del Hub tras CADA run (éxito o expulsión):
+
+1. **Post-mortem** (siempre, primero): informe del Auditor + análisis de
+   Ceniza del último obstáculo; si hubo expulsión, lección concreta asociada
+   (RM §3.3.4). Nunca se salta ni se hace opcional.
+2. **Historia**: cola de eventos Hades (§2.6.2) — líneas nuevas de aliados,
+   beats de encargo, fragmentos si tocan. Avanza SIEMPRE, éxito o no
+   (RM §3.4: el avance narrativo constante es la vacuna contra la sensación
+   de grind).
+3. **Economía y build**: cobrar, gastar en Gris (equipo/espejo), elegir
+   recuerdos, aceptar siguiente encargo y Pacto.
+4. **Ambiente vivo**: titulares según karma (§3.2), estado de los distritos,
+   barks cortos (SKILLS-ANTISLOP capa 2).
+
+El Hub es pantalla con diálogos, no exploración libre de nivel 3D: presupuesto
+de producción de un juego de 10–15 h (§3.4). Su vida viene de la cola de
+eventos, no de la geografía.
+
+---
+
+## 5. Sinergias, variedad y rejugabilidad — el pilar Isaac de conocimiento (Pase 2)
+
+> Tercer pilar pedido por Juanma (TODO 25/08): que boons, objetos y perks
+> sinergien entre sí de forma chula y que la combinación dé variedad de runs,
+> sin multiplicar contenido hasta lo inmanejable. Modelos de referencia:
+> Balatro «encontrar sinergias entre modificadores» (RM §2.2.1) e Isaac
+> «combinaciones de objetos que se disparan entre sí», adaptados a que la
+> moneda es conocimiento real.
+
+### 5.1 Principio rector: la sinergia nace de Unix
+
+Regla de diseño nº1 del pilar: **toda sinergia debe existir primero en la
+realidad de la terminal**. Unix YA es un sistema de combinación: pipes, xargs,
+redirección, composición de filtros. No inventamos combinatoria encima; la
+destilamos. Un boon combina con otro cuando sus comandos se encadenan con
+sentido en un shell real. Consecuencias:
+
+- Lo que el jugador descubre como sinergia mecánica (bonus numérico) coincide
+  con lo que un profesional descubriría como buen hábito. El juego premia
+  exactamente lo que transferiría.
+- La sinergia es DESCUBRIBLE con criterio: quien sabe Unix puede intuir que
+  `grep`+`sort`+`uniq -c` van juntos antes de ver el bonus. Nada de parejas
+  arbitrarias tipo Isaac que solo funcionan porque el juego lo dice.
+- Anti-patrón vetado: balanced-azar combinatorio sin significado (dos boons
+  que dan +15% juntos «porque sí»). Eso sería dopamina hueca con skin de
+  conocimiento — el antipatrón quiz-con-skin aplicado a builds (RM §1.3).
+
+### 5.2 Tipos de sinergia (con ejemplos canónicos)
+
+Los números son ilustrativos ⚠️; el balance fino es del Pase 4 con harness.
+Lo normativo aquí son los TIPOS:
+
+| Tipo | Mecánica | Ejemplo canónico | Por qué enseña |
+|---|---|---|---|
+| **Pipeline** | completar una cadena real de N comandos en una sala multiplica el botín | `grep` → `sort` → `uniq -c` seguidos: ×2 datos extraídos | la composición de filtros ES el hábito profesional |
+| **Reconocimiento→ejecución** | haber usado un comando de reconocimiento en la misma run potencia al ejecutor | `find` usado antes ⇒ `rm`/`chmod` posteriores cuestan menos alerta | mirar antes de tocar: flujo real de intrusión |
+| **Estado persistente** | dejar infraestructura en la run habilita acciones nuevas | backdoor dejado en sala 2 ⇒ en sala 5 puedes volver por él (atajo de ruta) | enseña qué implica realmente «dejar una puerta abierta» (y alimenta karma rojo, §3.3) |
+| **Perk×boon** | un perk pasivo cambia las REGLAS de un boon | perk «alias»: encadenar el mismo par de comandos 3 veces crea un atajo permanente de esa run | los alias existen; recompensa automatizar lo repetido |
+| **Objeto×comando** | objetos de Gris potencian categorías de comando | llave USB física: `dd`/copias extraen botín duplicado | conecta hardware real con su uso real |
+| **Kármica** | el perfil Blue/Red modula qué sinergias brillan | perfil azul: auditoría+cifrado encadenados dan botín de prueba íntegra; perfil rojo: destructivas encadenadas dan velocidad | refuerza identidad de build sin partir el currículo (§3.1) |
+
+Diseño de descubrimiento [OPINIÓN]: las sinergias NO se anuncian en menú
+completo. Se muestran pistas diegéticas (Gris: «el `grep` y el `sort` se llevan
+bien, como todo lo que filtra») y el primer disparo de cada sinergia tiene
+juice propio (RM §2.3: feedback proporcional). Descubrirlas es parte del
+contenido rejugable — y quien las descubre, aprendió el patrón Unix.
+
+### 5.3 Variedad por combinación: la aritmética honesta
+
+El criterio presupuestario ya fijado (§3.1, §3.3): variedad por COMBINACIÓN,
+no por contenido ramificado caro. Aquí su aplicación al pilar:
+
+**Superficies de variación de una run** (todas baratas, ninguna multiplica
+texto):
+1. Piel procedural (nombres/topología/puertos) — infinita, coste cero marginal.
+2. Combinación de boons equipados (build del jugador).
+3. Pacto elegido (modificadores de riesgo, §4.6).
+4. Karma acumulado (qué encargos existen y cómo terminan, §3.3).
+5. Recuerdos equipados (sesgo de drops).
+6. Semilla y ruta del mapa de nodos.
+
+**Presupuesto base para variedad real** [OPINIÓN con aritmética]:
+
+- **~60 boons de conocimiento** (familias de §4.4), **~12 objetos de Gris**,
+  **~8 perks pasivos**, **6–8 Pactos**, **4 finales + HERENCIA** (ya fijado
+  §3.4).
+- Combinaciones de builds: elegir 5 boons activos entre 60 ≈ C(60,5) ≈ 5,4 M;
+  incluso exigiendo coherencia por familia, quedan decenas de miles. La
+  limitación real no es el catálogo sino cuántas sinergias SIGNIFICATIVAS
+  existen: objetivo v1 ≈ **25–35 sinergias diseñadas a mano** de los tipos de
+  §5.2, cubriendo todas las familias. Eso son ~30 entradas de datos + juice
+  compartido; coste comparable a 30 lore-items, no a 30 niveles.
+- Contenido narrativo NO escala con las combinaciones: los textos reactivan
+  por CLASE de evento (usaste pipeline, dejaste puerta, perfil cruzó umbral),
+  no por combinación concreta (§2.6.3: el mundo reacciona a lo que hiciste,
+  con plantillas por tipo). Una sinergia nueva no necesita diálogo nuevo.
+
+⚠️ Orden de magnitud honesto: con estas cifras, dos jugadores con 20 runs
+cada uno tendrán builds, rutas y encargos mayormente distintos pero verán
+solaparse los textos de reacción. Eso es correcto y así se declara: la
+variedad prometida vive en decisiones y builds, no en prosa única por run.
+Multiplicar prosa sería el error de ramificación que §3.1 prohíbe.
+
+### 5.4 Rejugabilidad por fases del jugador
+
+- **Primeras runs (aprendiz):** variedad curricular — cada run trae concepto
+  nuevo. La rejugabilidad aquí es la del propio aprendizaje.
+- **Mid-game (operador):** variedad de build y ruta — boons, recuerdos,
+  Pactos suaves, karma abriendo encargos distintos. Las sinergias empiezan a
+  dispararse y crean objetivos propios («esta run quiero probar lo del tee»).
+- **End-game (maestro):** Pactos de Vela duros (§4.6), caza de sinergias
+  restantes, otros finales por karma, APAGÓN PROPIO como meta-logro (§3.4),
+  ranking de estilo del harness (fluidez y pipelines puntúan, RM §3.4).
+- **Post-victoria:** HERENCIA (§3.4) + Pactos + semillas daily-style para el
+  comité de testeo (runs headless comparables por seed — INVESTIGACION-STACK).
+
+Cascada de unlocks Balatro (RM §2.2.5) como colchón de todo: cada boon nuevo
+desbloqueado crea combinaciones nuevas → objetivos nuevos → otra run. El
+catálogo se desbloquea por logros de COMPETENCIA (usar bien X en contexto),
+nunca por grind de créditos (RM §1.3: recompensas desacopladas de la
+competencia corrompen la señal).
+
+---
+
+## 6. Decisiones abiertas (para P3/P4/P5/Juanma)
 
 - ¿El nombre final del camino azul se teclea o Cero adopta definitivamente ese
   nombre? (afecta a §2.2 y al final LUZ PLENA)
@@ -282,7 +613,24 @@ sale del loop, no de multiplicar contenido ramificado (juego objetivo 10–15 h)
 - Romance: fuera de alcance (coste). Relaciones por profundidad de diálogo,
   no por subsistema.
 
+Añadidas en Pase 2:
+
+- N = 8 de deriva kármica (§3.2): valor inicial fijado sin evidencia externa;
+  P5 lo revisa contra los datos del harness si existen.
+- Créditos tras expulsión (§4.1): propuesta «parcial proporcional al progreso»
+  pendiente de número; P4 la necesita para el balance de economía.
+- Catálogo v0 de ~60 boons (§4.4): el reparto por familias/capítulos es del
+  P3, que debe validar que las familias cubren el currículo sin huecos.
+- Sinergias v1 = 25–35 diseñadas a mano (§5.3): lista concreta la escribe P4
+  junto al balance numérico; P3 puede adelantar candidatas al estructurar
+  salas.
+- ¿Los recuerdos (§4.3) sesgan SOLO drops de boons o también piel procedural?
+  Recomendación: solo drops en v1; sesgar topología complica el contrato del
+  generador (§4.5). Decide P3.
+
 ---
 
-*Siguiente: **Pase 2** (11:00, 25/08) — loop roguelite Hades + dopamina Balatro.
-Debe leer este pase y `RESEARCH-MECANICAS.md` §§2–4, y respetar §2.6 y §3.1.*
+*Siguiente: **Pase 3** (15:00, 25/08) — capítulos y niveles. Debe leer este
+pase entero (§4–5 son nuevos y le condicionan: contrato de generador §4.5,
+catálogo de boons §4.4, currículo = grafo compartido) y `RESEARCH-MECANICAS.md`
+§§1 y 3. Respetar §2.6, §3.1 y la regla de §4.2.*
