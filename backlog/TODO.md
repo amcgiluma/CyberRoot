@@ -80,6 +80,11 @@
   "¿está bien hecho?"), Gwyn 23:00 (diseño y sabor en conjunto + coherencia,
   "¿es buen juego?"). La ZONA de testeo del día la deja Gwyn al cierre (23:00)
   → Havel la lee a las 07:00. Evitar pisarse entre los 3.
+- `[PENDIENTE]` (25/08) **Tercer pilar de mecánicas: SINERGIAS, VARIEDAD y
+  REJUGABILIDAD tipo Isaac** (pero de conocimiento). Juanma: además de progreso-
+  Hades y dopamina-Balatro (ya en research), que los boons/objetos/perks sinergien
+  de forma chula y den variedad de runs, sin multiplicar contenido. Lo investiga
+  el **Diseñador P2** (11:00 del 25/08) en su sección de sinergias/rejugabilidad.
 - `[PENDIENTE]` (23/08) Gate de Juanma sobre `docs/DESIGN.md` al cerrar la Fase 0.
   ↩ (24/08) El gate debe incluir también ratificar Pyxel como stack definitivo
   (recomendación del research: SÍ).
