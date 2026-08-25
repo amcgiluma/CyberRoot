@@ -4,10 +4,11 @@
 > Saber qué hacen los demás te permite: no pisar a nadie, delegar bien, y
 > proponer mejoras de forma informada. Es la parte "transparencia entre agentes".
 
-## El Concilio (8 agentes, horario Madrid)
+## El Concilio (9 agentes, horario Madrid)
 | Hora | Agente | Modelo | Función | Dónde entrega |
 |---|---|---|---|---|
 | 03:00 | **Manus** (historiador) | flash | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
+| 05:00 | **Oscar de Astora** (guardián de la experiencia) | flash | JUEGA como jugador de verdad: run de referencia desde save limpio + perspectiva de veterano (20+h). Comprueba la EXPERIENCIA global del juego y que el camino sea apto. Mantiene vivo `docs/ESTADO-JUGADOR.md` y deja NOTAS DE DIRECCIÓN a Gwyn (no decide, informa). | `docs/ESTADO-JUGADOR.md` |
 | 07:00 | **Havel** (vidente-creativo) | flash | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/TODO.md` |
 | 11:00 | **Gwyndolin** (planificador) | pro | Convierte TODO/log-ideas en `backlog/planes/YYYY/MM/DD.md` (HOY) con tareas por módulo. Reparte trabajo. | `backlog/planes/YYYY/MM/DD.md` |
 | 13:00 | **Ornstein** (ejecutor 1) | flash | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |

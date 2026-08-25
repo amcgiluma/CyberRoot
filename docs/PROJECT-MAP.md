@@ -41,6 +41,7 @@ src/                → el código del juego (módulos).
 | Agente (hora) | Modelo | Escritura/Entregas DÓNDE (obligatorio) |
 |---|---|---|
 | **Manus** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story, humanizer). Marca en TODO las piezas narrativas listas. |
+| **Oscar de Astora** (05:00) | deepseek-v4-flash | `docs/ESTADO-JUGADOR.md` (estado global jugable / run de referencia desde save limpio / progreso de veterano) + NOTAS DE DIRECCIÓN en `backlog/TODO.md` para Gwyn (no decide, informa). |
 | **Havel** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (bugs + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
 | **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/planes/YYYY/MM/DD.md` (HOY) + reparte tareas en `backlog/TODO.md`. Propone mejoras en MEJORAS (las aplica Gwyn). |
 | **Ornstein/Smough/Seath** (13/16/19) | deepseek-v4-flash | Código en su RAMA `feat/<modulo>` + PR a main. Marca `[HECHO]` en `backlog/TODO.md`. README del módulo. Ornstein: + harness de playtest. |

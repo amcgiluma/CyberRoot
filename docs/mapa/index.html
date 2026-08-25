@@ -422,7 +422,7 @@ footer .souls{
     </svg>
   </div>
   <h1 data-i18n="title">CYBERROOT · EL CONCILIO</h1>
-  <p class="sub" data-i18n="subtitle">Ocho guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.</p>
+  <p class="sub" data-i18n="subtitle">Nueve guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.</p>
   <div class="rule"></div>
 </header>
 
@@ -435,7 +435,7 @@ footer .souls{
 <main>
 
   <section class="view on" id="view-concilio">
-    <p class="view-intro" data-i18n="intro1">Los ocho agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.</p>
+    <p class="view-intro" data-i18n="intro1">Los nueve agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.</p>
     <div class="legend">
       <span><i class="lr"></i> <em data-i18n="legendR">Lee / interpreta</em></span>
       <span><i class="lw"></i> <em data-i18n="legendW">Escribe / entrega</em></span>
@@ -480,7 +480,7 @@ footer .souls{
 
 <footer>
   <p class="souls">◆ PREPARE TO MERGE ◆</p>
-  <p data-i18n="footerLine">CyberRoot — El Concilio de los Ocho</p>
+  <p data-i18n="footerLine">CyberRoot — El Concilio de los Nueve</p>
   <p data-i18n="footerCredit">Retratos © FromSoftware / darksouls.fandom.com — uso decorativo sin ánimo de lucro</p>
 </footer>
 
@@ -490,11 +490,11 @@ const L = o => o[lang];
 
 const UI = {
   title:{es:"CYBERROOT · EL CONCILIO",en:"CYBERROOT · THE COUNCIL"},
-  subtitle:{es:"Ocho guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.",en:"Eight guardians keep watch over the realm in shifts. None rest; none tread on another."},
+  subtitle:{es:"Nueve guardianes turnan la vigilancia del reino. Ninguno descansa; ninguno se pisa.",en:"Nine guardians keep watch over the realm in shifts. None rest; none tread on another."},
   tab1:{es:"I · El Concilio",en:"I · The Council"},
   tab2:{es:"II · Flujo del Día",en:"II · Daily Flow"},
   tab3:{es:"III · Mapa del Reino",en:"III · Map of the Realm"},
-  intro1:{es:"Los ocho agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.",en:"The eight agents, in shift order (Madrid time). Click any portrait to open their full card."},
+  intro1:{es:"Los nueve agentes, en el orden de sus turnos (hora de Madrid). Haz clic en cualquier retrato para abrir su ficha completa.",en:"The nine agents, in shift order (Madrid time). Click any portrait to open their full card."},
   intro2:{es:"El relevo completo de una jornada: qué recibe cada guardián, qué hace y qué deja tras de sí para el siguiente.",en:"The full relay of a day: what each guardian receives, what they do, and what they leave behind for the next."},
   intro3:{es:"Las tres regiones del repositorio y quién pisa cada rincón. Pasa el cursor por un agente para iluminar su territorio; haz clic para ver su ficha.",en:"The three regions of the repository and who walks every corner. Hover an agent to light up their territory; click to see their card."},
   legendR:{es:"Lee / interpreta",en:"Reads / interprets"},
@@ -518,7 +518,7 @@ const UI = {
   allWrite:{es:"cualquiera puede proponer",en:"anyone may propose"},
   readsHint:{es:"lee",en:"reads"},
   writesHint:{es:"escribe",en:"writes"},
-  footerLine:{es:"CyberRoot — El Concilio de los Ocho",en:"CyberRoot — The Council of Eight"},
+  footerLine:{es:"CyberRoot — El Concilio de los Nueve",en:"CyberRoot — The Council of Nine"},
   footerCredit:{es:"Retratos © FromSoftware / darksouls.fandom.com — uso decorativo sin ánimo de lucro",en:"Portraits © FromSoftware / darksouls.fandom.com — decorative, non-commercial use"}
 };
 
@@ -539,6 +539,24 @@ const A = [
     handoff:{
       es:"Deja la crónica escrita. El sueño del abismo guarda el registro.",
       en:"He leaves the chronicle written. The abyss's dream keeps the record."}
+  },
+  {
+    id:"oscar", name:"Oscar", hour:"05:00", model:"flash", img:"assets/oscar.webp",
+    title:{es:"El Caballero de Astora",en:"The Knight of Astora"},
+    role:{es:"Guardián de la experiencia",en:"Guardian of the experience"},
+    mission:{
+      es:"Juega como lo haría un no muerto elegido: una run desde save limpio y otra con el progreso de un veterano (20+ h). Comprueba que el camino sea apto para quien empieza de cero, mantiene vivo ESTADO-JUGADOR.md y deja NOTAS DE DIRECCIÓN a Gwyn — informa, no decide.",
+      en:"Plays as an undead chosen would: one run from a clean save and another with a veteran's progress (20+ h). Ensures the path suits someone starting from zero, keeps ESTADO-JUGADOR.md alive and leaves DIRECTION NOTES to Gwyn — he informs, he does not decide."},
+    read:[
+      ["docs/ESTADO-JUGADOR.md",{es:"lo que dejó ayer (su doc vivo)",en:"what he left yesterday (his living doc)"}],
+      ["docs/DESIGN.md",{es:"la visión que protege",en:"the vision he protects"}],
+      ["build jugable de src/",{es:"juega como jugador de verdad",en:"plays as a real player"}]],
+    write:[
+      ["docs/ESTADO-JUGADOR.md",{es:"estado global jugable + run de referencia",en:"global playable state + reference run"}],
+      ["backlog/TODO.md",{es:"notas de DIRECCIÓN para Gwyn",en:"DIRECTION notes for Gwyn"}]],
+    handoff:{
+      es:"Su lectura del camino llega a Havel (07:00) y su dirección a Gwyn (23:00).",
+      en:"His reading of the path reaches Havel (07:00) and his direction reaches Gwyn (23:00)."}
   },
   {
     id:"havel", name:"Havel", hour:"07:00", model:"flash", img:"assets/havel.webp",
@@ -666,7 +684,7 @@ const A = [
 
 const ZONES = [
   { code:"backlog/", color:"#2f7a4a", desc:{es:"LA COLA DE TRABAJO (vivo)",en:"THE WORK QUEUE (alive)"}, files:[
-    { f:"TODO.md", rd:["gwyndolin"], wr:["havel","artorias","gwyn"], d:{es:"estados de tareas: pendiente / en curso / hecho",en:"task statuses: pending / in progress / done"} },
+    { f:"TODO.md", rd:["gwyndolin"], wr:["havel","oscar","artorias","gwyn"], d:{es:"estados de tareas: pendiente / en curso / hecho",en:"task statuses: pending / in progress / done"} },
     { f:"planes/YYYY/MM/DD.md", rd:["ornstein","smough","seath"], wr:["gwyndolin"], d:{es:"plan del HOY (histórico por fecha)",en:"TODAY's plan (historical by date)"} },
     { f:"historia/", rd:["gwyndolin","havel"], wr:["manus"], d:{es:"ÍNDICE · PERSONAJES · ESCENARIOS · CAPITULOS",en:"INDEX · CHARACTERS · SCENARIOS · CHAPTERS"} },
     { f:"MEJORAS.md", rd:[], wr:["todos"], d:{es:"buzón de auto-mejora del Concilio",en:"the Council's self-improvement mailbox"} }
@@ -675,11 +693,12 @@ const ZONES = [
     { f:"PROJECT-MAP.md", rd:["todos"], wr:[], d:{es:"índice maestro — lectura obligada (Paso 0)",en:"master index — mandatory reading (Step 0)"} },
     { f:"AGENTES.md", rd:["todos"], wr:[], d:{es:"roles del Concilio + delegación + skills",en:"Council roles + delegation + skills"} },
     { f:"DESIGN.md", rd:["todos"], wr:[], d:{es:"diseño del juego — la visión que no se rompe",en:"game design — the vision that must not break"} },
+    { f:"ESTADO-JUGADOR.md", rd:["havel","gwyn"], wr:["oscar"], d:{es:"qué está jugable HOY de principio a fin + run de referencia",en:"what is playable TODAY end-to-end + reference run"} },
     { f:"SKILLS-ANTISLOP.md", rd:["manus"], wr:[], d:{es:"guía anti-AI-slop",en:"anti-AI-slop guide"} },
     { f:"worklog/YYYY/MM/DD.md", rd:["havel"], wr:["todos"], d:{es:"bitácora diaria — la huella de cada uno",en:"daily log — everyone's trace"} }
   ]},
   { code:"src/ · git", color:"#a04a4a", desc:{es:"EL JUEGO (construido)",en:"THE GAME (built)"}, files:[
-    { f:"core/ render/", rd:["havel","artorias"], wr:["ornstein","smough","seath"], d:{es:"lógica + tests · Pyxel — creado en Fase 0",en:"logic + tests · Pyxel — created in Phase 0"} },
+    { f:"core/ render/", rd:["havel","oscar","artorias"], wr:["ornstein","smough","seath"], d:{es:"lógica + tests · Pyxel — creado en Fase 0",en:"logic + tests · Pyxel — created in Phase 0"} },
     { f:"ramas feat/* · PRs", rd:["artorias","gwyn"], wr:["ornstein","smough","seath"], d:{es:"una rama por tarea, un juicio por rama",en:"one branch per task, one judgement per branch"} },
     { f:"main", rd:[], wr:["gwyn"], d:{es:"tras el merge final de Gwyn",en:"after Gwyn's final merge"} },
     { f:"Telegram → Juanma", rd:[], wr:["gwyn"], d:{es:"el informe nocturno",en:"the nightly report"} }

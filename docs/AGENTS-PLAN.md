@@ -8,6 +8,7 @@
 ## 🧙 NOMBRES DE LOS AGENTES (lore Dark Souls — decisión de Juanma)
 El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
 - 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — deepseek-v4-flash
+- ⭐ **Oscar de Astora** · 05:00 · Guardián de la experiencia del jugador (run de referencia + estado global jugable + notas de dirección) — deepseek-v4-flash
 - ☀️ **Havel la Roca** · 07:00 · Vidente-creativo (ideas + testeo) — deepseek-v4-flash
 - 🌙 **Gwyndolin** · 11:00 · Planificador — deepseek-v4-pro
 - ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — deepseek-v4-flash
@@ -121,7 +122,7 @@ El comité no es estático: puede mejorar su propio funcionamiento.
   le da contexto para proponer mejoras con criterio.
 
 ## 2.7 DELEGACIÓN — los agentes pueden invocar sub-agentes (coordinadores) ⭐
-Los 8 agentes del Concilio tienen la herramienta `delegate_task`: pueden invocar
+Los 9 agentes del Concilio tienen la herramienta `delegate_task`: pueden invocar
 **sub-agentes** para ejecutar tareas y así NO llenar su ventana de contexto,
 coordinando trabajo de forma más eficiente. Detalle completo en `AGENTES.md`
 (sección "DELEGACIÓN").
@@ -166,7 +167,7 @@ con procedimientos estandarizados reutilizables.
 
 ## 3.1 Modelos VERIFICADOS (proveedor opencode-go, 100% confirmados)
 Listados con `opencode models opencode-go`:
-- `opencode-go/deepseek-v4-flash` — Manus, Havel, ejecutores, revisor filtro
+- `opencode-go/deepseek-v4-flash` — Manus, **Oscar**, Havel, ejecutores, revisor filtro
 - `opencode-go/deepseek-v4-pro` — planificador
 - `opencode-go/gpt-5.6-luna` — revisor de diseño
 - `opencode-go/ox-alpha-free` — **Fase 0 (research + diseño + arquitectura + coordinador)**: modelo potente, GRATIS durante ~1 semana (decisión de Juanma). Los 10 jobs de Fase 0 usan este modelo. Cuando caduque la gratuidad, volver a los modelos estándar.

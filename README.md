@@ -13,12 +13,13 @@ ejecuta el "cómo".
 
 ## 🧙 EL CONCILIO
 
-Ocho agentes inspirados en Dark Souls coordinan el desarrollo del juego.
+Nueve agentes inspirados en Dark Souls coordinan el desarrollo del juego.
 Cada uno firma su trabajo con su nombre.
 
 | Avatar | Agente | Hora | Rol | Modelo |
 |--------|--------|------|-----|--------|
 | 🖤 | **Manus, Padre del Abismo** | 03:00 | Historiador — escribe la historia del día | deepseek-v4-flash |
+| ⭐ | **Oscar de Astora** | 05:00 | Guardián de la experiencia — juega como jugador (run desde cero + veterano), vigila el `ESTADO-JUGADOR.md` y propone dirección a Gwyn | deepseek-v4-flash |
 | ☀️ | **Havel la Roca** | 07:00 | Vidente-creativo — juega e idea | deepseek-v4-flash |
 | 🌙 | **Gwyndolin, Dark Sun** | 11:00 | Planificador — organiza el día | deepseek-v4-pro |
 | ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | deepseek-v4-flash |
@@ -37,6 +38,8 @@ Cada uno firma su trabajo con su nombre.
 ## 🔄 EL FLUJO DIARIO
 
 ```
+Oscar de Astora (05:00) juega la EXPERIENCIA (run desde cero + veterano)
+   │  estado global → docs/ESTADO-JUGADOR.md + dirección → TODO (para Gwyn)
 Havel (07:00) juega e idea
    │  ideas + bugs → backlog/TODO.md
 Gwyndolin (11:00) planifica (autónomo, sin aprobación humana)
@@ -108,7 +111,7 @@ La Fase 0 usa el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 sem
 ## Cómo se construye
 1. **Fase 0** (en curso): los agentes investigan y diseñan el juego → `DESIGN.md`.
 2. **Gate de Juanma**: revisa el diseño y da el visto bueno.
-3. **Fase 1+ (el Concilio)**: los 8 agentes construyen el juego día a día hasta que esté terminado.
+3. **Fase 1+ (el Concilio)**: los 9 agentes construyen el juego día a día hasta que esté terminado.
 
 ---
 *Desarrollado por un comité de IAs autónomo y transparente. El proceso es la feature.*
