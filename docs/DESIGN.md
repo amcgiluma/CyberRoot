@@ -3,8 +3,8 @@
 > Documento vivo de diseño de Fase 0. Se construye en cinco pases:
 > - Pase 1 — concepto, historia, plot general, caminos y finales. ✅
 > - Pase 2 — loop roguelite Hades, karma operativo, sinergias y rejugabilidad. ✅
-> - **PASE 3 (este)** — estructura de capítulos y niveles.
-> - Pase 4 — dopamina fina y UX. 21:00 del 25/08.
+> - Pase 3 — estructura de capítulos y niveles. ✅
+> - **PASE 4 (este)** — dopamina fina y UX/visual.
 > - Pase 5 — revisión final. 09:00 del 26/08.
 >
 > Marcos cerrados que este documento no discute: `AGENTS-PLAN.md` §6.5.
@@ -307,7 +307,7 @@ previstos en §3.2, ahora con dueño mecánico:
 
 ⚠️ Riesgo abierto que hereda §3.5: si estos cuatro canales no contrastan lo
 suficiente entre perfiles, el jugador no percibirá agencia. La validación con
-runs headless del harness (ya anotada en §3.5 para P4/P5) debe medir contraste
+runs headless del harness (protocolo fijado en §8.6) debe medir contraste
 de stock de Gris y de cola de encargos entre un perfil azul forzado y uno rojo
 forzado, no solo «textos distintos».
 
@@ -338,8 +338,8 @@ sale del loop, no de multiplicar contenido ramificado (juego objetivo 10–15 h)
   ANTES (acto 2: el jugador ve quién paga a quién). Elegir la vía legal tiene
   que ser una decisión informada, no una trampa.
 - **Karma invisible:** si el mundo no reacciona con suficiente contraste entre
-  perfiles, el jugador no percibirá que sus decisiones importan. El Pase 4
-  valida el contraste con runs headless del harness de Ornstein.
+  perfiles, el jugador no percibirá que sus decisiones importan. El protocolo
+  de validación queda fijado en §8.6 (contraste headless con harness).
 
 ---
 
@@ -432,8 +432,8 @@ jugador. Tres fuentes:
 
 Catálogo objetivo v0: ~60 comandos/techniques repartidos en familias —
 navegación, permisos, texto/pipes, procesos, red, empaquetado, escalada,
-auditoría/defensa. El reparto fino por capítulos está en §6.2; el Pase 4
-define cómo se presenta cada uno (tarjeta de boon, juice, RM §2.3).
+auditoría/defensa. El reparto fino por capítulos está en §6.2; cómo se
+presenta cada uno (tarjeta, juice, unlocks) lo fija §7.5.
 
 ### 4.5 Generación procedural ENSEÑANTE
 
@@ -525,8 +525,8 @@ sentido en un shell real. Consecuencias:
 
 ### 5.2 Tipos de sinergia (con ejemplos canónicos)
 
-Los números son ilustrativos ⚠️; el balance fino es del Pase 4 con harness.
-Lo normativo aquí son los TIPOS:
+Los números son ilustrativos ⚠️; el catálogo cerrado v1 vive en §7.8 y se
+calibra con harness. Lo normativo aquí son los TIPOS:
 
 | Tipo | Mecánica | Ejemplo canónico | Por qué enseña |
 |---|---|---|---|
@@ -665,7 +665,7 @@ Notas:
   lentes distintas).
 - Los fragmentos personales (botín raro, §2.2) caen en cualquier capítulo
   1–6 con probabilidad baja fija; su contenido se ordena por capítulo para no
-  adelantar el misterio (decisión para Manus, §7).
+  adelantar el misterio (decisión para Manus, §9).
 
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 
@@ -757,13 +757,298 @@ estos márgenes:
 3. **Red (cap. 4) es la familia más grande** tras texto/pipes: es la skill
    firma de la fantasía hacking y la que más transferencia da. Recibe el
    capítulo más largo.
-4. **Censo**: el worldbuilding pendiente de §7 se necesita ANTES de escribir
+4. **Censo**: el worldbuilding pendiente de §9 se necesita ANTES de escribir
    las salas-datos del cap. 6 (el censo es la superficie principal de lore
    ahí). Marcado bloqueante para producción de contenido, no para diseño.
 
 ---
 
-## 7. Decisiones abiertas (para P4/P5/Juanma)
+## 7. Dopamina fina — la máquina de números (Pase 4)
+
+Este pase convierte la directriz de Juanma («super dopaminérgico», marco
+cerrado AGENTS-PLAN §6.5) en sistemas con números, aplicando las cinco
+palancas de Balatro (RM §2.2) sistema a sistema. Dos reglas duras heredadas
+que ordenan todo lo demás:
+
+1. **El juice codifica información, no decora** (RM §2.3): shake, flash, pitch
+   y tamaño de número son proporcionales a la MAGNITUD del evento. Si todo
+   brilla igual, nada brilla.
+2. **Todo número nace de competencia real** (RM §2.3 anti-patrón): ninguna
+   subida de combo ni multiplicador se dispara sin un comando correcto detrás.
+   La dopamina hueca produce retención sin transferencia; aquí está vetada.
+
+### 7.1 La moneda compuesta: DATOS × COMBO
+
+Traducción directa del «chips × mult» de Balatro (RM §2.2.1). Toda extracción
+puntúa así:
+
+- **DATOS** (base): cada fichero/dato extraído suma su valor en créditos-dato
+  según tipo (ruido civil = 1, documento interno = 5, credencial = 10,
+  fragmento personal = no puntúa: es botín narrativo, §2.2).
+- **COMBO** (multiplicador): empieza en ×1. Sube un escalón por cada cadena de
+  comandos correcta sin error ni detección (+0,1 por acción, redondeo visual
+  en el HUD). Al fallar un comando NO se resetea a ×1: baja UN escalón
+  (decisión RM §2.3, castiga sin humillar — coherente con muerte-como-lección,
+  marco §6.5.4). Si la detección sube un tramo, el combo baja dos escalones.
+- **Cobro**: los DATOS×COMBO se liquidan al EXTRAER o al ser expulsado
+  (parcial, §7.7). El combo activo siempre está a punto de romperse o de
+  subir: eso es el contador cerrándose de RM §2.2.2.
+
+Números ⚠️ v1 para calibrar con harness; lo normativo es que base y
+multiplicador sean DOS palancas separadas y visibles, y que el jugador pueda
+PERSEGUIR sinergias entre ambas (una pipeline limpia vale más que muchos
+comandos torpes).
+
+### 7.2 Ciclos anidados con contador siempre cerca
+
+Los ciclos ya existen (§4.1); aquí su capa numérica y de feedback:
+
+| Ciclo | Duración | Contador visible | Cierre |
+|---|---|---|---|
+| Comando | ~segundos | eco inmediato en HUD (línea de estado parpadea) | combo ±, alerta ± |
+| Sala | 1–2 min | % detección de sala | loot de sala cobrado o perdido |
+| Run/incursión | 10–20 min | barra de objetivo + % global | liquidación DATOS×COMBO |
+| Capítulo | varias runs | encargos clave restantes | puerta final (§6.0) |
+
+Regla de densidad [OPINIÓN heredada de RM §2.2]: en todo momento debe haber
+AL MENOS un contador parcialmente lleno en pantalla. El tick de detección
+sube por acciones ruidosas (regla de luz, §6.0.2), nunca por reloj artificial:
+la presión la crea el jugador, y eso hace legítimo perseguir «una sala más».
+
+### 7.3 Riesgo/recompensa: las apuestas dentro de la run
+
+La economía de apuestas de Balatro (RM §2.2.4) vive en decisiones que el
+jugador toma con datos imperfectos del mapa (§8.1):
+
+| Apuesta | Coste | Premio |
+|---|---|---|
+| Deep scan de un nodo | +% detección | revela loot y rutas ocultas |
+| Ruta ruidosa (forzar servicios) | alerta rápida | más botín por sala |
+| Quedarse «una sala más» con combo alto | riesgo de expulsión | liquidar el combo completo en vez de parcial |
+| Pacto de Vela activo (§4.6) | condiciones duras | multiplicador de créditos de la run |
+
+Todas comparten estructura: pagar vigilancia presente por valor futuro, o
+cobrar ya. Es la misma tensión del combo (§7.1) vista desde el mapa. Nada de
+esto introduce azar en la semántica de comandos (regla dura §4.5): el riesgo
+es SIEMPRE información/vigilancia, jamás «tu `chmod` funciona a veces».
+
+### 7.4 Juice: qué se anima y cuánto
+
+Catálogo de feedback por clase de evento, con magnitud codificada (RM §2.2.3,
+*Juice it or lose it*):
+
+| Evento | Feedback terminal | Feedback HUD/mapa | Escala |
+|---|---|---|---|
+| Comando correcto | color ANSI de prompt verde breve | pulso del nodo actual | fijo, discreto |
+| Cadena/pipeline limpio | — | +COMBO flotante sobre el nodo | escala con nº de eslabones |
+| Dato extraído | línea de progreso | número flotante DATOS | escala con valor del dato |
+| Hallazgo crítico (flag/root/fragmento) | flash de bloque invertido | shake de HUD + nodo dorado 2 s | máximo, único |
+| Alerta sube | prompt tiñe ámbar→rojo | mapa se satura de tinte Lumen | escala con % |
+| Expulsión | corte de sesión estilo `Connection closed` | glitch CRT + informe del Auditor (§4.7) | evento único, sobrio |
+
+Dos límites duros: (1) el shake/flash JAMÁS cubre texto de la terminal
+(legibilidad primero, RM §4.4.4 — el riesgo fuente-bitmap de
+INVESTIGACION-STACK manda aquí); (2) la expulsión va SOBRIA: el castigo no
+celebra. El juice máximo se reserva para el hallazgo crítico, que además es
+el evento pedagógico mayor (un boon entrando al inventario, §4.4).
+
+### 7.5 Presentación de boons y cascada de unlocks
+
+Cómo entra cada boon nuevo al inventario (cierra el pendiente «juice de
+boons» del footer P3):
+
+1. **Tarjeta de boon** estilo carta pixel-art: nombre real del comando arriba
+   (`tar`), familia como color de borde, una línea de QUÉ ha permitido hacer
+   AQUÍ (contextual a la sala donde nació: «este archivo pesaba la mitad y ha
+   cruzado el firewall»). Nunca descripción genérica de manual — el manual
+   vive en el juego (`man`, ayuda just-in-time RM §1.4).
+2. **Primera ejecución premiada**: la primera vez que usas el boon con éxito,
+   el HUD marca «dominio 1» y el combo sube doble esa vez. La repetición
+   espaciada (§6.0.4) recibe su señal: reaparece como reto de mantenimiento.
+3. **Unlock por competencia, nunca por grind** (§5.4): desbloquear la SIGUIENTE
+   tarjeta de la familia exige usar bien la actual en contexto. Cada unlock
+   abre combinaciones nuevas (cascada Balatro, RM §2.2.5) — el catálogo crece
+   hacia el jugador como lista de logros técnicos, no como tienda.
+
+### 7.6 Dopamina entre runs (Hub): números que esperan
+
+El Hub también cosquillea, sin traicionar la calma narrativa (§4.7):
+
+- **Cola de liquidación**: al entrar, el espejo de Gris muestra el desglose de
+  la última run línea a línea animadas (datos por tipo, combo máximo alcanzado,
+  pacto cumplido). Balatro liquida la ciega igual: conteo secuencial, cada
+  línea con su sonido.
+- **Récords personales persistentes**: mejor combo, pipeline más largo, sala
+  más valiosa. Visibles en el espejo; comparan contigo mismo, no con otros
+  jugadores (sin leaderboard: fuera de alcance y corrompería la señal).
+- **Progreso de unlocks casi-cerrados**: «te falta 1 uso de `tee` para el
+  siguiente dominio» — el gancho de «una run más» de RM §2.2.5, mostrado con
+  honestidad: solo cuenta lo que hiciste de verdad.
+- **Titulares y stock** (canales kármicos §3.3): su variación ES el feedback
+  macro. Que cambien entre runs es parte del ritmo de recompensa, no solo
+  narrativa.
+
+### 7.7 Economía: créditos parciales tras expulsión
+
+Cierra el pendiente abierto de Pase 2 (créditos parciales). Propuesta:
+
+- Éxito: liquidación completa DATOS×COMBO al extraer.
+- Expulsión: cobras el **50% ⚠️ de los datos YA EXTRAIDOS hasta ese momento**
+  (sin combo: se pierde el multiplicador pendiente de liquidar) + bonus fijo
+  si llegaste a una sala más profunda que nunca (primera vez por run).
+- Justificación: el parcial premia el progreso real sin hacer rentable
+  morir a propósito; el combo perdido es el coste emocional de la expulsión,
+  coherente con «pierdes el botín de la run» de §4.1. Calibrar con harness:
+  si el 50% hace la muerte demasiado barata frente a extraer, bajarlo; el
+  harness puede medir tasa de extracción vs expulsión por capítulo.
+
+### 7.8 Sinergias v1: catálogo inicial (28)
+
+Cierra el pendiente «lista de sinergias» de Pase 2 (objetivo 25–35, §5.3).
+Reparto por tipo de §5.2 — todas existen primero como patrón Unix real
+(regla §5.1):
+
+| Tipo | Sinergia (disparador → efecto) | # |
+|---|---|---|
+| Pipeline | `grep→sort→uniq -c`; `cat→grep→wc`; `ps aux→grep→kill`; `find→xargs`; `tail -f→grep`; `du→sort→head`; `journalctl→grep→tee`; `history→grep` | 8 |
+| Reconocimiento→ejecución | haber usado `ls -la` abarata `chmod` en la misma sala; `ss` previo abarata `ssh`; `find` previo abarata borrados; `man` consultado da +combo estable 30 s | 4 |
+| Estado persistente | backdoor de sala N atajo en sala M; alias creado persiste en la run; variable exportada disponible en salas siguientes; proceso demonio propio vigila por ti | 4 |
+| Perk×boon | perk «alias» auto-sugiere el par repetido; perk «historial» permite re-ejecutar con flechas entre salas; boon `tee`+perk auditoría duplica evidencia azul | 3 |
+| Objeto×comando | llave USB duplica `dd`/copias; lector de puertos acelera `ss`; chip RAM amplía buffer de historial | 3 |
+| Kármica | perfil azul: cadena de cifrado+auditoría genera botín de prueba íntegra; perfil rojo: cadena destructiva da velocidad de salida | 2 |
+| Multi-familia (elite, §6.4) | permisos+pipes en una sala; procesos+red (túnel bajo proceso ajeno); auditoría+escalada (limpiar rastro tras SUID); navegación+cualquiera (todo `find` potenciado) | 4 |
+
+Total: 28. Las multi-familia son las que brillan en salas elite del late-game
+(cap. 4–6, §6.1). Cada entrada lleva su pista diegética de Gris (§5.2) y su
+primer disparo con juice propio. Ampliable en Fase 1 con datos del harness
+(qué combinaciones intentan los jugadores sin premio).
+
+### 7.9 Qué NO hace la dopamina aquí (vetos explícitos)
+
+- Sin XP, sin niveles de personaje numéricos, sin barra de experiencia: el
+  poder nuevo es conocimiento (§4.4) y el avance de capítulo es competencia
+  demostrada (§6.3). Los números miden EXTRACCIÓN y FLUIDEZ, nunca «fuerza».
+- Sin recompensas aleatorias por comando: el RNG jamás decide si tu comando
+  funciona (§4.5); tampoco decide tu premio. Sorpresa sí (hallazgos raros),
+  azar en la mecánica no.
+- Sin FOMO artificial: nada expira por tiempo real. La urgencia es diegética
+  (detección) y siempre causada por el jugador (§7.2).
+- Sin confeti en el fallo: la expulsión duele limpia (§7.4) y deja lección
+  (§4.7). El refuerzo intermitente vive en los HALLAZGOS, no en el castigo.
+
+---
+
+## 8. UX/Visual — dos capas, una pantalla viva (Pase 4)
+
+Marco cerrado AGENTS-PLAN §6.5: mapa de nodos + HUD + selector pixel-art;
+resolución de salas en terminal REAL. Este pase define cómo conviven sin
+pelearse, sobre las directrices de integración de RM §4.4 (un estado, dos
+renderizadores; modos de foco; puentes de feedback; legibilidad primero).
+
+### 8.1 El mapa de nodos: estrategia y diegesis
+
+- **Qué es**: el grafo de la incursión (salas del generador, §4.5) dibujado
+  como diagrama de red estilo Slay the Spire (RM §4.1): nodos conectados,
+  ruta elegida con el ratón (Pyxel soporta ratón, INVESTIGACION-STACK).
+- **Información imperfecta** (RM §4.1): el tipo de sala se INSINUÚA (icono
+  ambiguo: ¿datos o elite?), nunca confirmado hasta entrar — excepto lo que
+  un deep scan haya revelado (apuesta §7.3). Decidir con información incompleta
+  ES el juego estratégico.
+- **Diegesis total**: el mapa es literalmente la herramienta de trabajo de
+  Cero — un diagrama del Grid trazado en la Subestación. Los nodos visitados
+  quedan marcados como máquinas comprometidas (tinte verde fósforo); los
+  perdidos, en rojo Lumen. Tras varias runs, el mapa del capítulo es también
+  el mapa de tu progreso histórico: la memoria visual sustituye a cualquier
+  menú de «selección de nivel».
+- **Karma visible sin medidor** (coherencia §3.2): el tinte general del mapa
+  deriva del anillo (luz = paleta clara/saturada, §6.0.2) y de tus acciones
+  (nodos quemados, puertas cerradas). Nunca dibujamos una barra ética.
+
+### 8.2 El HUD: todos los números, cero ensuciamiento
+
+Panel lateral fijo pixel-art (paleta CRT propia sobre los 16 colores de Pyxel,
+INVESTIGACION-STACK), con:
+
+```
+┌─ SUBESTACIÓN ────────────────────┐
+│ OBJETIVO   facturas Q3     ▓▓░░  │ ← objetivo de la sala/run
+│ DETECCIÓN  ████████░░ 78%   ▲    │ ← rojo >70%, pulsa
+│ COMBO      ×3.4            ↑↑    │ ← §7.1, flota al cambiar
+│ DATOS      1.240           ●●●○  │ ← base sin multiplier
+│ EQUIPO     [usb] [chip]          │ ← objetos equipados
+└──────────────────────────────────┘
+```
+
+Reglas: el HUD NUNCA solapa la zona de terminal (layout partido fijo, no
+flotante); cada cifra cambia SOLO por eventos del core (mismo canal de
+eventos que la terminal, RM §4.4.1 — el juice no es cosmético, es el dato
+visto dos veces); y toda cifra del HUD es explicable si el jugador pregunta
+«¿de dónde sale este número?» — trazabilidad anti-número-hueco.
+
+### 8.3 Modos de foco: mapa ↔ terminal
+
+Interacción de RESOLVER (marco cerrado §6.5), con fronteras estrictas:
+
+1. **Modo MAPA**: ratón navegra, se equipan boons/objetos, se lee el objetivo.
+   El teclado aquí solo mueve selección. No hay input de comandos.
+2. **Entrar en sala** → foco TOTAL en terminal: cursor vivo, historial,
+   autocompletado con Tab (si el perk lo da, §7.8). ESC vuelve al mapa SOLO
+   en estados seguros (nunca a mitad de una extracción iniciada).
+3. **Eventos globales rompen foco**: alerta crítica o expulsión interrumpen
+   cualquier modo (la intrusión te encuentra aunque estés mirando el mapa).
+
+Nunca se mezclan inputs de navegación y de comandos (RM §4.4.2): un solo
+contexto activo evita la clase entera de bugs «escribí `rm` en el mapa». El
+coste (un ESC más) compra claridad total de qué teclado está hablando.
+
+### 8.4 La terminal real dentro del juego
+
+- Es una terminal DE VERDAD: parser del `core/` contra el sandbox del nivel,
+  comandos reales con semántica real (§4.5). La capa visual solo la ENMARCA
+  (borde CRT, título del host, prompt con path coloreado).
+- Ayudas just-in-time en la propia terminal: primer fallo concreto → sugerencia
+  contextual de una línea (`¿quizá grep -i?`) — nunca antes (RM §1.4). El
+  post-mortem del Hub (§4.7) recoge el historial real de la sesión.
+- La fantasía «parecer hacker» se cumple escribiendo comandos de verdad, no
+  decorándolos (Hacknet vende la estética pero finge comandos — RM §1.1; aquí
+  la estética ENVUELVE comandos verdaderos: la diferencia es el producto).
+
+### 8.5 Estética hacker/CRT: la restricción como identidad
+
+- **Paleta fósforo**: verdes/ámbar sobre negro profundo, rojo Lumen reservado
+  para amenaza/alerta, dorado para hallazgo crítico (§7.4). Cuatro colores
+  SEMÁNTICOS fijos en TODO el juego: el jugador aprende el idioma cromático
+  una vez y lo lee en cualquier pantalla.
+- **Scanlines y curvatura sutiles**: presentes en reposo, se INTENSIFICAN con
+  eventos (alerta, glitch de expulsión) — la pantalla CRT es otro canal de
+  feedback, no un filtro muerto.
+- **Pixel-art funcional**: iconografía de nodos, tarjetas de boon y retratos
+  del Hub comparten rejilla y contorno. Nada de arte «bonito» suelto: cada
+  sprite comunica estado (conectado/comprometido/quemado).
+- Coherencia con SKILLS-ANTISLOP: la atmósfera la escriben los DETALLES
+  concretos (un hostname con fecha, un log que huele a prisa), no adjetivos.
+  La UI obedece lo mismo que la prosa: dato arriba, grieta abajo.
+
+### 8.6 Contraste kármico headless: cómo se valida (pendiente P2 §3.5)
+
+Protocolo comprometido por Pases 2–3, definido ya para Ornstein/Fase 1:
+
+1. Dos perfiles forzados (azul puro / rojo puro) juegan la MISMA secuencia de
+   seeds (contrato determinista §4.5).
+2. Métricas por seed: nº y tipo de encargos ofrecidos, composición del stock
+   de Gris, tono-medición del Auditor (longitud + vocabulario por clasificar),
+   reacciones de aliados disparadas.
+3. Umbral mínimo de aceptación ⚠️ v1: ≥40% de diferencia en composición de
+   stock y cola de encargos entre perfiles a igualdad de seeds. Por debajo,
+   el contraste se considera insuficiente y se ajustan pesos kármicos (§3.3)
+   ANTES de escribir textos nuevos (los textos son la capa cara; los pesos,
+   la gratis).
+4. Test automático en CI: corrección determinista (misma seed → mismos eventos)
+   + reporte de contraste por build.
+
+---
+
+## 9. Decisiones abiertas (para P5/Juanma)
 
 - ¿El nombre final del camino azul se teclea o Cero adopta definitivamente ese
   nombre? (afecta a §2.2 y al final LUZ PLENA)
@@ -776,29 +1061,44 @@ estos márgenes:
 - Romance: fuera de alcance (coste). Relaciones por profundidad de diálogo,
   no por subsistema.
 
-Añadidas en Pase 2:
+Añadidas en Pase 2 (estado tras Pase 4):
 
 - N = 8 de deriva kármica (§3.2): valor inicial fijado sin evidencia externa;
-  P5 lo revisa contra los datos del harness si existen.
-- Créditos tras expulsión (§4.1): propuesta «parcial proporcional al progreso»
-  pendiente de número; P4 la necesita para el balance de economía.
-- Sinergias v1 = 25–35 diseñadas a mano (§5.3): lista concreta la escribe P4
-  junto al balance numérico.
+  P5 lo revisa contra los datos del harness si existen. Sigue abierta.
+- Créditos tras expulsión (§4.1): RESUELTA en P4 — §7.7 fija 50 % de lo ya
+  extraído, combo no liquidado y bonus de profundidad; números ⚠️ para harness.
+- Sinergias v1 (§5.3): RESUELTA en P4 — catálogo inicial de 28 en §7.8,
+  ampliable con datos de uso del harness.
 
-Añadidas en Pase 3:
+Añadidas en Pase 3 (estado tras Pase 4):
 
 - Orden de lectura de fragmentos personales (§6.1): ¿estrictamente por
   capítulo o por seed? Recomendación: orden fijo por capítulo (controla el
   ritmo del misterio H1/H2); la seed solo decide QUÉ piel de objeto recibe.
-- ¿El cap. 5 admite Pacto? Por coherencia (es guionizada) recomiendo no;
-  Zeta apuesta aparte. Decide P4 con economía.
+  Decide P5.
+- ¿El cap. 5 admite Pacto?: RESUELTA en P4 — NO admite Pacto (es campaña
+  guionizada, §6.4.5); Zeta aparta sus apuestas a los preparatorios, que así
+  reciben su reto end-game sin tocar la guionización del asalto.
 - Los conteos de boons/familias de §6.2 son objetivo v0: la lista comando a
   comando debe validarla quien defina el sandbox real (stack), antes de P5.
 
+Añadidas en Pase 4 (decide P5):
+
+- ¿La liquidación animada del Hub (§7.6) es SIEMPRE secuencial o se puede
+  saltar? Recomendación: siempre secuencial la primera vez de cada sesión,
+  saltable después; la dopamina del conteo no debe volverse impuesto.
+- Umbral de contraste kármico ≥40 % (§8.6): valor semilla sin evidencia ⚠️;
+  si Ornstein no puede medirlo en Fase 1 temprana, P5 debe decidir si el
+  riesgo «karma invisible» (§3.5) bloquea producción de textos o no.
+- ¿Los récords personales del espejo (§7.6) persisten entre partidas nuevas
+  (New Game+) o se reinician? Depende de si existe NG+ — decisión de alcance
+  que hoy está FUERA (presupuesto §3.4); dejar anotado para evitar scope creep.
+
 ---
 
-*Siguiente: **Pase 4** (21:00, 25/08) — dopamina fina y UX. Debe leer este
-pase entero (§6 le da la estructura de campañas sobre la que balancear) y
-`RESEARCH-MECANICAS.md` §2 y §4. Respetar §3.1, §4.2, §4.5 y la checklist
-de RM §5. Pendientes suyos con nombre: créditos parciales, lista de
-sinergias v1, juice de boons, contraste kármico headless.*
+*Siguiente: **Pase 5** (09:00, 26/08) — revisión final. Debe leer este pase
+entero: le quedan las decisiones de §9 marcadas «decide P5» (arco del
+Auditor, N=8, orden de fragmentos, liquidación saltable), valida coherencia
+total del documento y referencias cruzadas. Los números ⚠️ de §7 (escalones
+de combo, 50 % parcial, umbral 40 % de contraste) quedan como hipótesis v1
+calibrables por Ornstein en Fase 1.*
