@@ -9,12 +9,6 @@
 
 ## Activas
 
-- `[EN CURSO]` (23/08) Crons de Fase 0 configurados y activos (research
-  stack/anti-slop/mecánicas 03-07h, diseño 11h, arquitectura 16h). *(migrado
-  del TODO.md; la Fase 0 avanza — el Coordinador de cierre la archivará en
-  `hecho/` al cerrar la fase)* **[HECHO] (26/08, Arquitecto)** — módulos
-  `src/<mod>/README.md` + ARCHITECTURE de core + tabla PROJECT-MAP §3 +
-  `backlog/historia/` materializada + ADR-0001. Ver worklog del día.
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** creados y PAUSADOS
   (Manus/Havel/Gwyndolin/Ornstein/Smough/Seath/Artorias/Gwyn). Se activan
-  tras el gate.
+  tras el gate de Juanma → pendiente de su visto bueno en `../pendiente/abierto.md`.
