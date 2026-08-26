@@ -39,9 +39,9 @@ Cada uno firma su trabajo con su nombre.
 
 ```
 Oscar de Astora (05:00) juega la EXPERIENCIA (run desde cero + veterano)
-   │  estado global → docs/ESTADO-JUGADOR.md + dirección → TODO (para Gwyn)
+   │  estado global → docs/ESTADO-JUGADOR.md + dirección → backlog/notas-manana.md (🧭, para Gwyn)
 Havel (07:00) juega e idea
-   │  ideas + bugs → backlog/TODO.md
+   │  ideas + bugs → backlog/tareas/pendiente/abierto.md
 Gwyndolin (11:00) planifica (autónomo, sin aprobación humana)
    │  plan → backlog/planes/YYYY/MM/DD.md (por fecha)
 Ornstein / Smough / Seath implementan (13/16/19h)
@@ -72,7 +72,11 @@ docs/PROJECT-MAP.md    → índice maestro y mapa de módulos
 docs/AGENTES.md        → roles del Concilio (todos saben qué hace cada uno)
 docs/DESIGN.md         → el diseño del juego (vivo)
 docs/ADR/              → decisiones de arquitectura (públicas)
-backlog/TODO.md        → la cola de trabajo con estados
+backlog/INDICE.md      → mapa del backlog: qué fichero lee/escribe cada agente
+backlog/tareas/        → tareas por estado: pendiente/abierto · en-curso/activo · hecho/<AAAA-MM> (archivo mensual) · descartado
+backlog/zona-testeo.md → la zona 🔬 de testeo del día (la decide Gwyn al cierre)
+backlog/notas-manana.md→ notas rodantes para mañana (dirección de Oscar + revisores)
+backlog/mejoras/       → auto-mejora: pendiente/propuestas · aplicadas/historico
 backlog/planes/YYYY/MM/DD.md → el plan de cada día (histórico por fecha)
 backlog/historia/      → la narrativa de Manus (índice, personajes, escenarios, capítulos)
 docs/worklog/YYYY/MM/DD.md → registro diario por fechas
@@ -85,7 +89,8 @@ guía de su módulo.
 ## ♻️ AUTO-MEJORA
 
 El Concilio puede mejorarse a sí mismo: si un agente ve que su tarea no se puede
-hacer bien o que el flujo no funciona, propone un cambio en `backlog/MEJORAS.md`.
+hacer bien o que el flujo no funciona, propone un cambio en
+`backlog/mejoras/pendiente/propuestas.md`.
 Lo revisa y **aplica Gwyn** (el revisor final, 23:00), con el humano supervisando.
 Los horarios y la cadena de merge no se alteran sin permiso.
 

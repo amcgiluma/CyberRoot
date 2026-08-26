@@ -525,7 +525,7 @@ eventos, no de la geografía.
 
 ## 5. Sinergias, variedad y rejugabilidad — el pilar Isaac de conocimiento (Pase 2)
 
-> Tercer pilar pedido por Juanma (TODO 25/08): que boons, objetos y perks
+> Tercer pilar pedido por Juanma (tarea del 25/08 en el backlog): que boons, objetos y perks
 > sinergien entre sí de forma chula y que la combinación dé variedad de runs,
 > sin multiplicar contenido hasta lo inmanejable. Modelos de referencia:
 > Balatro «encontrar sinergias entre modificadores» (RM §2.2.1) e Isaac

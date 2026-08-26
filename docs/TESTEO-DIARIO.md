@@ -57,9 +57,9 @@ rompe la progresión de un jugador real a lo largo del tiempo).
 4. **Mantiene `docs/ESTADO-JUGADOR.md` vivo**: qué es jugable HOY de
    principio a fin, qué falta, estado del progreso largo. Es el puente entre
    DESIGN.md (lo que será) y el código (lo que es).
-5. **Deja huella**: hallazgos como `[BUG]` en `backlog/TODO.md`; ajustes de
+5. **Deja huella**: hallazgos como `[BUG]` en `backlog/tareas/pendiente/abierto.md`; ajustes de
    dirección como NOTAS DE DIRECCIÓN para Gwyn en la sección «🎯 Notas de los
-   revisores» (informa, no decide). Su worklog cierra con el CICLO (§6).
+   revisores» de `backlog/notas-manana.md` (informa, no decide). Su worklog cierra con el CICLO (§6).
 
 Su filtro es «¿es apto el camino para un jugador de cero?». NO genera ideas
 de contenido (capa de Havel), NO valida código (Artorias) ni decide diseño
@@ -69,8 +69,8 @@ de contenido (capa de Havel), NO valida código (Artorias) ni decide diseño
 
 **Qué hace, en orden:**
 
-1. **Lee la zona de hoy** en `backlog/TODO.md`, bloque «🔬 Testeo de
-   mañana» (lo dejó Gwyn a las 23:00, §4; Oscar ya la habrá ejercitado por la
+1. **Lee la zona de hoy** en `backlog/zona-testeo.md`
+   (la dejó Gwyn a las 23:00 SOBRESCRIBIENDO el fichero, §4; Oscar ya la habrá ejercitado por la
    mañana). Ahí sabe qué priorizar SIN testear a ciegas.
 2. **Detecta lo nuevo**: `git pull` y luego
    `git log --oneline --since="24 hours ago"` para ver qué entró mergeado
@@ -85,7 +85,7 @@ de contenido (capa de Havel), NO valida código (Artorias) ni decide diseño
    de Havel solo comprueba que nada quedó roto a nivel de arranque/avance.
    Lo nuevo puede ser brillante y aun así haber roto el arranque: eso lo
    caza el smoke, no la zona.
-5. **Deja huella en `backlog/TODO.md`**: cada fallo como
+5. **Deja huella en `backlog/tareas/pendiente/abierto.md`**: cada fallo como
    `[BUG] <dónde> <pasos mínimos para reproducir>`; cada idea como
    `[PENDIENTE]` (su rol creativo habitual, AGENTES.md).
 
@@ -103,7 +103,7 @@ Si algo no le mola pero funciona, lo apunta como idea/nota, no como bug.
 2. **Por cada PR, verificación técnica**: `pytest tests/core/` (headless),
    lint, y un smoke de juego MÍNIMO pero REAL (arrancar, completar un ciclo
    de sala, salir limpio). No basta con que compile.
-3. **Marca 💥/✅ en `backlog/TODO.md`** con comentario accionable; un
+3. **Marca 💥/✅ junto a su línea en `backlog/tareas/en-curso/activo.md`** con comentario accionable; un
    rechazo dice POR QUÉ y CÓMO arreglar (formato AGENTS-PLAN §4).
 4. **Cruza con los bugs de la mañana**: si un `[BUG]` de Havel u Oscar tiene
    la causa en un PR de hoy, lo nombra en su veredicto para que el ejecutor
@@ -127,7 +127,7 @@ viaja a Gwyn como nota, no como veredicto.
    Además, integra (o descarta con razón) las NOTAS DE DIRECCIÓN de Oscar:
    informan su validación y sus decisiones de merge.
 3. **Merge final** (solo él mergea, cadena AGENTS-PLAN §4).
-4. **Decide LA ZONA DE TESTEO DE MAÑANA** y la deja en `backlog/TODO.md`
+4. **Decide LA ZONA DE TESTEO DE MAÑANA** y la deja SOBRESCRIBIENDO `backlog/zona-testeo.md`
    (§4 abajo). Nadie mejor que él sabe qué entró hoy y qué es crítico: es
    quien cierra el círculo para que OSCAR (primero) y HAVEL (después) no
    prueben a ciegas.
@@ -173,7 +173,7 @@ Reglas:
 
 ## 5. Cómo alimentan los hallazgos al día siguiente
 
-Los cuatro perfiles dejan su huella en `backlog/TODO.md`; Gwyndolin (11:00)
+Los cuatro perfiles dejan su huella en el backlog (`tareas/…` y `notas-manana.md`); Gwyndolin (11:00)
 la consume al planificar. Orden de prioridad del planificador:
 
 1. Ramas rechazadas por Gwyn/Artorias (su arreglo va primero — ya es regla
@@ -191,12 +191,12 @@ a las 07:00, y así el hallazgo de un día se convierte en verificación del
 siguiente.
 
 ```
-05:00 Oscar (run desde SAVE LIMPIO + veterano + ESTADO-JUGADOR) ──► [BUG] + dirección en TODO
-07:00 Havel (juega lo nuevo + smoke SIN save limpio) ────────────► [BUG] + ideas en TODO
+05:00 Oscar (run desde SAVE LIMPIO + veterano + ESTADO-JUGADOR) ──► [BUG] en pendiente/ + dirección 🧭
+07:00 Havel (juega lo nuevo + smoke SIN save limpio) ────────────► [BUG] + ideas en pendiente/
 11:00 Gwyndolin (planifica con esos hallazgos) ──────────────────► plan del día
 13:00–19:00 Ejecutores (bugs primero, luego tareas) ─────────────► ramas/PRs
 21:00 Artorias (tests/lint/smoke técnico por PR) ────────────────► 💥/✅
-23:00 Gwyn (diseño+sabor, merge, 🔬 zona de mañana) ─────────────► TODO
+23:00 Gwyn (diseño+sabor, merge, 🔬 zona de mañana) ─────────────► zona-testeo.md
         └── la zona espera al relevo 05:00 (Oscar) → 07:00 (Havel) y recomienza
 ```
 
@@ -225,7 +225,7 @@ abrir un solo fichero.
 - Havel no abre PRs ni toca código: reporta síntomas de jugador.
 - Artorias no rejuega «a ver si mola»: verifica técnica, punto.
 - Gwyn no depura: pide localizaciones, no las hace.
-- Cada uno escribe solo donde marca PROJECT-MAP (TODO + worklog propio;
+- Cada uno escribe solo donde marca PROJECT-MAP (su fichero del backlog + worklog propio;
   Oscar además mantiene `docs/ESTADO-JUGADOR.md`).
 - Antes de Fase 1 (sin código): este protocolo se aplica a lo que exista —
   docs y diseño. «Jugar» será recorrer los docs nuevos como usuario (para

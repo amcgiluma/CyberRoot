@@ -470,10 +470,10 @@ footer .souls{
       <ol>
         <li data-i18n="g1"><code>docs/PROJECT-MAP.md</code> → visión general</li>
         <li data-i18n="g2"><code>docs/AGENTES.md</code> → qué hace cada agente</li>
-        <li data-i18n="g3"><code>backlog/TODO.md</code> → estados</li>
+        <li data-i18n="g3"><code>backlog/INDICE.md</code> → mapa del backlog (solo tu rol)</li>
         <li data-i18n="g4"><code>docs/DESIGN.md</code> → la visión que no puedes romper</li>
         <li data-i18n="g5">(según tu rol) planes · historia · investigación</li>
-        <li data-i18n="g6"><code>backlog/MEJORAS.md</code> → auto-mejora pendiente</li>
+        <li data-i18n="g6"><code>backlog/mejoras/pendiente/propuestas.md</code> → auto-mejora pendiente</li>
       </ol>
       <p class="never" data-i18n="goldenNever">Nunca leas el código entero del repo. Solo lo que tu tarea demande.</p>
     </div>
@@ -513,10 +513,10 @@ const UI = {
   goldenTitle:{es:"La Regla de Oro — Paso 0",en:"The Golden Rule — Step 0"},
   g1:{es:'<code>docs/PROJECT-MAP.md</code> → visión general',en:'<code>docs/PROJECT-MAP.md</code> → big-picture view'},
   g2:{es:'<code>docs/AGENTES.md</code> → qué hace cada agente',en:'<code>docs/AGENTES.md</code> → what each agent does'},
-  g3:{es:'<code>backlog/TODO.md</code> → estados',en:'<code>backlog/TODO.md</code> → statuses'},
+  g3:{es:'<code>backlog/INDICE.md</code> → mapa del backlog (lee solo tu rol)',en:'<code>backlog/INDICE.md</code> → backlog map (read only your role)'},
   g4:{es:'<code>docs/DESIGN.md</code> → la visión que no puedes romper',en:'<code>docs/DESIGN.md</code> → the vision you must not break'},
   g5:{es:'(según tu rol) planes · historia · investigación',en:'(per your role) plans · story · research'},
-  g6:{es:'<code>backlog/MEJORAS.md</code> → auto-mejora pendiente',en:'<code>backlog/MEJORAS.md</code> → pending self-improvement'},
+  g6:{es:'<code>backlog/mejoras/pendiente/propuestas.md</code> → auto-mejora pendiente',en:'<code>backlog/mejoras/pendiente/propuestas.md</code> → pending self-improvement'},
   goldenNever:{es:"Nunca leas el código entero del repo. Solo lo que tu tarea demande.",en:"Never read the whole repo's code. Only what your task demands."},
   reads:{es:"LEE",en:"READS"},
   writes:{es:"ESCRIBE",en:"WRITES"},
@@ -543,7 +543,7 @@ const A = [
     read:[
       ["docs/DESIGN.md",{es:"la visión que narra",en:"the vision he narrates"}],
       ["docs/SKILLS-ANTISLOP.md",{es:"guía de estilo anti-AI-slop",en:"anti-AI-slop style guide"}],
-      ["backlog/TODO.md",{es:"contexto del día",en:"context for the day"}]],
+      ["backlog/tareas/en-curso/activo.md",{es:"qué se ejecuta hoy",en:"what runs today"}]],
     write:[
       ["backlog/historia/<fecha>.md",{es:"la crónica del día",en:"the day's chronicle"}]],
     handoff:{
@@ -558,12 +558,14 @@ const A = [
       es:"Juega como lo haría un no muerto elegido: una run desde save limpio y otra con el progreso de un veterano (20+ h). Comprueba que el camino sea apto para quien empieza de cero, mantiene vivo ESTADO-JUGADOR.md y deja NOTAS DE DIRECCIÓN a Gwyn — informa, no decide.",
       en:"Plays as an undead chosen would: one run from a clean save and another with a veteran's progress (20+ h). Ensures the path suits someone starting from zero, keeps ESTADO-JUGADOR.md alive and leaves DIRECTION NOTES to Gwyn — he informs, he does not decide."},
     read:[
+      ["backlog/zona-testeo.md",{es:"la zona 🔬 de hoy (decidió Gwyn)",en:"today's zone 🔬 (set by Gwyn)"}],
       ["docs/ESTADO-JUGADOR.md",{es:"lo que dejó ayer (su doc vivo)",en:"what he left yesterday (his living doc)"}],
       ["docs/DESIGN.md",{es:"la visión que protege",en:"the vision he protects"}],
       ["build jugable de src/",{es:"juega como jugador de verdad",en:"plays as a real player"}]],
     write:[
       ["docs/ESTADO-JUGADOR.md",{es:"estado global jugable + run de referencia",en:"global playable state + reference run"}],
-      ["backlog/TODO.md",{es:"notas de DIRECCIÓN para Gwyn",en:"DIRECTION notes for Gwyn"}]],
+      ["backlog/notas-manana.md",{es:"notas de DIRECCIÓN para Gwyn (🧭)",en:"DIRECTION notes for Gwyn (🧭)"}],
+      ["backlog/tareas/pendiente/abierto.md",{es:"sus [BUG] e ideas",en:"his bugs and ideas"}]],
     handoff:{
       es:"Su lectura del camino llega a Havel (07:00) y su dirección a Gwyn (23:00).",
       en:"His reading of the path reaches Havel (07:00) and his direction reaches Gwyn (23:00)."}
@@ -576,10 +578,11 @@ const A = [
       es:"JUEGA el juego con sus propias manos, GENERA ideas nuevas (capítulos, mecánicas, comandos) y anota los bugs que encuentra. La crítica de diseño no es suya: eso lo firman Artorias y Gwyn.",
       en:"PLAYS the game with his own hands, GENERATES new ideas (chapters, mechanics, commands) and notes the bugs he finds. Design critique is not his call: Artorias and Gwyn sign that."},
     read:[
+      ["backlog/zona-testeo.md",{es:"la zona 🔬 que continúa",en:"the zone he continues"}],
       ["docs/worklog/",{es:"la bitácora de ayer",en:"yesterday's log"}],
       ["build jugable de src/",{es:"juega el juego real",en:"plays the real game"}]],
     write:[
-      ["backlog/TODO.md",{es:"ideas, bugs e inspiraciones",en:"ideas, bugs and inspirations"}],
+      ["backlog/tareas/pendiente/abierto.md",{es:"ideas, bugs e inspiraciones",en:"ideas, bugs and inspirations"}],
       ["backlog/historia/",{es:"chispas narrativas",en:"narrative sparks"}]],
     handoff:{
       es:"Su lista de ideas y bugs alimenta el plan de mediodía.",
@@ -593,13 +596,14 @@ const A = [
       es:"Convierte TODO y las log-ideas en el PLAN DE HOY con tareas repartidas por módulo. Es la mano invisible que ordena la fila del Concilio.",
       en:"Turns TODO and log-ideas into TODAY'S PLAN with tasks split by module. The invisible hand that lines up the Council."},
     read:[
-      ["backlog/TODO.md",{es:"tareas e ideas pendientes",en:"pending tasks and ideas"}],
+      ["backlog/tareas/pendiente/abierto.md",{es:"tareas e ideas pendientes",en:"pending tasks and ideas"}],
+      ["backlog/notas-manana.md",{es:"las notas 🧭/🎯 de la noche",en:"last night's notes"}],
       ["backlog/historia/",{es:"contexto narrativo",en:"narrative context"}],
       ["docs/DESIGN.md",{es:"la visión intocable",en:"the untouchable vision"}],
       ["docs/AGENTES.md",{es:"quién es quién",en:"who is who"}]],
     write:[
       ["backlog/planes/YYYY/MM/DD.md",{es:"el plan de HOY, tarea a tarea",en:"TODAY's plan, task by task"}],
-      ["backlog/TODO.md",{es:"estados actualizados",en:"updated statuses"}]],
+      ["backlog/tareas/en-curso/activo.md",{es:"tareas elegidas → en curso",en:"chosen tasks → in progress"}]],
     handoff:{
       es:"Publica el plan. Los tres ejecutores ya tienen su misión.",
       en:"He publishes the plan. The three executors already have their mission."}
@@ -661,11 +665,12 @@ const A = [
       es:"Revisa técnicamente (tests, lint, juego), marca 💥 o ✅, y deja NOTAS DE GUSTO más la lista de \u201cqué no mergear\u201d para el día siguiente.",
       en:"Reviews technically (tests, lint, game), marks 💥 or ✅, and leaves TASTE NOTES plus the \u201cwhat not to merge\u201d list for the next day."},
     read:[
-      ["backlog/TODO.md",{es:"qué había pendiente",en:"what was pending"}],
+      ["backlog/tareas/en-curso/activo.md",{es:"qué se hizo hoy",en:"today's done tasks"}],
       ["PRs y ramas feat/*",{es:"el trabajo del día",en:"the day's work"}],
       ["src/ + tests",{es:"verificación real",en:"real verification"}]],
     write:[
-      ["backlog/TODO.md",{es:"veredictos 💥/✅ y notas de gusto",en:"💥/✅ verdicts and taste notes"}],
+      ["backlog/tareas/en-curso/activo.md",{es:"veredictos 💥/✅ junto a cada línea",en:"💥/✅ verdicts beside each task"}],
+      ["backlog/notas-manana.md",{es:"notas de gusto + qué no mergear (🎯)",en:"taste notes + what not to merge (🎯)"}],
       ["docs/worklog/",{es:"su huella diaria",en:"his daily trace"}]],
     handoff:{
       es:"El filtro está hecho: lo digno pasa, lo roto queda señalado.",
@@ -679,12 +684,14 @@ const A = [
       es:"Valida el DISEÑO, hace el MERGE final de las PRs aprobadas, deja sus propias notas de gusto e ideas, y reporta a Juanma. La última llama del día.",
       en:"Validates the DESIGN, performs the final MERGE of approved PRs, leaves his own taste notes and ideas, and reports to Juanma. The day's last flame."},
     read:[
-      ["backlog/TODO.md",{es:"los veredictos de Artorias",en:"Artorias's verdicts"}],
+      ["backlog/tareas/en-curso/activo.md",{es:"los veredictos de Artorias",en:"Artorias's verdicts"}],
+      ["backlog/notas-manana.md",{es:"las notas 🧭/🎯 de la tarde",en:"the evening's notes"}],
       ["PRs y ramas feat/*",{es:"lo que merece entrar",en:"what deserves to land"}],
       ["docs/DESIGN.md",{es:"¿se respetó la visión?",en:"was the vision honored?"}]],
     write:[
       ["main",{es:"merge final de las PRs",en:"final PR merge"}],
-      ["backlog/TODO.md",{es:"validación de diseño y notas",en:"design validation and notes"}],
+      ["backlog/tareas/hecho/<mes>.md",{es:"archiva lo mergeado (por mes)",en:"archives merged work (by month)"}],
+      ["backlog/zona-testeo.md",{es:"la ZONA 🔬 de mañana (sobrescribe)",en:"tomorrow's ZONE 🔬 (overwrites it)"}],
       ["Telegram de Juanma",{es:"informe diario",en:"daily report"}]],
     handoff:{
       es:"El informe vuela a Juanma. El Concilio duerme; la hoguera sigue encendida.",
@@ -694,10 +701,15 @@ const A = [
 
 const ZONES = [
   { code:"backlog/", color:"#2f7a4a", desc:{es:"LA COLA DE TRABAJO (vivo)",en:"THE WORK QUEUE (alive)"}, files:[
-    { f:"TODO.md", rd:["gwyndolin"], wr:["havel","oscar","artorias","gwyn"], d:{es:"estados de tareas: pendiente / en curso / hecho",en:"task statuses: pending / in progress / done"} },
+    { f:"INDICE.md", rd:["todos"], wr:[], d:{es:"mapa del backlog: qué fichero lee/escribe cada rol",en:"backlog map: which file each role reads/writes"} },
+    { f:"zona-testeo.md", rd:["oscar","havel"], wr:["gwyn"], d:{es:"la zona 🔬 del día: Gwyn la decide al cierre",en:"the day's zone 🔬: Gwyn sets it at close"} },
+    { f:"notas-manana.md", rd:["gwyndolin","gwyn"], wr:["oscar","artorias","gwyn"], d:{es:"notas rodantes: 🧭 dirección de Oscar · 🎯 revisores",en:"rolling notes: 🧭 Oscar's direction · 🎯 reviewers"} },
+    { f:"tareas/pendiente/abierto.md", rd:["gwyndolin"], wr:["havel","oscar","artorias"], d:{es:"tareas [PENDIENTE] / [BUG] / ideas abiertas",en:"pending / bug / open ideas"} },
+    { f:"tareas/en-curso/activo.md", rd:["manus","gwyndolin","ornstein","smough","seath","artorias","gwyn"], wr:["gwyndolin"], d:{es:"lo que se ejecuta HOY + veredictos 💥/✅",en:"what runs TODAY + verdicts"} },
+    { f:"tareas/hecho/<AAAA-MM>.md", rd:[], wr:["gwyn"], d:{es:"archivo POR MES de lo completado",en:"monthly archive of completed work"} },
     { f:"planes/YYYY/MM/DD.md", rd:["ornstein","smough","seath"], wr:["gwyndolin"], d:{es:"plan del HOY (histórico por fecha)",en:"TODAY's plan (historical by date)"} },
     { f:"historia/", rd:["gwyndolin","havel"], wr:["manus"], d:{es:"ÍNDICE · PERSONAJES · ESCENARIOS · CAPITULOS",en:"INDEX · CHARACTERS · SCENARIOS · CHAPTERS"} },
-    { f:"MEJORAS.md", rd:[], wr:["todos"], d:{es:"buzón de auto-mejora del Concilio",en:"the Council's self-improvement mailbox"} }
+    { f:"mejoras/pendiente/propuestas.md", rd:[], wr:["todos"], d:{es:"buzón de auto-mejora del Concilio",en:"the Council's self-improvement mailbox"} }
   ]},
   { code:"docs/", color:"#4a78a0", desc:{es:"EL CONOCIMIENTO (permanente)",en:"THE KNOWLEDGE (permanent)"}, files:[
     { f:"PROJECT-MAP.md", rd:["todos"], wr:[], d:{es:"índice maestro — lectura obligada (Paso 0)",en:"master index — mandatory reading (Step 0)"} },

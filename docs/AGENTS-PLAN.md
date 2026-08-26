@@ -37,12 +37,16 @@ Cada cron arranca sin memoria conversacional. Todo se persiste en el repo:
 docs/PROJECT-MAP.md      → mapa de módulos (qué es cada cosa, dónde) ← GUÍA CLAVE
 docs/DESIGN.md           → el diseño del juego (vivo, se actualiza)
 docs/ADR/                → decisiones de arquitectura (incl. las de IA/eficiencia)
-backlog/TODO.md          → tareas con estado (pendiente/curso/hecho/descartado)
+backlog/INDICE.md        → mapa del backlog: qué fichero lee/escribe cada rol ← GUÍA CLAVE DEL BACKLOG
+backlog/tareas/          → tareas por estado: pendiente/abierto.md · en-curso/activo.md · hecho/<AAAA-MM>.md (archivo POR MES) · descartado/historico.md
+backlog/mejoras/         → auto-mejora: pendiente/propuestas.md (los agentes proponen) · aplicadas/historico.md (registro de Gwyn)
+backlog/zona-testeo.md   → la ZONA 🔬 del día (Gwyn escribe al cierre; Oscar/Havel leen)
+backlog/notas-manana.md  → notas rodantes para mañana (🧭 Oscar → Gwyn · 🎯 revisores → planificador)
 backlog/planes/          → HISTÓRICO de planes diarios: planes/YYYY/MM/DD.md (hoy = fecha actual)
 backlog/historia/        → la narrativa de Manus (con índice, personajes, capítulos)
 docs/worklog/            → registro diario por fechas: worklog/YYYY/MM/DD.md
 docs/AGENTES.md          → roles del concilio: qué hace cada agente (supervisión mutua)
-backlog/MEJORAS.md       → auto-mejora del comité: los agentes proponen mejoras a su rol/flujo
+backlog/mejoras/         → auto-mejora del comité: pendiente/propuestas.md + aplicadas/historico.md
 ```
 **Regla de oro:** ninguna IA vuelve a leer todo el proyecto. Leen el
 `PROJECT-MAP.md` + la guía del módulo relevante + las tareas que les tocan.
@@ -60,17 +64,17 @@ ejecutores leen "el plan de hoy" (fecha actual). Se conserva el histórico compl
 Lee SIEMPRE, en este orden, al arrancar:
 1. `docs/PROJECT-MAP.md` → mapa de módulos y quién escribe dónde.
 2. `docs/AGENTES.md` → QUÉ hace cada agente del concilio (sabes con quién coordinas).
-3. `backlog/TODO.md` → qué hay pendiente/en curso/hecho.
+3. `backlog/INDICE.md` → mapa del backlog, y SOLO los ficheros de tu fila (qué hay pendiente/en curso/hecho sin leerlo entero).
 4. `docs/DESIGN.md` → la visión que NO puedes romper.
 5. (Si eres planificador) `backlog/historia/` (para saber la historia) + el día de ayer de `docs/worklog/`.
 6. (Si eres ejecutor) `backlog/planes/YYYY/MM/DD.md` (HOY) → tu tarea asignada.
-7. `backlog/MEJORAS.md` → revisa si hay propuestas de auto-mejora pendientes que te afecten.
+7. `backlog/mejoras/pendiente/propuestas.md` → revisa si hay propuestas de auto-mejora pendientes que te afecten.
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
 - Manus/Oscar/Havel: leen lo de ayer y generan (Manus = historia, Oscar =
   run de referencia + notas de dirección, Havel = ideas frescas + jugar).
-- Planificador: coge lo `[PENDIENTE]` del TODO (incluidas las ideas de Havel)
+- Planificador: coge lo `[PENDIENTE]` de `backlog/tareas/pendiente/abierto.md` (incluidas las ideas de Havel)
   → redacta `backlog/planes/YYYY/MM/DD.md` (hoy) sin esperar aprobación humana.
 - Ejecutores: cogen SU tarea del plan (la que les asignó el planificador).
 - Revisores: revisan los PR/diff de hoy.
@@ -81,7 +85,7 @@ Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 Cada agente, al terminar, DEJA SU HUELLA en ubicaciones fijas (ver tabla
 en PROJECT-MAP). Las reglas de oro de la escritura:
 
-1. **Marca el estado en `backlog/TODO.md`** SIEMPRE → `[HECHO]` | `[EN CURSO]`
+1. **Marca el estado en el fichero del backlog que corresponda** (`backlog/tareas/…`, ver INDICE) SIEMPRE → `[HECHO]` | `[EN CURSO]`
    | `[DESCARTADO]`. Nunca dejes una tarea "en el aire" sin estado.
 2. **Actualiza el WORKLOG** (append en `docs/worklog/YYYY/MM/DD.md` del día): qué
    hice, decidí, y POR QUÉ.
@@ -94,9 +98,9 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
 Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
 - **Manus →** deja historia en `backlog/historia/` para planificador/ejecutores.
 - **Oscar →** actualiza `docs/ESTADO-JUGADOR.md` (estado jugable + run de
-  referencia) y deja NOTAS DE DIRECCIÓN para Gwyn en TODO; ejecuta primero la
+  referencia) y deja NOTAS DE DIRECCIÓN para Gwyn en `notas-manana.md` (🧭); ejecuta primero la
   zona 🔬 del relevo Gwyn → Oscar → Havel (`docs/TESTEO-DIARIO.md`).
-- **Havel →** deja ideas frescas y bugs en TODO; Gwyndolin las planifica directamente (fuente creativa autónoma).
+- **Havel →** deja ideas frescas y bugs en `tareas/pendiente/abierto.md`; Gwyndolin las planifica directamente (fuente creativa autónoma).
 - **Planificador →** deja el plan en `backlog/planes/YYYY/MM/DD.md` (fecha de hoy) para que los ejecutores lo lean.
 - **Ejecutores →** marcan `[HECHO]` para que los revisores validen ese PR.
 - **Artorias →** marca 💥/✅ y deja NOTAS DE GUSTO + "qué no mergear" para mañana.
@@ -114,14 +118,14 @@ El comité no es estático: puede mejorar su propio funcionamiento.
 - **Visión:** si un agente detecta que su tarea no se puede hacer bien, que el
   flujo tiene un cuello de botella, que su prompt es ineficiente o que otro rol
   podría hacer algo mejor, puede proponer un cambio.
-- **DÓNDE:** `backlog/MEJORAS.md` — formato `[PROPUESTA]` (problema/propuesta/
+- **DÓNDE:** `backlog/mejoras/pendiente/propuestas.md` — formato `[PROPUESTA]` (problema/propuesta/
   impacto/estado). Ver `docs/AGENTES.md` (sección AUTO-MEJORA) para las reglas.
 - **QUIÉN APLICA: Gwyn (revisor final, 23:00) decide y APLICA** las mejoras
   aprobadas usando el CLI OFICIAL (`hermes cron edit --prompt ... <job_id>`),
   que es válido y con respaldo — NO edita `jobs.json` a mano. Cualquier agente
-  propone en `MEJORAS.md`; Gwyn decide el contenido Y lo aplica; Juanma supervisa.
+  propone en `mejoras/pendiente/propuestas.md`; Gwyn decide el contenido Y lo aplica; Juanma supervisa.
 - **Esqueleto protegido:** horarios del concilio y cadena de PRs/merge NO se
-  cambian sin aprobación de Juanma (se pueden PROPONER en MEJORAS, no auto-aplicar).
+  cambian sin aprobación de Juanma (se pueden PROPONER en `mejoras/pendiente/`, no auto-aplicar).
 - **Cada agente sabe qué hace el resto** (lee `docs/AGENTES.md` arriba), lo que
   le da contexto para proponer mejoras con criterio.
 
@@ -198,7 +202,7 @@ src/<modulo>/
   README, dependencias y quién lo toca. Un agente lee SOLO el map + el módulo
   de su tarea, nunca el código entero.
 - **Tras cada tarea, el agente documenta**: actualiza el README del módulo,
-  el TODO (marca hecho/descartado) y el WORKLOG (qué y por qué, en la ruta del día). Documentar es
+  su fichero en `backlog/tareas/` (marca hecho/descartado) y el WORKLOG (qué y por qué, en la ruta del día). Documentar es
   obligatorio y forma parte de "tarea terminada".
 - La guía de navegación para agentes también se documenta en el
   `PROJECT-MAP.md` y en el README público del repo (autoexplicativo para el
@@ -220,7 +224,7 @@ src/<modulo>/
 - Run de referencia desde SAVE LIMPIO (el dueño del save limpio es él) +
   perspectiva de VETERANO (20+ h). Mantiene vivo `docs/ESTADO-JUGADOR.md`
   (qué es jugable HOY de principio a fin).
-- Deja NOTAS DE DIRECCIÓN para Gwyn en `backlog/TODO.md` (informa, NO decide)
+- Deja NOTAS DE DIRECCIÓN para Gwyn en `backlog/notas-manana.md` (🧭; informa, NO decide)
   y su línea CICLO en el worklog. NO genera ideas de contenido ni valida código.
 
 ### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (jugar + idear) · deepseek-v4-flash
@@ -230,7 +234,7 @@ src/<modulo>/
      run de referencia desde cero es capa de Oscar (05:00, TESTEO-DIARIO.md).
   2. **GENERA ideas nuevas** constantemente (capítulos, mecánicas, objetos, boons,
      comandos Linux, bifurcaciones, enemigos, logros) para que el juego crezca solo.
-- Anota bugs y las nuevas ideas en `backlog/TODO.md` como `[PENDIENTE]` (sin implementar:
+- Anota bugs y las nuevas ideas en `backlog/tareas/pendiente/abierto.md` como `[PENDIENTE]` (sin implementar:
   eso lo hacen los ejecutores tras el planificador). Es la **chispa creativa**.
 - **NO** lleva la crítica de diseño ni las notas de gusto para mañana: eso es de los
   revisores (Artorias y Gwyn) para no sobrecargarlo. Él siembra, ellos deciden.
@@ -243,7 +247,7 @@ src/<modulo>/
   ejecutor (o sus sub-agentes) complete en un turno, sin llenar su contexto.
   Si una idea es grande, la FRACCIONA en varias tareas con orden. Criterio:
   "un ejecutor la entiende sin releer todo y la acaba en su franja".
-- **INICIATIVA DE CURACIÓN:** decide TÚ qué toca hoy del TODO completo (da igual
+- **INICIATIVA DE CURACIÓN:** decide TÚ qué toca hoy de las tareas abiertas completas (`pendiente/abierto.md`; da igual
   la antigüedad de la tarea). Elige lo más valioso/interesante/urgente; no
   repitas mecánicamente lo pendiente. Si algo antiguo sigue siendo importante,
   tráelo; si no aporta, propón descartarlo.
@@ -267,13 +271,13 @@ src/<modulo>/
 
 ### 21:00 — 🐺 ARTORIAS del Abismo · Revisor filtro · deepseek-v4-flash
 - Se toma su tiempo probando (juego + tests + lint + smoke).
-- Marca 💥 / ✅ en `backlog/TODO.md`. Rechaza lo roto con comentario accionable.
+- Marca 💥 / ✅ en `backlog/tareas/en-curso/activo.md`. Rechaza lo roto con comentario accionable.
 
 ### 23:00 — 👑 GWYN, Señor de la Ceniza · Revisor de diseño + MERGE · gpt-5.6-luna
 - Revisión profunda: ¿el PR sigue la visión del `DESIGN.md`? (no solo que "compila").
 - Integra las NOTAS DE DIRECCIÓN de Oscar (05:00) en su validación.
 - **Decide LA ZONA 🔬 de testeo de mañana** (`docs/TESTEO-DIARIO.md` §4): la
-  escribe al cierre en `backlog/TODO.md`; el relevo de la zona es
+  SOBRESCRIBE al cierre `backlog/zona-testeo.md`; el relevo de la zona es
   **Gwyn → Oscar (05:00) → Havel (07:00)**.
 - Modelo distinto al constructor → no se auto-aprueba.
 - **Cuidado con tokens; no excedernos.**
@@ -290,7 +294,7 @@ src/<modulo>/
    - Si está bien y sigue el diseño y Artorias lo aprobó → **mergea** a `main`.
    - Si NO se debe mergear → NO la mergea, NO borra la rama, y deja documentado:
      **POR QUÉ no se ha mergeado** y **CÓMO arreglarlo** (para que el ejecutor lo coja).
-     Registrado en `backlog/TODO.md` (+ comentario del PR). La tarea vuelve a `[EN CURSO]`.
+     Registrado junto a la línea en `backlog/tareas/en-curso/activo.md` (+ comentario del PR). La tarea sigue `[EN CURSO]`.
 4. Gwyn reporta a Juanma (qué se mergeó, qué no y por qué, cómo arreglarlo).
 5. Al día siguiente, el ejecutor cuya rama fue rechazada la arregla PRIMERO (lo dejo
    marcado como máxima prioridad en su prompt).
@@ -434,7 +438,7 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [x] Flujo 100% autónomo: ideas de Havel → Gwyndolin directamente, sin aprobación humana.
 - [x] Notas de gusto para mañana → las dejan LOS REVISORES (Artorias + Gwyn), no Havel.
 - [x] Flujo de ramas: ejecutores en rama, solo Gwyn mergea, ramas rechazadas con por qué + cómo arreglar.
-- [x] Auto-mejora del comité (`docs/AGENTES.md` + `backlog/MEJORAS.md`).
+- [x] Auto-mejora del comité (`docs/AGENTES.md` + `backlog/mejoras/pendiente/propuestas.md`).
 - [x] Visto bueno final del Concilio + firma por agente en git + README documentado.
 - [ ] Definir cron de uso del panel de métricas (`opencode stats --days N --models`) — ya existe el panel (00:00), falta el formato del doc.
 - [ ] **Fase 0** (arranca 24/08 03:00): los 10 one-shot producen DESIGN.md + plot + mapa de módulos.

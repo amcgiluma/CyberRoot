@@ -181,7 +181,7 @@ Principios derivados (para el Diseñador P2):
 1. **Un estado, dos renderizadores** [directriz arquitectónica]: el core emite eventos (comando_ok, dato_extraído, alerta_subida…) y la capa visual (mapa, HUD, animaciones) y la capa terminal (texto, colores ANSI) consumen LOS MISMOS eventos. El juice no es cosmética: es el mismo dato visto dos veces.
 2. **Modos de foco claros** [directriz]: en modo MAPA el teclado navegra/equipa; al entrar en sala, foco total en terminal; ESC vuelve al mapa. Nunca mezclar input de navegación y de comandos.
 3. **Puentes de feedback cruzado** [directriz]: un comando correcto pulsa el nodo actual + suma al combo del HUD; una alerta tiñe el mapa. El jugador percibe UNA pantalla viva, no dos apps pegadas.
-4. **Legibilidad primero** [regla dura]: la terminal in-game usa fuente bitmap validada (tarea `[PENDIENTE]` en TODO — bloqueante para el Diseñador P4). Si la fuente no se lee, se cambia de fuente antes que sacrificar texto.
+4. **Legibilidad primero** [regla dura]: la terminal in-game usa fuente bitmap validada (tarea `[PENDIENTE]` en `backlog/tareas/pendiente/abierto.md` — bloqueante para el diseño del HUD). Si la fuente no se lee, se cambia de fuente antes que sacrificar texto.
 5. **La estética CRT nace de la restricción** [OPINIÓN]: 16 colores de Pyxel + scanlines + verde/ámbar dan coherencia gratis; el pixel-art no decora, unifica.
 
 ---

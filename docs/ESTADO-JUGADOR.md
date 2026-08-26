@@ -43,7 +43,7 @@ textos de reacción)?
 ## 🧭 Notas de dirección (para Gwyn)
 
 *(Oscar puede dejar aquí también un apunte breve; las notas formales van en
-`backlog/TODO.md` para que Gwyn las valide a las 23:00.)*
+`backlog/notas-manana.md`, sección 🧭, para que Gwyn las valide a las 23:00.)*
 
 ---
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*

@@ -25,10 +25,13 @@ flowchart TD
     ROOT --> DOCS["<b>docs/</b><br/><i>EL CONOCIMIENTO (permanente)</i>"]
     ROOT --> TOOLS["<b>tools/</b><br/>utilidades (cyberroot_usage.py)"]
 
-    BACKLOG --> TODO["TODO.md<br/><i>estados de tareas (pend/curso/hecho)</i>"]
+    BACKLOG --> BINDICE["INDICE.md<br/><i>mapa del backlog: qué lee cada rol</i>"]
+    BACKLOG --> BZONA["zona-testeo.md<br/><i>la zona 🔬 del día (Gwyn → Oscar → Havel)</i>"]
+    BACKLOG --> BNOTAS["notas-manana.md<br/><i>notas rodantes para mañana (🧭 dirección · 🎯 revisores)</i>"]
+    BACKLOG --> BTAREAS["tareas/<br/><i>pendiente/abierto · en-curso/activo<br/>hecho/archivo POR MES · descartado</i>"]
     BACKLOG --> PLAN["planes/YYYY/MM/DD.md<br/><i>plan del HOY (histórico por fecha)</i>"]
     BACKLOG --> HIST["historia/<br/><i>INDICE · PERSONAJES · ESCENARIOS · CAPITULOS/</i>"]
-    BACKLOG --> MEJORAS["MEJORAS.md<br/><i>buzón de auto-mejora</i>"]
+    BACKLOG --> BMEJORAS["mejoras/<br/><i>pendiente/propuestas · aplicadas/historico</i>"]
 
     DOCS --> AGPLAN["AGENTS-PLAN.md<br/><i>plan maestro del sistema</i>"]
     DOCS --> AGENTES["AGENTES.md<br/><i>roles del Concilio + delegación + skills</i>"]
@@ -53,7 +56,9 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    TODO["backlog/TODO.md · estados"]
+    TAREAS["backlog/tareas/<br/>pendiente · en-curso"]
+    NOTAS["backlog/notas-manana.md · notas para mañana"]
+    ZONA["backlog/zona-testeo.md · zona 🔬"]
     HIST["backlog/historia/ · narrativa"]
     PLAN["backlog/planes/HOY · plan"]
     DESIGN["docs/DESIGN.md · visión"]
@@ -85,11 +90,11 @@ flowchart LR
     MANUS -->|"aplica"| ASLOP
 
     HAVEL -->|"lee/juega"| WL
-    HAVEL -->|"anota"| TODO
+    HAVEL -->|"anota"| TAREAS
     HAVEL -->|"inspira"| HIST
 
     GWYN2 -->|"escribe"| PLAN
-    GWYN2 -->|"reparte"| TODO
+    GWYN2 -->|"reparte"| TAREAS
     GWYN2 -->|"lee"| HIST
     GWYN2 -->|"lee"| DESIGN
     GWYN2 -->|"lee"| AGENTES
@@ -103,11 +108,12 @@ flowchart LR
         REND["render/ · Pyxel"]
     end
 
-    ART -->|"revisa"| TODO
+    ART -->|"revisa"| TAREAS
     ART -->|"revisa"| PRS
-    ART -->|"notas de gusto"| TODO
+    ART -->|"notas de gusto"| NOTAS
 
     GWYN -->|"merge final"| PRS
+    GWYN -->|"zona 🔬 de mañana"| ZONA
     GWYN -->|"reporta"| JUANMA
 
     style MANUS fill:#333366,color:#fff
@@ -124,10 +130,10 @@ flowchart LR
 LEE en orden (Paso 0, AGENTS-PLAN §2.5):
 1. docs/PROJECT-MAP.md   → visión general
 2. docs/AGENTES.md       → qué hace cada agente
-3. backlog/TODO.md       → estados
+3. backlog/INDICE.md     → mapa del backlog (abre SOLO los ficheros de tu rol)
 4. docs/DESIGN.md        → la visión que no puedes romper
 5. (según tu rol) planes/historia/investigación
-6. backlog/MEJORAS.md    → auto-mejora pendiente
+6. backlog/mejoras/pendiente/propuestas.md → auto-mejora pendiente
 
 NO leas el código entero del repo. Solo lo que necesites para tu tarea.
 ```
