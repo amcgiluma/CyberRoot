@@ -1,11 +1,12 @@
 # DESIGN — CyberRoot
 
-> Documento vivo de diseño de Fase 0. Se construye en cinco pases:
+> Documento vivo de diseño de Fase 0. Construido en cinco pases:
 > - Pase 1 — concepto, historia, plot general, caminos y finales. ✅
 > - Pase 2 — loop roguelite Hades, karma operativo, sinergias y rejugabilidad. ✅
 > - Pase 3 — estructura de capítulos y niveles. ✅
-> - **PASE 4 (este)** — dopamina fina y UX/visual.
-> - Pase 5 — revisión final. 09:00 del 26/08.
+> - Pase 4 — dopamina fina y UX/visual. ✅
+> - **PASE 5 (este)** — revisión final: coherencia total, condiciones de
+>   finales, dimensionado consolidado y protocolo de testeo diario. ✅
 >
 > Marcos cerrados que este documento no discute: `AGENTS-PLAN.md` §6.5.
 > Insumos: `docs/RESEARCH-MECANICAS.md` · `docs/INVESTIGACION-STACK.md` ·
@@ -107,7 +108,7 @@ completas se escriben antes de dar diálogo a cada uno — regla §2.6.5):
   pantallas y avisos públicos.
 
 > **Nota de Pase 2:** Gris vende el hardware (§4.3) y Zeta asigna los Pactos (§4.6);
-> ambos papeles ya estaban plantados en la Pase 1 y ahora tienen función
+> ambos papeles ya estaban plantados en el Pase 1 y ahora tienen función
 > mecánica sin cambiar un rasgo de carácter.
 
 ### 2.4 El antagonista: Lumen y la Oficina de Continuidad
@@ -165,7 +166,11 @@ completas se escriben antes de dar diálogo a cada uno — regla §2.6.5):
    vacío. El log dice «ensayo completado»; la fecha de cierre, en blanco. Dos
    lecturas: el único que sobrevivió, o el único que aún corre.
 8. **El giro del Auditor.** Empieza a preguntar cosas que no constan en el
-   formulario. Semilla de su arco (abierto en §4).
+   formulario. Arco cerrado en P5 (§9): aliado a medias, sin cambio de bando
+   ni de forma — con el tiempo deja de entregar algunos datos del ensayo y
+   permite a Cero descubrir que esos mismos informes son la palanca contra
+   Vela (condición de EL TRATO, §3.4.1). Sin traición dramática: es
+   burocracia que desarrolla conciencia por acumulación de casos.
 9. **Presión máxima.** Vela localiza la Subestación — consecuencia acumulada de
    las alertas reales del jugador, no guion. Asalto defensivo al Hub: la única
    incursión invertida del juego (defender en lugar de entrar; puente directo a
@@ -253,7 +258,7 @@ externa que cite aquí: es criterio propio, y así queda registrado.
 
 ### 3.3 Karma operativo
 
-La Pase 1 definió qué mueve la aguja y cómo se lee. Falta el mecanismo exacto:
+El Pase 1 definió qué mueve la aguja y cómo se lee. Falta el mecanismo exacto:
 cómo se decide Blue/Red dentro y entre runs, y cómo llega eso al jugador sin
 medidores morales.
 
@@ -312,7 +317,7 @@ de stock de Gris y de cola de encargos entre un perfil azul forzado y uno rojo
 forzado, no solo «textos distintos».
 
 ---
-### 3.4 Finales (esbozo — condiciones exactas en P5; dónde se ganan, §6)
+### 3.4 Finales (condiciones cerradas en §3.4.1; dónde se ganan, §6)
 
 | Final | Condición | Qué pasa | Coste |
 |---|---|---|---|
@@ -324,6 +329,28 @@ forzado, no solo «textos distintos».
 Variante transversal — **HERENCIA**: si mueres en la misión final con karma
 polarizado, los aliados ejecutan tu plan sin ti; epílogo póstumo. Barata de
 producir (texto reutilizado) y muy Hades.
+
+**Condiciones exactas** (cerradas en P5). El valor de karma K es la suma
+ponderada de las últimas 8 entradas (§3.3); positivo = azul, negativo =
+rojo. Umbrales v1 ⚠️ de calibración por harness: lo normativo es el
+mecanismo, no la cifra.
+
+- **LUZ PLENA**: cadena final completada con K ≥ +T_alto Y la prueba íntegra
+  de la Lista conservada (ningún dato de la cadena vendido o destruido
+  durante el acto 3). Historial azul sostenido, no un sprint final.
+- **NOCHE LARGA**: ejecutar el quemado del nodo maestro cuando la cadena lo
+  ofrece. Único final que decide una ACCIÓN final en vez de un historial:
+  cualquier K puede elegirla — el «rojo puro» de la tabla es su perfil
+  típico, no su requisito — y el coste narrativo (§3.4) caiga como caiga.
+- **EL TRATO**: llegar a la confrontación dentro de la banda mixta
+  (−T_bajo < K < +T_alto) Y poseer la palanca: los logs del Auditor
+  (su arco semi-abierto los vuelve arma contra Vela, §9).
+- **APAGÓN PROPIO**: los tres requisitos de arriba — arcos de aliados
+  completos, banda mixta, último fragmento. Es el final de dominio total,
+  no de perfil moral: exige haber jugado BIEN, no azul.
+
+Las bandas se excluyen entre sí; HERENCIA se superpone a cualquiera si la
+muerte llega en la misión final con K fuera de la banda mixta.
 
 Presupuesto honesto: cuatro finales + una variante, no diez. La rejugabilidad
 sale del loop, no de multiplicar contenido ramificado (juego objetivo 10–15 h).
@@ -590,7 +617,8 @@ Multiplicar prosa sería el error de ramificación que §3.1 prohíbe.
   restantes, otros finales por karma, APAGÓN PROPIO como meta-logro (§3.4),
   ranking de estilo del harness (fluidez y pipelines puntúan, RM §3.4).
 - **Post-victoria:** HERENCIA (§3.4) + Pactos + semillas daily-style para el
-  comité de testeo (runs headless comparables por seed — INVESTIGACION-STACK).
+  testeo del Concilio (runs headless comparables por seed —
+  INVESTIGACION-STACK; protocolo de turnos en `docs/TESTEO-DIARIO.md`).
 
 Cascada de unlocks Balatro (RM §2.2.5) como colchón de todo: cada boon nuevo
 desbloqueado crea combinaciones nuevas → objetivos nuevos → otra run. El
@@ -634,11 +662,14 @@ una pieza nueva (contrato de generador, §4.5).
    usando pipes y permisos, pero bajo presión mayor y combinados. La tabla de
    §6.2 marca cada familia como ENSEÑANZA (se introduce) o MANTENIMIENTO (se
    sigue practicando).
-5. **Dimensionado** (⚠️ criterio propio, calibra harness): run típica
-   10–20 min (§4.1); jugador medio completa la campaña en 12–14 h con
-   ~45–60 incursiones y 25–35 expulsiones (la muerte es método de estudio,
-   no pérdida). Con finales alternativos y Pactos: 15 h+. Los números por
-   capítulo son objetivos de diseño v1, no contratos.
+5. **Dimensionado** (consolidado en P5 contra §3.4 y §6.3; cifras ⚠️ a
+   calibrar por harness): run típica 10–20 min (§4.1); campaña principal
+   12–14 h con ~46–65 incursiones sobre ~42 encargos base (§6.3) y 25–35
+   expulsiones — la muerte es método de estudio, no pérdida. Con los otros
+   tres finales y Pactos: 15 h+. El objetivo contractual del proyecto es
+   10–15 h (INVESTIGACION-STACK): los números caben dentro con margen, y el
+   margen absorbe la calibración. Los desgloses por capítulo son objetivos
+   v1, no contratos.
 
 ### 6.1 Los siete capítulos
 
@@ -665,7 +696,7 @@ Notas:
   lentes distintas).
 - Los fragmentos personales (botín raro, §2.2) caen en cualquier capítulo
   1–6 con probabilidad baja fija; su contenido se ordena por capítulo para no
-  adelantar el misterio (decisión para Manus, §9).
+  adelantar el misterio (cerrado en P5, §9: orden fijo por capítulo).
 
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 
@@ -690,8 +721,8 @@ es el 4 (red), deliberadamente el más largo en nº de encargos.
 
 ### 6.3 Dimensionado por capítulo (objetivo v1 ⚠️)
 
-Números de diseño para calibrar con harness; suman ~50 encargos distintos
-(más variación procedural infinita sobre ellos).
+Números de diseño para calibrar con harness; suman ~42 encargos base
+(39–45, fila TOTAL) más variación procedural infinita sobre ellos.
 
 | # | Encargos (misiones) | Runs esperadas ⚠️ | Conceptos nuevos | Horas |
 |---|---|---|---|---|
@@ -702,6 +733,11 @@ Números de diseño para calibrar con harness; suman ~50 encargos distintos
 | 4 | 9–10 | 10–14 | ~9 | 2,5 |
 | 5 | 1 (asalto) + 2 preparatorios | 3–5 | ~7 | 1,5 |
 | 6 | 6–8 + cadena final | 8–12 | ~8 | 2,5 |
+| **TOTAL** | **~42 (39–45)** | **46–68** | **~52** | **~13 h** |
+
+La cadena final del cap. 6 es contenido guionizado aparte de los 6–8
+encargos; las horas suman 13 exacto en columna, dentro de la campaña de
+12–14 h declarada en §6.0.5.
 
 Regla de avance: cada capítulo exige completar sus encargos CLAVE (los que
 portan beats del plot, §2.6.1) y demuestra fluidez mínima en su familia
@@ -744,8 +780,8 @@ estos márgenes:
   rojo atraviesan los mismos siete capítulos con los mismos retos técnicos.
 - La muerte sigue avanzando plot en TODOS los capítulos (§2.6.2): la cola de
   eventos tiene líneas reservadas por capítulo y por obstáculo.
-- Presupuesto honesto (§3.4): 7 campañas × ~7 encargos ≈ 50 misiones base +
-  variación procedural; nada de ramificar contenido por karma.
+- Presupuesto honesto (§3.4): 7 campañas ≈ 42 misiones base (39–45, suma
+  real de §6.3) + variación procedural; nada de ramificar contenido por karma.
 
 ### 6.6 Huecos detectados y decisiones tomadas en este pase
 
@@ -1048,57 +1084,76 @@ Protocolo comprometido por Pases 2–3, definido ya para Ornstein/Fase 1:
 
 ---
 
-## 9. Decisiones abiertas (para P5/Juanma)
+## 9. Decisiones abiertas (para Juanma/Fase 1)
 
-- ¿El nombre final del camino azul se teclea o Cero adopta definitivamente ese
-  nombre? (afecta a §2.2 y al final LUZ PLENA)
-- Arco del Auditor: ¿aliado a medias que libera el final secreto, o permanece
-  instrumental? Recomendación: aliado a medias; decide P5.
-- ¿Vela aparece en persona antes del asalto al Hub? Recomendación: solo voz y
-  pantallas hasta entonces; su presencia gana por escasez.
+Estado tras el Pase 5. Lo que queda abierto tiene dueño nombrado; nada queda
+huérfano.
+
+Cerradas en P5:
+
+- **Arco del Auditor**: aliado a medias, sin cambio de bando ni de forma;
+  sus informes acaban siendo la palanca de EL TRATO (§2.5 beat 8, §3.4.1).
+- **Nombre final del camino azul**: se teclea UNA vez, al activar LUZ PLENA
+  (única entrada libre del juego; el epílogo lo repite tal cual). En los
+  demás finales sigue siendo Cero — el tema «identidad como dato» se cobra
+  dejando al jugador escribir el dato. Coste: una entrada + eco en epílogo.
+- **Vela en persona**: solo voz y pantallas hasta el asalto al Hub; cuerpo
+  propio solo en las escenas finales del acto 3. Su presencia gana por
+  escasez.
+- **Orden de fragmentos personales** (§6.1): fijo por capítulo; la seed solo
+  decide la piel del objeto. Controla el ritmo del misterio H1/H2.
+- **Liquidación animada del Hub** (§7.6): siempre secuencial la primera vez
+  de cada sesión, saltable después.
+- **Récords personales / New Game+** (§7.6): NG+ queda FUERA de alcance
+  (presupuesto §3.4); los récords persisten entre partidas como historial
+  local del espejo. Reabrir NG+ exige decisión expresa de Juanma.
+- **Karma invisible** (riesgo §3.5): NO bloquea la producción de textos. El
+  protocolo §8.6 ordena primero pesos kármicos (gratis) y después prosa
+  (cara); Ornstein mide contraste desde la primera build jugable de Fase 1.
+
+Abiertas, con dueño:
+
 - Contenido concreto del censo (qué se puntúa exactamente): worldbuilding
-  pendiente — bloquea salas-dato del cap. 6 (§6.6.4), no el diseño.
+  pendiente — Manus/Fase 1; bloquea salas-dato del cap. 6 (§6.6.4), no el
+  diseño.
+- N = 8 de deriva kármica (§3.2) y umbrales T_alto/T_bajo (§3.4.1): valores
+  v1 sin evidencia externa; los calibra el harness (Ornstein) en Fase 1.
+- Umbral de contraste kármico ≥40 % (§8.6): valor semilla ⚠️; primera
+  métrica a validar por Ornstein.
+- Lista comando a comando de los ~60 boons (§4.4, §6.2): la valida quien
+  defina el sandbox real (stack/Arquitecto, 27/08) contra lo soportado.
 - Romance: fuera de alcance (coste). Relaciones por profundidad de diálogo,
   no por subsistema.
 
-Añadidas en Pase 2 (estado tras Pase 4):
+---
 
-- N = 8 de deriva kármica (§3.2): valor inicial fijado sin evidencia externa;
-  P5 lo revisa contra los datos del harness si existen. Sigue abierta.
-- Créditos tras expulsión (§4.1): RESUELTA en P4 — §7.7 fija 50 % de lo ya
-  extraído, combo no liquidado y bonus de profundidad; números ⚠️ para harness.
-- Sinergias v1 (§5.3): RESUELTA en P4 — catálogo inicial de 28 en §7.8,
-  ampliable con datos de uso del harness.
+## 10. Resumen ejecutivo del diseño (para el gate de Juanma)
 
-Añadidas en Pase 3 (estado tras Pase 4):
-
-- Orden de lectura de fragmentos personales (§6.1): ¿estrictamente por
-  capítulo o por seed? Recomendación: orden fijo por capítulo (controla el
-  ritmo del misterio H1/H2); la seed solo decide QUÉ piel de objeto recibe.
-  Decide P5.
-- ¿El cap. 5 admite Pacto?: RESUELTA en P4 — NO admite Pacto (es campaña
-  guionizada, §6.4.5); Zeta aparta sus apuestas a los preparatorios, que así
-  reciben su reto end-game sin tocar la guionización del asalto.
-- Los conteos de boons/familias de §6.2 son objetivo v0: la lista comando a
-  comando debe validarla quien defina el sandbox real (stack), antes de P5.
-
-Añadidas en Pase 4 (decide P5):
-
-- ¿La liquidación animada del Hub (§7.6) es SIEMPRE secuencial o se puede
-  saltar? Recomendación: siempre secuencial la primera vez de cada sesión,
-  saltable después; la dopamina del conteo no debe volverse impuesto.
-- Umbral de contraste kármico ≥40 % (§8.6): valor semilla sin evidencia ⚠️;
-  si Ornstein no puede medirlo en Fase 1 temprana, P5 debe decidir si el
-  riesgo «karma invisible» (§3.5) bloquea producción de textos o no.
-- ¿Los récords personales del espejo (§7.6) persisten entre partidas nuevas
-  (New Game+) o se reinician? Depende de si existe NG+ — decisión de alcance
-  que hoy está FUERA (presupuesto §3.4); dejar anotado para evitar scope creep.
+CyberRoot es un RPG roguelite de 10–15 h donde aprender Linux real ES subir de
+nivel: cada incursión en el Grid de Lumen enseña comandos por necesidad
+(Bandit), cada expulsión deja lección y avanza la trama (Hades), y cada número
+nace de un comando correcto (Balatro). Siete capítulos-campaña reparten ~60
+comandos en familias con prerrequisitos; el generador procedural aleatoriza la
+piel pero jamás decide si tu comando funciona, y toda sala se auto-resuelve
+antes de ofrecerse. El karma azul/rojo ramifica contexto y finales — cuatro más
+una variante póstuma — sin partir nunca el currículo. La dopamina es
+arquitectura de números trazables (DATOS×COMBO, ciclos anidados, unlocks por
+competencia), con juice que codifica magnitud y terminal siempre legible.
+Tecnología: Pyxel + core Python puro testeable headless, con protocolo de
+contraste kármico y harness de balance definidos para Fase 1. El testeo diario
+del Concilio tiene capa asignada por perfil (TESTEO-DIARIO.md) y zona decidida
+cada noche por Gwyn. Pendiente del gate: ratificar este diseño y el stack
+Pyxel; luego el Arquitecto define módulos y arranca el Concilio.
 
 ---
 
-*Siguiente: **Pase 5** (09:00, 26/08) — revisión final. Debe leer este pase
-entero: le quedan las decisiones de §9 marcadas «decide P5» (arco del
-Auditor, N=8, orden de fragmentos, liquidación saltable), valida coherencia
-total del documento y referencias cruzadas. Los números ⚠️ de §7 (escalones
-de combo, 50 % parcial, umbral 40 % de contraste) quedan como hipótesis v1
-calibrables por Ornstein en Fase 1.*
+*Documento cerrado por el Pase 5 (07:00, 26/08): revisión integral contra
+RESEARCH-MECANICAS, INVESTIGACION-STACK y SKILLS-ANTISLOP; condiciones de
+finales cerradas (§3.4.1), dimensionado consolidado (§6.0.5, §6.3), decisiones
+de §9 resueltas o con dueño, y protocolo de testeo diario creado
+(`docs/TESTEO-DIARIO.md`). Los números ⚠️ (escalones de combo, 50 % parcial,
+N=8, bandas T_alto/T_bajo, umbral 40 %) quedan como hipótesis v1 calibrables
+por el harness de Ornstein en Fase 1. Siguiente paso: **Arquitecto** (27/08,
+11:00) — módulos `src/<mod>/README.md` + tabla PROJECT-MAP, respetando las
+reglas de frontera core/render de INVESTIGACION-STACK; después, gate de
+Juanma.*

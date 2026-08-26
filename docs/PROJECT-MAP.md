@@ -29,6 +29,7 @@ docs/               → el conocimiento permanente.
   PROJECT-MAP.md    → ESTE fichero (índice maestro).
   AGENTES.md        → roles del concilio: qué hace cada agente (coordinación).
   DESIGN.md         → diseño del juego (historia, capítulos, niveles, stack).
+  TESTEO-DIARIO.md  → protocolo de testeo del Concilio: capa de Havel/Artorias/Gwyn + zona 🔬.
   worklog/           → registro diario por fechas: index.md + YYYY/MM/DD.md
   ADR/              → decisiones de arquitectura (fecha + motivo) — públicas.
   USAGE.md          → panel de uso/coste de IA diario.

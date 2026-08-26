@@ -80,6 +80,9 @@
   "¿está bien hecho?"), Gwyn 23:00 (diseño y sabor en conjunto + coherencia,
   "¿es buen juego?"). La ZONA de testeo del día la deja Gwyn al cierre (23:00)
   → Havel la lee a las 07:00. Evitar pisarse entre los 3.
+  ↩ (26/08 07:00) `[HECHO]` — Diseñador P5 crea `docs/TESTEO-DIARIO.md`: capa
+  por perfil, zona 🔬 Gwyn→Havel con formato fijo, fallback si falta zona,
+  prioridades para Gwyndolin, línea CICLO verde/ámbar/rojo en worklog.
 - `[PENDIENTE]` (25/08) **Tercer pilar de mecánicas: SINERGIAS, VARIEDAD y
   REJUGABILIDAD tipo Isaac** (pero de conocimiento). Juanma: además de progreso-
   Hades y dopamina-Balatro (ya en research), que los boons/objetos/perks sinergien
