@@ -17,6 +17,18 @@
 
 ## Historial
 
+### [APLICADA] (25/08) — por decisión de Juanma + Raiden (creación de agente)
+- Agente/job afectado: **Oscar de Astora** (`ee900afb19da`), nuevo agente 05:00.
+- Qué se hizo: se creó el 25/08 como GUARDIÁN DE LA EXPERIENCIA del jugador (run
+  de referencia desde save limpio + perspectiva de veterano + mantiene
+  `docs/ESTADO-JUGADOR.md` + notas de dirección a Gwyn). Se integró en
+  `docs/TESTEO-DIARIO.md` como 4º perfil de testeo (05:00) y en el Concilio de 9.
+- Qué se mejoró / por qué: resolver la propuesta de Juanma (24/08) de descargar a
+  Havel y cubrir el testeo de la EXPERIENCIA (save limpio de cero + progresión a
+  largo plazo) que ningún otro agente cubría.
+- Origen: `[PROPUESTA]` (24/08) "nuevo agente para el testeo de la experiencia
+  del jugador" — cerrada. Detalle: `docs/worklog/2026/08/25.md` y `AGENTES.md`.
+
 ### [APLICADA] (26/08) — por Raiden (reestructurador one-shot, autorizado por decisión de Juanma)
 - Agentes/jobs afectados: los 9 del Concilio (Manus `f6bef0f8e3d8`, Oscar
   `ee900afb19da`, Havel `e3c150781f9d`, Gwyndolin `d5c8def555cd`, Ornstein

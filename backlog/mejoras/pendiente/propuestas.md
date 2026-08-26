@@ -27,21 +27,6 @@
 
 ## Propuestas abiertas
 
-### Propuesta: nuevo agente para el testeo de la experiencia del jugador
-`[PROPUESTA] (24/08, por la noche) — Juanma — Havel / testeo`
-- Problema: Havel (07:00) puede estar SOBRECARGADO: juega lo nuevo (git diff) + smoke
-  del conjunto + genera ideas + ve el estado global. Y quedaría sin resolver del
-  todo la "run de referencia": ver el juego como un jugador que EMPIEZA DE CERO y
-  avanza (save limpio → capítulo 1 en adelante), que es distinto de probar módulos.
-- Propuesta: valorar crear UN NUEVO AGENTE dedicado al testeo de la EXPERIENCIA del
-  jugador (estado global de qué está jugable + run de referencia desde save limpio),
-  descargando a Havel para que siga en ideas + lo nuevo. Enlazado con el protocolo
-  de testeo diario (TESTEO-DIARIO.md, lo hace P5) y el doc ESTADO-JUGADOR.md.
-- Impacto: testeo de experiencia más profundo sin sobrecargar a Havel.
-- Estado: ↩ (26/08) `[APROBADA y aplicada]` — existe desde el 25/08: es
-  **Oscar de Astora** (05:00), integrado en `docs/TESTEO-DIARIO.md` §1. Esta
-  propuesta puede archivarse; Gwyn la cierra en su próxima pasada de curación.
-
 ### Propuestas del corrector one-shot (integración Oscar en TESTEO-DIARIO)
 `[PROPUESTA] (26/08) — Corrector one-shot — Gwyn / Ornstein`
 1. **Validar visualmente el mapa GitHub** (`docs/mapa/index.html`): ya refleja
