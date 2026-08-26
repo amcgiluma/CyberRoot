@@ -27,6 +27,25 @@
 
 ## Propuestas abiertas
 
+### Propuestas del Arquitecto (Fase 0, cierre)
+`[PROPUESTA] (26/08) — Arquitecto — Gwyn / Ornstein / todos`
+1. **Espacio de trabajo del harness fuera de `src/`**: la estructura de
+   `backlog/` cubre a los 9 agentes EXCEPTO un caso — el **harness de
+   playtest** que construye Ornstein (`tools/harness/` en la raíz, junto al
+   `tools/cyberroot_usage.py` existente). Es herramienta de CI/métricas, no
+   código del juego ni entrega narrativa; no cabe en `src/` (rompería la
+   frontera core/render) ni en `backlog/`. Propuesta: crearlo en la raíz como
+   `tools/harness/`, propiedad de Ornstein (`feat/engine`), con sus métricas
+   exportables a `docs/` cuando Gwyn las pida. *(Ya recogido así en
+   `docs/PROJECT-MAP.md` §3 — esta entrada es solo para trazabilidad de la
+   excepción.)*
+2. **`docs/ADR/` se estrena hoy** con `ADR-0001` (frontera core/render).
+   Recordatorio operativo: decisiones grandes de arquitectura → ADR numerado +
+   fila en el WORKLOG, como ya pedía `docs/worklog/index.md` regla 3.
+   *(Creado: `docs/ADR/ADR-0001-arquitectura-core-render.md`.)*
+
+- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+
 ### Propuestas del corrector one-shot (integración Oscar en TESTEO-DIARIO)
 `[PROPUESTA] (26/08) — Corrector one-shot — Gwyn / Ornstein`
 1. **Validar visualmente el mapa GitHub** (`docs/mapa/index.html`): ya refleja

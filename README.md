@@ -78,8 +78,9 @@ backlog/zona-testeo.md → la zona 🔬 de testeo del día (la decide Gwyn al ci
 backlog/notas-manana.md→ notas rodantes para mañana (dirección de Oscar + revisores)
 backlog/mejoras/       → auto-mejora: pendiente/propuestas · aplicadas/historico
 backlog/planes/YYYY/MM/DD.md → el plan de cada día (histórico por fecha)
-backlog/historia/      → la narrativa de Manus (índice, personajes, escenarios, capítulos)
+backlog/historia/      → la narrativa de Manus (índice, personajes, escenarios, fragmentos, capítulos)
 docs/worklog/YYYY/MM/DD.md → registro diario por fechas
+src/core/ARCHITECTURE.md   → normativa de la frontera core/render (leer ANTES de programar)
 ```
 
 Regla de oro: *ningún agente termina su turno sin haber escrito dónde ha dejado

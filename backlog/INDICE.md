@@ -22,8 +22,13 @@ backlog/
     pendiente/propuestas.md    ← propuestas de auto-mejora [NUEVA]/[EN REVISIÓN]
     aplicadas/historico.md     ← registro [APLICADA] de Gwyn (trazabilidad pública en GitHub)
   planes/YYYY/MM/DD.md         ← el plan de cada día (histórico por fecha)
-  historia/                    ← la narrativa de Manus (INDICE, PERSONAJES, ESCENARIOS, CAPITULOS/)
+  historia/                    ← la narrativa de Manus (INDICE, PERSONAJES,
+                                 ESCENARIOS, FRAGMENTOS, CAPITULOS/) —
+                                 materializada el 26/08 según AGENTS-PLAN §6.1
 ```
+
+> Estructura de trabajo POR AGENTE y tabla de dueños de módulos/ramas:
+> **`docs/PROJECT-MAP.md` §3** (cerrada por el Arquitecto el 26/08).
 
 ## Estados (prefijo SIEMPRE en mayúscula)
 

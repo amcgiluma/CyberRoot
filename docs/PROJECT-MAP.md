@@ -44,8 +44,13 @@ docs/               → el conocimiento permanente.
   ADR/              → decisiones de arquitectura (fecha + motivo) — públicas.
   USAGE.md          → panel de uso/coste de IA diario.
   AGENTS-PLAN.md    → este mismo sistema, documentado públicamente.
-src/                → el código del juego (módulos).
-  <modulo>/         → cada módulo con su README.md (qué hace) + ARCHITECTURE.md
+src/                → el código del juego (módulos). Mapa completo: §3 abajo.
+  core/             → lógica pura headless: common, sandbox, curriculum,
+                      generator, engine, state, progression, karma
+                      (detalle: src/core/ARCHITECTURE.md)
+  render/           → capa delgada de Pyxel (dibuja estado, traduce input)
+  assets/ data/ tests/ → arte binario · contenido JSON · pytest headless
+tools/              → utilidades raíz: cyberroot_usage.py · harness/ (Ornstein)
 ```
 
 ## 2. Cómo se atribuye trabajo (quién escribe DÓNDE)
@@ -61,10 +66,51 @@ src/                → el código del juego (módulos).
 | **Juanma** (feedback) | — | — | Escribe en la libreta (INDICE/DESIGN) o me dice a mí. ← EL CONTROL |
 
 ## 3. Tabla de módulos
-*(Rellena cuando la arquitectura se cierre)*
-| Módulo | Qué hace | Dónde vive | README/Auth | Quién lo toca |
+*(Cerrada por el Arquitecto el 26/08 — Fase 0. Detalle operativo por paquete:
+`src/core/ARCHITECTURE.md` + `README.md` de cada módulo. ADR:
+`docs/ADR/ADR-0001-arquitectura-core-render.md`.)*
+
+### 3.1 Código (`src/` — una rama = un dueño = rutas disjuntas)
+
+| Módulo | Qué hace | Dónde vive | README/Auth | Quién lo toca (rama) |
 |---|---|---|---|---|
-| *(pendiente de arquitectura)* | | `src/...` | | ejecutor A/B/C |
+| **common** | RNG seedeada, bus de eventos, tipos base | `src/core/common/` | `src/core/ARCHITECTURE.md` §2.1 | Ornstein (`feat/engine`) |
+| **sandbox** | FS virtual + shell: semántica real de comandos Linux, ruido por acción | `src/core/sandbox/` | su `README.md` | Smough (`feat/sandbox`) |
+| **curriculum** | DAG único de conceptos (~60 boons/8 familias); pools y prerrequisitos | `src/core/curriculum/` + `src/data/curriculum.json` | su `README.md` | Smough (`feat/sandbox`) |
+| **generator** | Generación procedural ENSEÑANTE determinista por seed; validación canónica §6.4.4 | `src/core/generator/` | su `README.md` | Ornstein (`feat/engine`) |
+| **engine** | Motor roguelite: run, salas, detección, DATOS×COMBO, post-mortem | `src/core/engine/` | su `README.md` | Ornstein (`feat/engine`) |
+| **state** | GameState serializable JSON ida-y-vuelta + saves versionados | `src/core/state/` | su `README.md` | Seath (`feat/meta-ui`) |
+| **progression** | Espejo de Gris, unlocks POR COMPETENCIA, economía, récords | `src/core/progression/` | su `README.md` | Seath (`feat/meta-ui`) |
+| **karma** | Contabilidad Blue/Red: N=8, bandas, condiciones de finales | `src/core/karma/` | su `README.md` | Seath (`feat/meta-ui`) |
+| **render** | Capa delgada Pyxel: dibuja estado, traduce input→comandos. Cero lógica. ÚNICO importador de pyxel | `src/render/` | su `README.md` | Seath (`feat/meta-ui`) |
+| **assets** | Fuente bitmap 5×7 (riesgo nº 1 del stack), paleta CRT, sprites, sfx | `src/assets/` | su `README.md` | Seath (`feat/meta-ui`) |
+| **data** | Contenido JSON: currículo, campañas, catálogos, textos ⚠️ v1 calibrables | `src/data/` (reparto por fichero en su README) | su `README.md` | dueño por fila; textos los integra el ejecutor desde `backlog/historia/` |
+| **tests** | pytest headless + frontera arquitectónica (`tests/architecture/` no se toca sin propuesta) | `src/tests/` | su `README.md` | cada dueño en SU carpeta |
+| **harness** | Playtest autónomo: miles de seeds, métricas de balance/contraste kármico §8.6 | `tools/harness/` (fuera de src — ver propuestas.md) | por crear (Ornstein, Fase 1) | Ornstein (`feat/engine`) |
+
+**Orden de arranque sugerido para Fase 1** (respeta el grafo de dependencias
+de `core/ARCHITECTURE.md`): common → sandbox+curriculum (Smough) ∥ generator+
+engine (Ornstein, contra stubs de sandbox) ∥ state+progression+karma (Seath,
+contra contratos). Render al final de la primera semana: primero fuente bitmap
+validada.
+
+### 3.2 Trabajo por agente (`backlog/` — estructura vigente, NO reinventar)
+
+| Agente | Su espacio de trabajo | Escribe también en |
+|---|---|---|
+| Manus (03:00) | `backlog/historia/` (INDICE, PERSONAJES, ESCENARIOS, FRAGMENTOS, CAPITULOS/) — materializado hoy según AGENTS-PLAN §6.1 | `[HECHO]` en `tareas/en-curso/activo.md`; sus textos entran al juego vía ejecutor integrador → `src/data/story/` |
+| Oscar (05:00) | `docs/ESTADO-JUGADOR.md` (su doc vivo) | `tareas/pendiente/abierto.md` [BUG]/ideas · `notas-manana.md` 🧭 |
+| Havel (07:00) | — (lee zona-testeo + ESTADO-JUGADOR; no tiene carpeta propia: sus entregas son tareas e ideas) | `tareas/pendiente/abierto.md` |
+| Gwyndolin (11:00) | `backlog/planes/YYYY/MM/DD.md` | mueve tareas → `tareas/en-curso/activo.md`; descartes → `tareas/descartado/historico.md`; propone mejoras → `mejoras/pendiente/propuestas.md` |
+| Ornstein (13:00) | `feat/engine`: `src/core/{generator,engine,common}/`, `tools/harness/` | código+PR · `[HECHO]` en activo.md · READMEs que toque |
+| Smough (16:00) | `feat/sandbox`: `src/core/{sandbox,curriculum}/` (+ retos de `data/chapters/`) | ídem |
+| Seath (19:00) | `feat/meta-ui`: `src/core/{state,progression,karma}/`, `src/render/`, `src/assets/` | ídem |
+| Artorias (21:00) | — (veredictos 💥/✅ sobre el trabajo de otros) | `activo.md` + `notas-manana.md` 🎯 |
+| Gwyn (23:00) | `zona-testeo.md` (sobrescribe), merges, archivo mensual | `tareas/hecho/<mes>.md` · `mejoras/aplicadas/historico.md` |
+
+Regla anti-colisión transversal: **una tarea = un dueño = una rama = rutas
+disjuntas.** Si tu tarea exige tocar rutas de otro, se abre en
+`tareas/pendiente/abierto.md` y la ejecuta el dueño.
 
 ## 4. Cómo se entera un agente de "qué se ha hecho y qué toca"
 1. Abre SU fila de la tabla §2 (o `backlog/INDICE.md` si duda) → lee SOLO esos ficheros.
