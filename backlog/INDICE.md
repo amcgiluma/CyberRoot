@@ -38,7 +38,19 @@ backlog/
 - `[HECHO]` …implementada Y documentada. Solo entonces se archiva.
 - `[DESCARTADO]` …rechazada con motivo (Juanma o curación). No retomar salvo petición expresa.
 
-Formato de línea: `- [ESTADO] (fecha) Título — quién: detalle.` Añade `↩ respuesta` cuando alguien decida sobre ella.
+## Prioridades (segundo prefijo, SIEMPRE en pendiente)
+
+- `[P0]` — máxima/urgente: desbloquea lo crítico o lo que Juanma marca como máxima. Gwyndolin la respeta SIEMPRE por encima de su criterio.
+- `[P1]` — alta: importante; entra antes que lo interesante.
+- `[P2]` — media: vale pero puede esperar; Gwyndolin usa su juicio de valor.
+- `[P3]` — baja/incubando: idea interesante que no compromete nada a corto plazo.
+
+> La prioridad **NO anula** la curación de Gwyndolin: la guía. Respeta `[P0]`/`[P1]`
+> por encima de su criterio; en `[P2]`/`[P3]` usa su juicio de valor. Mantener las
+> prioridades al día (revalorar las que se quedaron obsoletas) es parte de su
+> **HIGIENE GENERAL** del backlog.
+
+Formato de línea: `- [ESTADO][PRIORIDAD] (fecha) Título — quién: detalle.` Añade `↩ respuesta` cuando alguien decida sobre ella.
 
 ## Qué lee y qué escribe cada agente (SOLO esto)
 
