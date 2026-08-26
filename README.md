@@ -72,8 +72,10 @@ docs/PROJECT-MAP.md    → índice maestro y mapa de módulos
 docs/AGENTES.md        → roles del Concilio (todos saben qué hace cada uno)
 docs/DESIGN.md         → el diseño del juego (vivo)
 docs/ADR/              → decisiones de arquitectura (públicas)
+docs/TESTEO-DIARIO.md  → protocolo de testeo: 4 capas (Oscar/Havel/Artorias/Gwyn) que no se pisan
+docs/ESTADO-JUGADOR.md → qué es jugable HOY de principio a fin + run de referencia (lo mantiene Oscar)
 backlog/INDICE.md      → mapa del backlog: qué fichero lee/escribe cada agente
-backlog/tareas/        → tareas por estado: pendiente/abierto · en-curso/activo · hecho/<AAAA-MM> (archivo mensual) · descartado
+backlog/tareas/        → tareas por estado: pendiente/abierto (con prioridad [P0]-[P3]) · en-curso/activo · hecho/<AAAA-MM> (archivo mensual) · descartado
 backlog/zona-testeo.md → la zona 🔬 de testeo del día (la decide Gwyn al cierre)
 backlog/notas-manana.md→ notas rodantes para mañana (dirección de Oscar + revisores)
 backlog/mejoras/       → auto-mejora: pendiente/propuestas · aplicadas/historico
@@ -112,13 +114,30 @@ La Fase 0 usa el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 sem
 ---
 
 ## Estado actual
-- **Fase:** 0 — investigación y diseño en marcha (arranca 24/08)
-- **Última actualización:** 23/08/2026
+- **Fase:** 0 — **finalizada** (24/08 → 26/08). Research completo, diseño en **5 pasadas**
+  cerrado en `docs/DESIGN.md` (1.159 líneas: historia/plot, roguelite + sinergias,
+  capítulos-campaña, dopamina/UX), arquitectura de módulos definida
+  (`src/` + `src/core/ARCHITECTURE.md` + `docs/ADR/`), protocolo de testeo en 4
+  perfiles (`docs/TESTEO-DIARIO.md`), y backlog estructurado por estados + prioridades
+  (`backlog/INDICE.md`).
+- **Gate de Juanma:** en el **Coordinador de cierre (26/08 21:00)**. Tras el OK,
+  arranca la **Fase 1 (el Concilio construye el juego)**.
+- **Última actualización:** 26/08/2026
 
 ## Cómo se construye
-1. **Fase 0** (en curso): los agentes investigan y diseñan el juego → `DESIGN.md`.
+1. **Fase 0** (✅ breve): los agentes investigan y diseñan el juego → `docs/DESIGN.md`.
 2. **Gate de Juanma**: revisa el diseño y da el visto bueno.
 3. **Fase 1+ (el Concilio)**: los 9 agentes construyen el juego día a día hasta que esté terminado.
+
+## 🎮 Jugar en web (próximamente)
+El objetivo es que el juego esté **jugable siempre en el navegador**, no solo con
+pull + local. Cuando exista el primer build (Fase 1), se desplegará a **Vercel**
+(tarea P1 de máx. prioridad, acceso ya verificado; fallback: GitHub Pages), y el
+enlace se añadirá aquí.
+
+> ⚠️ **Regla para el agente/Concilio que haga el deploy:** en cuanto haya un enlace
+> de juego en web publicado, **ACTUALIZA ESTA SECCIÓN** con el enlace y la fecha.
+> Hasta entonces, mantenla como "próximamente".
 
 ---
 *Desarrollado por un comité de IAs autónomo y transparente. El proceso es la feature.*
