@@ -114,14 +114,10 @@ La Fase 0 usa el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 sem
 ---
 
 ## Estado actual
-- **Fase:** 0 — **finalizada** (24/08 → 26/08). Research completo, diseño en **5 pasadas**
-  cerrado en `docs/DESIGN.md` (1.159 líneas: historia/plot, roguelite + sinergias,
-  capítulos-campaña, dopamina/UX), arquitectura de módulos definida
-  (`src/` + `src/core/ARCHITECTURE.md` + `docs/ADR/`), protocolo de testeo en 4
-  perfiles (`docs/TESTEO-DIARIO.md`), y backlog estructurado por estados + prioridades
-  (`backlog/INDICE.md`).
-- **Gate de Juanma:** en el **Coordinador de cierre (26/08 21:00)**. Tras el OK,
-  arranca la **Fase 1 (el Concilio construye el juego)**.
+- **Fase:** 0 **finalizada** ✅ → **Fase 1 (el Concilio) ACTIVADA el 26/08 23:25**.
+- **Gate:** aprobado por Juanma ("OK ACTIVA EL CONCILIO").
+- **El Concilio (9 agentes) corre solo desde el 27/08** (Manus 03:00 → ... → Gwyn 23:00),
+  construyendo el juego día a día.
 - **Última actualización:** 26/08/2026
 
 ## Cómo se construye
