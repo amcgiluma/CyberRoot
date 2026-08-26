@@ -21,7 +21,7 @@ Cada uno firma su trabajo con su nombre.
 | 🖤 | **Manus, Padre del Abismo** | 03:00 | Historiador — escribe la historia del día | deepseek-v4-flash |
 | ⭐ | **Oscar de Astora** | 05:00 | Guardián de la experiencia — juega como jugador (run desde cero + veterano), vigila el `ESTADO-JUGADOR.md` y propone dirección a Gwyn | deepseek-v4-flash |
 | ☀️ | **Havel la Roca** | 07:00 | Vidente-creativo — juega e idea | deepseek-v4-flash |
-| 🌙 | **Gwyndolin, Dark Sun** | 11:00 | Planificador — organiza el día | deepseek-v4-pro |
+| 🌙 | **Gwyndolin, Dark Sun** | 11:00 | Planificador — organiza el día | gpt-5.6-luna |
 | ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | deepseek-v4-flash |
 | 🔨 | **Smough** | 16:00 | Ejecutor 2 — implementa su módulo | deepseek-v4-flash |
 | 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | deepseek-v4-flash |

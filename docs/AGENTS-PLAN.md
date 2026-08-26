@@ -10,7 +10,7 @@ El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
 - 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — deepseek-v4-flash
 - ⭐ **Oscar de Astora** · 05:00 · Guardián de la experiencia del jugador (run de referencia + estado global jugable + notas de dirección) — deepseek-v4-flash
 - ☀️ **Havel la Roca** · 07:00 · Vidente-creativo (ideas + testeo) — deepseek-v4-flash
-- 🌙 **Gwyndolin** · 11:00 · Planificador — deepseek-v4-pro
+- 🌙 **Gwyndolin** · 11:00 · Planificador — gpt-5.6-luna
 - ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — deepseek-v4-flash
 - 🔨 **Smough** · 16:00 · Ejecutor 2 — deepseek-v4-flash
 - 💛 **Seath el Descamado** · 19:00 · Ejecutor 3 — deepseek-v4-flash
@@ -176,8 +176,7 @@ con procedimientos estandarizados reutilizables.
 ## 3.1 Modelos VERIFICADOS (proveedor opencode-go, 100% confirmados)
 Listados con `opencode models opencode-go`:
 - `opencode-go/deepseek-v4-flash` — Manus, **Oscar**, Havel, ejecutores, revisor filtro
-- `opencode-go/deepseek-v4-pro` — planificador
-- `opencode-go/gpt-5.6-luna` — revisor de diseño
+- `opencode-go/gpt-5.6-luna` — planificador (Gwyndolin) y revisor de diseño (Gwyn)
 - `opencode-go/ox-alpha-free` — **Fase 0 (research + diseño + arquitectura + coordinador)**: modelo potente, GRATIS durante ~1 semana (decisión de Juanma). Los 10 jobs de Fase 0 usan este modelo. Cuando caduque la gratuidad, volver a los modelos estándar.
 (Disponibles además: grok-4.5, glm-5.2, kimi-k2.7-code, qwen3.8-max… si algún día se decide un cambio de modelo.)
 
@@ -240,7 +239,7 @@ src/<modulo>/
   revisores (Artorias y Gwyn) para no sobrecargarlo. Él siembra, ellos deciden.
 - Distingue hechos (lo que prueba) de opiniones.
 
-### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · deepseek-v4-pro (caro) ⚠️
+### 11:00 — 🌙 GWYNDOLIN, Dark Sun · Planificador · gpt-5.6-luna (caro) ⚠️
 - **NO gastar demasiados tokens.** Las ideas le llegan mascadas; él estructura.
 - Redacta `backlog/planes/YYYY/MM/DD.md` (HOY): tareas concretas {módulo, descripción, aceptación}.
 - **REGLA DE TAMAÑO:** cada tarea debe ser una pieza pequeña y AUTÓNOMA que un
