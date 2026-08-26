@@ -1141,9 +1141,13 @@ arquitectura de números trazables (DATOS×COMBO, ciclos anidados, unlocks por
 competencia), con juice que codifica magnitud y terminal siempre legible.
 Tecnología: Pyxel + core Python puro testeable headless, con protocolo de
 contraste kármico y harness de balance definidos para Fase 1. El testeo diario
-del Concilio tiene capa asignada por perfil (TESTEO-DIARIO.md) y zona decidida
-cada noche por Gwyn. Pendiente del gate: ratificar este diseño y el stack
-Pyxel; luego el Arquitecto define módulos y arranca el Concilio.
+del Concilio tiene CUATRO capas asignadas por perfil (`docs/TESTEO-DIARIO.md`):
+Oscar (05:00) cubre EXPERIENCIA/PROGRESIÓN —run de referencia desde save
+limpio + veterano, manteniendo `docs/ESTADO-JUGADOR.md`—; Havel (07:00),
+NOVEDAD+CONJUNTO (lo nuevo + smoke sin save limpio); Artorias (21:00), la capa
+TÉCNICA por PR; y Gwyn (23:00), DISEÑO/SABOR, decidiendo cada noche la zona 🔬
+con relevo Gwyn → Oscar → Havel. Pendiente del gate: ratificar este diseño y
+el stack Pyxel; luego el Arquitecto define módulos y arranca el Concilio.
 
 ---
 

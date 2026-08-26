@@ -62,6 +62,20 @@ cambió, en qué agente, cuándo y por qué):
 - Impacto: testeo de experiencia más profundo sin sobrecargar a Havel.
 - Estado: [NUEVA] (por meditar). NO tocar hasta que Juanma/Raiden decidan mañana.
 
+### Propuestas del corrector one-shot (integración Oscar en TESTEO-DIARIO)
+`[PROPUESTA] (26/08) — Corrector one-shot — Gwyn / Ornstein`
+1. **Validar visualmente el mapa GitHub** (`docs/mapa/index.html`): ya refleja
+   a Oscar y el flujo, pero tras el cambio de protocolo (relevo
+   Gwyn→Oscar→Havel) conviene una pasada visual de la página publicada.
+2. **Unificar AGENTS-PLAN §4 con TESTEO-DIARIO**: hoy quedan coherentes pero
+   duplican parte de la descripción de Artorias/Gwyn; un futuro pase podría
+   desglosar las preguntas-filtro de cada capa en un solo sitio para evitar
+   divergencias futuras.
+3. **Harness con reset explícito (Ornstein, Fase 1)**: exponer comando claro
+   de reset-a-save-limpio + save-veterano (20+ h); es requisito duro de la
+   capa EXPERIENCIA/PROGRESIÓN de Oscar (`docs/TESTEO-DIARIO.md` §1).
+- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+
 ---
 
 ## 📓 Historial de aplicación (implementado)

@@ -68,7 +68,8 @@ Lee SIEMPRE, en este orden, al arrancar:
 Después, SOLO tocas el módulo de tu tarea, nunca el código entero.
 
 ### Paso 1: "¿QUÉ TENGO QUE HACER HOY?"
-- Manus/Havel: leen lo de ayer y generan (Manus = historia, Havel = ideas frescas + jugar).
+- Manus/Oscar/Havel: leen lo de ayer y generan (Manus = historia, Oscar =
+  run de referencia + notas de dirección, Havel = ideas frescas + jugar).
 - Planificador: coge lo `[PENDIENTE]` del TODO (incluidas las ideas de Havel)
   → redacta `backlog/planes/YYYY/MM/DD.md` (hoy) sin esperar aprobación humana.
 - Ejecutores: cogen SU tarea del plan (la que les asignó el planificador).
@@ -92,6 +93,9 @@ en PROJECT-MAP). Las reglas de oro de la escritura:
 ### Paso 4: el RELEVO (cómo sigue el sistema)
 Al terminar tu turno dejas "la pelota" en un sitio concreto para el siguiente:
 - **Manus →** deja historia en `backlog/historia/` para planificador/ejecutores.
+- **Oscar →** actualiza `docs/ESTADO-JUGADOR.md` (estado jugable + run de
+  referencia) y deja NOTAS DE DIRECCIÓN para Gwyn en TODO; ejecuta primero la
+  zona 🔬 del relevo Gwyn → Oscar → Havel (`docs/TESTEO-DIARIO.md`).
 - **Havel →** deja ideas frescas y bugs en TODO; Gwyndolin las planifica directamente (fuente creativa autónoma).
 - **Planificador →** deja el plan en `backlog/planes/YYYY/MM/DD.md` (fecha de hoy) para que los ejecutores lo lean.
 - **Ejecutores →** marcan `[HECHO]` para que los revisores validen ese PR.
@@ -209,9 +213,21 @@ src/<modulo>/
 - Entrega narrativa en `backlog/historia/<fecha>.md` para planificador/ejecutores.
 - Su prosa pasa criterio `humanizer`. En Fase 0 además investiga skills anti-slop.
 
+### 05:00 — ⭐ OSCAR DE ASTORA · Guardián de la experiencia · deepseek-v4-flash
+- **Capa EXPERIENCIA/PROGRESIÓN del testeo diario** (`docs/TESTEO-DIARIO.md` §1):
+  ejecuta PRIMERO la zona 🔬 que dejó Gwyn la noche anterior (relevo
+  Gwyn → Oscar → Havel).
+- Run de referencia desde SAVE LIMPIO (el dueño del save limpio es él) +
+  perspectiva de VETERANO (20+ h). Mantiene vivo `docs/ESTADO-JUGADOR.md`
+  (qué es jugable HOY de principio a fin).
+- Deja NOTAS DE DIRECCIÓN para Gwyn en `backlog/TODO.md` (informa, NO decide)
+  y su línea CICLO en el worklog. NO genera ideas de contenido ni valida código.
+
 ### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (jugar + idear) · deepseek-v4-flash
 - **Rol enfocado y ligero (2 cosas, no más):**
-  1. **JUEGA** lo nuevo del día anterior (testing real del juego/core).
+  1. **JUEGA** lo nuevo del día anterior por `git log` + **smoke del CONJUNTO**
+     (¿el juego entero sigue arrancando/avanzando?). **SIN save limpio**: la
+     run de referencia desde cero es capa de Oscar (05:00, TESTEO-DIARIO.md).
   2. **GENERA ideas nuevas** constantemente (capítulos, mecánicas, objetos, boons,
      comandos Linux, bifurcaciones, enemigos, logros) para que el juego crezca solo.
 - Anota bugs y las nuevas ideas en `backlog/TODO.md` como `[PENDIENTE]` (sin implementar:
@@ -255,6 +271,10 @@ src/<modulo>/
 
 ### 23:00 — 👑 GWYN, Señor de la Ceniza · Revisor de diseño + MERGE · gpt-5.6-luna
 - Revisión profunda: ¿el PR sigue la visión del `DESIGN.md`? (no solo que "compila").
+- Integra las NOTAS DE DIRECCIÓN de Oscar (05:00) en su validación.
+- **Decide LA ZONA 🔬 de testeo de mañana** (`docs/TESTEO-DIARIO.md` §4): la
+  escribe al cierre en `backlog/TODO.md`; el relevo de la zona es
+  **Gwyn → Oscar (05:00) → Havel (07:00)**.
 - Modelo distinto al constructor → no se auto-aprueba.
 - **Cuidado con tokens; no excedernos.**
 - **Es el encargado del MERGE FINAL:** tras ver la revisión de Artorias (21:00),
@@ -408,7 +428,7 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [x] Verificar identificadores de modelo (deepseek-v4-pro, deepseek-v4-flash, gpt-5.6-luna, ox-alpha-free — ✅ confirmados via `opencode models`).
 - [x] Autenticar `gh` con la cuenta de Juanma (✅ amcgiluma, lista).
 - [x] Crear repo público + estructura git + PROJECT-MAP (✅ `amcgiluma/CyberRoot`).
-- [x] Concilio nombrado y definido → Manus, Havel, Gwyndolin, Ornstein, Smough, Seath, Artorias, Gwyn.
+- [x] Concilio nombrado y definido → Manus, Oscar (añadido el 24/08), Havel, Gwyndolin, Ornstein, Smough, Seath, Artorias, Gwyn (9 en total).
 - [x] Crear base del registro diario → `docs/worklog/` (por fechas: index + 2026/08/23).
 - [x] Modelo `ox-alpha-free` para Fase 0 (gratis ~1 semana, decisión Juanma) — aplicado a los 10 jobs.
 - [x] Flujo 100% autónomo: ideas de Havel → Gwyndolin directamente, sin aprobación humana.
@@ -421,8 +441,10 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - [ ] En Fase 0: definir la estructura de CARPETAS por agente (ej. historia/ con INDICE, PERSONAJES, ESCENARIOS, CAPITULOS/ por capítulo) → se registra en PROJECT-MAP.
 - [ ] En Fase 0: PLANEAR las skills de proyecto iniciales (skills con `skill_manage` que estandaricen tareas: escribir niveles, limpiar AI-slop, revisar PRs, harness). Se mejoran conforme avanza el proyecto (mismo mecanismo que la auto-mejora).
 - [ ] Gate de Juanma al final de Fase 0.
-- [ ] Tras el gate → `resume` de los 8 agentes del Concilio; planes diarios en `backlog/planes/YYYY/MM/DD.md`.
-- [ ] Harness de playtest automático: Ornstein lo construye para que Havel y el comité jueguen runs headless y midan balance.
+- [ ] Tras el gate → `resume` de los 9 agentes del Concilio; planes diarios en `backlog/planes/YYYY/MM/DD.md`.
+- [ ] Harness de playtest automático: Ornstein lo construye para que Oscar y
+  Havel (y el comité) jueguen runs headless y midan balance. Debe soportar
+  reset a SAVE LIMPIO (lo necesita la run de referencia diaria de Oscar).
 - [ ] Fijar nombre definitivo del juego (candidatos en BRAINSTORM).
 
 ---

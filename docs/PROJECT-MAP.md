@@ -29,7 +29,8 @@ docs/               → el conocimiento permanente.
   PROJECT-MAP.md    → ESTE fichero (índice maestro).
   AGENTES.md        → roles del concilio: qué hace cada agente (coordinación).
   DESIGN.md         → diseño del juego (historia, capítulos, niveles, stack).
-  TESTEO-DIARIO.md  → protocolo de testeo del Concilio: capa de Havel/Artorias/Gwyn + zona 🔬.
+  TESTEO-DIARIO.md  → protocolo de testeo del Concilio: 4 capas (Oscar/Havel/Artorias/Gwyn) + zona 🔬.
+  ESTADO-JUGADOR.md → doc vivo de Oscar: qué es jugable HOY + run de referencia desde save limpio.
   worklog/           → registro diario por fechas: index.md + YYYY/MM/DD.md
   ADR/              → decisiones de arquitectura (fecha + motivo) — públicas.
   USAGE.md          → panel de uso/coste de IA diario.
@@ -43,11 +44,11 @@ src/                → el código del juego (módulos).
 |---|---|---|
 | **Manus** (03:00) | deepseek-v4-flash | `backlog/historia/<fecha>.md` (story, humanizer). Marca en TODO las piezas narrativas listas. |
 | **Oscar de Astora** (05:00) | deepseek-v4-flash | `docs/ESTADO-JUGADOR.md` (estado global jugable / run de referencia desde save limpio / progreso de veterano) + NOTAS DE DIRECCIÓN en `backlog/TODO.md` para Gwyn (no decide, informa). |
-| **Havel** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (bugs + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Notas en `docs/worklog/` (día actual). |
+| **Havel** (07:00) | deepseek-v4-flash | `backlog/TODO.md` (bugs de lo nuevo + ideas NUEVAS de capítulos/mecánicas/comandos, `[PENDIENTE]`). Smoke del conjunto SIN save limpio (esa capa es de Oscar). Notas en `docs/worklog/` (día actual). |
 | **Gwyndolin** (11:00) | deepseek-v4-pro | `backlog/planes/YYYY/MM/DD.md` (HOY) + reparte tareas en `backlog/TODO.md`. Propone mejoras en MEJORAS (las aplica Gwyn). |
 | **Ornstein/Smough/Seath** (13/16/19) | deepseek-v4-flash | Código en su RAMA `feat/<modulo>` + PR a main. Marca `[HECHO]` en `backlog/TODO.md`. README del módulo. Ornstein: + harness de playtest. |
 | **Artorias** (21:00) | deepseek-v4-flash | 💥/✅ de las ramas/PRs + NOTAS DE GUSTO + "qué no mergear" + ideas, en `backlog/TODO.md`. |
-| **Gwyn** (23:00) | gpt-5.6-luna | VALIDA diseño + MERGE final (solo él). Si no mergea: por qué + cómo arreglar en `backlog/TODO.md`. + sus notas de gusto + reporte a Juanma. APLICA la auto-mejora (via `hermes cron edit`, registra `[APLICADA]` en MEJORAS). |
+| **Gwyn** (23:00) | gpt-5.6-luna | VALIDA diseño + MERGE final (solo él). Si no mergea: por qué + cómo arreglar en `backlog/TODO.md`. + sus notas de gusto + **decide la zona 🔬 de mañana** (relevo Gwyn → Oscar → Havel, `docs/TESTEO-DIARIO.md` §4) + reporte a Juanma. APLICA la auto-mejora (via `hermes cron edit`, registra `[APLICADA]` en MEJORAS). |
 | **Juanma** (feedback) | — | Escribe en la libreta (TODO/DESIGN) o me dice a mí. ← EL CONTROL |
 
 ## 3. Tabla de módulos

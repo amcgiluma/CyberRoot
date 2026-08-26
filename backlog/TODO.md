@@ -21,8 +21,12 @@
 ---
 
 ## ✅ Ya sabes lo que hay que hacerse — flujo diario
-1. Havel (07:00) AÑADE ideas/bugs aquí (como `[PENDIENTE]`) — sin filtro humano.
-2. El planificador (11:00) coge lo `[PENDIENTE]` (incluidas las ideas de Havel),
+1. Los perfiles de testeo matinales AÑADEN aquí sus hallazgos: **Oscar (05:00)**
+   deja `[BUG]` de su run desde save limpio, NOTAS DE DIRECCIÓN para Gwyn e
+   ideas de contenido como `[PENDIENTE]`; **Havel (07:00)** añade ideas/bugs
+   (como `[PENDIENTE]`) — sin filtro humano.
+2. El planificador (11:00) coge lo `[PENDIENTE]` (ideas de Havel y de Oscar,
+   más las notas de dirección que Gwyn haya validado),
    las convierte en tareas concretas con módulo y las deja `[EN CURSO]` en
    `backlog/planes/YYYY/MM/DD.md` (plan de hoy). FLUJO 100% AUTÓNOMO: no espera
    aprobación de Juanma.

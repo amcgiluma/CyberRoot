@@ -48,8 +48,9 @@ Ornstein / Smough / Seath implementan (13/16/19h)
    │  cada uno en su RAMA feat/<módulo> → abre PR a main
 Artorias (21:00) revisa técnicamente y deja notas de gusto
    │  💥/✅ + qué no mergear + ideas
-Gwyn (23:00) revisa diseño y hace el MERGE final
+Gwyn (23:00) revisa diseño, hace el MERGE final y decide la zona 🔬 de mañana
    │  si NO mergea: deja por qué + cómo arreglarlo
+   │  relevo del testeo: Gwyn → Oscar (05:00) → Havel (07:00)
 Manus (03:00) escribe la historia mientras el ciclo se repite
 ```
 
