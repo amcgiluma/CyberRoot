@@ -17,6 +17,20 @@ from typing import Tuple
 
 from PIL import Image
 
+# Extensión de cobertura tipográfica (verificada sobre la tabla, 27/08/2026):
+# el codec cp437 de Python mapea 0x18-0x1B a caracteres de control, pero la
+# TABLA dibuja ahí las flechas DOS; se reasignan a los caracteres que la UI
+# del juego usa. '—'/'–' reutilizan el glifo de línea horizontal 0xC4
+# (box-drawing); '…' NO existe en la tabla (los textos usan '...').
+CHAR_EXTENSIONS: dict[str, int] = {
+    "→": 0x1A,  # flecha derecha DOS
+    "←": 0x1B,  # flecha izquierda DOS
+    "↑": 0x18,  # flecha arriba DOS
+    "↓": 0x19,  # flecha abajo DOS
+    "—": 0xC4,  # em-dash ≈ línea horizontal (glifo box-drawing)
+    "–": 0xC4,  # en-dash  ≈ ídem
+}
+
 
 class Font5x7:
     """Glifos 5×7 y helpers de codificación CP437 y medida de texto."""
@@ -132,17 +146,30 @@ class Font5x7:
         )
 
     # ------------------------------------------------------------------
-    # Codificación CP437
+    # Codificación CP437 (+ extensión de cobertura)
     # ------------------------------------------------------------------
     def cp437_encode(self, text: str) -> bytes:
-        """Codifica ``text`` a bytes CP437.
+        """Codifica ``text`` a códigos de glifo de la tabla.
 
-        Python's stdlib trae la tabla CP437 completa, por lo que no hace falta
-        copiar mapeos a mano. Acentos españoles de referencia: á=0xA0, é=0x82,
-        í=0xA1, ó=0xA2, ú=0xA3, ñ=0xA4, ü=0x81, ¡=0xAD, ¿=0xA8, ª=0xA6, º=0xA7.
-        Lanza ``UnicodeEncodeError`` ante cualquier carácter no mapeable.
+        Base: codec ``cp437`` de la stdlib, que trae los acentos españoles
+        (á=0xA0, é=0x82, í=0xA1, ó=0xA2, ú=0xA3, ñ=0xA4, ü=0x81, ¡=0xAD,
+        ¿=0xA8, ª=0xA6, º=0xA7, ·=0xFA).
+
+        EXTENSIÓN (:data:`CHAR_EXTENSIONS`): el codec mapea los bytes bajos
+        0x18–0x1B a caracteres de control, pero la TABLA sí dibuja ahí las
+        flechas DOS; se reasignan los caracteres tipográficos que la UI del
+        juego usa. Nota honesta: ``—``/``–`` reutilizan el glifo de línea
+        horizontal 0xC4 (box-drawing), y ``…`` NO está mapeado (no existe en
+        la tabla): los textos del juego usan ``...``. Lanza
+        ``UnicodeEncodeError`` ante cualquier otro carácter no mapeable.
         """
-        return text.encode("cp437")
+        out = bytearray()
+        for ch in text:
+            if ch in CHAR_EXTENSIONS:
+                out += bytes([CHAR_EXTENSIONS[ch]])
+            else:
+                out += ch.encode("cp437")
+        return bytes(out)
 
     # ------------------------------------------------------------------
     # Medida

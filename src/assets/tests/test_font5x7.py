@@ -141,6 +141,43 @@ def test_render_pbm_vacio_coherente_con_text_size():
 
 
 # ---------------------------------------------------------------------------
+# Extensión tipográfica (CHAR_EXTENSIONS)
+# ---------------------------------------------------------------------------
+
+def test_extension_flechas_dos():
+    # El codec cp437 de Python no codifica →; la tabla SÍ dibuja las flechas
+    # DOS en 0x18-0x1B (verificado byte a byte contra glcdfont.c.ref).
+    f = Font5x7()
+    assert f.cp437_encode("→") == b"\x1a"
+    assert f.cp437_encode("←") == b"\x1b"
+    assert f.cp437_encode("↑") == b"\x18"
+    assert f.cp437_encode("↓") == b"\x19"
+    # El glifo de → tiene tinta: flecha reconocible (columna 2 = 0x2A).
+    assert f.glyph(0x1A) == (0x08, 0x08, 0x2A, 0x1C, 0x08)
+
+
+def test_extension_em_dash_reutiliza_linea_horizontal():
+    # '—' no tiene glifo propio: se reutiliza 0xC4 (box-drawing ─).
+    # Decisión documentada en CHAR_EXTENSIONS; 0xC4 = 5 filas centrales.
+    f = Font5x7()
+    assert f.cp437_encode("—") == b"\xc4"
+    assert f.glyph(0xC4) == (0x10, 0x10, 0x10, 0x10, 0x10)
+
+
+def test_extension_mixta_con_cp437_base():
+    # Línea real del cap. 0: conectando → oficina-vecinal-muelle-norte...
+    f = Font5x7()
+    enc = f.cp437_encode("conectando → oficina")
+    assert b"\x1a" in enc and "conectando ".encode("cp437") in enc
+
+
+def test_extension_no_inventa_glifo_para_ellipsis():
+    # '…' NO existe en la tabla: debe fallar alto y claro (los textos usan ...).
+    with pytest.raises(UnicodeEncodeError):
+        Font5x7().cp437_encode("…")
+
+
+# ---------------------------------------------------------------------------
 # Ida y vuelta
 # ---------------------------------------------------------------------------
 
