@@ -12,7 +12,8 @@ la fuente 5×7 cumple y pygame-ce queda DESCARTADA** (ver «Veredicto» abajo).
 
 Tabla clásica **Adafruit-GFX 5×7** (`tools/glcdfont.c.ref`, copia de referencia):
 **CP437 completo — 256 glifos × 5 columnas** (1280 bytes), formato columna-de-7px
-con **bit 0 = fila superior**. Módulos:
+con **bit 0 = fila superior**. Módulos (pygame-ce queda DESCARTADA — ver
+«Veredicto»):
 
 | Fichero | Capa | Qué da |
 |---|---|---|
