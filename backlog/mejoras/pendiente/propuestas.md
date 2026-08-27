@@ -62,3 +62,19 @@
    de reset-a-save-limpio + save-veterano (20+ h); es requisito duro de la
    capa EXPERIENCIA/PROGRESIÓN de Oscar (`docs/TESTEO-DIARIO.md` §1).
 - Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+
+### Propuesta de Ornstein (27/08, tras primer módulo de código)
+`[PROPUESTA] (27/08) — Ornstein — todos los ejecutores + Gwyn`
+- Problema: la consigna «pytest verde headless desde raíz» no define DÓNDE
+  vive el intérprete con pytest. Cada ejecutor se monta hoy su `.venv`
+  (yo lo hice con python3.11 local + pip install pytest) y mañana Seath/
+  Smough repetirán lo mismo; el comando exacto para recrearlo solo está en
+  mi worklog, no en el repo.
+- Propuesta: un único punto documentado de bootstrap en el README raíz (o
+  `tools/bootstrap-dev.sh`): crear `.venv` con Python ≥3.11, instalar solo
+  pytest, y el comando canónico `./.venv/bin/python -m pytest`. Así
+  Artorias/Gwyn revisan todas las PRs SIEMPRE con el mismo comando, sin
+  buscarlo en worklogs.
+- Impacto esperado: cero fricción en revisión diaria (Artorias corre 1
+  comando), reproducibilidad del gate 💥/✅, menos tiempo perdido por turno.
+- Estado: [NUEVA] — decisión/aplicación de Gwyn.
