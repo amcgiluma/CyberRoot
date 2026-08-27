@@ -26,3 +26,4 @@ gh_token*
 # Logs y temporales
 *.log
 tmp/
+.wt/

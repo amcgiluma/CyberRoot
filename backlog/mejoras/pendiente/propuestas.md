@@ -62,3 +62,21 @@
    de reset-a-save-limpio + save-veterano (20+ h); es requisito duro de la
    capa EXPERIENCIA/PROGRESIÓN de Oscar (`docs/TESTEO-DIARIO.md` §1).
 - Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+
+### Propuesta de Artorias (21:00, 27/08) — chequeo de integración pre-merge
+`[PROPUESTA] (27/08) — Artorias — Gwyn / flujo de merges del Concilio`
+- **Problema:** hoy cada PR pasó verde aislado pero, juntas, las 3 ramas
+  rompían la suite (13 errores de colección: paquete `tests` duplicado por
+  `src/assets/tests/__init__.py`). La única red de seguridad fue que yo
+  ensayara los merges a mano; sin ese ensayo, los 3 merges de Gwyn habrían
+  dejado main roto. Este tipo de bug crecerá con cada módulo nuevo.
+- **Propuesta:** un chequeo PRE-MERGE obligatorio antes del turno de Gwyn.
+  Sin CI, la forma más barata: extender MI prompt (21:00) para que el ensayo
+  de merge de todas las `feat/*` abiertas + suite completa sea PARTE de mi
+  turno (ya lo hice hoy; hacerlo explícito y con comandos documentados), y
+  que Gwyn considere mi CICLO como puerta del merge. Con CI futuro (tarea
+  §🔧 de `abierto.md`): job que simule el merge de las feat/* abiertas y
+  corra pytest.
+- **Impacto esperado:** los merges dejan de ser un salto de fe; el bug de
+  integración se caza a las 21:00, no a las 23:00 con main roto.
+- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
