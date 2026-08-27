@@ -15,6 +15,11 @@ historia/
   FRAGMENTOS.md    → botín narrativo H1/H2 con orden fijo por capítulo (§9 P5)
 ```
 
+## Flujo de entrega
+Manus escribe AQUÍ. Para entrar al juego, sus textos viajan a `src/data/story/`
+con claves JSON — lo hace el ejecutor integrador (no Manus), para no romper
+formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
+
 ## Reglas de oro (resumen — el detalle manda en DESIGN)
 1. Cada encargo = objetivo técnico + beat narrativo + decisión de karma +
    gancho post-mortem (§2.6.1). Sin barrera técnica no hay avance de trama.
@@ -25,13 +30,12 @@ historia/
    concreto por descripción. Cero adjetivos atmosféricos.
 5. Todo en español de España; comandos/salidas técnicas en forma real.
 
-## Flujo de entrega
-Manus escribe AQUÍ. Para entrar al juego, sus textos viajan a `src/data/story/`
-con claves JSON — lo hace el ejecutor integrador (no Manus), para no romper
-formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
-
-## Estado inicial
+## Estado — FUNDACIÓN (27/08, primer turno de Manus)
 - Beats 1–12 definidos (DESIGN §2.5). Capítulos 0–6 con necesidad narrativa
   propia (§6.1).
+- ✅ Fichas de voz completas (6/6, `PERSONAJES.md`) — desbloquea todo diálogo.
+- ✅ Escenarios con datos base (6/6, `ESCENARIOS.md`).
+- ✅ Fragmento 1 `[LISTA]` (`FRAGMENTOS.md`). Fragmentos 2–6 pendientes.
+- ✅ Capítulo 0 abierto (`CAPITULOS/00-la-firma.md`, beats 1–3).
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
