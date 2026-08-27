@@ -235,11 +235,26 @@ def test_copy_file_fuente_directorio_lanza_not_a_directory() -> None:
     assert exc.value.kind == "not_a_directory"
 
 
-def test_copy_file_destino_directorio_existente_lanza_is_a_directory() -> None:
-    """cp a un directorio existente produce `is_a_directory`."""
+def test_copy_file_a_directorio_existente_copia_dentro() -> None:
+    """GNU real: destino dir existente → copia dentro como dir/<base>.
+
+    Solo si dir/<base> es a su vez un directorio se produce `is_a_directory`
+    (colisión fichero-vs-dir, como `cp f dir/f/` real).
+    """
     fs = _build_fs()
+    fs.copy_file("/home/node/inner.txt", "/etc")
+    destino = fs.resolve("/etc/inner.txt")
+    assert isinstance(destino, FileNode)
+    assert destino.content == "inner"
+
+    # Colisión dir: cp cuyo destino-caja contiene un DIR con el nombre base
+    # del fuente → is_a_directory («cannot overwrite directory 'X/Y' with
+    # non-directory» en GNU real).
+    fs.get_dir("/home").children["sub"] = DirNode(
+        name="sub", children={"file.txt": DirNode(name="file.txt")}
+    )
     with pytest.raises(FsError) as exc:
-        fs.copy_file("/home/node/inner.txt", "/etc")
+        fs.copy_file("/home/file.txt", "/home/sub")
     assert exc.value.kind == "is_a_directory"
 
 

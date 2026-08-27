@@ -25,6 +25,7 @@ ErrorKind: TypeAlias = Literal[
     "permission_denied",
     "not_empty",
     "invalid_argument",
+    "same_file",
 ]
 
 
@@ -269,7 +270,34 @@ class FileSystem:
         if dst_name in parent.children:
             existing = parent.children[dst_name]
             if isinstance(existing, DirNode):
-                raise FsError("is_a_directory", dst)
+                # GNU real: `cp fichero dir/` copia DENTRO del directorio
+                # (dst pasa a ser dir/<base>); error solo si colisiona.
+                base = src_segs[-1]
+                if base in existing.children:
+                    clash = existing.children[base]
+                    if isinstance(clash, DirNode):
+                        # GNU: «cannot overwrite directory with non-directory».
+                        raise FsError("is_a_directory", dst)
+                    if dst_segs + [base] == src_segs:
+                        raise FsError("same_file", dst)
+                    clash.content = src_node.content
+                    clash.owner = src_node.owner
+                    clash.group = src_node.group
+                    clash.mode = src_node.mode
+                    clash.mtime = src_node.mtime
+                else:
+                    existing.children[base] = FileNode(
+                        name=base,
+                        content=src_node.content,
+                        owner=src_node.owner,
+                        group=src_node.group,
+                        mode=src_node.mode,
+                        mtime=src_node.mtime,
+                    )
+                return
+            if dst_segs == src_segs:
+                # GNU real: `cp f f` → «'f' and 'f' are the same file».
+                raise FsError("same_file", dst)
             existing.content = src_node.content
             existing.owner = src_node.owner
             existing.group = src_node.group
