@@ -39,6 +39,10 @@ Cada uno firma su trabajo con su nombre.
 > `gpt-5.6-luna` (inestable) y `ox-alpha-free` (promoción caducada). El Vigilante
 > usa `deepseek-v4-flash` a propósito (red de seguridad independiente).
 
+> 🚀 **¿Vienes nuevo o retomas el proyecto?** Lee
+> **[`docs/ONBOARDING.md`](docs/ONBOARDING.md)** — en 3 minutos te pongo al día de
+> qué es, dónde está cada cosa y qué toca hoy.
+
 ---
 
 ## 🔄 EL FLUJO DIARIO
