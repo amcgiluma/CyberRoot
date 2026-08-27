@@ -12,7 +12,7 @@ backlog/
   INDICE.md                    ← ESTE mapa (corto; léelo una vez)
   zona-testeo.md               ← la zona 🔬 del día (la escribe Gwyn al cierre; ≤6 líneas)
   notas-manana.md              ← notas para el día siguiente (dirección de Oscar + revisores)
-  tmp-reintentos.md            ← contador de reintentos del Vigilante Fase 0
+  tmp-reintentos.md            ← (histórico — el Vigilante ya no reintenta; ahora DETECTA y REPORTA)
   tareas/
     pendiente/abierto.md       ← tareas [PENDIENTE] + [BUG] + ideas abiertas
     en-curso/activo.md         ← lo que se ejecuta HOY y sus veredictos 💥/✅

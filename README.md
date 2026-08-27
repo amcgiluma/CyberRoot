@@ -33,10 +33,11 @@ Cada uno firma su trabajo con su nombre.
 > **[amcgiluma.github.io/CyberRoot/mapa](https://amcgiluma.github.io/CyberRoot/mapa/)**
 > (fuente: [`docs/mapa/`](docs/mapa/))
 
-> 🧠 **Modelo único del Concilio:** los 9 agentes (y el Vigilante) corren sobre
+> 🧠 **Modelo único del Concilio:** los 9 agentes corren sobre
 > **`opencode-go/glm-5.3-flash`** — más potente y más barato que los anteriores,
 > verificado en crons. Se descartaron: `deepseek-v4-flash`/`deepseek-v4-pro`,
-> `gpt-5.6-luna` (inestable) y `ox-alpha-free` (promoción caducada).
+> `gpt-5.6-luna` (inestable) y `ox-alpha-free` (promoción caducada). El Vigilante
+> usa `deepseek-v4-flash` a propósito (red de seguridad independiente).
 
 ---
 
