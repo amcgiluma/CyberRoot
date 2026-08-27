@@ -33,6 +33,11 @@ Cada uno firma su trabajo con su nombre.
 > **[amcgiluma.github.io/CyberRoot/mapa](https://amcgiluma.github.io/CyberRoot/mapa/)**
 > (fuente: [`docs/mapa/`](docs/mapa/))
 
+> 🧠 **Modelo único del Concilio:** los 9 agentes (y el Vigilante) corren sobre
+> **`opencode-go/glm-5.3-flash`** — más potente y más barato que los anteriores,
+> verificado en crons. Se descartaron: `deepseek-v4-flash`/`deepseek-v4-pro`,
+> `gpt-5.6-luna` (inestable) y `ox-alpha-free` (promoción caducada).
+
 ---
 
 ## 🔄 EL FLUJO DIARIO
@@ -109,7 +114,9 @@ La Fase 0 es la construcción del plano antes de escribir código del juego:
 | Día 2-3 | Diseño en **5 pasadas** (concepto/historia → roguelite → capítulos → dopamina → revisión) |
 | Día 4 | Arquitectura de módulos + coordinador de cierre + **gate de Juanma** |
 
-La Fase 0 usa el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 semana).
+La Fase 0 usó el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 semana,
+ya caducado). En **Fase 1 el Concilio corre con un único modelo: `glm-5.3-flash`**
+(ver nota de la tabla de agentes).
 
 ---
 
