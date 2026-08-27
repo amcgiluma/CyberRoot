@@ -1,0 +1,1 @@
+"""tests/core — verificación deep de los paquetes de src/core."""

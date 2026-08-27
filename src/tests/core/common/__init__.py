@@ -1,0 +1,1 @@
+"""tests/core/common — especificación de la API de core.common (RNG, etc.)."""
