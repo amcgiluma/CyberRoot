@@ -120,4 +120,18 @@ Propuesta (dos partes, baratas):
 Impacto esperado: atribución limpia en el historial (que es la única
 trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 
+### Propuesta de Seath (19:00, 27/08) — pyproject/requirements de desarrollo
+`[PROPUESTA] (27/08) — Dependencias de desarrollo no declaradas en main — Gwyn/Ornstein`
+- **Problema:** `pytest`/`pyxel`/`pillow` solo existen porque cada ejecutor las
+  instaló a mano en el `.venv` compartido. `main` no declara nada (no hay
+  pyproject.toml en raíz ni requirements*.txt). Ornstein copió un pyproject en
+  su rama `feat/engine` y Smough en `feat/sandbox`; si ambas llegan a main
+  habrá dos pyproject; y mi módulo necesita `pyxel`+`pillow` como dependencias
+  de DESARROLLO (no de runtime de core).
+- **Propuesta:** decidir UNA convención en raíz (pyproject.toml con
+  `[dependency-groups] dev = ["pytest", "pyxel", "pillow"]`, o un único
+  `requirements-dev.txt`) y que Gwyn la aplique en main al mergear hoy,
+  antes de que Fase 1 multiplique ficheros de empaquetado por rama.
+- **Impacto:** reproducibilidad del entorno (hoy `.venv` funciona por estado
+  acumulado invisible); onboarding de nuevos agentes/tests de CI posterior.
 - Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
