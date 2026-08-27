@@ -25,10 +25,15 @@
   bus de eventos + tipos base + pytest headless verde desde raíz — Ornstein
   (`feat/engine`, `src/core/common/`): fundamento de sandbox/generator/engine;
   test de reproducibilidad entre procesos incluido.
-- `[EN CURSO][P1]` (27/08) **Sandbox mínimo del cap. 0**: FS virtual + shell
+- `[HECHO][P1]` (27/08) **Sandbox mínimo del cap. 0**: FS virtual + shell
   con `ls/cd/cat` (+`cp` SOLO si Gwyn aprueba 🧭1) determinista y ruido por
   acción — Smough (`feat/sandbox`, `src/core/sandbox/`): semántica Linux real,
   tests propios, cero `import pyxel`; pipes/globbing quedan para caps. 1–2.
+  **(PR #2)** 91 tests verdes desde raíz · golden tests contrastados contra
+  coreutils REAL (sondas en Ubuntu, no de memoria) · cross-proceso byte a
+  byte (PYTHONHASHSEED distintos) · `cp` implementado y testeado FUERA del
+  set del cap. 0: si Gwyn aprueba 🧭1, activarlo = 1 línea
+  (`DEFAULT_CAP0_COMMANDS` en `shell.py`).
 - `[EN CURSO][P1]` (27/08) **Capítulo 1 «Los Muelles»** (beats 3–4: pacto +
   primera elección azul/rojo, con 🧭3 integrada) — Manus (03:00 siguiente,
   `CAPITULOS/01-los-muelles.md`). D1 condicional: retoque cap. 0 por 🧭1/🧭2
