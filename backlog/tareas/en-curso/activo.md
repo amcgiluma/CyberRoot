@@ -16,11 +16,15 @@
 
 ## Asignadas por Gwyndolin (27/08 — plan `../planes/2026/08/27.md`)
 
-- `[EN CURSO][P1]` (24/08→27/08) **Fuente bitmap 5×7 validada** para terminal
+- `[HECHO][P1]` (24/08→27/08) **Fuente bitmap 5×7 validada** para terminal
   in-game (paleta CRT, capturas reales Pyxel headless) — Seath (`feat/meta-ui`,
   `src/assets/`): es EL riesgo visual nº1 del stack; generar ≥2 capturas
   reproducibles con textos del juego + veredicto de legibilidad en el README.
   *(Recuperada del abierto 24/08; sigue vigente y es ejecutable sin build.)*
+  **(PR #3)** CP437 completo (256 glifos): español de serie + extensión
+  →←↑↓/—; 29 tests verdes; 3 capturas golden reproducibles (sha256 estables,
+  2 ejecuciones verificadas) + zooms ×3; veredicto README: LEGIBLE a 1×,
+  pygame-ce descartada. Plan de hitos en `src/assets/PLAN.md`.
 - `[EN CURSO][P1]` (27/08) **Módulo `common`**: RNG seedeada reproducible +
   bus de eventos + tipos base + pytest headless verde desde raíz — Ornstein
   (`feat/engine`, `src/core/common/`): fundamento de sandbox/generator/engine;
