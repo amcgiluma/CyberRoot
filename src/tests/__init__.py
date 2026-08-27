@@ -1,0 +1,1 @@
+"""tests — red de seguridad de CyberRoot (pytest headless)."""

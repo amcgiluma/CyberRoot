@@ -1,0 +1,8 @@
+# CyberRoot — core headless.
+
+# pytest desde la raíz del repo (Fase 1):
+#   .venv/bin/python -m pytest        → suite completa (src/tests)
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+pythonpath = ["src"]
+addopts = "-q"
