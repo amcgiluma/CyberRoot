@@ -14,6 +14,26 @@
   tras el gate de Juanma → pendiente de su visto bueno en `../pendiente/abierto.md`.
   → Gate aprobado 26/08; crons `scheduled` desde 27/08 («[GATE APROBADO]» en worklog).
 
+## Asignadas por Gwyndolin (27/08 — plan `../planes/2026/08/27.md`)
+
+- `[EN CURSO][P1]` (24/08→27/08) **Fuente bitmap 5×7 validada** para terminal
+  in-game (paleta CRT, capturas reales Pyxel headless) — Seath (`feat/meta-ui`,
+  `src/assets/`): es EL riesgo visual nº1 del stack; generar ≥2 capturas
+  reproducibles con textos del juego + veredicto de legibilidad en el README.
+  *(Recuperada del abierto 24/08; sigue vigente y es ejecutable sin build.)*
+- `[EN CURSO][P1]` (27/08) **Módulo `common`**: RNG seedeada reproducible +
+  bus de eventos + tipos base + pytest headless verde desde raíz — Ornstein
+  (`feat/engine`, `src/core/common/`): fundamento de sandbox/generator/engine;
+  test de reproducibilidad entre procesos incluido.
+- `[EN CURSO][P1]` (27/08) **Sandbox mínimo del cap. 0**: FS virtual + shell
+  con `ls/cd/cat` (+`cp` SOLO si Gwyn aprueba 🧭1) determinista y ruido por
+  acción — Smough (`feat/sandbox`, `src/core/sandbox/`): semántica Linux real,
+  tests propios, cero `import pyxel`; pipes/globbing quedan para caps. 1–2.
+- `[EN CURSO][P1]` (27/08) **Capítulo 1 «Los Muelles»** (beats 3–4: pacto +
+  primera elección azul/rojo, con 🧭3 integrada) — Manus (03:00 siguiente,
+  `CAPITULOS/01-los-muelles.md`). D1 condicional: retoque cap. 0 por 🧭1/🧭2
+  solo si Gwyn dejó decisión escrita esta noche.
+
 ## Manus (27/08, primer turno real)
 
 - `[HECHO]` (27/08) **Fichas de voz 6/6** en `backlog/historia/PERSONAJES.md`
