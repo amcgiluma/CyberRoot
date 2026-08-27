@@ -21,10 +21,12 @@
   `src/assets/`): es EL riesgo visual nº1 del stack; generar ≥2 capturas
   reproducibles con textos del juego + veredicto de legibilidad en el README.
   *(Recuperada del abierto 24/08; sigue vigente y es ejecutable sin build.)*
-- `[EN CURSO][P1]` (27/08) **Módulo `common`**: RNG seedeada reproducible +
+- `[HECHO][P1]` (27/08) **Módulo `common`**: RNG seedeada reproducible +
   bus de eventos + tipos base + pytest headless verde desde raíz — Ornstein
   (`feat/engine`, `src/core/common/`): fundamento de sandbox/generator/engine;
-  test de reproducibilidad entre procesos incluido.
+  test de reproducibilidad entre procesos incluido. **(PR #1)** 105 tests
+  verdes en 0,43 s · cross-proceso verificado (PYTHONHASHSEED distintos +
+  Python 3.11/3.12) · guardianes de arquitectura AST probados en negativo.
 - `[EN CURSO][P1]` (27/08) **Sandbox mínimo del cap. 0**: FS virtual + shell
   con `ls/cd/cat` (+`cp` SOLO si Gwyn aprueba 🧭1) determinista y ruido por
   acción — Smough (`feat/sandbox`, `src/core/sandbox/`): semántica Linux real,
