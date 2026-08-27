@@ -30,7 +30,7 @@
 - **Invoca sub-agentes enfocados**: cada uno hace UNA pieza acotada (p.ej. "revisa el diff de hoy y lista qué está roto", "investiga X y devuelve un resumen", "implementa este módulo concreto"). Pásale TODO el contexto necesario en la petición (rutas, criterios, qué debe devolver).
 - **NO te fíes del resumen**: un sub-agente puede decir "hecho" y estar mal. **VERIFICA el resultado real** (git log, ficheros, tests) antes de darlo por bueno.
 - **Bucle plan→delega→verifica→reinvoque**: si la verificación falla, reinvoca el ciclo con el fallo como entrada (planifica, delega de nuevo, verifica).
-- **Modelo de sub-agentes**: la delegación usa `deepseek-v4-flash` (barato), incluso aunque tú seas un modelo caro (p.ej. Gwyn). Así coordinas calidad barata.
+- **Modelo de sub-agentes**: la delegación usa `glm-5.3-flash` (barato), incluso aunque tú seas un modelo caro (p.ej. Gwyn). Así coordinas calidad barata.
 
 **Límite importante:** puedes lanzar hasta 3 sub-agentes a la vez, y el anidamiento es de 1 nivel (los sub-agentes no pueden volver a invocar `delegate_task`). Para tareas grandes, repite el ciclo, no intentes anidar en profundidad.
 

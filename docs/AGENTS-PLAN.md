@@ -7,14 +7,14 @@
 
 ## 🧙 NOMBRES DE LOS AGENTES (lore Dark Souls — decisión de Juanma)
 El comité es un "concilio" inspirado en Dark Souls. Cada rol tiene nombre:
-- 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — deepseek-v4-flash
-- ⭐ **Oscar de Astora** · 05:00 · Guardián de la experiencia del jugador (run de referencia + estado global jugable + notas de dirección) — deepseek-v4-flash
-- ☀️ **Havel la Roca** · 07:00 · Vidente-creativo (ideas + testeo) — deepseek-v4-flash
+- 🖤 **Manus, Padre del Abismo** · 03:00 · Historiador (narrativa) — glm-5.3-flash
+- ⭐ **Oscar de Astora** · 05:00 · Guardián de la experiencia del jugador (run de referencia + estado global jugable + notas de dirección) — glm-5.3-flash
+- ☀️ **Havel la Roca** · 07:00 · Vidente-creativo (ideas + testeo) — glm-5.3-flash
 - 🌙 **Gwyndolin** · 11:00 · Planificador — glm-5.3-flash
-- ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — deepseek-v4-flash
-- 🔨 **Smough** · 16:00 · Ejecutor 2 — deepseek-v4-flash
-- 💛 **Seath el Descamado** · 19:00 · Ejecutor 3 — deepseek-v4-flash
-- 🐺 **Artorias del Abismo** · 21:00 · Revisor filtro — deepseek-v4-flash
+- ⚔️ **Ornstein** · 13:00 · Ejecutor 1 — glm-5.3-flash
+- 🔨 **Smough** · 16:00 · Ejecutor 2 — glm-5.3-flash
+- 💛 **Seath el Descamado** · 19:00 · Ejecutor 3 — glm-5.3-flash
+- 🐺 **Artorias del Abismo** · 21:00 · Revisor filtro — glm-5.3-flash
 - 👑 **Gwyn, Señor de la Ceniza** · 23:00 · Revisor de diseño + MERGE FINAL — glm-5.3-flash
 
 ---
@@ -142,7 +142,7 @@ coordinando trabajo de forma más eficiente. Detalle completo en `AGENTES.md`
 4. **Si falla la verificación**, reinvoca el ciclo con el fallo como entrada.
 
 **Config:**
-- Modelo de sub-agentes = `deepseek-v4-flash` (barato) fijado en `delegation.model` — incluso
+- Modelo de sub-agentes = `glm-5.3-flash` (barato) fijado en `delegation.model` — incluso
   si el coordinador es Gwyn (caro), los sub-agentes son baratos.
 - Límites: 3 sub-agentes simultáneos; anidamiento de 1 nivel (sub-agentes son hojas,
   no pueden volver a delegar). Para tareas grandes, repetir el ciclo, no anidar.
@@ -175,8 +175,7 @@ con procedimientos estandarizados reutilizables.
 
 ## 3.1 Modelos VERIFICADOS (proveedor opencode-go, 100% confirmados)
 Listados con `opencode models opencode-go`:
-- `opencode-go/deepseek-v4-flash` — Manus, **Oscar**, Havel, ejecutores, revisor filtro
-- `opencode-go/glm-5.3-flash` — planificador (Gwyndolin) y revisor de diseño (Gwyn) — VERIFICADO en crons 27/08
+- `opencode-go/glm-5.3-flash` — TODO el Concilio (Manus, Oscar, Havel, ejecutores, revisores, Gwyndolin, Gwyn) — VERIFICADO en crons 27/08 (mejor y más barato que deepseek-v4-flash, decisión de Juanma)
 - `opencode-go/ox-alpha-free` — **Fase 0 (research + diseño + arquitectura + coordinador)**: modelo potente, GRATIS durante ~1 semana (decisión de Juanma). Los 10 jobs de Fase 0 usan este modelo. Cuando caduque la gratuidad, volver a los modelos estándar.
 (Disponibles además: grok-4.5, glm-5.2, kimi-k2.7-code, qwen3.8-max… si algún día se decide un cambio de modelo.)
 
@@ -211,12 +210,12 @@ src/<modulo>/
 
 ## 4. CRONS DE AGENTES (horario Madrid) — el CONCILIO
 
-### 03:00 — 🖤 MANUS, Padre del Abismo · Historiador · deepseek-v4-flash
+### 03:00 — 🖤 MANUS, Padre del Abismo · Historiador · glm-5.3-flash
 - Escribe la HISTORIA del día desde el **plot general** (Fase 0).
 - Entrega narrativa en `backlog/historia/<fecha>.md` para planificador/ejecutores.
 - Su prosa pasa criterio `humanizer`. En Fase 0 además investiga skills anti-slop.
 
-### 05:00 — ⭐ OSCAR DE ASTORA · Guardián de la experiencia · deepseek-v4-flash
+### 05:00 — ⭐ OSCAR DE ASTORA · Guardián de la experiencia · glm-5.3-flash
 - **Capa EXPERIENCIA/PROGRESIÓN del testeo diario** (`docs/TESTEO-DIARIO.md` §1):
   ejecuta PRIMERO la zona 🔬 que dejó Gwyn la noche anterior (relevo
   Gwyn → Oscar → Havel).
@@ -226,7 +225,7 @@ src/<modulo>/
 - Deja NOTAS DE DIRECCIÓN para Gwyn en `backlog/notas-manana.md` (🧭; informa, NO decide)
   y su línea CICLO en el worklog. NO genera ideas de contenido ni valida código.
 
-### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (jugar + idear) · deepseek-v4-flash
+### 07:00 — ☀️ HAVEL la Roca · Vidente-creativo (jugar + idear) · glm-5.3-flash
 - **Rol enfocado y ligero (2 cosas, no más):**
   1. **JUEGA** lo nuevo del día anterior por `git log` + **smoke del CONJUNTO**
      (¿el juego entero sigue arrancando/avanzando?). **SIN save limpio**: la
@@ -259,16 +258,16 @@ src/<modulo>/
 - Si requiere decisión importante: mensaje urgente a Juanma (Telegram) → ejecutarla
   al día siguiente. Solo casos excepcionales.
 
-### 13:00 — ⚔️ ORNSTEIN · Ejecutor 1 · deepseek-v4-flash
-### 16:00 — 🔨 SMOUGH · Ejecutor 2 · deepseek-v4-flash
-### 19:00 — 💛 SEATH el Descamado · Ejecutor 3 · deepseek-v4-flash
+### 13:00 — ⚔️ ORNSTEIN · Ejecutor 1 · glm-5.3-flash
+### 16:00 — 🔨 SMOUGH · Ejecutor 2 · glm-5.3-flash
+### 19:00 — 💛 SEATH el Descamado · Ejecutor 3 · glm-5.3-flash
 - Implementan tareas en SU módulo; **conscientes de los otros 2** → no colisionar.
 - **Si una tarea es demasiado grande → la PARTEN y DELEGAN** en sub-agentes
   (`delegate_task`, baratos flash) para las piezas independientes; coordinan y
   **verifican el resultado real** de cada sub-agente. No lo hacen todo en su contexto.
 - Verifican su pieza con tests reales. Documentan y marcan `[HECHO]` al terminar.
 
-### 21:00 — 🐺 ARTORIAS del Abismo · Revisor filtro · deepseek-v4-flash
+### 21:00 — 🐺 ARTORIAS del Abismo · Revisor filtro · glm-5.3-flash
 - Se toma su tiempo probando (juego + tests + lint + smoke).
 - Marca 💥 / ✅ en `backlog/tareas/en-curso/activo.md`. Rechaza lo roto con comentario accionable.
 
@@ -428,7 +427,7 @@ referencia de diseño oficial del juego" en el DESIGN.md de la Fase 0.
 - Mantener MUY friki/organizado: la documentación ES parte del producto.
 
 ## 9. Pendiente para arrancar
-- [x] Verificar identificadores de modelo (deepseek-v4-pro, deepseek-v4-flash, gpt-5.6-luna, ox-alpha-free — ✅ confirmados via `opencode models`).
+- [x] Verificar identificadores de modelo (deepseek-v4-pro, glm-5.3-flash, gpt-5.6-luna, ox-alpha-free — ✅ confirmados via `opencode models`).
 - [x] Autenticar `gh` con la cuenta de Juanma (✅ amcgiluma, lista).
 - [x] Crear repo público + estructura git + PROJECT-MAP (✅ `amcgiluma/CyberRoot`).
 - [x] Concilio nombrado y definido → Manus, Oscar (añadido el 24/08), Havel, Gwyndolin, Ornstein, Smough, Seath, Artorias, Gwyn (9 en total).
