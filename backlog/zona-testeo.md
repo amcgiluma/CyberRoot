@@ -8,11 +8,11 @@
 > Si algún día no hay zona, fallback: Oscar usa su run de referencia habitual
 > y Havel su `git log --since` + smoke del camino real (TESTEO-DIARIO §4).
 
-## 🔬 Testeo de mañana (2026-08-28)
+## 🔬 Testeo de mañana (2026-08-29)
 
-Zona prioritaria: el tutorial del cap. 0 con `cp` activado — sandbox end-to-end + prosa retocada por Manus (🧭1/🧭2)
-- Primero (Oscar): recorre la sesión del cap. 0 headless como proxy jugable — `PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/sandbox/test_session_cap0.py -o addopts= -v` — y evalúa con ojos de novato si `ls→cat→cd→cp` enseña POR NECESIDAD; cruza la sesión contra `CAPITULOS/00-la-firma.md` recién retocado por Manus: el briefing debe mostrar los 4 comandos y la run 0 debe admitir el fallo (post-mortem nº 1 ya no es rama muerta).
-- Segunda (Havel): juzga la fuente bitmap mirando `src/assets/golden/*.zoom3x.png` — legibilidad y SABOR CRT: ¿parece terminal de fósforo de verdad o una fuente genérica? Es la primera pieza visual del juego.
-- Smoke: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **225 passed sí o sí** (si Smough canjea dicts→`Event` el número no debería cambiar; si cambia, que el worklog diga por qué); y las 3 capturas golden se regeneran byte a byte (`python src/assets/tools/make_captures.py`, sha256 estables en README). Sin `.venv`: bootstrap nuevo en el README raíz (`python3.11 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt`).
+Zona prioritaria: el CÓDIGO como sistema — curriculum + generator + state conviven por primera vez en main (PRs #4/#5/#6, suite 316)
+- Primero (Oscar, ojos de experiencia): recorre el CAMINO del cap. 0 con las piezas ya integradas — la sesión canónica (`PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/sandbox/test_session_cap0.py -o addopts= -v`) sigue siendo el mapa; verifica que lo que generator produce (`generate(seed, 0)` → sala → `Shell` real) respeta el VIAJE del dossier: 4 comandos POR NECESIDAD, cumbre `cp` alcanzable, errores honestos. La decisión 🧭2 (opción B: cwd en `/`, dossier con rutas completas — DESIGN §6.1) debe cortar el tropiezo de ayer (el «no puedo copiar con el nombre del dossier» ya no puede pasar con rutas completas).
+- Segunda (Havel, ojos de novedad): juega el CONTRATO de datos nuevo — `load_curriculum()` sobre `src/data/curriculum.json`: ¿los prereqs de `story.ch1.e1` cuentan la misma historia que el cap. 1 de Manus (permisos como «quién puede tocar esto»)? ¿el validador rechaza lo que debe rechazar? Y sabor: el mensaje didáctico de `&&`/`;` (PR #5) — ¿enseña o da la lata?
+- Smoke: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **316 passed sí o sí** (225 + 30 engine + 51 sandbox/curriculum + 10 state); el guard `test_tests_layout.py` debe seguir vivo (cero `src/assets/tests/`).
 
-Contexto: primer día de código del juego mergeado (27/08: PR #1 `common` —RNG/bus/tipos—, PR #2 `sandbox` del cap. 0 con `cp` ACTIVADO por decisión 🧭1 de Gwyn, PR #3 fuente bitmap CP437 con el `__init__.py` problemático eliminado). Sin build gráfica aún: hoy el «juego» es headless y las capturas golden.
+Contexto: hoy entraron PR #4 (generator v0 + guard de layout), #5 (curriculum.json v0 + canje Event + rechazo didáctico `&&`/`;`) y #6 (state v0: primer save atómico/versionado + SEMANTIC a un idioma). Decisión 🧭2: opción B (DESIGN §6.1).

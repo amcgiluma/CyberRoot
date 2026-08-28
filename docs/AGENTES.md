@@ -28,7 +28,7 @@
 **Cómo usarla (patrón general):**
 - **Evalúa si conviene delegar**: si una tarea es extensa o independiente, delega; si es corta y la dominas, hazla tú.
 - **Invoca sub-agentes enfocados**: cada uno hace UNA pieza acotada (p.ej. "revisa el diff de hoy y lista qué está roto", "investiga X y devuelve un resumen", "implementa este módulo concreto"). Pásale TODO el contexto necesario en la petición (rutas, criterios, qué debe devolver).
-- **NO te fíes del resumen**: un sub-agente puede decir "hecho" y estar mal. **VERIFICA el resultado real** (git log, ficheros, tests) antes de darlo por bueno.
+- **NO te fíes del resumen**: un sub-agente puede decir "hecho" y estar mal. **VERIFICA el resultado real** (git log, ficheros, tests) antes de darlo por bueno. *Checklist del gate (propuesta de Seath 28/08):* `git status --porcelain` sin ficheros FUERA de las rutas del dueño + leer el diff real, nunca el resumen. *Checklist del gate (propuesta de Seath 28/08):* `git status --porcelain` sin ficheros FUERA de las rutas del dueño + leer el diff real, nunca el resumen.
 - **Bucle plan→delega→verifica→reinvoque**: si la verificación falla, reinvoca el ciclo con el fallo como entrada (planifica, delega de nuevo, verifica).
 - **Modelo de sub-agentes**: la delegación usa `glm-5.3-flash` (barato), incluso aunque tú seas un modelo caro (p.ej. Gwyn). Así coordinas calidad barata.
 

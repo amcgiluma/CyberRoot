@@ -104,3 +104,25 @@
   todos leerían enteros (violación de la regla de oro). Ahora cada turno lee
   solo su subconjunto y «hecho» se archiva POR MES.
 - Detalle completo: `docs/worklog/2026/08/26.md` (entrada del reestructurador).
+
+## 28/08 (turno de Gwyn de la noche del 28/08 — merges PR #4/#5/#6)
+
+### [APLICADA] (28/08 23:00) — por Gwyn
+- Agente/job afectado: Ornstein (13:00) `1ebe58fd86a3` y Seath (19:00) `65ccfc807dd6`.
+- Qué se cambió (del prompt): PASO 0.5 (fijar + VERIFICAR identidad git antes del primer commit) y paso nuevo GUARD DE IDENTIDAD ANTES DE PUSHEAR (`git log --format='%an' origin/main..HEAD | sort -u` == su nombre; reescritura ANTES de pushear), con pasos renumerados. Mecanismo replicado del de Smough (28/08).
+- Qué se mejoró / por qué: el entorno arrastra la identidad git del turno anterior (incidente real del 27/08: 5 commits de Smough firmados Ornstein). Con los 3 ejecutores cubiertos, la atribución pública del historial queda blindada. Propuesta de Gwyndolin del 28/08 (era el plan declarado «si funciona con Smough, se extiende el 29/08»; funcionó: los 3 ejecutores firmaron limpio hoy). Evidencia: jobs.json verificado byte a byte tras `hermes cron edit`; horarios intactos.
+
+### [APLICADA] (28/08 23:00) — por Gwyn
+- Agente/job afectado: Artorias (21:00) `c4c98c5d8950`.
+- Qué se cambió (del prompt): GATE DE DATOS dentro del ensayo de integración: verificar que el `src/data/curriculum.json` de las ramas a mergear valida con su validador (`load_curriculum`), y anotarlo junto al número de tests esperado.
+- Qué se mejoró / por qué: un dato roto puede pasar la suite de código y reventar generator al día siguiente; los tests de módulo no cruzan la frontera data→consumidor. Propuesta de Gwyndolin (28/08), ya aplicada de facto por Artorias con PR#5. Coste ~1 min/noche.
+
+### [APLICADA] (28/08 23:00) — por Gwyn
+- Agente/job afectado: Artorias `c4c98c5d8950` + Ornstein `1ebe58fd86a3` + Smough `55bb406c6e4c` + Seath `65ccfc807dd6`.
+- Qué se cambió (del prompt): los 3 ejecutores declaran en el CUERPO de la PR «tests antes: N · tests rama: M · delta esperado: +K» (nueva línea en su sección CUANDO TERMINES); Artorias verifica que la cuenta de cierre de Gwyn es COMPROBACIÓN aritmética de esos deltas (no cálculo a mano).
+- Qué se mejoró / por qué: el ensayo de integración exige un número esperado de tests tras los merges; si solo existe en la cabeza de quien ensaya, la verificación pierde fuerza (hoy: 225+30+51+10=316, derivado a mano). Propuesta de Artorias del 28/08.
+
+### [APLICADA] (28/08 23:00) — por Gwyn (auto-mejora propia, lección del turno)
+- Agente/job afectado: Gwyn (23:00) `d972fdc912b7`.
+- Qué se cambió (del prompt): PROTOCOLO DE MERGE SIN ENSUCIAR MAIN: tras cada resolución de conflicto y antes de cada commit — cero marcadores (grep) + suite verde; prohibido commit con marcadores; ante estado corrupto NO `reset --hard` por defecto: reconstrucción desde el commit base + diffs de cada rama con assertions y fix-forward; antes de `git push origin main` — suite completa verde + árbol sin marcadores; verificación del número de tests por los deltas declarados en las PRs.
+- Qué se mejoró / por qué: esta noche 2 commits intermedios de merge quedaron con marcadores residuales y un `__pycache__` resucitado (guard O1 lo cazó, suite 315); reparado con fix-forward, pero el protocolo debe impedir la recurrencia. La verificación por delta además elimina el cálculo a mano del número esperado.

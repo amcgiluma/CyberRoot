@@ -704,6 +704,17 @@ Notas:
   al completar la cadena final del cap. 6 — APAGÓN PROPIO premia haber jugado
   bien y no puede depender del azar puro.
 
+- Andamiaje de la run 0 (🧭2, 28/08 — decisión de Gwyn al mergear O2): la
+  run 0 arranca con cwd en la RAÍZ (`/`) y el dossier SIEMPRE da rutas completas
+  (opción B del scaffold del generator, ya su `default`); las rutas relativas se
+  enseñan en el cap. 1. Motivo: la primera fricción del jugador debe ser un
+  aprendizaje del oficio (navegar), no una trampa de andamiaje — y la cumbre del
+  cap. 0 es COPIAR, no explorar: (a) arriesgaba tapar esa necesidad con tutorial de
+  navegación y (c) gastaba el post-mortem nº 1 en un tropiezo artificial. El
+  scaffold expone las 3 opciones como datos (`scaffold.options`); PENDIENTE v0.1:
+  que generator CONSUMA el scaffold en la sesión que produce (hoy es dato, no
+  comportamiento).
+
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 
 ENSEÑANZA = el capítulo lo presenta como boon de currículo (§4.4.1);

@@ -133,56 +133,27 @@ huellas de `activo.md` y `worklog/2026/08/28.md` — conserva las tres.
 
 ### 👑 Gwyn (28/08, 23:00) — criterio de diseño y dirección para el 29/08
 
-**Trámite de la noche:** sin merges: no había ramas/PRs nuevas (las tres
-feat/* del 27/08 ya estaban en main). Este turno cerró la huella que quedó
-sin commit del 27/08 (docs, `cp` activado, retoques 🧭2 en DESIGN, 225
-passed verificado por mí) y aplicó 4 auto-mejoras — registro en
-`mejoras/aplicadas/historico.md` (sección del 28/08).
+**Trámite:** 3 merges (PR #4 engine → #5 sandbox → #6 meta-ui), **316 passed** verificados, decisión 🧭2 = **OPCIÓN B** escrita en DESIGN §6.1, 9 tareas archivadas en `hecho/2026-08.md`, 4 auto-mejoras aplicadas con el CLI y registradas en `mejoras/aplicadas/historico.md`. Incidente propio de huellas (marcadores residuales en 2 commits intermedios) reparado con fix-forward y convertido en protocolo en MI prompt — transparencia completa en el worklog.
 
-**Validación de las 🧭 de Oscar (la repetida queda cerrada):**
-- 🧭1 y 🧭2 ya APROBADAS el 27/08 (ver `activo.md`, decisión D1) y ahora sí
-  ALINEADAS EN TODOS LOS SITIOS: DESIGN §2.5 beat 1 y fila 0 de §6.1 ya no
-  prometen «todo sale bien» a secas. Falta la PROSA de Manus (cap. 0) — esa
-  es su tarea D1 de esta noche; que Gwyndolin no la deje caer.
-- 🧭3/🧭4/🧭5/🧭6/🧭7: resueltas o apuntadas según lo registrado el 27/08.
-  Nada nuevo que decidir de la revisión MODO A hasta que exista build.
+**Qué me ha gustado del día (sabor):**
+- El DAG de Smough respira diseño: los tints de los encargos (blue/blue/grey/red/grey) ya dibujan la primera elección azul/rojo del beat 4, y los prereqs de `story.ch1.e1` (`c.ls-la`, `c.permisos-leer`) son EXACTAMENTE el cap. 1 de §6.1 (permisos como «quién puede tocar esto»). La historia de Manus y el currículo de Smough coinciden sin haberse puesto de acuerdo: el sistema funciona.
+- La validación canónica §6.4.4 tal como la soñé: una sala irresoluble es un `UnsolvableRoomError` que te dice el paso que falla, no un reto traicionero. Y la variante `practice` con decoys deterministas abre la rejugabilidad barata del §4.5.
+- El primer save del juego existe: atómico, versionado y sin reloj real. Diegético como pide §2.7. Hito silencioso: a partir de aquí, todo lo que pase en el Grid se puede recordar.
+- T2: un idioma en SEMANTIC. Gracias, Seath — norma aplicada sin tener que imponerla.
 
-**Qué me ha gustado de hoy (y quiero que quede como norma):**
-- El ensayo de integración de Artorias cazó un bug invisible PR a PR. A
-  partir de ahora ES protocolo: mi prompt lo exige con ≥2 PRs abiertas
-  (mejora [APLICADA] 28/08). Sin CI, este ensayo es el CI.
-- La desconfianza sana entre ejecutores («no me fío del resumen de un
-  sub-agente: leo el código y corro los tests yo») es EXACTAMENTE el nivel
-  de rigor que pedí. Que Ornstein y Smough sigan verificando así, también
-  entre ellos.
-- La identidad git de los agentes ya tiene PASO 0.5 + guard de push (mejora
-  de Smough aplicada a su prompt): el historial de GitHub es nuestra única
-  atribución pública; estuvo a un `push` de salir MAL la primera noche.
+**Qué NO me ha gustado / corrijo:**
+- MI propio merge: huellas con marcadores residuales en 2 commits intermedios. Reparado y protocolizado (mejora [APLICADA] a mi prompt). El estándar es el que exigí a otros: el turno no termina cuando el trabajo está hecho; termina cuando la huella está en origin LIMPIA.
+- `scaffold.options` expone las 3 opciones como datos pero el generator v0 aún no las CONSUME: la decisión de esta noche (B) debe materializarse en el comportamiento del generator, no quedarse en un dict decorativo. Ornstein: que generator construya la sesión con el `initial_cwd` del `default` del scaffold.
 
-**Qué NO me ha gustado:**
-- La huella del turno del 27/08 quedó ESCRITA PERO SIN COMMIT (más de 9
-  ficheros en el árbol, sin entrada de worklog ni mejoras aplicadas). Esta
-  noche la he cerrado yo, pero la lección es de proceso: **el turno no
-  termina cuando el trabajo está hecho; termina cuando la huella está en
-  origin**. Si una noche hay corte, la siguiente reconstruye — pero que no
-  sea costumbre. Gwyndolin: si mañana hay huella huérfana otra vez, insiste
-  en el commit de cierre como último hito de cada turno.
-- Detalle de gusto menor, para Seath cuando toque `palette.py`: un idioma
-  por diccionario en `SEMANTIC` (eco de Artorias; sigo sin decidir cuál —
-  pero UNO).
+**Dirección para el plan del 29/08 (mi lectura, por prioridad):**
+1. Ornstein: generator CONSUMIENDO `curriculum.json` real (contrato de Smough ya en main: `load_curriculum/unlocked/campaign_pool/quests_for_chapter`) + materializar la decisión 🧭2 (B) en la sesión que produce. Adiós al cap. 0 hardcodeado.
+2. Seath: re-export de la fachada `core.state` (nota de Artorias; 10 min) y después `progression` v0 contra el estado ya salvable — el primer unlock por competencia respira sobre T1.
+3. Smough: pasada GNU sistemática `cp`/`cat` (2 bugs P3 de Havel vivos en `abierto.md`) + REPL `python -m core.sandbox` (barato, primera impresión tangible para Juanma).
+4. Manus: M1/M2 ya en curso (cap. 2 «Facturas» + pulsera HOSP-47-C) — el Acto 1 necesita colchón para que los ejecutores integren texto sin esperas.
+5. O3 harness (Ornstein, P3): ahora SÍ tiene cliente — con curriculum+generator en main, el runner de N seeds puede medir resolubilidad y determinismo de verdad.
 
-**Dirección para el plan del 29/08 (mi lectura):**
-1. Smough: canje dicts→`Event` (deuda P1, su línea en `activo.md`) y después
-   curriculum — `curriculum.json` v0 es la pieza que desbloquea generator.
-2. Ornstein: `generator` v0 contra el sandbox YA mergeado, con la piel de la
-   escena del cap. 0 (que las salas salgan de datos de Manus, no de fixtures
-   abstractas).
-3. Manus: si el cap. 1 + retoque cap. 0 de esta noche están bien, siguiente
-   parada natural: fragmentos 2–3 y beats del cap. 2 (el Acto 1 necesita
-   colchón para que los ejecutores integren texto sin esperas).
-4. Seath: `state` v0 (GameState serializable) consumiendo `ensure_plain` de
-   common — es su módulo y desbloquea el primer save del juego.
-5. El blueprint del mundo (#7 de mi aviso del 27/08) sigue en la recámara:
-   cuando Ornstein toque generator de verdad, lo reevalúo con él.
+**Ideas propias (para la recámara, no para el plan de mañana):**
+- El DAG ya tiene quests con tints: cuando engine exista, «la ventana de las 11:04 se abrió dos veces» puede ser el primer experimento de karma real — misma sala, encargo azul vs rojo, y el post-mortem del Auditor leyendo el patrón (§3.3 canal 2).
+- `saved_at` como tick simulado abre algo precioso: el GRID PUEDE VER TU HISTORIAL DE TICKS. Un día, los logs del mundo pueden llevar timestamps que coincidan con tus runs (el sistema te cuenta). Havel: apúntalo cuando toque lore de logs.
 
 *(Fin de la entrada de Gwyn — Gwyndolin consume esta sección a las 11:00.)*
