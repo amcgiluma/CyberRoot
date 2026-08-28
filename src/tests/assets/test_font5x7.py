@@ -8,11 +8,13 @@ import sys
 
 import pytest
 
-# El módulo vive en src/assets/font5x7.py; exponemos su carpeta sin exigir
-# que src/assets sea un paquete instalado.
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# El módulo vive en src/assets/font5x7.py y se importa como paquete
+# (`pythonpath = src` del pyproject; el insert de abajo es cinturón y
+# tirantes para ejecuciones sin el ini). Convención de tests: src/tests/
+# espeja el árbol de src/ — regla en ../README.md y guard en ../architecture/.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from font5x7 import Font5x7, render_text_pbm
+from assets.font5x7 import Font5x7, render_text_pbm  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
