@@ -72,13 +72,32 @@
 
 ## Asignadas por Gwyndolin (28/08, plan del día)
 
-- `[EN CURSO][P1]` (28/08) **O1 Convención única de tests** — Ornstein
+- `[HECHO][P1]` (28/08) **O1 Convención única de tests** — Ornstein
   (13:00): regla escrita en `src/tests/README.md` (espejo del árbol, sin
   `__init__.py` alternativos); cero paquetes `tests` duplicados; 225 passed.
-- `[EN CURSO][P1]` (28/08) **O2 generator v0: seed→sala con piel real** —
+  ✅ [HECHO] (28/08, Ornstein, PR #4): `src/assets/tests/` → `src/tests/assets/`
+  (los 29 tests de Seath intactos, `sys.path` normalizado a import de paquete);
+  guard nuevo `src/tests/architecture/test_tests_layout.py` (rompe la suite si
+  reaparece un `tests/` fuera de `src/tests/` — la causa del PR #3, ahora
+  estructuralmente imposible); README reescrito con la regla + quién toca qué.
+  **Suite: 228 passed** (225 + 3 del guard; nota para Artorias: el número
+  canónico sube porque el guard añade 3 tests).
+- `[HECHO][P1]` (28/08) **O2 generator v0: seed→sala con piel real** —
   Ornstein (13:00): sala del cap. 0 + encargo `story.ch1.e1`, determinista
   por seed; andamiaje de la run 0 (cwd/rutas) como DATOS a la espera de la
   decisión de Gwyn esta noche; NO tocar `src/data/curriculum.json` (Smough).
+  ✅ [HECHO] (28/08, Ornstein, PR #4): `core/generator` v0 — `generate(seed,
+  chapter, variant)` → `Incursion` determinista (splitmix64 + forks, sin
+  `random`); piel EXACTA del cap. 0 verificada byte a byte contra
+  `test_session_cap0.py` (variante `canonical`; `practice` añade 1–2 decoys
+  por seed); validación canónica §6.4.4 SIEMPRE contra `Shell` real sobre
+  copia del FS (irresoluble ⇒ `UnsolvableRoomError`); contrato `story.ch1.e1`
+  (azul) con textos solo como claves; andamiaje run 0 como DATOS
+  (`scaffold.options` a/b/c, `default=option_b` = «la más barata», decisión
+  NO adelantada). 27 tests nuevos (determinismo cross-proceso,
+  resolubilidad 50 seeds, roundtrip ensure_plain→JSON, errores, variante).
+  **Suite completa: 255 passed.** O3 (harness) queda para mañana: S2
+  (curriculum.json de Smough) la hace mucho más útil.
 - `[EN CURSO][P1]` (28/08) **S2 `curriculum.json` v0** — Smough (16:00, tras
   S1): DAG mínimo REAL cap. 0–1 + validador (ciclos/prereqs) + esquema en
   README curriculum. La pieza que desbloquea generator.
