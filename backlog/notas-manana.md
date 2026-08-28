@@ -74,58 +74,60 @@ del test, o divergirá cuando el engine pinte la sesión de verdad.
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Artorias (27/08, 21:00) — filtro técnico del día
+### 🎯 Artorias (28/08, 21:00) — filtro técnico del día
 
 **⚠️ AVISO A GWYN (merges de esta noche):**
-- **NO mergees PR #3 (`feat/meta-ui`) tal cual**: primero BORRA
-  `src/assets/tests/__init__.py` (fichero VACÍO) en la rama o en el merge.
-  Colisiona como paquete `tests` con `src/tests/`: con las 3 ramas juntas la
-  suite entera da **13 errores de colección** (verificado por mí con ensayo de
-  merge real); sin ese fichero: **225 passed**. Es 1 línea de arreglo, no
-  rehacer nada. PRs #1 y #2: merge directos, sin pegas — y #1 primero
-  (base del core; sandbox no la importa aún, canje dicts→clase trivial).
-- Orden sugerido: **#1 → #2 → #3(con el borrado)**. Tras los merges, suite
-  completa desde raíz debe dar 225 passed — si no, algo se perdió por el camino.
-- **Decisión pendiente tuya que desbloquea a los ejecutores mañana**: 🧭1
-  (`cp` como 4.º concepto del cap. 0). Smough lo dejó IMPLEMENTADO y
-  TESTEADO (activarlo = añadir `"cp"` a `DEFAULT_CAP0_COMMANDS`, 1 línea;
-  tests ya verdes). Decidir hoy = Smough canjea dicts→Event y activa `cp`
-  mañana sin retrabajo. También: el README de assets dice «5 semánticos» y
-  DESIGN §8.5 dice «cuatro» — o GOLD entra en §8.5 o se corrige el README.
+- **Las 3 PRs están ✅**: mergea **#4 (`feat/engine`) → #5 (`feat/sandbox`)
+  → #6 (`feat/meta-ui`)**, en ese orden (ensayado por mí). Nada que rechazar.
+- **ENSAYO DE INTEGRACIÓN hecho** (worktree desechable, las 3 ramas juntas):
+  suite combinada **316 passed, 0 errores de colección** (main 225 → PR#4
+  +30, PR#5 +51, PR#6 +10). Si tras tus merges la suite NO da 316, algo se
+  perdió por el camino — verifica tú mismo antes de cerrar.
+- **Conflictos de docs ESPERABLES solo en 2 ficheros**:
+  `backlog/tareas/en-curso/activo.md` y `docs/worklog/2026/08/28.md` (las
+  huellas del día chocan porque las 3 ramas partieron del mismo main).
+  Resolver conservando TODAS las huellas; cero conflictos en código.
+- **Cruce con los bugs de la mañana**: el `[BUG][P2]` de Oscar (`&&`/`;`)
+  está ARREGLADO en PR#5 — ejecuté sus 3 repros exactos sobre la rama: los
+  tres dan el rechazo didáctico exit 2. Ciérralo al mergear. Los 2
+  `[BUG][P3]` de Havel (`cat fichero/` → exit 0; `cp dir destino` culpa al
+  destino) SIGUEN VIVOS verificados hoy — no bloquean merge, dueño Smough.
 
 **⭐ Notas de gusto (técnico):**
-- **Lo que más mola del día**: los guardianes de arquitectura de Ornstein
-  (tests AST que FALLAN si alguien importa pyxel/requests/random en core,
-  probados en negativo) — es la mejor protección barata contra la pudrición
-  de la frontera core/render. Y el rigor GNU de Smough: contrastó con
-  coreutils REAL de Ubuntu, no de memoria, y corrigió a su sub-agente con
-  las salidas reales. Este es el estándar: verificar contra la fuente, no
-  contra la intuición.
-- **Determinismo como obsesión compartida**: splitmix64 propio (RNG
-  reproducible entre procesos/plataformas), sesión sandbox byte a byte,
-  capturas golden con sha256 estables. Las tres ramas comparten la misma
-  religión y eso hará posible el harness (§8.6) sin rewritings.
-- **La sesión end-to-end de Smough usa la piel EXACTA de la escena de
-  Manus** (oficina-vecinal-muelle-norte, CANDELAS proveedor nº 47, ventana
-  11:04): los tests ya son documento narrativo. Que no se pierda esa
-  costumbre cuando llegue el generador.
-- **Detalle menor que no me convence**: `palette.py` usa nombres en español
-  (`texto`, `hallazgo`) mezclados con ingleses (`alert`, `info`) en SEMANTIC.
-  Un idioma por diccionario, Seath — el render va a consumir esto a diario.
-  No bloquea.
-- **Prioridad para mañana (mi lectura técnica)**: 1º canje de Smough a
-  `common.events.Event` + decisión 🧭1; 2º `curriculum.json` (daga v0, datos
-  reales contra los que testear generator y sandbox juntos); 3º que Ornstein
-  empiece `generator` contra el sandbox YA mergeado (adiós stubs).
-- **Conflictos de docs ESPERABLES al mergear**: las 3 ramas añadieron su
-  huella al final de `activo.md`, `worklog/2026/08/27.md` y `propuestas.md` —
-  resolver conservando TODAS las huellas (ensayado por mí: son los únicos
-  conflictos, cero en código).
+- **Lo que más mola del día**: la convención O1 no quedó en README que
+  nadie lee — quedó en un GUARD ejecutable (`test_tests_layout.py` rompe la
+  suite si aparece un `tests/` fuera de `src/tests/`). La regla se defiende
+  sola ahora. Y el `UnsolvableRoomError.from_step()` de Ornstein reporta
+  argv/exit/stderr del paso que falló: errores que te dicen dónde mirar.
+- **La validación canónica (§6.4.4) tal como el diseño la pedía**:
+  `generate()` ejecuta la solución sobre `fs.snapshot()` y la Incursión
+  devuelta conserva SU FS intacto. Una sala irresoluble es un bug lanzado,
+  no un reto. Además `variant="canonical"|"practice"` con decoys
+  deterministas: gancho limpio para las salas futuras.
+- **T1 de Seath es la atomicidad hecha costumbre**: tmp + `os.replace`,
+  fallo de serialización deja el save anterior INTACTO (testeado),
+  migraciones cableadas desde v1 y `saved_at` = tick simulado (nunca reloj
+  real). El día que el formato cambie, ya hay camino — así se Versiona.
+- **El mensaje didáctico de S3 es exactamente 🧭3**: «sh: syntax not
+  supported in this session: it runs one command at a time (pipes and
+  chaining arrive later)» — honesto como GNU, y enseña qué llega después.
+- **Detalle que no me convence**: `core/state/__init__.py` es solo
+  docstring; `GameState`/`save`/`load` viven en `core.state.state` y el
+  primer consumidor (engine/main) tendrá que adivinarlo. Re-exportar la
+  fachada es gratis, Seath — hazlo en tu próximo paso, no urgente.
+- **Prioridad para mañana (mi lectura técnica)**: 1º generator consumiendo
+  `curriculum.json` real (el contrato de S2 ya existe; adiós al cap. 0
+  hardcodeado en `chapter0.py`); 2º la pasada GNU sistemática de Smough
+  (3 divergencias acumuladas de la familia `cp`/`cat`, tarea [P2] en
+  abierto); 3º el REPL `python -m core.sandbox` (barato, primera impresión
+  tangible para Juanma).
+- **Propuesta menor de flujo** (en `propuestas.md`): que los ejecutores
+  declaren en el cuerpo del PR el DELTA de tests esperado (+30/+51/+10 hoy,
+  lo derivé a mano) — a Gwyn le cuesta 10 segundos verificar el 316.
 
-**🚨 Línea de aviso:** NO mergees PR #3 (`feat/meta-ui`) tal cual — borra
-antes `src/assets/tests/__init__.py` (vacío): sin eso, la suite combinada de
-las 3 ramas da 13 errores de colección (con él borrado: 225 passed, verificado
-por mí); PR #1 y PR #2: merge directos.
+**🚨 Línea de aviso:** mergea #4 → #5 → #6 sin miedo (todas ✅, ensayo de
+integración 316 passed verificado por mí); los ÚNICOS conflictos serán las
+huellas de `activo.md` y `worklog/2026/08/28.md` — conserva las tres.
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
 

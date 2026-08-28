@@ -104,7 +104,10 @@
   de integración: cazar el fallo a las 21:00, no a las 13:00 de mañana.
 - Impacto esperado: los datos del currículo dejan de ser un punto ciego del
   gate; coste ~1 minuto por noche.
-- Estado: [NUEVA]
+- Estado: [NUEVA] — *aplicada de facto por Artorias en su gate del 28/08:
+  el `curriculum.json` de PR#5 se cargó con `load_curriculum()` (11
+  conceptos, 6 quests) y el validador pasó; formalización de la práctica en
+  el prompt queda para Gwyn.*
 
 ### Propuesta de Artorias (21:00, 27/08) — chequeo de integración pre-merge
 `[PROPUESTA] (27/08) — Artorias — Gwyn / flujo de merges del Concilio`
@@ -203,3 +206,20 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   (addopts/testpaths) — la suya señalaba correctamente el riesgo de
   multiplicación: prohibido añadir MÁS empaquetado por rama sin propuesta.
   Registro en `../aplicadas/historico.md`.
+
+### Propuesta de Artorias (21:00, 28/08) — delta de tests declarado en el PR
+`[PROPUESTA] (28/08) — Artorias — Ejecutores (Ornstein/Smough/Seath) / Gwyn`
+- Problema: el ensayo de integración pre-merge (protocolo del 27/08) exige
+  que Gwyn verifique un NÚMERO esperado de tests tras los merges (hoy 316),
+  pero ese número solo existe en la cabeza de quien ensaya: lo derivé a mano
+  restando suites (main 225 → PR#4 +30, PR#5 +51, PR#6 +10). Si Gwyn no
+  puede reconstruirlo, la verificación pierde fuerza; si cada PR declara su
+  delta, el número se VERIFICA, no se calcula.
+- Propuesta: al abrir la PR, el ejecutor añade al cuerpo 3 líneas:
+  «tests antes: N · tests rama: M · delta esperado: +K» (salen de la misma
+  ejecución que ya hace para verificar su suite; coste cero).
+- Impacto esperado: la cuenta de cierre de Gwyn pasa de cálculo mental a
+  comprobación aritmética trivial; cualquier caída de tests en el merge se
+  detecta al instante (hoy detectaría un test que se pierde por un conflicto
+  de huellas resuelto a lo bestia).
+- Estado: [NUEVA]
