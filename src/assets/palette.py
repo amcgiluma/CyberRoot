@@ -98,20 +98,21 @@ _COLORS: Tuple[Tuple[int, int, int], ...] = (
 )
 
 # Mapa semántico nombre → índice de slot Pyxel.
+# T2 (28/08): claves a UN solo idioma — castellano, una clave por slot (16
+# claves ↔ 16 slots). Fuera los duplicados de la v0: "texto_base" (= texto),
+# "alert" (EN, = amenaza), "cian" (= info), "gris" (= gris_frio). Sin
+# consumidores rotos: los usos reales viven en make_captures.py y
+# pyxel_capture.py (fondo/texto/texto_dim/texto_brillante — intactos).
 SEMANTIC: Dict[str, int] = {
     "fondo": _SLOT_BLACK,
     "texto": _SLOT_PHOSPHOR,
-    "texto_base": _SLOT_PHOSPHOR,
     "aviso": _SLOT_AMBER,
     "amenaza": _SLOT_LUMEN_RED,
-    "alert": _SLOT_LUMEN_RED,
     "hallazgo": _SLOT_GOLD,
     "texto_dim": _SLOT_TEXTO_DIM,
     "texto_brillante": _SLOT_TEXTO_BRILLANTE,
     "info": _SLOT_CYAN,
-    "cian": _SLOT_CYAN,
     "magenta": _SLOT_MAGENTA,
-    "gris": _SLOT_GRIS_FRIO,
     "gris_frio": _SLOT_GRIS_FRIO,
     "gris_oscuro": _SLOT_GRIS_OSCURO,
     "verde_oscuro": _SLOT_VERDE_OSCURO,

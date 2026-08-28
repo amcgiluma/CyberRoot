@@ -71,8 +71,9 @@ Requisitos: `pyxel` + `pillow` en `.venv` (headless: no necesita DISPLAY ni Xvfb
 
 El dibujo va **píxel a píxel con `pyxel.pset`** usando `Font5x7` — la fuente
 builtin de Pyxel está PROHIBIDA en este módulo (la evidencia de esta validación
-es la tabla). Los 4 colores semánticos §8.5 se consumen vía `palette.SEMANTIC`
-(claves: `fondo`, `texto`, `aviso`, `amenaza`, `hallazgo`…); los valores RGB son
+es la tabla). Los 5 colores semánticos §8.5 se consumen vía `palette.SEMANTIC`
+(claves: `fondo`, `texto`, `aviso`, `amenaza`, `hallazgo`… — un idioma, una
+clave por slot desde el 28/08, T2); los valores RGB son
 v1 calibrables sin tocar código de UI.
 
 ---
