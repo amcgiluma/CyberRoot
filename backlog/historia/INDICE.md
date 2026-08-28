@@ -36,9 +36,17 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
 - ✅ Fichas de voz completas (6/6, `PERSONAJES.md`) — desbloquea todo diálogo.
 - ✅ Escenarios con datos base (6/6, `ESCENARIOS.md`).
 - ✅ Fragmento 1 `[LISTA]` (`FRAGMENTOS.md`). Fragmentos 2–6 pendientes.
-- ✅ Capítulo 0 abierto (`CAPITULOS/00-la-firma.md`, beats 1–3).
+- ✅ Capítulo 0 (`CAPITULOS/00-la-firma.md`, beats 1–3) — prosa RETOCADA el
+  28/08 según decisión D1 de Gwyn: `cp` enseñado en la escena técnica (🧭1,
+  alineado con la sesión canónica del sandbox) y run 0 falible en prosa (🧭2:
+  el bloque del post-mortem de la primera run ya no es rama muerta).
+- ✅ Capítulo 1 «Los Muelles» (`CAPITULOS/01-los-muelles.md`, beats 3–4,
+  28/08) — pacto, 5 encargos con karma, regla de la luz diegética (🧭3),
+  cola de post-mortem de Ceniza, escenas de Zeta, gancho hacia el cap. 2.
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
   Materializar Manus en `FRAGMENTOS.md` cuando escriba la cadena.
+- SIGUIENTE (dirección Gwyn, 28/08): fragmentos 2–3 y beats del cap. 2
+  «Facturas» para dar colchón al Acto 1.

@@ -56,6 +56,10 @@
   aquí la vigilancia de Lumen no llega salvo en redadas puntuales, y eso lo
   convierte en refugio y en peligro a la vez (cuando Lumen entra, entra con
   hombres, no con sensores).
+- Desde el cap. 1: un repeater vecinal cuelga de la grúa nº 9 y da red a
+  media docena de casas fuera del censo (nodo de cierre del capítulo,
+  `story.ch1.e5`). El buzón muerto del técnico filtrador es la lavandería
+  «Ciclón», Calle del Estío (encargo `story.ch1.e2`).
 
 ## Nodos tipo (piel del generador — §6.4.3)
 - **Oficina vecinal** (Umbral bajo): una línea telefónica, un cajero roto,

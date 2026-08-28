@@ -1,9 +1,11 @@
 # CAPÍTULO 0 — Trabajo en frío
 
-> Acto 1, beats 1–3 (DESIGN §2.5). Tutorial sin teoría: 1 sala, 1 run guiada.
-> Objetivo técnico (`ls`/`cd`/`cat` por necesidad) + beat narrativo +
-> decisión de karma (aquí, la primera) + gancho post-mortem.
-> Estado: `[LISTA]` para integración → `src/data/story/`.
+> Acto 1, beats 1–3 (DESIGN §2.5). Tutorial sin teoría: 1 sala, 1 run guiada
+> que puede fallar (🧭2). Objetivo técnico (`ls`/`cd`/`cat`/`cp` por
+> necesidad, 🧭1: copiar ES el encargo) + beat narrativo + decisión de
+> karma (aquí, la primera) + gancho post-mortem.
+> Estado: `[LISTA]` para integración → `src/data/story/`. Prosa alineada
+> con las decisiones D1 de Gwyn (27/08).
 
 ---
 
@@ -19,13 +21,15 @@ Carbón en papel de impresora reciclada:
 OFICINA VECINAL — MUELLE NORTE 12B
 turnal: 11:04 (ventana de silencio)
 fichero: nombre_de_proveedor.txt  (3 KB, usa el nombre que diga la cadena)
+destino: /usb (tu unidad; no salgas sin la copia)
 objetivo: copiar, no borrar
 ```
 - Dirección escrita a mano, con erre que parece corrida por calor.
 - Nadie firmó. Nadie pidió favores. Corre en sentido de la ciudad: pagas
   cobertura, no preguntas.
 
-Es tu primer encargo legítimo. Todo sale bien al final; es lo que punza.
+Es tu primer encargo legítimo. Nadie te ha prometido que salga limpio: la
+ventana es corta y el sistema, aunque viejo, respira.
 
 ---
 
@@ -35,24 +39,45 @@ Ceniza no está contigo. La única voz que entra es la del sistema.
 
 ```
 conectando → oficina-vecinal-muelle-norte...
-$ ls
-nombre_de_proveedor.txt  log.txt  README
-$ cat nombre_de_proveedor.txt
+$ ls /srv/oficina-vecinal-muelle-norte
+README
+log.txt
+nombre_de_proveedor.txt
+$ cat /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt
 CANDELAS  ·  proveedor nº 47  ·  facturación externa  ·  114 facturas/mes
-$ cd ..
+$ cp /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt /usb/
+$ cd /srv
+$ ls
+oficina-vecinal-muelle-norte
+usb
 $
 ```
-Copia el fichero. La sesión se cierra sola a los 11 minutos. Nada se rompe,
-nadie te ve, el ruido de extracción es mínimo. Vuelves a la calle con la
-copia en un USB de 512 MB y un número que ya no te importa: 11:04.
+Copias el fichero. En `ls`, el sistema lista por su cuenta (README, log, el
+dossier); tú lees en orden humano: el proveedor, el log, qué más hay. La
+sesión se cierra sola a los 11 minutos. El dossier pedía la copia y la copia
+está. Nada se rompe. Vuelves a la calle con el nombre en el USB y un número
+que ya no te importa: 11:04.
 
 Primera línea del Auditor, al cierre, con su precisión de formulario:
 
-> Registro de sesión: 1 fichero accedido, 0 marcados para borrado. Salida
-> limpia. Continuidad del servicio: no interrumpida.
+> Registro de sesión: 1 fichero accedido, 1 copia emitida hacia unidad
+> externa, 0 borrados. Salida limpia. Continuidad del servicio: no
+> interrumpida.
 
 No es una felicitación. Es un recibo. Te lo cobran después, y tú no lo sabes
 aún: esa ventana de las 11:04 dejó tu firma donde no estuviste.
+
+Puede que no llegues a cobrar. Que el turno de recepción vuelva antes, que
+el `cp` se te atragante, que un comando de más llene la sala de ruido. Si la
+sesión muere, el encargo no: la ventana vuelve a abrirse y el dossier sigue
+clavado donde estaba. Nadie en la ciudad sabe aún que existes; el sistema, sí,
+y no lo olvida:
+
+> Registro de sesión: 3 comandos, 0 ficheros extraídos. Expulsión. Reintento
+> permitido: el encargo permanece abierto. Continuidad del servicio: pendiente.
+
+Vuelve a entrar. Morir en el primer trabajo no te saca del juego; te mete en
+él: el post-mortem ya tiene tu línea esperando.
 
 ---
 
