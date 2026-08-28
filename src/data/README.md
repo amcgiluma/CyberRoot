@@ -35,6 +35,10 @@
 ```bash
 python -m pytest src/tests/data -q   # esquemas + referencias cruzadas + DAG
 ```
+> *(28/08, Smough: `curriculum.json` se valida en
+> `src/tests/core/curriculum/` — 46 tests, junto al módulo que lo carga y
+> define su esquema. La carpeta `src/tests/data/` nacerá cuando haya más de
+> un fichero de datos con esquema propio.)*
 
 ## Coordinación
 - Manus ESCRIBE prosa pero NO toca este directorio directamente: entrega sus
