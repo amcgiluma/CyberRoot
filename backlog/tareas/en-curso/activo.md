@@ -138,6 +138,7 @@
 - `[EN CURSO][P2]` (28/08) **S3 [BUG] `&&`/`;` → rechazo didáctico** — Smough
   (16:00, truncable a mañana): `&;` a `_UNSUPPORTED_SYNTAX` + mensaje que
   insinúe futuro + los 3 repros de Oscar en negativo.
+<<<<<<< HEAD
   ✅ ARTORIAS (21:00, PR #5): los 3 repros EXACTOS de Oscar ejecutados en
   vivo sobre la rama → TODOS `exit 2` con el mensaje didáctico («sh: syntax
   not supported in this session: it runs one command at a time (pipes and
@@ -187,6 +188,31 @@
   ✅ ARTORIAS (21:00, PR #6): SEMANTIC 16↔16 en castellano, cero usos de
   claves viejas (grep negativo sobre todo `src/` limpio), suite assets 29
   dentro de la rama. Gwyn valida al mergear. LISTA PARA MERGE.
+=======
+- `[HECHO][P1]` (28/08) **T1 `state` v0: primer save** — Seath (19:00):
+  GameState serializable roundtrip JSON con `version` de formato, envolviendo
+  la Shell del cap. 0.
+  ✅ [HECHO] (28/08, Seath, PR #6): `GameState(version, shell)` envuelve la
+  Shell como sub-dict plano (contrato de Smough intacto); `save()/load()`
+  ATÓMICOS (tmp mismo-dir + `os.replace`; fallo de serialización →
+  `SaveIntegrityError` con el save anterior INTACTO, testeado); `version` int
+  monotónico desde 1 + `saved_at` (tick simulado, sin reloj real); errores
+  `SaveVersionError`/`SaveIntegrityError` con mensajes claros; `_MIGRATIONS`
+  cableado desde el día 1 (vacío en v1, mecanismo probado con migración
+  sintética v0→v1 white-box); JSON escrito a mano carga exacto (§1.5).
+  Límite v1 declarado en README: el set de comandos no viaja en el save
+  (migración v2 futura). Plan de hitos propio en `src/core/state/PLAN.md`
+  (H0–H3, tests H2 delegados a sub-agente y verificados). 10 tests nuevos
+  (roundtrips in-memory/JSON/disco/doble, atomicidad, migración, versión
+  desconocida, sesión canónica cat+cp ruido 4). Suite: **206 passed**.
+- `[HECHO][P3]` (28/08) **T2 paleta: un idioma en SEMANTIC** — Seath
+  (19:00, opcional si T1 verde pronto): claves a UN solo idioma (propuesta);
+  Gwyn valida al mergear.
+  ✅ [HECHO] (28/08, Seath, PR #6): `SEMANTIC` a castellano, UNA clave por
+  slot (16↔16): fuera los duplicados `texto_base`, `alert` (EN), `cian`,
+  `gris`; los 5 semánticos §8.5 intactos; grep negativo de usos de claves
+  viejas; suite assets 29 passed. Gwyn valida al mergear.
+>>>>>>> origin/feat/meta-ui
 - `[EN CURSO][P2]` (28/08) **M1 prosa↔FS cap. 0** — Manus (03:00 29/08):
   listado de UNA entrada tras `cd /srv`; `/usb` permanece en raíz (canónico
   para dossier y test); prosa verificada contra `test_session_cap0.py`.

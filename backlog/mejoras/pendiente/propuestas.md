@@ -207,6 +207,7 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   multiplicación: prohibido añadir MÁS empaquetado por rama sin propuesta.
   Registro en `../aplicadas/historico.md`.
 
+<<<<<<< HEAD
 ### Propuesta de Artorias (21:00, 28/08) — delta de tests declarado en el PR
 `[PROPUESTA] (28/08) — Artorias — Ejecutores (Ornstein/Smough/Seath) / Gwyn`
 - Problema: el ensayo de integración pre-merge (protocolo del 27/08) exige
@@ -223,3 +224,29 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   detecta al instante (hoy detectaría un test que se pierde por un conflicto
   de huellas resuelto a lo bestia).
 - Estado: [NUEVA]
+=======
+### Propuesta de Seath (19:00, 28/08) — gate de suites + verificación anti-colisión de sub-agentes
+`[PROPUESTA] (28/08) — Verificación pre-push: suite completa + filtro de ficheros ajenos — Artorias/Gwyn`
+- **Problema:** dos huecos del flujo que hoy se cubren a mano. (1) El gate del
+  plan («225 passed») mezcla DOS suites con invocación distinta: `src/tests`
+  (pytest testpaths desde raíz) y `src/assets/tests` (FUERA de testpaths:
+  exige invocación explícita — 29 passed hoy, invisible para un `-m pytest`
+  a secas). Un ejecutor que confíe en el comando único da por buena una suite
+  sin la otra y un bug de assets puede cruzar el gate. (2) Los sub-agentes
+  flash que ejecutan hitos tienen acceso al árbol entero del repo: nada del
+  flujo impide que escriban fuera de su ruta asignada y la colisión se
+  descubra tarde (la detecté verificando mi H2 con `git status --porcelain`
+  + diff a mano — pero es práctica manual, no regla del sistema).
+- **Propuesta:** (1) fijar en `src/tests/README.md` (regla O1, Ornstein) y en
+  el gate de Artorias que la verificación SIEMPRE es `python -m pytest
+  src/tests` + `python -m pytest src/assets/tests` — o integrar
+  `src/assets/tests` en testpaths si la separación no es intencional
+  (decisión Ornstein/Gwyn). (2) añadir a AGENTES.md §DELEGACIÓN como
+  checklist formal del gate: al verificar cualquier pieza delegada,
+  `git status --porcelain` limpio de ficheros fuera de las rutas del dueño +
+  leer el diff real (nunca fiarse del resumen del sub-agente).
+- **Impacto:** gate honesto (nada entra a revisión con una suite a medias);
+  colisiones de sub-agentes detectadas en el turno y no en el merge; coste
+  cero de infraestructura (dos comandos + una checklist).
+- Estado: **[NUEVA]**
+>>>>>>> origin/feat/meta-ui
