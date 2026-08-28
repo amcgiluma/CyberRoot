@@ -39,3 +39,6 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
 - ✅ Capítulo 0 abierto (`CAPITULOS/00-la-firma.md`, beats 1–3).
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
+- DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
+  GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
+  Materializar Manus en `FRAGMENTOS.md` cuando escriba la cadena.

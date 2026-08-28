@@ -140,7 +140,8 @@ completas se escriben antes de dar diálogo a cada uno — regla §2.6.5):
 
 1. **Trabajo en frío.** Misión-tutorial con objetivo primero y teoría cero
    (directriz Bandit, RESEARCH-MECANICAS §1). Copias unos datos de una oficina
-   del Umbral. Todo sale bien.
+   del Umbral. Todo sale bien EN PANTALLA — por si acaso, el post-mortem ya
+   está a un muerte de distancia (🧭2, 27/08: la run 0 PUEDE fallar; §2.6.2).
 2. **La firma.** Al amanecer, la intrusión aparece en todos los medios atribuida
    a ti, con detalles que solo el autor conoce. Vela anuncia tu búsqueda. El
    jugador entiende que usaron su sesión mientras él estaba dentro.
@@ -336,8 +337,10 @@ rojo. Umbrales v1 ⚠️ de calibración por harness: lo normativo es el
 mecanismo, no la cifra.
 
 - **LUZ PLENA**: cadena final completada con K ≥ +T_alto Y la prueba íntegra
-  de la Lista conservada (ningún dato de la cadena vendido o destruido
-  durante el acto 3). Historial azul sostenido, no un sprint final.
+  de la Lista conservada (ningún dato de la cadena vendido o destruido en
+  NINGÚN momento de la partida — 🧭6, 27/08: la custodia se compromete con
+  cualquier venta, no solo en el acto 3). Historial azul sostenido, no un
+  sprint final.
 - **NOCHE LARGA**: ejecutar el quemado del nodo maestro cuando la cadena lo
   ofrece. Único final que decide una ACCIÓN final en vez de un historial:
   cualquier K puede elegirla — el «rojo puro» de la tabla es su perfil
@@ -679,7 +682,7 @@ capítulo.
 
 | # | Nombre | Anillo | Acto | Necesidad narrativa (por qué juegas) | Contenido | Fin de capítulo |
 |---|---|---|---|---|---|---|
-| 0 | **Trabajo en frío** | Umbral | 1 | Tu primer encargo legítimo: copiar unos datos (beat 1) | Tutorial sin teoría: `ls`/`cd`/`cat` aparecen POR NECESIDAD; 1 sala, 1 run guiada | Todo sale bien. La firma ya está puesta |
+| 0 | **Trabajo en frío** | Umbral | 1 | Tu primer encargo legítimo: copiar unos datos (beat 1) | Tutorial sin teoría: `ls`/`cd`/`cat`/`cp` aparecen POR NECESIDAD (🧭1, 27/08: copiar ES el objetivo); 1 sala, 1 run guiada que PUEDE fallar (🧭2, 27/08) | El encargo se cumple; si hubo expulsión, post-mortem nº 1 — y la firma ya está puesta |
 | 1 | **Los Muelles** | Muelles | 1 | Primeros encargos de los Apagados: pagar la cobertura con trabajo (beat 3); elegir azul o rojo (beat 4) | Shell y navegación; lectura de ficheros; permisos básicos (`chmod`, `chown`) como «quién puede tocar esto»; primer `man --help` por atasco | Control estable del nodo vecinal; primer fragmento personal |
 | 2 | **Facturas** | Umbral bajo | 1→2 | Rastrear quién usó tu sesión exige cruzar registros de facturación (beat 5) | Texto y pipes: `grep`, `sort`, `uniq`, redirección; buscar en logs ajenos sin ser visto; aquí brillan las primeras sinergias pipeline (§5.2) | La pista lleva al censo; aparece la palabra Lista |
 | 3 | **Bombas** | Umbral alto | 2 | Los nodos que necesitas están protegidos por procesos y sesiones ajenas | Procesos y sistema: `ps`, `kill`, señales, servicios, variables de entorno, empaquetado básico; primer uso serio de `sudo` (con credenciales ganadas) | Acceso a la red troncal; Ceniza confiesa (beat 6) |
@@ -697,6 +700,9 @@ Notas:
 - Los fragmentos personales (botín raro, §2.2) caen en cualquier capítulo
   1–6 con probabilidad baja fija; su contenido se ordena por capítulo para no
   adelantar el misterio (cerrado en P5, §9: orden fijo por capítulo).
+  EXCEPCIÓN (🧭5, 27/08): el ÚLTIMO fragmento de la cadena está GARANTIZADO
+  al completar la cadena final del cap. 6 — APAGÓN PROPIO premia haber jugado
+  bien y no puede depender del azar puro.
 
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 
@@ -726,7 +732,7 @@ Números de diseño para calibrar con harness; suman ~42 encargos base
 
 | # | Encargos (misiones) | Runs esperadas ⚠️ | Conceptos nuevos | Horas |
 |---|---|---|---|---|
-| 0 | 1 | 1 | 3 | 0,5 |
+| 0 | 1 | 1 | 4 | 0,5 |
 | 1 | 6–7 | 8–12 | ~8 | 2 |
 | 2 | 7–8 | 8–12 | ~9 | 2 |
 | 3 | 7–8 | 8–12 | ~8 | 2 |

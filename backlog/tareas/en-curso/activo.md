@@ -9,87 +9,56 @@
 
 ## Activas
 
-- `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** creados y PAUSADOS
-  (Manus/Havel/Gwyndolin/Ornstein/Smough/Seath/Artorias/Gwyn). Se activan
-  tras el gate de Juanma → pendiente de su visto bueno en `../pendiente/abierto.md`.
-  → Gate aprobado 26/08; crons `scheduled` desde 27/08 («[GATE APROBADO]» en worklog).
+- `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
+  (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 
-## Asignadas por Gwyndolin (27/08 — plan `../planes/2026/08/27.md`)
+## Deuda técnica del merge del 27/08 (Gwyn)
 
-- `[HECHO][P1]` (24/08→27/08) **Fuente bitmap 5×7 validada** para terminal
-  in-game (paleta CRT, capturas reales Pyxel headless) — Seath (`feat/meta-ui`,
-  `src/assets/`): es EL riesgo visual nº1 del stack; generar ≥2 capturas
-  reproducibles con textos del juego + veredicto de legibilidad en el README.
-  *(Recuperada del abierto 24/08; sigue vigente y es ejecutable sin build.)*
-  **(PR #3)** CP437 completo (256 glifos): español de serie + extensión
-  →←↑↓/—; 29 tests verdes; 3 capturas golden reproducibles (sha256 estables,
-  2 ejecuciones verificadas) + zooms ×3; veredicto README: LEGIBLE a 1×,
-  pygame-ce descartada. Plan de hitos en `src/assets/PLAN.md`.
-  **✅ Artorias (27/08 21:00)**: VERIFICADO — 29/29 tests verdes reproducidos
-  por mí; regeneración de capturas golden ejecutada POR MÍ: sha256 idénticos
-  byte a byte (`git status` limpio tras `make_captures`); legibilidad
-  confirmada de forma independiente (PNG decodificado a matriz ASCII: glifos
-  nítidos a 1×). Frontera core/render respetada (pyxel solo en
-  `pyxel_capture.py`). LISTA PARA MERGE con UN arreglo previo OBLIGATORIO:
-  **borrar `src/assets/tests/__init__.py`** (vacío) — colisiona como paquete
-  `tests` con `src/tests/` de Ornstein/Smough: con las 3 ramas juntas la suite
-  da 13 errores de colección; sin ese fichero, 225 passed (ensayo de merge de
-  las 3 ramas verificado por mí). Doc menor a alinear: README dice «5
-  semánticos §8.5» y DESIGN §8.5 define CUATRO (¿GOLD entra o se corrige? →
-  decidir Gwyn).
-- `[HECHO][P1]` (27/08) **Módulo `common`**: RNG seedeada reproducible +
-  bus de eventos + tipos base + pytest headless verde desde raíz — Ornstein
-  (`feat/engine`, `src/core/common/`): fundamento de sandbox/generator/engine;
-  test de reproducibilidad entre procesos incluido. **(PR #1)** 105 tests
-  verdes en 0,43 s · cross-proceso verificado (PYTHONHASHSEED distintos +
-  Python 3.11/3.12) · guardianes de arquitectura AST probados en negativo.
-  *(Marca `[HECHO]+PR#1` restaurada por Artorias: se perdió de main — incidente
-  documentado por Smough en su worklog; vivía solo en `feat/engine`.)*
-  **✅ Artorias (27/08 21:00)**: VERIFICADO — 105/105 tests reproducidos por mí
-  (27 rng + 19 events + 55 types + 3 guardianes + 1 smoke); smoke técnico
-  propio VERDE (seed→secuencia→state roundtrip→bus+handler→Event/Command
-  serialización→ensure_plain + reproducibilidad cross-proceso con
-  PYTHONHASHSEED 424242 vs 7 = idéntico); splitmix64 propio justificado y
-  sin sesgo; guardianes AST de arquitectura funcionando. LISTA PARA MERGE —
-  RECOMENDACIÓN: mergearla PRIMERA (es la base; sandbox hoy no la importa, el
-  canje dicts→clase es trivial mañana).
-- `[HECHO][P1]` (27/08) **Sandbox mínimo del cap. 0**: FS virtual + shell
-  con `ls/cd/cat` (+`cp` SOLO si Gwyn aprueba 🧭1) determinista y ruido por
-  acción — Smough (`feat/sandbox`, `src/core/sandbox/`): semántica Linux real,
-  tests propios, cero `import pyxel`; pipes/globbing quedan para caps. 1–2.
-  **(PR #2)** 91 tests verdes · golden tests contrastados contra coreutils
-  real · sesión end-to-end de la escena del cap. 0 con datos de Manus +
-  reproducibilidad cross-proceso byte a byte · `cp` implementado y testeado,
-  desactivado a la espera de 🧭1 (activarlo = 1 línea en
-  `DEFAULT_CAP0_COMMANDS`).
-  **✅ Artorias (27/08 21:00)**: VERIFICADO — 91/91 tests reproducidos por mí
-  (35 commands + 32 fs + 14 shell + 6 noise + 3 sesión + 1 package); smoke
-  técnico propio VERDE: sesión completa de sala cap. 0 con la piel EXACTA de
-  la escena de Manus (ls→cat→cd→cat relativo, errores GNU reales: cp fuera de
-  set→exit 127, globbing→exit 2 didáctico), sesión to_dict/from_dict
-  restaurada ejecutando igual, ruido amount por acción = perfil documentado
-  (cd:0/ls:1/cat:1), y `cp` habilitado ad-hoc verificando copia+lectura
-  (escenario 🧭1 listo). LISTA PARA MERGE. Matiz de gusto (no bloquea): el
-  rechazo de sintaxis futura («syntax not supported») me parece acierto
-  didáctico; cuando exista engine, valorar que ese error sugiera la solución
-  válida en su lugar.
+- `[EN CURSO][P1]` (27/08→28/08) **Canje dicts→`common.events.Event`** en
+  `src/core/sandbox/noise.py` — Smough (16:00): los eventos de ruido son hoy
+  dicts con la FORMA de `Event`; con PR #1 ya mergeada, el canje es una
+  importación + ajuste de tests (lo dejó documentado en su worklog). Que
+  Smough lo haga PRIMERO en su turno de mañana, antes de cualquier cosa
+  nueva del sandbox.
+- `[EN CURSO][P1]` (28/08) **Retoque del cap. 0** en
+  `backlog/historia/CAPITULOS/00-la-firma.md` como consecuencia de 🧭1/🧭2
+  (APROBADAS por Gwyn la noche del 27/08, decisión en la sección D1):
+  briefing alineado con `ls/cd/cat/cp` (cp YA activado en el sandbox) y prosa
+  de la run 0 FALIBLE (el bloque del post-mortem de la primera run deja de
+  ser rama muerta). Sube de P2 a P1: Manus la tiene asignada esta noche en
+  su línea D1; si no la integra, Gwyndolin la reasigna por la mañana.
+
+## Asignadas por Gwyndolin (27/08, plan del día — sigue viva para el 28/08)
+
 - `[EN CURSO][P1]` (27/08) **Capítulo 1 «Los Muelles»** (beats 3–4: pacto +
-  primera elección azul/rojo, con 🧭3 integrada) — Manus (03:00 siguiente,
-  `CAPITULOS/01-los-muelles.md`). D1 condicional: retoque cap. 0 por 🧭1/🧭2
-  solo si Gwyn dejó decisión escrita esta noche.
+  primera elección azul/rojo, con 🧭3 integrada) — Manus (03:00,
+  `CAPITULOS/01-los-muelles.md`).
+  **DECISIÓN DE GWYN (27/08 23:00) — D1 DESBLOQUEADO y OBLIGATORIO esta noche:**
+  - 🧭1 **APROBADA**: `cp` es el 4.º concepto del cap. 0. Ya activado en el
+    sandbox (`DEFAULT_CAP0_COMMANDS`, suite 225 passed) y DESIGN §6.1/§6.3
+    actualizados. El briefing del cap. 0 puede enseñar `cp` POR NECESIDAD:
+    copiar ES el objetivo del primer encargo.
+  - 🧭2 **APROBADA**: la run 0 SÍ puede fallar, conservando la guía (§2.6.2
+    «morir avanza»; enseña muerte=método desde el minuto uno; prometer éxito
+    falso es peor). Adecuar la prosa del cap. 0: el bloque del post-mortem de
+    la primera run deja de ser rama muerta. (DESIGN ya alineado: §2.5 beat 1
+    y fila 0 de la tabla de capítulos retocadas por Gwyn el 28/08.)
+- `[PENDIENTE][P3]` (28/08) **Mapa del Concilio (docs/mapa): pasada
+  estética visual** — la validación estática ya está hecha (Gwyn 28/08:
+  HTML publicado coherente con el relevo Gwyn→Oscar→Havel y los 9
+  `assets/*.webp` responden 200); falta la pasada con NAVEGADOR real.
+  Esta noche el Chromium del entorno no arrancó (falta `chrome` en el host),
+  así que NO ejecutada — de nuevo para la próxima (cualquier agente con
+  navegador; respuesta del corrector one-shot del 26/08 en
+  `../mejoras/pendiente/propuestas.md`).
 
-## Manus (27/08, primer turno real)
+## Manus (27/08, primer turno real) — fundación narrativa ARCHIVADA
 
-- `[HECHO]` (27/08) **Fichas de voz 6/6** en `backlog/historia/PERSONAJES.md`
-  (Ceniza, Gris, Zeta, El Auditor, Vela, Cero). Desbloquea todo diálogo. ✅
-- `[HECHO]` (27/08) **Escenarios con datos base 6/6** en
-  `backlog/historia/ESCENARIOS.md` (Subestación, Faro, Umbral bajo/alto,
-  Muelles, nodos tipo). ✅
-- `[HECHO]` (27/08) **Fragmento 1 `[LISTA]`** (la foto) en
-  `backlog/historia/FRAGMENTOS.md` — formato Souls, H1/H2 simultáneos. ✅
-- `[HECHO]` (27/08) **Capítulo 0** `backlog/historia/CAPITULOS/00-la-firma.md`
-  (Acto 1 beats 1–3: Trabajo en frío → La firma → La Subestación), con
-  decisión de karma 1.ª, post-mortem nº 1 y gancho. `[LISTA]` integrable. ✅
+*Líneas `[HECHO]` archivadas por Gwyn el 27/08 en `../hecho/2026-08.md`
+(viven ya en main): fichas de voz 6/6, escenarios 6/6, fragmento 1, cap. 0.*
 - `[PENDIENTE][P1]` (27/08) Worldbuilding fino del **censo** (qué se puntúa
   exactamente) — dueño Manus/Fase 1; bloquea salas-dato del cap. 6 (§9/§6.6.4),
   no cap. 0–4. (Registrado en INDICE.md de historia para Gwyndolin.)
+- `[PENDIENTE][P3]` (27/08) Materializar el **drop garantizado del último
+  fragmento** (🧭5 aprobada por Gwyn) en `FRAGMENTOS.md` cuando escriba la
+  cadena del cap. 6. Anotado también en `backlog/historia/INDICE.md`.

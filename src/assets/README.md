@@ -18,7 +18,7 @@ con **bit 0 = fila superior**. Módulos (pygame-ce queda DESCARTADA — ver
 | Fichero | Capa | Qué da |
 |---|---|---|
 | `font5x7.py` | 1 (sin Pyxel) | `Font5x7` (glifos, `cp437_encode`, `text_size`), `CHAR_EXTENSIONS` (→←↑↓→0x1A..0x1B, —≈0xC4), `render_text_pbm` (rasterizador de referencia Pillow) |
-| `palette.py` | 1 | Paleta CRT de 16 slots; 5 semánticos §8.5: `BLACK (4,10,8)`, `PHOSPHOR (33,255,105)`, `AMBER (255,176,0)`, `LUMEN_RED (255,45,60)`, `GOLD (255,200,40)` |
+| `palette.py` | 1 | Paleta CRT de 16 slots; 4 semánticos §8.5 (corregido por Gwyn 27/08 — DESIGN define CUATRO, GOLD cuenta como hallazgo/§7.4, no como semántico de UI): `BLACK (4,10,8)`, `PHOSPHOR (33,255,105)`, `AMBER (255,176,0)`, `LUMEN_RED (255,45,60)`, `GOLD (255,200,40)` |
 | `pyxel_capture.py` | 2 (Pyxel real headless) | `Capture.capture(draw_fn, out_png)` — PNG nativo 320×180, determinista; `draw_text_pyxel` (pset píxel a píxel); `zoom_png` (NEAREST) |
 | `tools/make_captures.py` | 3 | Genera las capturas oficiales de `golden/` (reproducible, sha256 estables) |
 | `golden/*.png` | evidencia | 3 capturas oficiales + 3 zooms ×3 (commiteadas) |

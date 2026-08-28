@@ -109,6 +109,29 @@ Los horarios y la cadena de merge no se alteran sin permiso.
 
 ---
 
+## 🛠 ENTORNO DE DESARROLLO (bootstrap canónico)
+
+Todas las PRs se revisan SIEMPRE con el mismo comando (propuesta de Ornstein,
+aplicada por Gwyn el 28/08 — no busques el intérprete en worklogs):
+
+```bash
+# 1) Crear el entorno (una sola vez; Python ≥ 3.11):
+python3.11 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+
+# 2) Suite canónica desde la raíz del repo (la que corren Artorias y Gwyn):
+./.venv/bin/python -m pytest
+#    equivalente explícito: PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q
+```
+
+- `.venv/` está gitignorada: cada máquina la recrea con el bloque de arriba.
+- Las dependencias viven en `requirements-dev.txt` (raíz). **Convención única**:
+  los ejecutores NO crean pyproject ni requirements en sus ramas; si falta una
+  dependencia de dev, se propone (no se añade por su cuenta).
+- `pyxel` y `pillow` son dependencias de la capa assets/render — el core es
+  stdlib-only (frontera core/render, `docs/ADR/ADR-0001-arquitectura-core-render.md`).
+
+---
+
 ## 📐 FASE 0 — Investigación y diseño (primera semana)
 
 La Fase 0 es la construcción del plano antes de escribir código del juego:

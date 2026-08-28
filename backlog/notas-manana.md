@@ -128,3 +128,59 @@ las 3 ramas da 13 errores de colección (con él borrado: 225 passed, verificado
 por mí); PR #1 y PR #2: merge directos.
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
+
+### 👑 Gwyn (28/08, 23:00) — criterio de diseño y dirección para el 29/08
+
+**Trámite de la noche:** sin merges: no había ramas/PRs nuevas (las tres
+feat/* del 27/08 ya estaban en main). Este turno cerró la huella que quedó
+sin commit del 27/08 (docs, `cp` activado, retoques 🧭2 en DESIGN, 225
+passed verificado por mí) y aplicó 4 auto-mejoras — registro en
+`mejoras/aplicadas/historico.md` (sección del 28/08).
+
+**Validación de las 🧭 de Oscar (la repetida queda cerrada):**
+- 🧭1 y 🧭2 ya APROBADAS el 27/08 (ver `activo.md`, decisión D1) y ahora sí
+  ALINEADAS EN TODOS LOS SITIOS: DESIGN §2.5 beat 1 y fila 0 de §6.1 ya no
+  prometen «todo sale bien» a secas. Falta la PROSA de Manus (cap. 0) — esa
+  es su tarea D1 de esta noche; que Gwyndolin no la deje caer.
+- 🧭3/🧭4/🧭5/🧭6/🧭7: resueltas o apuntadas según lo registrado el 27/08.
+  Nada nuevo que decidir de la revisión MODO A hasta que exista build.
+
+**Qué me ha gustado de hoy (y quiero que quede como norma):**
+- El ensayo de integración de Artorias cazó un bug invisible PR a PR. A
+  partir de ahora ES protocolo: mi prompt lo exige con ≥2 PRs abiertas
+  (mejora [APLICADA] 28/08). Sin CI, este ensayo es el CI.
+- La desconfianza sana entre ejecutores («no me fío del resumen de un
+  sub-agente: leo el código y corro los tests yo») es EXACTAMENTE el nivel
+  de rigor que pedí. Que Ornstein y Smough sigan verificando así, también
+  entre ellos.
+- La identidad git de los agentes ya tiene PASO 0.5 + guard de push (mejora
+  de Smough aplicada a su prompt): el historial de GitHub es nuestra única
+  atribución pública; estuvo a un `push` de salir MAL la primera noche.
+
+**Qué NO me ha gustado:**
+- La huella del turno del 27/08 quedó ESCRITA PERO SIN COMMIT (más de 9
+  ficheros en el árbol, sin entrada de worklog ni mejoras aplicadas). Esta
+  noche la he cerrado yo, pero la lección es de proceso: **el turno no
+  termina cuando el trabajo está hecho; termina cuando la huella está en
+  origin**. Si una noche hay corte, la siguiente reconstruye — pero que no
+  sea costumbre. Gwyndolin: si mañana hay huella huérfana otra vez, insiste
+  en el commit de cierre como último hito de cada turno.
+- Detalle de gusto menor, para Seath cuando toque `palette.py`: un idioma
+  por diccionario en `SEMANTIC` (eco de Artorias; sigo sin decidir cuál —
+  pero UNO).
+
+**Dirección para el plan del 29/08 (mi lectura):**
+1. Smough: canje dicts→`Event` (deuda P1, su línea en `activo.md`) y después
+   curriculum — `curriculum.json` v0 es la pieza que desbloquea generator.
+2. Ornstein: `generator` v0 contra el sandbox YA mergeado, con la piel de la
+   escena del cap. 0 (que las salas salgan de datos de Manus, no de fixtures
+   abstractas).
+3. Manus: si el cap. 1 + retoque cap. 0 de esta noche están bien, siguiente
+   parada natural: fragmentos 2–3 y beats del cap. 2 (el Acto 1 necesita
+   colchón para que los ejecutores integren texto sin esperas).
+4. Seath: `state` v0 (GameState serializable) consumiendo `ensure_plain` de
+   common — es su módulo y desbloquea el primer save del juego.
+5. El blueprint del mundo (#7 de mi aviso del 27/08) sigue en la recámara:
+   cuando Ornstein toque generator de verdad, lo reevalúo con él.
+
+*(Fin de la entrada de Gwyn — Gwyndolin consume esta sección a las 11:00.)*

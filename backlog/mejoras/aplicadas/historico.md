@@ -17,6 +17,64 @@
 
 ## Historial
 
+### [APLICADA] (28/08) — por Gwyn
+- Agente/job afectado: **Artorias, Revisor filtro** (`c4c98c5d8950`)
+- Qué se cambió (del prompt): nuevo paso 2 de la MISIÓN — «ENSAYO DE
+  INTEGRACIÓN PRE-MERGE» OBLIGATORIO cuando haya ≥2 ramas/PRs abiertas:
+  simular el merge de todas las `feat/*` sobre main en un worktree desechable
+  (`git worktree add --detach -f /tmp/ensayo-pr origin/main`), correr la
+  suite COMBINADA y limpiar el worktree; si falla, localizar culpable y
+  marcarlo 💥 con el arreglo EXACTO. Además, el aviso a Gwyn debe incluir el
+  NÚMERO de tests esperado tras los merges.
+- Qué se mejoró / por qué: el 27/08 cada PR pasó verde aislado pero las tres
+  juntas rompían la suite (13 errores de colección por
+  `src/assets/tests/__init__.py`); solo el ensayo manual de Artorias evitó
+  mergear main roto. Sin CI, ese ensayo ES el CI: ahora es protocolo, no
+  heroísmo. Origen: propuesta de Artorias del 27/08.
+
+### [APLICADA] (28/08) — por Gwyn
+- Agente/job afectado: **Smough, Ejecutor 2** (`55bb406c6e4c`)
+- Qué se cambió (del prompt): (1) PASO 0.5 nuevo tras la firma: fijar
+  identidad git Y VERIFICARLA (`git config user.name`) antes del PRIMER
+  commit — el entorno arrastra la del turno anterior; (2) paso 6 nuevo:
+  GUARD DE IDENTIDAD antes de pushear (`git log --format='%an'
+  origin/main..HEAD | sort -u` == solo su nombre; si no, reescribir con
+  `rebase --exec 'git commit --amend --reset-author --no-edit'` ANTES del
+  push, nunca después). Renumerados los pasos siguientes (7 PR, 9 auto-mejora).
+- Qué se mejoró / por qué: el 27/08 los 5 primeros commits de Smough salieron
+  firmados «Ornstein» por identidad arrastrada del entorno; se arregló de
+  suerte antes del push. La atribución en GitHub es la única autoría pública
+  del Concilio. Origen: propuesta de Smough del 27/08 (parte 1 = PASO 0.5,
+  parte 2 = guard). PARCIAL a propósito: se estrena SOLO en Smough; si
+  funciona el 28/08, Gwyn lo extiende a Ornstein/Seath el 29/08.
+
+### [APLICADA] (28/08) — por Gwyn
+- Agente/job afectado: README raíz del repo (proceso, sin cambio de cron) —
+  propuesta de **Ornstein** (bootstrap canónico)
+- Qué se cambió (del prompt): nada en crons; nueva sección «🛠 ENTORNO DE
+  DESARROLLO» en `README.md`: `python3.11 -m venv .venv && .venv/bin/pip
+  install -r requirements-dev.txt` + suite canónica `./.venv/bin/python -m
+  pytest` como ÚNICO comando de revisión.
+- Qué se mejoró / por qué: la consigna «pytest verde headless» no decía DÓNDE
+  vive el intérprete; cada ejecutor montaba su venv a mano y el comando real
+  solo estaba en un worklog. Revisión reproducible en 1 comando.
+  Origen: propuesta de Ornstein del 27/08.
+
+### [APLICADA] (28/08) — por Gwyn
+- Agente/job afectado: repo (proceso, sin cambio de cron) — propuesta de
+  **Seath** (convención de dependencias dev)
+- Qué se cambió (del prompt): nada en crons; creado `requirements-dev.txt`
+  único en raíz (pytest>=9.1.1, pyxel>=2.9.9, pillow>=12.3.0) y REGLA en el
+  README: los ejecutores NO añaden pyproject/requirements por rama sin
+  propuesta. Forma elegida: requirements-dev y no `[dependency-groups]`
+  (PEP 735) porque el pip del entorno es 24.0 y PEP 735 exige ≥25 —
+  migración futura documentada en el propio fichero.
+- Qué se mejoró / por qué: main no declaraba sus dependencias de desarrollo
+  (el .venv funcionaba por estado acumulado invisible) y Fase 1 iba a
+  multiplicar ficheros de empaquetado por rama (los pyproject de PR #1/#2 ya
+  venían duplicados; se conservan SOLO como config de pytest).
+  Origen: propuesta de Seath del 27/08.
+
 ### [APLICADA] (25/08) — por decisión de Juanma + Raiden (creación de agente)
 - Agente/job afectado: **Oscar de Astora** (`ee900afb19da`), nuevo agente 05:00.
 - Qué se hizo: se creó el 25/08 como GUARDIÁN DE LA EXPERIENCIA del jugador (run

@@ -44,7 +44,9 @@
    fila en el WORKLOG, como ya pedía `docs/worklog/index.md` regla 3.
    *(Creado: `docs/ADR/ADR-0001-arquitectura-core-render.md`.)*
 
-- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+- Estado: [APLICADA] (27/08) — Gwyn: nada que ejecutar; era trazabilidad de
+  decisiones ya tomadas (`tools/harness/` recogido en PROJECT-MAP §3, ADR-0001
+  creado). No requirió cambio de prompt ni registro adicional.
 
 ### Propuestas del corrector one-shot (integración Oscar en TESTEO-DIARIO)
 `[PROPUESTA] (26/08) — Corrector one-shot — Gwyn / Ornstein`
@@ -61,7 +63,20 @@
 3. **Harness con reset explícito (Ornstein, Fase 1)**: exponer comando claro
    de reset-a-save-limpio + save-veterano (20+ h); es requisito duro de la
    capa EXPERIENCIA/PROGRESIÓN de Oscar (`docs/TESTEO-DIARIO.md` §1).
-- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+- Estado: [APLICADA PARCIAL] (28/08) — Gwyn:
+  1. **Pasada VISUAL del mapa**: INTENTADA esta noche — el Chromium del
+     entorno no arranca (falta `chrome` en el host). Validación ESTÁTICA
+     hecha en su lugar (HTML publicado: contenido coherente con el relevo
+     Gwyn→Oscar→Havel, 9/9 `assets/*.webp` responden 200). La pasada
+     estética real queda `[PENDIENTE][P3]` en `activo.md` para el primer
+     turno con navegador operativo.
+  2. Unificación AGENTS-PLAN §4 / TESTEO-DIARIO: [RECHAZADA POR AHORA] — la
+     duplicación es hoy mínima y el riesgo de divergencia pesa menos que el
+     coste de una reescritura del protocolo en plena Fase 1. Se reabrirá si
+     aparece la PRIMERA divergencia real entre ambos docs.
+  3. Harness con reset explícito: APROBADA COMO REQUISITO — pasa a criterio
+     de aceptación del harness de Ornstein (Fase 1); no requiere prompt
+     ahora (el módulo aún no existe).
 
 ### Propuesta de Artorias (21:00, 27/08) — chequeo de integración pre-merge
 `[PROPUESTA] (27/08) — Artorias — Gwyn / flujo de merges del Concilio`
@@ -79,7 +94,11 @@
   corra pytest.
 - **Impacto esperado:** los merges dejan de ser un salto de fe; el bug de
   integración se caza a las 21:00, no a las 23:00 con main roto.
-- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+- Estado: **[APLICADA] (28/08)** — Gwyn: prompt de Artorias actualizado con
+  el ensayo de integración OBLIGATORIO (≥2 ramas/PRs abiertas) y el aviso a
+  Gwyn incluyendo el nº de tests esperado tras el merge (lo verifico antes
+  de cerrar). Registro `[APLICADA]` en `../aplicadas/historico.md`.
+
 ### Propuesta de Ornstein (27/08, tras primer módulo de código)
 `[PROPUESTA] (27/08) — Ornstein — todos los ejecutores + Gwyn`
 - Problema: la consigna «pytest verde headless desde raíz» no define DÓNDE
@@ -94,7 +113,10 @@
   buscarlo en worklogs.
 - Impacto esperado: cero fricción en revisión diaria (Artorias corre 1
   comando), reproducibilidad del gate 💥/✅, menos tiempo perdido por turno.
-- Estado: [NUEVA] — decisión/aplicación de Gwyn.
+- Estado: **[APLICADA] (28/08)** — Gwyn: sección «🛠 ENTORNO DE DESARROLLO»
+  en el README raíz con el bootstrap canónico (`python3.11 -m venv .venv &&
+  .venv/bin/pip install -r requirements-dev.txt` + suite canónica).
+  Registro en `../aplicadas/historico.md`.
 
 ### Propuesta de Smough (27/08, turno 16:00)
 `[PROPUESTA] (27/08) — Smough — Gwyn / todos los ejecutores`
@@ -120,6 +142,16 @@ Propuesta (dos partes, baratas):
 Impacto esperado: atribución limpia en el historial (que es la única
 trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 
+- Estado: **[APLICADA PARCIAL] (28/08)** — Gwyn: parte 1 aplicada al prompt
+  de Smough (PASO 0.5: fijar + VERIFICAR identidad antes del primer commit)
+  y parte 2 también (paso 6 nuevo: guard de push con
+  `git log --format='%an' origin/main..HEAD | sort -u` y reescritura
+  ANTES de pushear). NO extendido aún a Ornstein/Seath para no tocar dos
+  prompts más la misma noche con un mecanismo sin estrenar: si el de Smough
+  funciona el 28/08, lo extiendo a los otros dos ejecutores el 29/08 (y si
+  falla, lo arreglo con un solo sitio que corregir). Registro en
+  `../aplicadas/historico.md`.
+
 ### Propuesta de Seath (19:00, 27/08) — pyproject/requirements de desarrollo
 `[PROPUESTA] (27/08) — Dependencias de desarrollo no declaradas en main — Gwyn/Ornstein`
 - **Problema:** `pytest`/`pyxel`/`pillow` solo existen porque cada ejecutor las
@@ -134,4 +166,12 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   antes de que Fase 1 multiplique ficheros de empaquetado por rama.
 - **Impacto:** reproducibilidad del entorno (hoy `.venv` funciona por estado
   acumulado invisible); onboarding de nuevos agentes/tests de CI posterior.
-- Estado: [NUEVA] — para decisión/aplicación de Gwyn (23:00).
+- Estado: **[APLICADA] (28/08)** — Gwyn: convención decidida y aplicada en
+  main: `requirements-dev.txt` único en raíz (pytest/pyxel/pillow con
+  mínimos) + bootstrap canónico en el README raíz. Motivo de la forma y no
+  de `[dependency-groups]`: el pip del entorno es 24.0 y PEP 735 exige
+  ≥25 (migración futura documentada en el propio fichero). Los pyproject
+  que vinieron en PR #1/#2 se mantienen como configuración de pytest
+  (addopts/testpaths) — la suya señalaba correctamente el riesgo de
+  multiplicación: prohibido añadir MÁS empaquetado por rama sin propuesta.
+  Registro en `../aplicadas/historico.md`.

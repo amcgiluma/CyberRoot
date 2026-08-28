@@ -1,9 +1,9 @@
 """shell.py — la sesión interactiva del sandbox (ARCHITECTURE §2.2).
 
-Parser argv (`shlex`, modo POSIX) + registro de comandos + cwd/tick/historial
+parser shlex POSIX + registro de comandos + cwd/tick/historial
 SIMULADOS. El shell NO sabe qué comandos existen: recibe specs registradas;
-v0 expone `DEFAULT_CAP0_COMMANDS = ("cat", "cd", "ls")` — `cp` existe como
-spec y tests, pero entra al set SOLO si Gwyn aprueba 🧭1 (PLAN decisión 1).
+v0 expone `DEFAULT_CAP0_COMMANDS = ("cat", "cd", "cp", "ls")` — `cp` entra en
+el set por decisión 🧭1 de Gwyn (27/08): copiar ES el objetivo del tutorial.
 
 Sintaxis NO soportada v0 (pipes, globs, redirección — caps. 1–2): se detecta
 FUERA de comillas (GNU real: `cat "a*b.txt"` es literal y válido) y se
@@ -23,9 +23,10 @@ from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
 from core.sandbox.fs import FileSystem
 from core.sandbox.noise import NoiseMeter
 
-#: Comandos del set del cap. 0 (tutorial). `cp` PENDIENTE de 🧭1 (Gwyn):
-#: si se aprueba, se añade aquí y los tests H4/H6 lo cubren ya.
-DEFAULT_CAP0_COMMANDS: tuple[str, ...] = ("cat", "cd", "ls")
+#: Comandos del set del cap. 0 (tutorial). 🧭1 APROBADA por Gwyn (27/08):
+#: `cp` es el 4.º concepto del cap. 0 — copiar ES el objetivo del primer
+#: encargo (aprender-por-necesidad, DESIGN §6.1).
+DEFAULT_CAP0_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "ls")
 
 #: Todas las specs implementadas (registro completo del módulo v0).
 SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS

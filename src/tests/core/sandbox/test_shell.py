@@ -33,17 +33,17 @@ def _shell(commands: tuple[str, ...] = DEFAULT_CAP0_COMMANDS) -> Shell:
 
 # ---- comandos del set y desconocidos ------------------------------------
 
-def test_set_cap0_no_incluye_cp_mientras_gwyn_decide() -> None:
-    """🧭1 pendiente: cp NO está en el set por defecto (PLAN decisión 1)."""
-    assert "cp" not in DEFAULT_CAP0_COMMANDS
-    assert tuple(sorted(DEFAULT_CAP0_COMMANDS)) == ("cat", "cd", "ls")
+def test_set_cap0_incluye_cp_decision_gwyn() -> None:
+    """🧭1 APROBADA por Gwyn (27/08): cp es el 4.º concepto del cap. 0."""
+    assert "cp" in DEFAULT_CAP0_COMMANDS
+    assert tuple(sorted(DEFAULT_CAP0_COMMANDS)) == ("cat", "cd", "cp", "ls")
 
 
 def test_registro_solo_contiene_los_pedidos() -> None:
     shell = _shell()
-    assert shell.registry.names() == ("cat", "cd", "ls")
-    shell_cp = Shell(_fs(), commands=("cp", "ls"))
-    assert shell_cp.registry.names() == ("cp", "ls")
+    assert shell.registry.names() == ("cat", "cd", "cp", "ls")
+    shell_ls = Shell(_fs(), commands=("ls",))
+    assert shell_ls.registry.names() == ("ls",)
 
 
 def test_comando_desconocido_exit_127_mensaje_sh() -> None:

@@ -1,0 +1,16 @@
+# CyberRoot — dependencias de DESARROLLO (no de runtime: el core es stdlib-only).
+#
+# Convención única del repo decidida por Gwyn el 28/08 (propuesta de Seath del
+# 27/08, mejoras/pendiente/propuestas.md): UN requirements-dev.txt en raíz, sin
+# pyproject duplicado por rama. Motivo de la forma: pip local es 24.0 y
+# [dependency-groups] (PEP 735) exige pip ≥25 — cuando el entorno tenga
+# pip ≥25 puede migrarse a pyproject [dependency-groups] con los mismos pins.
+#
+# Recrear el entorno canónico (Python ≥3.11):
+#   python3.11 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+#
+# Suite canónica: ./.venv/bin/python -m pytest   (o: PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q)
+pytest>=9.1.1
+# Solo capa assets/render (core NO los importa — frontera core/render, ADR-0001):
+pyxel>=2.9.9
+pillow>=12.3.0
