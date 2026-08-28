@@ -7,66 +7,66 @@
 
 ## 🧭 Notas de dirección (Oscar → Gwyn)
 
-*Oscar (05:00) deja aquí ajustes de experiencia/progresión detectados en su
-revisión de papel (MODO A, aún sin build jugable). INFORMAN, no deciden: Gwyn
-(23:00) las valida, integra o descarta con razón.*
-*(Revisión del 27/08 — primer pase de diseño completo cap. 0→6 + 4 finales.)*
+*Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
+deciden: Gwyn (23:00) valida, integra o descarta con razón.*
+*(SOBRESCRITA 28/08 05:00 — zona 🔬 ejecutada: tutorial del cap. 0 con `cp`,
+proxy headless. Las 7 notas de la revisión de papel del 27/08 quedan saldadas:
+1–2 materializadas y verificadas hoy jugando; 3–7 viven como tareas en
+`tareas/pendiente/abierto.md`.)*
 
-**1. 🔴 El tutorial del cap. 0 pide copiar sin enseñar a copiar.**
-El dossier del primer encargo dice «objetivo: copiar», y la escena técnica
-materializada por Manus solo muestra `ls`/`cat`/`cd ..` — nunca `cp`. Verificado:
-DESIGN §6.1/§6.3 asignan al cap. 0 solo `ls`/`cd`/`cat` (3 conceptos), pero la
-extracción de datos (§7.1) depende de copiar. En manos de un jugador de cero, la
-primera run exige un comando que no se le ha mostrado. Propuesta a decidir (no
-ejecutada): **o bien `cp` entra como 4.º concepto del cap. 0** (y se ajusta el
-conteo de §6.3), **o bien el objetivo inicial se reformula** para no exigir copia
-hasta el cap. 1. Revisa el texto de `CAPITULOS/00-la-firma.md` para que el
-briefing y la escena técnica se alineen con el reparto curricular del cap. 0.
+**1. 🔴→🟢 SALDADA 🧭1 (`cp` en el cap. 0) — verificada hoy como jugador.**
+`cp` está en el set por defecto (`DEFAULT_CAP0_COMMANDS`), el dossier ya dice
+«destino: /usb (tu unidad; no salgas sin la copia)» y la escena técnica lo
+muestra por necesidad. Con la piel exacta del capítulo, el momento cumbre SE
+COMPLETA: `cp nombre_de_proveedor.txt /usb` → copia verificable con `cat`.
+Primera impresión del novato: APTA.
 
-**2. 🟠 Definir si la run 0 puede fallar o no.**
-El cap. 0 se describe como run guiada «todo sale bien» (DESIGN §6.1, beat 1),
-pero el capítulo materializado cierra con un bloque «si mueres en la primera run,
-post-mortem…». Si no puede fallar, ese texto es rama muerta; si puede, contradice
-«todo sale bien» y duplica el problema de `cp` (morir en una run que no enseña a
-copiar frustra al doble). Decide el comportamiento real de la run 0 y adecúa la
-prosa.
+**2. 🟠 ANDAMIAJE DE RUTA en el cap. 0: ¿dónde «despierta» el jugador y qué
+significa mecánicamente «run guiada»?**
+La secuencia canónica (la del test y la prosa) deja al jugador en `/srv`; el
+dossier nombra el fichero SIN ruta (`nombre_de_proveedor.txt`). Verificado: si
+tras esa secuencia intenta cumplir el encargo con el nombre del dossier, recibe
+«cp: cannot stat 'nombre_de_proveedor.txt'» — honesto (GNU real), pero es la
+primera vez que el juego le falla sin haber hecho nada «mal»: usó los nombres
+exactos del briefing. No es bug de código: es una decisión de diseño pendiente.
+Opciones (todas válidas, decides tú): (a) la run 0 arranca con cwd=/srv/
+oficina… y la navegación del tutorial es libre; (b) el dossier SIEMPRE da rutas
+completas en cap. 0 y los nombres relativos se enseñan en cap. 1; (c) el error
+se mantiene y el post-mortem nº 1 lo convierte en lección («el objetivo se
+nombra antes de mirarlo» ya apunta ahí). Lo que pido: que la decisión quede
+escrita en DESIGN §6.1 ANTES de que Ornstein monte generator+engine, para que
+la piel procedural del cap. 0 nazca con ella dentro.
 
-**3. 🟠 Señalizar la regla «más luz = más vigilancia» antes del Umbral.**
-El cap. 1 (Muelles, apagado) debería dejar claro al jugador —vía diálogo, titular
-o el mercado de Gris— que un distrito brillante es más caro de pagar (§6.0.2),
-para que al cruzar al Umbral bajo en el cap. 2 no suba la detección sin aviso.
+**3. 🟠 TERMINAL QUE ENSEÑA: errores que no culpen al comando equivocado.**
+Fileado como `[BUG][P2]`: `&&` y `;` escapan hoy al rechazo didáctico y
+producen mensajes engañosos («cd: too many arguments» por un `cd /srv && ls`).
+Para la experiencia importa el doble: el sandbox es GNU-honesto en TODO lo
+demás (lo verifiqué jugando: missing operand, same file, Is a directory,
+cannot access) y ESA honestidad es el argumento pedagógico del juego — un
+mensaje que miente rompe el contrato en la primera sesión. Cuando Artorias
+localice y Smough arregle, propongo que el rechazo didáctico insinúe el
+futuro («esta sesión va comando a comando; el encadenado llega después») en la
+línea del mensaje de sintaxis v0: la primera sala también enseña QUÉ no sabe
+hacer AÚN.
 
-**4. 🟠 Vigilar el ritmo del cap. 4 (valle del mid-game).**
-Es deliberadamente el más largo (9–10 encargos, 2,5 h, §6.3; skill firma §6.6.3)
-y cierra el acto 2, cuando el jugador lleva ~8 h. La repetición espaciada lo
-alivia, pero planteo que se airee con variedad de familia (salas elite
-multi-familia ya definidas en §5.2/§7.8) para que no se sienta como 10 encargos
-seguidos de red.
+**4. 🟡 TOCAR EL JUEGO SIN ENGINE: REPL del sandbox (fileado `[PENDIENTE][P3]`).**
+`python -m core.sandbox` con prompt y `exit`: hoy solo pytest y yo hemos
+«jugado» el cap. 0; con un REPL lo toca Juanma y cualquiera del Concilio. No
+acelera el engine, pero da primera impresión tangible semanas antes. Coste bajo
+(el Shell ya trae execute/to_dict/from_dict).
 
-**5. 🟠 APAGÓN PROPIO (final secreto): garantizar el último fragmento.**
-El último fragmento cae solo en cap. 6 por el orden fijo por capítulo (§9), pero
-su drop es «probabilidad baja fija» (§6.1). Un jugador que ha resuelto todos los
-arcos y mantiene banda mixta podría no ver el final de dominio total si el drop
-final es RNG puro. Propongo drop garantizado del fragmento final en la cadena
-del cap. 6 (el único final que recompensa «haber jugado bien» no debería
-depender del azar).
+**5. 🟡 Divulgación prosa↔FS (fileado `[PENDIENTE][P2]`, dueño Manus):** la
+escena técnica lista `usb` tras `cd /srv`, pero en el FS real cuelga de la
+raíz. La costumbre «tests como documento narrativo» funcionó en el sentido
+código→prosa (Manus verificó su secuencia contra el test); pido cerrar el bucle
+inverso: cuando la prosa DESCRIBA salidas de pantalla, verificarla contra el FS
+del test, o divergirá cuando el engine pinte la sesión de verdad.
 
-**6. 🟡 LUZ PLENA: precisar la condición «ningún dato vendido… durante el acto 3».**
-La integridad de la cadena se compromete si se vende en CUALQUIER momento, no
-solo en el acto 3. Propongo reformular §3.4.1 a «en ningún momento» y que los
-textos avisen claramente qué ventas cierran el final azul (sin spoilear el
-mecanismo completo, pero sin trampa).
-
-**7. 🟡 Techo veterano post-finales (sin NG+).**
-Con NG+ fuera de alcance (§9), tras los 4 finales + APAGÓN PROPIO el contenido
-queda en Pactos duros (§4.6) + récords personales (§7.6). Suficiente para el
-objetivo de 10–15 h y para una perspectiva de 20 h, pero conviene declarar el
-techo para alinear expectativas del veterano (quizá un HUD/meta-logro que invite
-a la caza de sinergias restantes §7.8).
-
-> **Filtro Oscar:** ninguna nota bloquea Fase 1 ni la construcción del build;
-> lo único que aprieta a corto plazo es el punto 1 (`cp` en el cap. 0) por ser la
-> primera impresión del jugador. CICLO: verde.
+> **Filtro Oscar:** el cap. 0 AGUANTA de principio a fin como experiencia
+> (cumbre alcanzable, aprendizaje por necesidad real, errores honestos salvo el
+> encadenado). Nada de hoy bloquea el plan del 29/08; lo que aprieta a plazo es
+> fijar la decisión 2 (cwd/andamiaje) antes de que generator monte la piel del
+> cap. 0. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 

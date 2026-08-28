@@ -7,133 +7,100 @@
 
 ---
 
-## 🎮 Estado global jugable de HOY
+## 🎮 Estado global jugable de HOY (28/08 — MODO B parcial: primer código, proxy headless)
 
-**¿Hay algo que jugar de principio a fin?** *(27/08 — MODO A)*
-**SIN BUILD AÚN.** No existe un punto de entrada ejecutable que arranque una run
-de principio a fin. Verificado 27/08 05:00:
-- `src/` contiene SOLO los README de los 11 módulos (Fase 0 del Arquitecto) y la
-  doc `core/ARCHITECTURE.md` — cero `.py` de juego.
-- No hay harness (`tools/harness/` ni `tools/playtest/` no existen físicamente;
-  están por crear en Fase 1 por Ornstein).
-- El único `.py` raíz es `tools/cyberroot_usage.py` (panel de uso/coste), no el juego.
-- No hay `python -m core` ni equivalente. → **No se puede jugar ni headless.**
-- Revisión hecha en MODO A (test de diseño en papel), ver sección «📝 Revisión de
-  diseño (papel)» abajo.
+**¿Hay algo que jugar de principio a fin?** AÚN NO — pero por primera vez hay un
+trozo de juego REAL que se puede ejercitar:
 
-## 🏃 Run de referencia (save limpio)
+- **MERGEADO en main:** sandbox del cap. 0 (PR #2): FS virtual + shell con
+  `ls`/`cd`/`cat`/`cp` (set por defecto, 🧭1 aplicada), semántica GNU verificada
+  contra coreutils reales, ruido por comando (cd 0 / ls 1 / cat 1 / cp 3),
+  sesión serializable ida-y-vuelta, determinismo entre procesos
+  (PYTHONHASHSEED distinto → salida byte a byte idéntica).
+- **NO hay build jugable** en sentido estricto: ni `python -m core` ni REPL
+  interactivo ni harness (`tools/harness/` no existe). Hoy el «jugable» se
+  ejercita vía pytest o construyendo la sesión en Python (así hice la run de
+  referencia de abajo).
+- **Primera pieza visual commitada:** fuente bitmap 5×7 CP437 + 3 capturas
+  golden (las regeneré hoy: byte a byte estables, sha256 sin cambios ✓). El
+  juicio de SABOR CRT es capa de Havel (07:00).
+- **Para «jugable de principio a fin» falta:** engine (runs/salas/detección),
+  generator, curriculum.json, state/saves, progression/karma, render. Hoy el
+  juego es UNA sesión de terminal sin objetivo mecánico todavía.
 
-**Pregunta de Oscar cada día:** ¿un jugador que empieza de cero puede avanzar por
-el camino real (capítulo 1 en adelante) hasta donde toque, sin que se rompa el
-viaje?
+## 🏃 Run de referencia (save limpio) — 28/08
 
-- Resultado de la run de hoy: **no ejecutable** (sin build). Run MENTAL sobre el
-  diseño, cap. 0 → 6 + 4 finales (§3.4).
-- Dónde se rompe el camino (si se rompe): *(aún sin código — ver riesgos en la
-  revisión de papel, sobre todo el tutorial del cap. 0)*
-- Estado del save al terminar: **no existe save** (ni estado, ni harness que lo
-  genere).
+*(No existe save: la run de hoy es una SIMULACIÓN del novato de cero sobre la
+piel exacta de la escena técnica de `CAPITULOS/00-la-firma.md` — 29 líneas
+tecleadas en 4 fases. La secuencia canónica ya la cubren los tests; yo jugué el
+viaje completo: desorientación, extracción, curiosidad y errores.)*
+
+**Veredicto: el viaje aguanta de `ls` a `cp`.** Fase a fase:
+
+1. **Desorientación → lectura (NOVATO OK):** la raíz muestra `srv` y `usb`
+   (el destino del botín se ve antes de saber qué buscar); `cd` + `ls` navegan
+   sin fricción; `cat` devuelve el contenido tal cual. Los tres comandos
+   aparecen por necesidad real, no por cuestionario.
+2. **Extracción (OK con matiz):** `cp nombre_de_proveedor.txt /usb` funciona
+   (con o sin barra final) y `cat /usb/...` confirma el botín: el momento
+   cumbre del cap. 0 SE PUEDE COMPLETAR. Matiz: si el jugador sigue la secuencia
+   canónica (que acaba en `cd /srv`), el nombre relativo del dossier YA NO
+   resuelve desde ahí (verificado: «cp: cannot stat 'nombre_de_proveedor.txt'»).
+   Primera rozadura de andamiaje → 🧭2 para Gwyn (cwd inicial / qué significa
+   mecánicamente «run guiada»).
+3. **Curiosidad (rozaduras menores):** `help` y `pwd` no existen (127 sin
+   pista; el `pwd` ya está propuesto por Havel como idea P3); `ls -l` trata el
+   flag como fichero («cannot access '-l'») — GNU-honesto pero sin insinuar que
+   los flags llegan después. `cd` sin args vuelve a la raíz (home=/): bien.
+4. **Errores (lo mejor y lo peor del sandbox):** los mensajes de `cp`/`cat` son
+   GNU reales y honestos (missing operand, same file, Is a directory) —
+   excelente para enseñar Linux de verdad. Lo peor: `&&` y `;` producen errores
+   que culpan al comando equivocado («cd: too many arguments») en vez del
+   rechazo didáctico que el shell YA aplica a pipes/globs → `[BUG][P2]` filed.
+
+**Estado del save al terminar: no existe sistema de saves** (es el módulo
+`state` de Seath, pendiente).
 
 ## 👴 Progreso de veterano (save 20+ horas)
 
-**Pregunta de Oscar cada día:** ¿el juego sigue enganchando y siendo coherente
-cuando ya llevas 20+ horas (loop a largo plazo, base/Hub, karma, dificultad,
-textos de reacción)?
+Sin cambios respecto al 27/08: no hay progresión, karma, unlocks ni economía en
+código. La evaluación en papel (3 fases de rejugabilidad §5.4, Pactos de Vela
+§4.6, techo post-finales) sigue como referencia; la validación real llegará con
+el harness de Ornstein (§8.6). Lo único de largo plazo ya medible en código: el
+ruido por comando está contabilizado (cd 0/ls 1/cat 1/cp 3) y es la base
+numérica de la tensión velocidad-vs-cuidado del late game.
 
-- Evaluación (en papel): el diseño prevé 3 fases de rejugabilidad (§5.4) con
-  Pactos de Vela (§4.6), caza de sinergias (§5.2/§7.8) y récords personales
-  (§7.6). Sin save real, la validación de largo plazo la hará el harness de
-  Ornstein en cuanto haya build.
-- Señales de cansancio o rotura del ciclo: ver hallazgo sobre el **techo
-  post-finales** en la sección de papel (y en `notas-manana.md` 🧭).
+## 📝 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: tutorial cap. 0 con `cp`)
 
-## 📝 Revisión de diseño — camino del novato en el papel (MODO A, 27/08)
+- **Sesión canónica end-to-end:** `test_session_cap0.py` 3/3 passed (escena
+  byte a byte + gancho `cp` + reproducibilidad entre procesos). ✓
+- **Smoke del conjunto:** «225 passed sí o sí» → **225 passed** ✓ (cuadra con
+  lo prometido por Gwyn: 105 common + 91 sandbox + 29 assets).
+- **Capturas golden regeneradas:** estables byte a byte (árbol limpio tras
+  regenerar). ✓ El sabor CRT lo juzga Havel.
+- **Cruce sesión ↔ prosa retocada por Manus:** dossier con `destino: /usb` y
+  «no salgas sin la copia» ✓; los 4 comandos (`ls`/`cat`/`cp`/`cd`) aparecen en
+  la escena técnica por necesidad ✓; run 0 PUEDE fallar con línea de expulsión
+  y post-mortem vivo (🧭2 materializada) ✓. UNA divergencia hallada: el listado
+  tras `cd /srv` en la prosa muestra `usb`, que en el FS real cuelga de la raíz
+  → `[PENDIENTE][P2]` filed (barato de arreglar ahora en la prosa).
+- **¿Enseña por necesidad?** SÍ a nivel de comando (leer para saber QUÉ copiar,
+  copiar para cumplir el encargo, navegar para orientarse). A nivel de RUTA hay
+  un hueco de andamiaje (dossier con nombre relativo vs cwd tras la secuencia
+  canónica): 🧭2 para Gwyn.
 
-**Veredicto general:** el esqueleto del viaje (cap. 0 → 6, 4 finales en §3.4)
-TIENE SENTIDO de principio a fin para un jugador de cero: el aprendizaje por
-necesidad está bien secuenciado a grandes rasgos (navegar antes que permisos, la
-luz como curva de dificultad, el cap. 5 como práctica obligatoria de defensa).
-El camino NO está roto sobre el papel, pero tiene **un agujero serio en el
-tutorial del capítulo 0** y varios puntos a afinar. Detalle abajo.
+## 🧭 Notas de dirección
 
-**HALLAZGOS (HECHO vs OPINIÓN):**
+*(Detalle en `backlog/notas-manana.md` 🧭 — sobrescritas hoy.)* Resumen: (1)
+encadenado `&&`/`;` → rechazo didáctico ([BUG][P2] filed); (2) definir cwd
+inicial y significado mecánico de «run guiada» en el cap. 0; (3) divergencia
+prosa ↔ FS en el listado de la escena ([P2] filed); (4) REPL
+`python -m core.sandbox` ([P3] filed). Las 🧭1–7 de la revisión de papel del
+27/08 quedan saldadas (1–2 materializadas y verificadas hoy; 3–7 como tareas en
+`abierto.md`). Nada bloquea el plan del 29/08.
 
-1. **[SERIO — camino de cero] El cap. 0 no enseña a COPIAR, pero pide copiar.**
-   - HECHO: `docs/DESIGN.md` §6.1 dice cap. 0 = «Tutorial sin teoría: `ls`/`cd`/`cat`
-     aparecen POR NECESIDAD; 1 sala, 1 run guiada». §6.3 le asigna 3 conceptos.
-   - HECHO: la escena técnica de `backlog/historia/CAPITULOS/00-la-firma.md`
-     (Manus, 27/08) muestra `ls`, `cat`, `cd ..` — y solo esos. El dossier pide
-     «objetivo: copiar, no borrar», y el texto afirma «Copia el fichero» pero
-     NUNCA muestra `cp`.
-   - OPINIÓN/RIESGO: un jugador de cero que hace su primera run recibe el objetivo
-     «copia el fichero» sin haber visto ningún comando de copia. O bien `cp` debe
-     entrar en el cap. 0 (cuarto concepto, y el `datos×combo` del hallazgo §7.1 de
-     extracción depende de copiar), o el tutorial debe rediseñarse para que el
-     objetivo inicial no exija copiar. Es la primera impresión del juego y hoy
-     exige un comando no enseñado. → Nota 🧭 a Gwyn + `[PENDIENTE][P1]`.
-2. **[MEDIO] Cap. 0: run guiada «que sale bien» vs. texto de post-mortem si mueres.**
-   - HECHO: §6.1 dice cap. 0 «Todo sale bien. La firma ya está puesta» (beat 1).
-   - HECHO: el capítulo materializado incluye «Si mueres en la primera run, no es
-     game over: post-mortem» con líneas de expulsión al 40 %.
-   - OPINIÓN: si la run 0 es tutorial guiado que no puede fallar, ese bloque es
-     rama muerta; si puede fallar, contradice «todo sale bien». Gwyn debe decidir
-     si la run 0 puede fallar o no (y, si puede, `cp` es OBLIGATORIO en el cap. 0,
-     ver hallazgo 1). → Nota 🧭 a Gwyn.
-3. **[MEDIO] La regla «más luz = más vigilancia» debe señalizarse antes del Umbral.**
-   - HECHO: §6.0.2 «la luz es la curva de dificultad»; cap. 1 = Muelles (apagado),
-     cap. 2 = Umbral bajo.
-   - OPINIÓN: el jugador debería descubrir/verbalizar la regla en el cap. 1 (un
-     diálogo, un titular, el mercado de Gris) ANTES de cruzar al Umbral en el
-     cap. 2, o entrará en la primera zona brillante sin saber que subió la apuesta.
-   → Nota 🧭 a Gwyn.
-4. **[MEDIO — ritmo] Cap. 4 (red) es el más largo (9–10 encargos, 2,5 h) y cierra
-   el acto 2.** §6.3 lo define deliberadamente así (skill firma, §6.6.3).
-   - OPINIÓN: es el valle de riesgo del mid-game: justo cuando el jugador lleva
-     ~8 h, 10 encargos de red seguidos pueden cansar. La repetición espaciada
-     (§6.0.4) y las salas elite multi-familia (§5.2) alivian, pero conviene
-     vigilar el ritmo; quizá airear el cap. 4 con más variedad de familia. →
-     Nota 🧭 a Gwyn (no es decisión mía).
-5. **[MEDIO — finales] APAGÓN PROPIO (secreto) depende del último fragmento, cuyo
-   drop es «probabilidad baja fija» (§6.1).**
-   - HECHO: §9 «orden fijo por capítulo; la seed solo decide la piel» → el último
-     fragmento cae solo en cap. 6.
-   - OPINIÓN: si el drop final es RNG puro, un jugador que ha completado TODOS los
-     arcos + banda mixta podría no ver APAGÓN PROPIO y frustrarse en el final
-     secreto. Recomendar drop garantizado del último fragmento en la cadena final
-     del cap. 6 (no dejar el final de dominio total al azar). → Nota 🧭 a Gwyn.
-6. **[MENOR — redacción] Condición de LUZ PLENA ambigua en §3.4.1.**
-   - HECHO: «ningún dato de la cadena vendido o destruido **durante el acto 3**».
-   - OPINIÓN: la integridad de la cadena se compromete si vendes en CUALQUIER
-     momento, no solo en el acto 3; la condición debería leer «en ningún momento».
-     Dejar claro qué ventas cierran LUZ PLENA para no sorprender al jugador. →
-     `[PENDIENTE][P2]` de coherencia (Gwyndolin) + nota 🧭.
-7. **[VETERANO — techo] Sin NG+ (§9), el contenido post-4-finales queda en Pactos
-   duros + récords personales.** Es suficiente para 20 h (objetivo 10–15 h), pero
-   el techo existe y conviene declararlo para alinear expectativas del veterano.
-   → Nota 🧭.
-
-**Señalización de los 4 finales:** §3.4 y §3.4.1 son coherentes entre sí y con los
-beats del acto 3 (§2.5); los cuatro finales son alcanzables de forma lógica con el
-karma K ya definido (§3.3). No hay final incoherente sobre el papel, salvo el
-matiz del punto 5 (RNG del fragmento) y el 6 (redacción de LUZ PLENA).
-
-**Secuenciación curricular:** correcta a grandes rasgos. No se exige un comando de
-escalada antes de enseñarlo; los prerrequisitos = llaves diegéticas
-(§6.0.3) son una herramienta de diseño muy buena (la puerta se ve antes de tener
-la llave). Cap. 5 obliga a defensa a todo perfil (coherente con §3.1: misma
-materia, lentes distintas).
-
-## 🧭 Notas de dirección (para Gwyn)
-
-*(Oscar puede dejar aquí también un apunte breve; las notas formales van en
-`backlog/notas-manana.md`, sección 🧭, para que Gwyn las valide a las 23:00.)*
-
-**Resumen (detalle en `backlog/notas-manana.md`):** el mayor riesgo del camino de
-cero hoy es el tutorial del cap. 0 (objetivo «copiar» sin enseñar `cp`). Le sigo
-el cap. 4 como valle de ritmo, la señalización de la regla luz=vigilancia antes
-del Umbral, el drop del fragmento final para APAGÓN PROPIO, y el techo veterano
-post-finales. Nada bloqueante de Fase 1; todo son decisiones de Gwyn.
-CICLO: verde.
+CICLO: verde — el camino del cap. 0 aguanta de principio a fin en proxy
+headless; los 4 hallazgos de hoy son rozaduras, no roturas.
 
 ---
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*
