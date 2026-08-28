@@ -67,9 +67,33 @@
 
 *Líneas `[HECHO]` archivadas por Gwyn el 27/08 en `../hecho/2026-08.md`
 (viven ya en main): fichas de voz 6/6, escenarios 6/6, fragmento 1, cap. 0.*
-- `[PENDIENTE][P1]` (27/08) Worldbuilding fino del **censo** (qué se puntúa
-  exactamente) — dueño Manus/Fase 1; bloquea salas-dato del cap. 6 (§9/§6.6.4),
-  no cap. 0–4. (Registrado en INDICE.md de historia para Gwyndolin.)
-- `[PENDIENTE][P3]` (27/08) Materializar el **drop garantizado del último
-  fragmento** (🧭5 aprobada por Gwyn) en `FRAGMENTOS.md` cuando escriba la
-  cadena del cap. 6. Anotado también en `backlog/historia/INDICE.md`.
+> *(28/08, Gwyndolin: el censo (P1→P2) y el drop del último fragmento (P3)
+> vuelven a `pendiente/abierto.md` — un `[PENDIENTE]` vive allí, no aquí.)*
+
+## Asignadas por Gwyndolin (28/08, plan del día)
+
+- `[EN CURSO][P1]` (28/08) **O1 Convención única de tests** — Ornstein
+  (13:00): regla escrita en `src/tests/README.md` (espejo del árbol, sin
+  `__init__.py` alternativos); cero paquetes `tests` duplicados; 225 passed.
+- `[EN CURSO][P1]` (28/08) **O2 generator v0: seed→sala con piel real** —
+  Ornstein (13:00): sala del cap. 0 + encargo `story.ch1.e1`, determinista
+  por seed; andamiaje de la run 0 (cwd/rutas) como DATOS a la espera de la
+  decisión de Gwyn esta noche; NO tocar `src/data/curriculum.json` (Smough).
+- `[EN CURSO][P1]` (28/08) **S2 `curriculum.json` v0** — Smough (16:00, tras
+  S1): DAG mínimo REAL cap. 0–1 + validador (ciclos/prereqs) + esquema en
+  README curriculum. La pieza que desbloquea generator.
+- `[EN CURSO][P2]` (28/08) **S3 [BUG] `&&`/`;` → rechazo didáctico** — Smough
+  (16:00, truncable a mañana): `&;` a `_UNSUPPORTED_SYNTAX` + mensaje que
+  insinúe futuro + los 3 repros de Oscar en negativo.
+- `[EN CURSO][P1]` (28/08) **T1 `state` v0: primer save** — Seath (19:00):
+  GameState serializable roundtrip JSON con `version` de formato, envolviendo
+  la Shell del cap. 0.
+- `[EN CURSO][P3]` (28/08) **T2 paleta: un idioma en SEMANTIC** — Seath
+  (19:00, opcional si T1 verde pronto): claves a UN solo idioma (propuesta);
+  Gwyn valida al mergear.
+- `[EN CURSO][P2]` (28/08) **M1 prosa↔FS cap. 0** — Manus (03:00 29/08):
+  listado de UNA entrada tras `cd /srv`; `/usb` permanece en raíz (canónico
+  para dossier y test); prosa verificada contra `test_session_cap0.py`.
+- `[EN CURSO][P1]` (28/08) **M2 fragmento 2 + cap. 2 «Facturas»** — Manus
+  (03:00 29/08): pulsera HOSP-47-C (piel propuesta por Havel) + beats del
+  cap. 2; auto-pass anti-slop + relectura completa.

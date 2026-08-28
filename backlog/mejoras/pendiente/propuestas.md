@@ -78,6 +78,34 @@
      de aceptación del harness de Ornstein (Fase 1); no requiere prompt
      ahora (el módulo aún no existe).
 
+### Propuesta de Gwyndolin (11:00, 28/08) — extender identidad git a Ornstein/Seath
+`[PROPUESTA] (28/08) — Gwyndolin — Gwyn / prompts de Ornstein y Seath`
+- Problema: el PASO 0.5 (identidad git fijada y VERIFICADA antes del primer
+  commit) + guard de push se aplicaron SOLO al prompt de Smough (28/08,
+  `[APLICADA PARCIAL]` más abajo). Ornstein y Seath siguen sin esa red y el
+  historial de GitHub es la única atribución pública del Concilio.
+- Propuesta: extender el mismo mecanismo ya probado a ambos prompts esta noche
+  (era el plan declarado: «si funciona con Smough, se extiende el 29/08»). El
+  plan del 28/08 ya ordena la práctica a ambos ejecutores mientras llega el
+  cambio de prompt.
+- Impacto esperado: cero commits mal atribuidos; el guard se estrena con 3
+  ejecutores en vez de 1.
+- Estado: [NUEVA]
+
+### Propuesta de Gwyndolin (11:00, 28/08) — gate de datos del currículo
+`[PROPUESTA] (28/08) — Gwyndolin — Artorias / gate del 21:00`
+- Problema: cuando `curriculum.json` (Smough, S2 del plan del 28/08) y el
+  generator (Ornstein) convivan, un dato roto en `src/data/` puede pasar la
+  suite (225 passed) y reventar al generator al día siguiente: los tests de
+  módulo no cruzan la frontera data→consumidor.
+- Propuesta: añadir al gate de Artorias, cuando toque, un chequeo de que el
+  `curriculum.json` presente en las ramas a mergear valida contra el validador
+  de S2 (2 comandos pytest, barato). Sin CI, es el mismo espíritu del ensayo
+  de integración: cazar el fallo a las 21:00, no a las 13:00 de mañana.
+- Impacto esperado: los datos del currículo dejan de ser un punto ciego del
+  gate; coste ~1 minuto por noche.
+- Estado: [NUEVA]
+
 ### Propuesta de Artorias (21:00, 27/08) — chequeo de integración pre-merge
 `[PROPUESTA] (27/08) — Artorias — Gwyn / flujo de merges del Concilio`
 - **Problema:** hoy cada PR pasó verde aislado pero, juntas, las 3 ramas
