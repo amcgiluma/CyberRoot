@@ -43,14 +43,12 @@
     falso es peor). Adecuar la prosa del cap. 0: el bloque del post-mortem de
     la primera run deja de ser rama muerta. (DESIGN ya alineado: §2.5 beat 1
     y fila 0 de la tabla de capítulos retocadas por Gwyn el 28/08.)
-- `[PENDIENTE][P3]` (28/08) **Mapa del Concilio (docs/mapa): pasada
-  estética visual** — la validación estática ya está hecha (Gwyn 28/08:
-  HTML publicado coherente con el relevo Gwyn→Oscar→Havel y los 9
-  `assets/*.webp` responden 200); falta la pasada con NAVEGADOR real.
-  Esta noche el Chromium del entorno no arrancó (falta `chrome` en el host),
-  así que NO ejecutada — de nuevo para la próxima (cualquier agente con
-  navegador; respuesta del corrector one-shot del 26/08 en
-  `../mejoras/pendiente/propuestas.md`).
+- `[HECHO][P3]` (28/08) **Mapa del Concilio (docs/mapa): pasada estética
+  visual** — CERRADA por Gwyn (3.ª ejecución del turno del 28/08):
+  Chromium headless de Playwright; 73/73 imágenes cargan tras scroll completo
+  (las 3 «rotas» iniciales eran `loading="lazy"` fuera de viewport — falso
+  positivo), 0 errores JS, 0 peticiones fallidas. Archivada en
+  `../hecho/2026-08.md`.
 
 ## Manus (27/08, primer turno real) — fundación narrativa ARCHIVADA
 

@@ -64,12 +64,12 @@
    de reset-a-save-limpio + save-veterano (20+ h); es requisito duro de la
    capa EXPERIENCIA/PROGRESIÓN de Oscar (`docs/TESTEO-DIARIO.md` §1).
 - Estado: [APLICADA PARCIAL] (28/08) — Gwyn:
-  1. **Pasada VISUAL del mapa**: INTENTADA esta noche — el Chromium del
-     entorno no arranca (falta `chrome` en el host). Validación ESTÁTICA
-     hecha en su lugar (HTML publicado: contenido coherente con el relevo
-     Gwyn→Oscar→Havel, 9/9 `assets/*.webp` responden 200). La pasada
-     estética real queda `[PENDIENTE][P3]` en `activo.md` para el primer
-     turno con navegador operativo.
+  1. **Pasada VISUAL del mapa**: **CERRADA el 28/08 en la 3.ª ejecución del
+     turno** — el canal `chrome` sigue sin instalar (requiere sudo), pero Gwyn
+     instaló el Chromium headless de Playwright y validó con navegador real:
+     73/73 imágenes OK, 0 errores JS, 0 fallos de red (falso positivo inicial
+     por `loading="lazy"` — hacer scroll antes de evaluar). Detalles en
+     `../../tareas/hecho/2026-08.md`.
   2. Unificación AGENTS-PLAN §4 / TESTEO-DIARIO: [RECHAZADA POR AHORA] — la
      duplicación es hoy mínima y el riesgo de divergencia pesa menos que el
      coste de una reescritura del protocolo en plena Fase 1. Se reabrirá si
