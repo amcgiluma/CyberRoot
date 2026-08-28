@@ -128,15 +128,16 @@ def test_command_registry_es_instancia_no_global() -> None:
 
 
 def test_noise_event_tiene_forma_event_con_cantidad_del_perfil() -> None:
-    """Cada comando emite un evento de ruido con su cantidad de NOISE_PROFILE."""
-    assert noise_event("ls", ("a",), 3) == ({
+    """Cada comando emite un `Event` de ruido con su cantidad de NOISE_PROFILE."""
+    (ev,) = noise_event("ls", ("a",), 3)
+    assert ev.to_dict() == {
         "type": "event.noise",
         "data": {"command": "ls", "amount": 1, "argv": ["a"]},
         "tick": 3,
-    },)
-    assert noise_event("cd", (), 0)[0]["data"]["amount"] == 0
-    assert noise_event("cat", ("f",), 1)[0]["data"]["amount"] == 1
-    assert noise_event("cp", ("s", "d"), 2)[0]["data"]["amount"] == 3
+    }
+    assert noise_event("cd", (), 0)[0].data["amount"] == 0
+    assert noise_event("cat", ("f",), 1)[0].data["amount"] == 1
+    assert noise_event("cp", ("s", "d"), 2)[0].data["amount"] == 3
 
 
 # ---- ls -------------------------------------------------------------

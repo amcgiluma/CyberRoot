@@ -4,9 +4,9 @@ Cada comando emite un evento de ruido; el coste de DETECCIÓN (% que sube,
 tramos) lo decide el ENGINE, no el sandbox (§2.2: «aquí solo se emite»).
 Constantes ⚠️ v1 calibrables sin tocar lógica.
 
-Forma del evento: dict plano {type, data, tick} IDÉNTICA a
-`core.common.events.Event` de Ornstein (PR #1 aún no mergeada: viajo con
-dicts y el canje a la clase real es una importación — PLAN.md decisión 4).
+Los eventos SON `core.common.events.Event` (canje S1, 28/08: PR #1 mergeada —
+deuda del 27/08 saldada). El tipo canónico es `EventTypes.NOISE`; la constante
+local `NOISE_EVENT_TYPE` se mantiene por compatibilidad con lectores previos.
 Prohibido `random`: el ruido es determinista por comando.
 """
 
@@ -14,8 +14,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-#: Tipo canónico compartido con common.events.EventTypes.NOISE (feat/engine).
-NOISE_EVENT_TYPE = "event.noise"
+from core.common.events import Event, EventTypes
+
+#: Tipo canónico compartido con `common.events.EventTypes.NOISE` (iguales por
+#: contrato; el canje S1 usa la constante de common como fuente de verdad).
+NOISE_EVENT_TYPE = EventTypes.NOISE
 
 #: Ruido base por comando ⚠️ v1 (calibra harness). `cd` no cruza el sistema
 #: (ruido 0); leer es barato; copiar datos toca el fichero dos veces (más
@@ -38,19 +41,21 @@ class NoiseMeter:
 
     total: int = 0
 
-    def emit(self, command: str, argv: tuple[str, ...], tick: int) -> dict:
-        """Devuelve el evento de ruido del comando (forma Event) SIN mutar.
+    def emit(self, command: str, argv: tuple[str, ...], tick: int) -> Event:
+        """Devuelve el evento de ruido del comando SIN mutar nada.
 
         Comandos sin entrada en el perfil emiten ruido 0 (comando no
         reconocido aún puede dibujar atención: eso lo decide el engine con
-        el exit 127).
+        el exit 127). El payload viaja con SNAPSHOT de `argv` (Event hace
+        copia superficial del Mapping: mutar la tupla/dict original después
+        de emitir no altera el evento).
         """
         amount = NOISE_PROFILE.get(command, 0)
-        return {
-            "type": NOISE_EVENT_TYPE,
-            "data": {"command": command, "amount": amount, "argv": list(argv)},
-            "tick": tick,
-        }
+        return Event(
+            type=NOISE_EVENT_TYPE,
+            data={"command": command, "amount": amount, "argv": list(argv)},
+            tick=tick,
+        )
 
     def accumulate(self, command: str) -> "NoiseMeter":
         """Suma al total el ruido del comando y devuelve meter nuevo."""

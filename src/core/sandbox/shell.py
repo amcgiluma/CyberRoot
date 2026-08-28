@@ -126,7 +126,7 @@ class Shell:
         sí consumen un tick: el tiempo simulado corre igual.
         """
         self.history.append({"line": line, "result": result.to_dict()})
-        self.total_noise += sum(int(ev["data"]["amount"]) for ev in result.noise)
+        self.total_noise += sum(int(ev.data["amount"]) for ev in result.noise)
         self.tick += 1
         return result
 
