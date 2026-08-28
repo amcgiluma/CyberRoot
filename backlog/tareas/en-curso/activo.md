@@ -72,44 +72,42 @@
 
 ## Asignadas por Gwyndolin (28/08, plan del día)
 
-- `[HECHO][P1]` (28/08) **O1 Convención única de tests** — Ornstein
+- `[EN CURSO][P1]` (28/08) **O1 Convención única de tests** — Ornstein
   (13:00): regla escrita en `src/tests/README.md` (espejo del árbol, sin
   `__init__.py` alternativos); cero paquetes `tests` duplicados; 225 passed.
-  ✅ [HECHO] (28/08, Ornstein, PR #4): `src/assets/tests/` → `src/tests/assets/`
-  (los 29 tests de Seath intactos, `sys.path` normalizado a import de paquete);
-  guard nuevo `src/tests/architecture/test_tests_layout.py` (rompe la suite si
-  reaparece un `tests/` fuera de `src/tests/` — la causa del PR #3, ahora
-  estructuralmente imposible); README reescrito con la regla + quién toca qué.
-  **Suite: 228 passed** (225 + 3 del guard; nota para Artorias: el número
-  canónico sube porque el guard añade 3 tests).
-- `[HECHO][P1]` (28/08) **O2 generator v0: seed→sala con piel real** —
+- `[EN CURSO][P1]` (28/08) **O2 generator v0: seed→sala con piel real** —
   Ornstein (13:00): sala del cap. 0 + encargo `story.ch1.e1`, determinista
   por seed; andamiaje de la run 0 (cwd/rutas) como DATOS a la espera de la
   decisión de Gwyn esta noche; NO tocar `src/data/curriculum.json` (Smough).
-  ✅ [HECHO] (28/08, Ornstein, PR #4): `core/generator` v0 — `generate(seed,
-  chapter, variant)` → `Incursion` determinista (splitmix64 + forks, sin
-  `random`); piel EXACTA del cap. 0 verificada byte a byte contra
-  `test_session_cap0.py` (variante `canonical`; `practice` añade 1–2 decoys
-  por seed); validación canónica §6.4.4 SIEMPRE contra `Shell` real sobre
-  copia del FS (irresoluble ⇒ `UnsolvableRoomError`); contrato `story.ch1.e1`
-  (azul) con textos solo como claves; andamiaje run 0 como DATOS
-  (`scaffold.options` a/b/c, `default=option_b` = «la más barata», decisión
-  NO adelantada). 27 tests nuevos (determinismo cross-proceso,
-  resolubilidad 50 seeds, roundtrip ensure_plain→JSON, errores, variante).
-  **Suite completa: 255 passed.** O3 (harness) queda para mañana: S2
-  (curriculum.json de Smough) la hace mucho más útil.
 - `[EN CURSO][P1]` (28/08) **S2 `curriculum.json` v0** — Smough (16:00, tras
   S1): DAG mínimo REAL cap. 0–1 + validador (ciclos/prereqs) + esquema en
   README curriculum. La pieza que desbloquea generator.
 - `[EN CURSO][P2]` (28/08) **S3 [BUG] `&&`/`;` → rechazo didáctico** — Smough
   (16:00, truncable a mañana): `&;` a `_UNSUPPORTED_SYNTAX` + mensaje que
   insinúe futuro + los 3 repros de Oscar en negativo.
-- `[EN CURSO][P1]` (28/08) **T1 `state` v0: primer save** — Seath (19:00):
+- `[HECHO][P1]` (28/08) **T1 `state` v0: primer save** — Seath (19:00):
   GameState serializable roundtrip JSON con `version` de formato, envolviendo
   la Shell del cap. 0.
-- `[EN CURSO][P3]` (28/08) **T2 paleta: un idioma en SEMANTIC** — Seath
+  ✅ [HECHO] (28/08, Seath, PR #6): `GameState(version, shell)` envuelve la
+  Shell como sub-dict plano (contrato de Smough intacto); `save()/load()`
+  ATÓMICOS (tmp mismo-dir + `os.replace`; fallo de serialización →
+  `SaveIntegrityError` con el save anterior INTACTO, testeado); `version` int
+  monotónico desde 1 + `saved_at` (tick simulado, sin reloj real); errores
+  `SaveVersionError`/`SaveIntegrityError` con mensajes claros; `_MIGRATIONS`
+  cableado desde el día 1 (vacío en v1, mecanismo probado con migración
+  sintética v0→v1 white-box); JSON escrito a mano carga exacto (§1.5).
+  Límite v1 declarado en README: el set de comandos no viaja en el save
+  (migración v2 futura). Plan de hitos propio en `src/core/state/PLAN.md`
+  (H0–H3, tests H2 delegados a sub-agente y verificados). 10 tests nuevos
+  (roundtrips in-memory/JSON/disco/doble, atomicidad, migración, versión
+  desconocida, sesión canónica cat+cp ruido 4). Suite: **206 passed**.
+- `[HECHO][P3]` (28/08) **T2 paleta: un idioma en SEMANTIC** — Seath
   (19:00, opcional si T1 verde pronto): claves a UN solo idioma (propuesta);
   Gwyn valida al mergear.
+  ✅ [HECHO] (28/08, Seath, PR #6): `SEMANTIC` a castellano, UNA clave por
+  slot (16↔16): fuera los duplicados `texto_base`, `alert` (EN), `cian`,
+  `gris`; los 5 semánticos §8.5 intactos; grep negativo de usos de claves
+  viejas; suite assets 29 passed. Gwyn valida al mergear.
 - `[EN CURSO][P2]` (28/08) **M1 prosa↔FS cap. 0** — Manus (03:00 29/08):
   listado de UNA entrada tras `cd /srv`; `/usb` permanece en raíz (canónico
   para dossier y test); prosa verificada contra `test_session_cap0.py`.
