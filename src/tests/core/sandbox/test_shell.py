@@ -5,7 +5,12 @@ from __future__ import annotations
 from core.sandbox.commands.files import SPECS as FILE_SPECS
 from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
 from core.sandbox.fs import DirNode, FileNode, FileSystem
-from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, Shell, SPECS_ALL
+from core.sandbox.shell import (
+    DEFAULT_CAP0_COMMANDS,
+    SPECS_ALL,
+    Shell,
+    _SYNTAX_MSG,
+)
 
 
 def _fs() -> FileSystem:
@@ -65,7 +70,7 @@ def test_linea_vacia_no_hace_nada_y_no_consumira_historial() -> None:
 def test_pipe_rechazado_con_exit_2() -> None:
     res = _shell().execute("cat /etc/passwd | wc -l")
     assert res.exit_code == 2
-    assert res.stderr == "sh: syntax not supported in this session"
+    assert res.stderr == _SYNTAX_MSG
 
 
 def test_glob_y_redireccion_rechazados() -> None:
@@ -73,7 +78,61 @@ def test_glob_y_redireccion_rechazados() -> None:
     for line in ("cat *.txt", "ls > out.txt", "cat a?b"):
         res = shell.execute(line)
         assert res.exit_code == 2, line
-        assert res.stderr == "sh: syntax not supported in this session", line
+        assert res.stderr == _SYNTAX_MSG, line
+
+
+def test_encadenado_and_amp_repros_exactos_de_oscar_rechazados() -> None:
+    """S3 (28/08): los 3 repros EXACTOS de Oscar (zona 🔬) — didáctico, no mentira.
+
+    Antes: `cd /srv && ls` → «cd: too many arguments» exit 1 (culpaba a cd);
+    `ls /srv && cat f` → `ls` trataba `&&`/`cat` como operandos (exit 2);
+    `ls; cat X` → «sh: command not found: ls;» exit 127. Ahora: rechazo
+    didáctico exit 2 que insinúa el futuro (🧭3) y NO culpa al comando.
+    """
+    shell = _shell()
+    for line in ("cd /srv && ls", "ls /srv && cat fichero", "ls; cat fichero"):
+        res = shell.execute(line)
+        assert res.exit_code == 2, line
+        assert res.stderr == _SYNTAX_MSG, line
+        assert "too many arguments" not in res.stderr, line
+        assert "command not found" not in res.stderr, line
+
+
+def test_ampersand_y_punto_y_coma_sueltos_tambien_rechazados() -> None:
+    """`&` (background) y `;` suelto son encadenado igual: no se cuelan."""
+    shell = _shell()
+    for line in ("ls &", "ls ;", "ls ; cat fichero", "&"):
+        res = shell.execute(line)
+        assert res.exit_code == 2, line
+        assert res.stderr == _SYNTAX_MSG, line
+
+
+def test_comillas_con_ampersand_y_punto_y_coma_son_literales_validos() -> None:
+    """Entre comillas `&` y `;` son LITERALES (GNU real), no sintaxis bloqueada.
+
+    Y sin comillas SÍ se rechaza — igual que `sh` real, que interpretaría
+    `&` como background: la honestidad GNU corta en ambos sentidos.
+    """
+    fs = FileSystem(
+        root=DirNode(
+            name="/",
+            children={
+                "home": DirNode(
+                    name="home",
+                    children={
+                        "a&b;.txt": FileNode(name="a&b;.txt", content="contenido\n"),
+                    },
+                ),
+            },
+        )
+    )
+    shell = Shell(fs, host="oficina-vecinal-muelle-norte")
+    res = shell.execute('cat "/home/a&b;.txt"')
+    assert res.exit_code == 0, res.stderr
+    assert res.stdout == "contenido\n"
+    res2 = shell.execute("cat /home/a&b;.txt")
+    assert res2.exit_code == 2
+    assert res2.stderr == _SYNTAX_MSG
 
 
 def test_comillas_convenierten_metacaracteres_en_literales() -> None:

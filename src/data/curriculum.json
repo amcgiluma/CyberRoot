@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "concepts": [
+    {
+      "id": "c.ls",
+      "family": "navegacion",
+      "chapter": 0,
+      "prerequisites": [],
+      "summary_key": "concept.ls.summary"
+    },
+    {
+      "id": "c.cd",
+      "family": "navegacion",
+      "chapter": 0,
+      "prerequisites": ["c.ls"],
+      "summary_key": "concept.cd.summary"
+    },
+    {
+      "id": "c.cat",
+      "family": "navegacion",
+      "chapter": 0,
+      "prerequisites": ["c.cd"],
+      "summary_key": "concept.cat.summary"
+    },
+    {
+      "id": "c.cp",
+      "family": "navegacion",
+      "chapter": 0,
+      "prerequisites": ["c.cd", "c.cat"],
+      "summary_key": "concept.cp.summary"
+    },
+    {
+      "id": "c.ls-la",
+      "family": "navegacion",
+      "chapter": 1,
+      "prerequisites": ["c.ls"],
+      "summary_key": "concept.ls-la.summary"
+    },
+    {
+      "id": "c.permisos-leer",
+      "family": "permisos",
+      "chapter": 1,
+      "prerequisites": ["c.ls-la"],
+      "summary_key": "concept.permisos-leer.summary"
+    },
+    {
+      "id": "c.chmod",
+      "family": "permisos",
+      "chapter": 1,
+      "prerequisites": ["c.permisos-leer"],
+      "summary_key": "concept.chmod.summary"
+    },
+    {
+      "id": "c.chown",
+      "family": "permisos",
+      "chapter": 1,
+      "prerequisites": ["c.chmod"],
+      "summary_key": "concept.chown.summary"
+    },
+    {
+      "id": "c.find",
+      "family": "navegacion",
+      "chapter": 1,
+      "prerequisites": ["c.cd", "c.ls"],
+      "summary_key": "concept.find.summary"
+    },
+    {
+      "id": "c.fechas",
+      "family": "hallazgo",
+      "chapter": 1,
+      "prerequisites": ["c.find"],
+      "summary_key": "concept.fechas.summary"
+    },
+    {
+      "id": "c.man",
+      "family": "hallazgo",
+      "chapter": 1,
+      "prerequisites": ["c.cat"],
+      "summary_key": "concept.man.summary"
+    }
+  ],
+  "quests": [
+    {
+      "id": "story.ch0.ventana",
+      "chapter": 0,
+      "tint": "grey",
+      "requires": ["c.ls", "c.cd", "c.cat", "c.cp"],
+      "title_key": "story.ch0.ventana.title",
+      "beat_key": "story.ch0.ventana.beat"
+    },
+    {
+      "id": "story.ch1.e1",
+      "chapter": 1,
+      "tint": "blue",
+      "requires": ["c.ls-la", "c.permisos-leer"],
+      "title_key": "story.ch1.e1.title",
+      "beat_key": "story.ch1.e1.beat"
+    },
+    {
+      "id": "story.ch1.e2",
+      "chapter": 1,
+      "tint": "blue",
+      "requires": ["c.find", "c.fechas"],
+      "title_key": "story.ch1.e2.title",
+      "beat_key": "story.ch1.e2.beat"
+    },
+    {
+      "id": "story.ch1.e3",
+      "chapter": 1,
+      "tint": "grey",
+      "requires": ["c.cat", "c.man"],
+      "title_key": "story.ch1.e3.title",
+      "beat_key": "story.ch1.e3.beat"
+    },
+    {
+      "id": "story.ch1.e4",
+      "chapter": 1,
+      "tint": "red",
+      "requires": ["c.find", "c.cp"],
+      "title_key": "story.ch1.e4.title",
+      "beat_key": "story.ch1.e4.beat"
+    },
+    {
+      "id": "story.ch1.e5",
+      "chapter": 1,
+      "tint": "grey",
+      "requires": ["c.chmod", "c.chown", "c.permisos-leer"],
+      "title_key": "story.ch1.e5.title",
+      "beat_key": "story.ch1.e5.beat"
+    }
+  ]
+}

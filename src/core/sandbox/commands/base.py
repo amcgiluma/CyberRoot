@@ -19,6 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable
 
+from core.common.events import Event
 from core.sandbox.fs import FileSystem
 from core.sandbox.noise import NoiseMeter
 
@@ -26,10 +27,12 @@ from core.sandbox.noise import NoiseMeter
 CommandRunner = Callable[[FileSystem, str, tuple[str, ...], int], "CommandResult"]
 
 
-def noise_event(command: str, argv: tuple[str, ...], tick: int) -> tuple[dict, ...]:
-    """Evento(s) de ruido que emite un comando (forma Event, PLAN decisión 4).
+def noise_event(
+    command: str, argv: tuple[str, ...], tick: int
+) -> tuple[Event, ...]:
+    """Evento(s) de ruido que emite un comando (`Event` real, canje S1 28/08).
 
-    Cada invocación emite UN evento via `NoiseMeter.emit` (cantidad del perfil
+    Cada invocación emite UN `Event` via `NoiseMeter.emit` (cantidad del perfil
     de noise.py); el coste de DETECCIÓN lo decide el engine, no el sandbox
     (ARCHITECTURE §2.2: «aquí solo se emite»).
     """
@@ -48,7 +51,7 @@ class CommandResult:
     stdout: str = ""
     stderr: str = ""
     exit_code: int = 0
-    noise: tuple[dict, ...] = ()
+    noise: tuple[Event, ...] = ()
     new_cwd: str | None = None
 
     @property
@@ -57,12 +60,12 @@ class CommandResult:
         return self.exit_code == 0
 
     def to_dict(self) -> dict[str, Any]:
-        """Serializa (noise como lista); ida y vuelta exacta con from_dict."""
+        """Serializa (noise como lista de dicts planos); ida y vuelta exacta."""
         return {
             "stdout": self.stdout,
             "stderr": self.stderr,
             "exit_code": self.exit_code,
-            "noise": list(self.noise),
+            "noise": [ev.to_dict() for ev in self.noise],
             "new_cwd": self.new_cwd,
         }
 
@@ -73,7 +76,7 @@ class CommandResult:
             stdout=str(d["stdout"]),
             stderr=str(d["stderr"]),
             exit_code=int(d["exit_code"]),
-            noise=tuple(d["noise"]),
+            noise=tuple(Event.from_dict(ev) for ev in d["noise"]),
             new_cwd=d["new_cwd"],
         )
 

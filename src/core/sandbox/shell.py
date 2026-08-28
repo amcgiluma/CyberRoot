@@ -31,11 +31,19 @@ DEFAULT_CAP0_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "ls")
 #: Todas las specs implementadas (registro completo del módulo v0).
 SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS
 
-#: Caracteres de sintaxis NO soportada en v0 (fuera de comillas).
-_UNSUPPORTED_SYNTAX = frozenset("|*?<>")
+#: Caracteres de sintaxis NO soportada en v0 (fuera de comillas). `|` = pipes,
+#: `*?<` = globs, `>` = redirección; `&`/`;` = encadenado (BUG de Oscar,
+#: zona 🔬 28/08: `cd /srv && ls` producía «cd: too many arguments» — engañoso).
+#: Entre comillas SON literales reales (`cat "a&b.txt"` es un nombre válido).
+_UNSUPPORTED_SYNTAX = frozenset("|*?<>&;")
 
-#: Mensaje didáctico de sintaxis futura (caps. 1–2; PLAN §3).
-_SYNTAX_MSG = "sh: syntax not supported in this session"
+#: Mensaje didáctico de sintaxis futura (caps. 1–2; PLAN §3 + 🧭3 de Oscar:
+#: la terminal también ENSEÑA qué no sabe hacer AÚN — nunca culpar al comando
+#: equivocado: «esta sesión va comando a comando; el encadenado llega después»).
+_SYNTAX_MSG = (
+    "sh: syntax not supported in this session: it runs one command at a time "
+    "(pipes and chaining arrive later)"
+)
 
 
 def _has_unsupported_syntax(line: str) -> bool:
@@ -126,7 +134,7 @@ class Shell:
         sí consumen un tick: el tiempo simulado corre igual.
         """
         self.history.append({"line": line, "result": result.to_dict()})
-        self.total_noise += sum(int(ev["data"]["amount"]) for ev in result.noise)
+        self.total_noise += sum(int(ev.data["amount"]) for ev in result.noise)
         self.tick += 1
         return result
 

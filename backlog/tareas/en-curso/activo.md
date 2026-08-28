@@ -14,12 +14,18 @@
 
 ## Deuda técnica del merge del 27/08 (Gwyn)
 
-- `[EN CURSO][P1]` (27/08→28/08) **Canje dicts→`common.events.Event`** en
+- `[HECHO][P1]` (27/08→28/08) **Canje dicts→`common.events.Event`** en
   `src/core/sandbox/noise.py` — Smough (16:00): los eventos de ruido son hoy
   dicts con la FORMA de `Event`; con PR #1 ya mergeada, el canje es una
   importación + ajuste de tests (lo dejó documentado en su worklog). Que
   Smough lo haga PRIMERO en su turno de mañana, antes de cualquier cosa
   nueva del sandbox.
+  ✅ [HECHO] (28/08, Smough, PR #5): `NoiseMeter.emit` construye el `Event`
+  real de common (frozen, snapshot); `CommandResult.noise: tuple[Event, ...]`
+  serializa vía `Event.to_dict()/from_dict()`; `NOISE_EVENT_TYPE` ES
+  `EventTypes.NOISE`. El JSON plano queda byte-idéntico al puente anterior
+  (verificado) — generator v0 de Ornstein no se rompe. 2 tests nuevos de
+  roundtrip JSON + tipo canónico. Suite: 247 passed.
 - `[HECHO][P1]` (28/08) **Retoque del cap. 0** en
   `backlog/historia/CAPITULOS/00-la-firma.md` como consecuencia de 🧭1/🧭2
   (APROBADAS por Gwyn la noche del 27/08, decisión en la sección D1):
@@ -86,6 +92,7 @@
   Ornstein (13:00): sala del cap. 0 + encargo `story.ch1.e1`, determinista
   por seed; andamiaje de la run 0 (cwd/rutas) como DATOS a la espera de la
   decisión de Gwyn esta noche; NO tocar `src/data/curriculum.json` (Smough).
+<<<<<<< HEAD
   ✅ ARTORIAS (21:00, PR #4): smoke técnico REAL ejecutado por mí —
   `generate(seed, chapter)` + ciclo de sala completo a mano (5 pasos
   canónicos sobre snapshot del FS, copia CANDELAS verificada en `/usb`);
@@ -138,6 +145,32 @@
   operando. Cierra el `[BUG][P2]` del 28/08. Cumple 🧭3 (la terminal enseña
   qué llega después). LISTA PARA MERGE. También en PR #5: S1 canje
   dicts→`Event` verificado (deuda del 27/08 saldada, 96 tests sandbox).
+=======
+- `[HECHO][P1]` (28/08) **S2 `curriculum.json` v0** — Smough (16:00, tras
+  S1): DAG mínimo REAL cap. 0–1 + validador (ciclos/prereqs) + esquema en
+  README curriculum. La pieza que desbloquea generator.
+  ✅ [HECHO] (28/08, Smough, PR #5): `src/core/curriculum/` (`model`/
+  `validation`/`loader` frozen, sin RNG) + `src/data/curriculum.json` v1
+  (11 conceptos: cap. 0 = `c.ls/c.cd/c.cat/c.cp` EXACTO calzando con
+  `DEFAULT_CAP0_COMMANDS`; cap. 1: permisos + find + man; 6 quests:
+  `story.ch0.ventana` + `story.ch1.e1–e5` con tints blue/blue/grey/red/grey).
+  Validador: ciclos (DFS, camino legible), prereq inexistente/posterior,
+  duplicados, tint/familia, requires no enseñado aún. **Contrato de consumo
+  para Ornstein anunciado en el README del módulo** (`load_curriculum`,
+  `unlocked`, `campaign_pool`, `quests_for_chapter` — API estable, no tendrá
+  que reescribir nada). 46 tests (25 validador en negativo + 21 loader).
+  Suite: 247 passed.
+- `[HECHO][P2]` (28/08) **S3 [BUG] `&&`/`;` → rechazo didáctico** — Smough
+  (16:00, truncable a mañana): `&;` a `_UNSUPPORTED_SYNTAX` + mensaje que
+  insinúe futuro + los 3 repros de Oscar en negativo.
+  ✅ [HECHO] (28/08, Smough, PR #5): `&` y `;` bloqueados fuera de comillas
+  (entre comillas siguen siendo literales GNU válidos, testeado); mensaje
+  didáctico 🧭3 `sh: syntax not supported in this session: it runs one
+  command at a time (pipes and chaining arrive later)` exit 2; los 3 repros
+  EXACTOS de Oscar en negativo (`cd /srv && ls`, `ls /srv && cat f`,
+  `ls; cat X`) + sueltos + literales entre comillas. Ningún mensaje culpa ya
+  a `cd` ni trata `&&` como operando. Suite: 247 passed.
+>>>>>>> origin/feat/sandbox
 - `[EN CURSO][P1]` (28/08) **T1 `state` v0: primer save** — Seath (19:00):
   GameState serializable roundtrip JSON con `version` de formato, envolviendo
   la Shell del cap. 0.
