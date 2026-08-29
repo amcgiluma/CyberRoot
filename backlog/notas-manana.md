@@ -67,60 +67,69 @@ Informo; decides tú.
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Artorias (28/08, 21:00) — filtro técnico del día
+### 🎯 Artorias (29/08, 21:00) — filtro técnico del día
 
 **⚠️ AVISO A GWYN (merges de esta noche):**
-- **Las 3 PRs están ✅**: mergea **#4 (`feat/engine`) → #5 (`feat/sandbox`)
-  → #6 (`feat/meta-ui`)**, en ese orden (ensayado por mí). Nada que rechazar.
+- **Las 3 PRs están ✅**: mergea **#7 (`feat/engine`) → #8 (`feat/sandbox`)
+  → #9 (`feat/meta-ui`)**, en ese orden (ensayado por mí). Nada que rechazar.
 - **ENSAYO DE INTEGRACIÓN hecho** (worktree desechable, las 3 ramas juntas):
-  suite combinada **316 passed, 0 errores de colección** (main 225 → PR#4
-  +30, PR#5 +51, PR#6 +10). Si tras tus merges la suite NO da 316, algo se
-  perdió por el camino — verifica tú mismo antes de cerrar.
-- **Conflictos de docs ESPERABLES solo en 2 ficheros**:
-  `backlog/tareas/en-curso/activo.md` y `docs/worklog/2026/08/28.md` (las
-  huellas del día chocan porque las 3 ramas partieron del mismo main).
-  Resolver conservando TODAS las huellas; cero conflictos en código.
-- **Cruce con los bugs de la mañana**: el `[BUG][P2]` de Oscar (`&&`/`;`)
-  está ARREGLADO en PR#5 — ejecuté sus 3 repros exactos sobre la rama: los
-  tres dan el rechazo didáctico exit 2. Ciérralo al mergear. Los 2
-  `[BUG][P3]` de Havel (`cat fichero/` → exit 0; `cp dir destino` culpa al
-  destino) SIGUEN VIVOS verificados hoy — no bloquean merge, dueño Smough.
+  suite combinada **342 passed + 1 xfailed, 0 errores de colección** (main 316
+  → PR#7 +9, PR#8 +7, PR#9 +10; deltas declarados cuadran exactos). Si tras
+  tus merges la suite NO da 342+1 xfail, algo se perdió — verifica tú mismo.
+- **Gate de datos curriculum.json OK** (load_curriculum carga; pool cap. 0 =
+  `c.ls/cd/cat/cp`).
+- **Conflictos de docs ESPERABLES en 3 ficheros**: `backlog/tareas/en-curso/
+  activo.md`, `docs/worklog/2026/08/29.md` y `backlog/mejoras/pendiente/
+  propuestas.md` (las 3 ramas partieron del mismo main). Resolver conservando
+  TODAS las huellas; cero conflictos en código.
+- **Cruce con bugs de la mañana**: los 2 `[BUG][P3]` de Havel (cat fichero/,
+  cp dir→destino) quedan CERRADOS en PR#8 (golden en negativo verificados).
+  No quedan bugs de la mañana sin causa cubierta por un PR de hoy.
+- **XFAIL intencional**: `test_costura_navig8.py` (🧭8 contract→story.ch1.e1)
+  es xfail a propósito; NO es un fallo. Gwyn decide (a)/(b) esta noche.
+- **Propuestas de hoy**: 2 complementarias en `propuestas.md` (Ornstein: gate
+  de rama realineada; Seath: «tests antes» sobre main actualizado). Valóralas
+  juntas — ambas evitan el problema de las ramas stale de hoy.
 
 **⭐ Notas de gusto (técnico):**
-- **Lo que más mola del día**: la convención O1 no quedó en README que
-  nadie lee — quedó en un GUARD ejecutable (`test_tests_layout.py` rompe la
-  suite si aparece un `tests/` fuera de `src/tests/`). La regla se defiende
-  sola ahora. Y el `UnsolvableRoomError.from_step()` de Ornstein reporta
-  argv/exit/stderr del paso que falló: errores que te dicen dónde mirar.
-- **La validación canónica (§6.4.4) tal como el diseño la pedía**:
-  `generate()` ejecuta la solución sobre `fs.snapshot()` y la Incursión
-  devuelta conserva SU FS intacto. Una sala irresoluble es un bug lanzado,
-  no un reto. Además `variant="canonical"|"practice"` con decoys
-  deterministas: gancho limpio para las salas futuras.
-- **T1 de Seath es la atomicidad hecha costumbre**: tmp + `os.replace`,
-  fallo de serialización deja el save anterior INTACTO (testeado),
-  migraciones cableadas desde v1 y `saved_at` = tick simulado (nunca reloj
-  real). El día que el formato cambie, ya hay camino — así se Versiona.
-- **El mensaje didáctico de S3 es exactamente 🧭3**: «sh: syntax not
-  supported in this session: it runs one command at a time (pipes and
-  chaining arrive later)» — honesto como GNU, y enseña qué llega después.
-- **Detalle que no me convence**: `core/state/__init__.py` es solo
-  docstring; `GameState`/`save`/`load` viven en `core.state.state` y el
-  primer consumidor (engine/main) tendrá que adivinarlo. Re-exportar la
-  fachada es gratis, Seath — hazlo en tu próximo paso, no urgente.
-- **Prioridad para mañana (mi lectura técnica)**: 1º generator consumiendo
-  `curriculum.json` real (el contrato de S2 ya existe; adiós al cap. 0
-  hardcodeado en `chapter0.py`); 2º la pasada GNU sistemática de Smough
-  (3 divergencias acumuladas de la familia `cp`/`cat`, tarea [P2] en
-  abierto); 3º el REPL `python -m core.sandbox` (barato, primera impresión
-  tangible para Juanma).
-- **Propuesta menor de flujo** (en `propuestas.md`): que los ejecutores
-  declaren en el cuerpo del PR el DELTA de tests esperado (+30/+51/+10 hoy,
-  lo derivé a mano) — a Gwyn le cuesta 10 segundos verificar el 316.
+- **O1 de Ornstein** es la costura que el sistema esperaba: generator lee
+  `curriculum.json` real (pool por ids `c.ls/cd/cat/cp`, quest
+  `story.ch0.ventana`) y la sesión nace del scaffold (`initial_cwd=/`, opción
+  B) vía `new_session` — la decisión 🧭2 por fin es COMPORTAMIENTO, no dict
+  decorativo. Y el xfail de 🧭8 está documentado con su invariante, no
+  escondido.
+- **Harness v0 (O2)**: `run_seeds.py` mide resolubilidad/determinismo/
+  distribución y el AC (50/50) cuadra en mi smoke de 5 seeds. Es la base de
+  calibración de 🧭6 y del «ánimo de novedad» de Havel. Primera pieza del
+  circuito de validación §8.6 en pie.
+- **S1 de Smough**: GNU-honesto hasta la última coma — verificado contra
+  coreutils real que `cat fichero/` → `Not a directory` exit 1 y `cp dir` sin
+  `-r` diagnostica el ORIGEN. Un bug de semántica que enseñaba mal al jugador
+  queda en test golden. Este es el método de enseñanza del juego (§2.6.8)
+  hecho código.
+- **REPL (S2)**: la primera impresión TANGIBLE para Juanma, y funciona de
+  verdad (lo jugué: ls→cat→cp→ls /usb). Prompt diegético, drift de cwd,
+  errores honestos. Barato y enorme retorno.
+- **T1 de Seath**: la fachada de `core.state` y `core.sandbox` que pedí ayer,
+  hecha como coordinación limpiamente disjunta (el `__init__` de sandbox lo
+  toca él, no Smough). Ambos imports funcionan desde raíz.
+- **T2 progression**: el primer unlock POR COMPETENCIA (§4.2) respira sobre el
+  save (`GameState.knowledge`); idempotente. El «espejo acelera, nunca
+  sustituye saber» ya tiene su primera demonstración de patrón.
+- **Detalle que NO me convence**: nada bloqueante. Solo nota de calidad para
+  mañana: no vi `progression` consumir el historial real de la sesión en el
+  unlock (usa evidencia `cp exit 0 a /usb`) — bien para v0, pero el siguiente
+  paso natural es leer `shell.history/total_noise` para el unlock (encaja con
+  el post-mortem de Havel).
+- **Prioridad para mañana (mi lectura técnica)**: 1º materializar la decisión
+  🧭8 (a)/(b) que Gwyn tome hoy; 2º O3/harness ampliado si urgen calibraciones
+  de ruido y contraste de karma (§8.6); 3º integrar Manus M1/M2 (cap. 2
+  «Facturas») — el integrador tendrá que añadir `story.ch2.*` al curriculum
+  cuando toque. El REPL ya da a Juanma lo tangible para probar.
 
-**🚨 Línea de aviso:** mergea #4 → #5 → #6 sin miedo (todas ✅, ensayo de
-integración 316 passed verificado por mí); los ÚNICOS conflictos serán las
-huellas de `activo.md` y `worklog/2026/08/28.md` — conserva las tres.
+**🚨 Línea de aviso:** mergea #7 → #8 → #9 sin miedo (todas ✅, ensayo 342
+passed + 1 xfail + gate de datos OK verificado por mí); conflictos solo en
+`activo.md`, `worklog/2026/08/29.md` y `propuestas.md` — conserva las tres.
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
 
