@@ -324,6 +324,33 @@ def test_cat_sin_argumentos_error_didactico_v0() -> None:
     assert res.exit_code == 1
 
 
+def test_cat_fichero_con_barra_final_not_a_directory_exit_1() -> None:
+    """BUG de Havel (28/08): `cat fichero/` debe dar Not a directory, exit 1.
+
+    GNU real contrastado (coreutils en la máquina, 29/08): `cat f.txt/` →
+    `cat: f.txt/: Not a directory`, exit 1. Antes el sandbox normalizaba la
+    barra final y volcaba el contenido con exit 0.
+    """
+    fs = _fs()
+    res = _run_cat(fs, "/home", ("file.txt/",), 0)
+    assert res.stdout == ""
+    assert res.stderr == "cat: file.txt/: Not a directory"
+    assert res.exit_code == 1
+
+
+def test_cat_dir_con_barra_final_is_a_directory() -> None:
+    """`cat dir/` → Is a directory (GNU); la barra no cambia que es un dir."""
+    fs = _fs()
+    res = _run_cat(fs, "/home", ("empty/",), 0)
+    assert res.stdout == ""
+    assert res.stderr == "cat: empty/: Is a directory"
+    assert res.exit_code == 1
+    # Sin barra sigue como estaba: también Is a directory.
+    res2 = _run_cat(fs, "/home", ("empty",), 0)
+    assert res2.stderr == "cat: empty: Is a directory"
+    assert res2.exit_code == 1
+
+
 # ---- cp -------------------------------------------------------------
 
 
@@ -408,6 +435,26 @@ def test_cp_fuente_inexistente_cannot_stat() -> None:
     res = _run_cp(fs, "/", ("/no/existe", "/etc/x"), 0)
     assert res.stderr == "cp: cannot stat '/no/existe': No such file or directory"
     assert res.exit_code == 1
+
+
+def test_cp_directorio_sin_r_omitting_directory_diagnostica_origen() -> None:
+    """BUG de Havel (28/08): `cp dir destino` debe diagnosticar el ORIGEN.
+
+    GNU real contrastado (coreutils en la máquina, 29/08): `cp dir dst` →
+    `cp: -r not specified; omitting directory 'dir'`, exit 1. Antes el sandbox
+    culpaba al DESTINO («cp: <dst>: Not a directory»).
+    """
+    fs = _fs()
+    res = _run_cp(fs, "/", ("/home/node", "/etc/x"), 0)
+    assert res.stdout == ""
+    assert res.stderr == "cp: -r not specified; omitting directory '/home/node'"
+    assert res.exit_code == 1
+    # La barra final en el ORIGEN se conserva en el mensaje (GNU: 'dir/').
+    res2 = _run_cp(fs, "/home", ("node/", "dest"), 0)
+    assert res2.stderr == "cp: -r not specified; omitting directory 'node/'"
+    assert res2.exit_code == 1
+    # El ORIGEN sigue intacto: el fallo ocurre antes de tocar nada.
+    assert fs.get_dir("/home/node") is not None
 
 
 def test_cp_padre_del_destino_inexistente_not_found() -> None:
