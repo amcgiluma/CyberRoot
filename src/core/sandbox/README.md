@@ -16,6 +16,7 @@
 | `commands/navigation.py` | `ls` (columna única, orden codepoint), `cd` (builtin: valida→normaliza, errores antes de tocar cwd) |
 | `commands/files.py` | `cat` (bytes exactos, exit 1 si cualquier error), `cp` (sobrescribe, copia-DENTRO de dirs, `same_file`) |
 | `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
+| `__main__.py` | **REPL (S2, 29/08):** `PYTHONPATH=src python -m core.sandbox` abre una sesión real del cap. 0 con prompt diegético (`operador@oficina-vecinal:~$`, DESIGN §6.1); `run_repl` reutilizable y testeable programáticamente |
 | `PLAN.md` | Decisiones de diseño e hitos del turno 27/08 |
 
 ## Decisiones que un revisor debe conocer
@@ -52,6 +53,13 @@
    — el JSON plano queda byte-idéntico al puente de dicts anterior).
 8. **`fs.change_dir` solo normaliza strings**; la validación de existencia es
    del comando `cd` (get_dir antes de mover) — separación limpia de capas.
+9. **GNU-honesto en `cat`/`cp` (pasada S1 del 29/08, cierra los 2 `[BUG]` de
+   Havel):** `cat fichero/` → `cat: X/: Not a directory` exit 1 (una barra
+   final fuerza a tratar el operando como ruta-a-directorio; GNU contrastado
+   en la máquina); `cp dir destino` sin `-r` → `cp: -r not specified; omitting
+   directory 'dir'` exit 1 diagnosticando el ORIGEN, no el destino. `mtime` de
+   `cp` sin `-p` queda como limitación deliberada (se preserva, GNU lo
+   actualiza).
 
 ## Cómo se testea
 
@@ -62,6 +70,10 @@
 - **Sesión end-to-end del cap. 0** (escena de `CAPITULOS/00-la-firma.md`:
   `ls` → `cat` → `cd ..` + gancho `cp` a `/usb/`) en
   `test_session_cap0.py`, con reproducibilidad cross-proceso.
+- **REPL** (`test_repl.py`, S2 29/08): smoke del bucle de `__main__` sin TTY
+  (`run_repl` con iterable de líneas + captura por canal); la secuencia
+  canónica del dossier y los errores (127, rechazo `&&`) salen idénticos a la
+  sesión testeada.
 - Regla del módulo: si un comando no se comporta como Linux real, ES un bug
   (fantasía = competencia real, DESIGN §8.4). Los desvíos se detectaron
   contrastando con coreutils real, no de memoria.

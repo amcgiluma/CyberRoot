@@ -11,7 +11,7 @@ en inglés GNU (DESIGN §2.6.8). Prohibido `random`: nada aleatorio aquí.
 from __future__ import annotations
 
 from core.sandbox.commands.base import CommandResult, CommandSpec, noise_event
-from core.sandbox.fs import FileSystem, FsError
+from core.sandbox.fs import DirNode, FileNode, FileSystem, FsError
 from core.sandbox.noise import NOISE_PROFILE
 
 CAT_NAME = "cat"
@@ -57,6 +57,21 @@ def _run_cat(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int) -> Comm
     chunks: list[str] = []
     err_lines: list[str] = []
     for arg in argv:
+        # GNU real: una barra final fuerza a tratar el operando como RUTA A
+        # DIRECTORIO. `cat fichero/` → «Not a directory» (el nodo es un
+        # fichero); `cat dir/` → «Is a directory» (cat sobre un dir). Sin la
+        # barra, `cat fichero` vuelca el contenido y `cat dir` da «Is a
+        # directory» — la barra solo añade el caso «Not a directory».
+        if arg.endswith("/"):
+            try:
+                node = fs.resolve(arg, cwd)
+            except FsError as e:
+                err_lines.append(_cat_kind_message(e.kind, arg))
+                continue
+            if isinstance(node, FileNode):
+                err_lines.append(_cat_kind_message("not_a_directory", arg))
+                continue
+            # Es un directorio: dejamos que read_file emita «Is a directory».
         try:
             chunks.append(fs.read_file(arg, cwd))
         except FsError as e:
@@ -110,10 +125,19 @@ def _run_cp(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int) -> Comma
     dst = argv[1]
     # Distinguir src vs dst por orden: pre-validar el fuente primero.
     try:
-        fs.resolve(src, cwd)
+        src_node = fs.resolve(src, cwd)
     except FsError as e:
         return CommandResult(
             stderr=_cp_src_message(e.kind, src), exit_code=1, noise=noise
+        )
+    # GNU real: copiar un DIRECTORIO sin `-r` diagnostica el ORIGEN y aborta
+    # antes de tocar nada («omitting directory»), no culpa al destino. Reproduc
+    # de Havel (28/08): `cp /srv /usb/` debía decir esto, no «cp: /usb/: ...».
+    if isinstance(src_node, DirNode):
+        return CommandResult(
+            stderr=f"cp: -r not specified; omitting directory '{src}'",
+            exit_code=1,
+            noise=noise,
         )
     try:
         fs.copy_file(src, dst, cwd)
