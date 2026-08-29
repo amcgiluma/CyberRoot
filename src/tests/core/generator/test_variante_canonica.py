@@ -56,7 +56,8 @@ def test_variante_canonica_cwd_final() -> None:
 def test_variante_canonica_sin_decoys() -> None:
     inc = generate(SEED, 0, variant="canonical")
     assert inc.room.decoys == ()
-    assert inc.room.concept_pool == ("cat", "cd", "cp", "ls")
+    # El concept_pool viene del curriculum.json (ids), ya no de constantes.
+    assert inc.room.concept_pool == ("c.cat", "c.cd", "c.cp", "c.ls")
 
 
 def test_variante_canonica_fs_identico_al_test() -> None:

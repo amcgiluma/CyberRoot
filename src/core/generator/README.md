@@ -1,9 +1,10 @@
-# `core/generator` — generador procedural determinista del cap. 0 (v0)
+# `core/generator` — generador procedural determinista (v0.2)
 
-Entrega de la **tarea O2 del plan 28/08** (Gwyndolin). Primera API determinista
-del generador: `generate(seed, chapter, *, variant)` produce **UNA sala** del
-cap. 0 «Trabajo en frío» con la piel EXACTA del capítulo y el encargo del
-cap. 1 apuntando a su técnico+beat.
+Entrega de **O1/O2 del plan 29/08** (Gwyndolin). La API pública
+`generate(seed, chapter, *, variant, curriculum)` produce **UNA Incursion** del
+cap. 0 «Trabajo en frío» con la piel EXACTA del capítulo. **La sala consume el
+curriculum.json real**: su `concept_pool` y su `objective` (la quest) vienen del
+currículo, no de constantes hardcodeadas.
 
 Contrato §4.5 (dueño Ornstein): el módulo ENTREGA `Incursion` (y sus dicts
 planos); el render/engine los consume. Los textos visibles van como CLAVES
@@ -13,66 +14,80 @@ planos); el render/engine los consume. Los textos visibles van como CLAVES
 
 ## ENTRADA / SALIDA
 
-```
-generate(seed: int|str|bytes, chapter=0, *, variant="canonical") -> Incursion
+```python
+generate(seed: int|str|bytes, chapter=0, *, variant="canonical",
+         curriculum: Curriculum|None = None) -> Incursion
 ```
 
 | Entrada | Reglas |
 |---|---|
 | `seed` | Seed ORIGINAL de la run. `bool` → `TypeError` (coherente con `Rng`). `str`/`bytes` se dispersan vía sha256. |
-| `chapter` | DEBE ser `0`. Otro valor → `ValueError` avisando de `curriculum.json` (ch1+ llega en la siguiente fase). |
-| `variant` | `"canonical"` (piel EXACTA del capítulo, sin decoys, byte a byte idéntica al test de la escena) \| `"practice"` (añade 1–2 decoys de ambientación). Otro → `ValueError`. |
+| `chapter` | DEBE ser `0`; otro valor → `ValueError` (ch1+ llega cuando curriculum cubra más capítulos y exista piel). |
+| `variant` | `"canonical"` (piel EXACTA del capítulo, sin decoys) \| `"practice"` (1–2 decoys de ambientación). Otro → `ValueError`. |
+| `curriculum` | Curriculum ya cargado (el harness lo carga UNA vez y lo reusa en N seeds). `None` → `load_curriculum()``. |
 
-Salida: `Incursion` (decoys/mtimes/ids derivados de la seed; contenedor de las
-piezas: `seed`, `chapter`, `contract`, `scaffold`, `room`).
+Salida: `Incursion` (`seed`, `chapter`, `contract`, `scaffold`, `room`).
 
+```python
+validate_incursion(incursion) -> None     # pública; lanza UnsolvableRoomError
+new_session(incursion) -> Shell           # sesión jugable (copia del FS, cwd del scaffold)
 ```
-validate_incursion(incursion) -> None   # pública; lanza UnsolvableRoomError
-```
+
+**`new_session`, la sesión que produce la Incursión** (🧭2, opción B como
+comportamiento): copia del FS (la Incursión conserva el suyo intacto), cwd
+nacido de `RunScaffold.initial_cwd()` (default `option_b` → `/`), y el set de
+comandos del cap. 0. La usa `validate_incursion` y el harness; el engine
+montará aquí al jugador.
+
+---
+
+## Consumo del curriculum (O1, 29/08)
+
+- **`concept_pool`** = los ids de los conceptos que el capítulo enseña
+  (`Curriculum.chapter_concepts(0)` → `c.ls/cd/cat/cp`), determinista y sin RNG.
+  Se acabó el pool hardcodeado con nombres de comando y decoys mezclados: los
+  decoys de ambientación viven SOLO en `room.decoys`.
+- **La quest** (`objective.story_key`) se toma del **pool del capítulo**
+  (`quests_for_chapter`, cap. 0 → `story.ch0.ventana`) y su `requires` debe
+  estar cubierto por el pool (§6.4.1): si no, `GeneratorError` accionable.
+- Borrar `chapter0.py` como fuente de datos (quest/conceptos) **no rompe la
+  generación**: solo sigue aportando la piel (FS, decoys, secuencia canónica).
+- El harness puede inyectar `curriculum` para no releer el JSON en cada seed.
 
 ---
 
 ## Reglas duras
 
 1. **Determinismo absoluto.** Prohibido `import random` (arquitectura §1.3).
-   Toda variación nace de `Rng(seed)` y sus `fork("decoys")`, `fork("room-id")`,
-   `fork("fs")`. Misma seed ⇒ misma `Incursion` en cualquier proceso/cross-PYTHONHASHSEED.
+   Toda variación nace de `Rng(seed)` y sus `fork`. Misma seed ⇒ misma
+   `Incursion` en cualquier proceso/cross-PYTHONHASHSEED.
 2. **Validación canónica OBLIGATORIA (§6.4.4).** `generate` SIEMPRE valida la
-   sala antes de devolverla: ejecuta la secuencia canónica sobre una **copia**
-   (`fs.snapshot()`) y comprueba que el encargo queda en el USB. Si algún paso
-   no devuelve el exit esperado, o la copia no aparece, lanza
-   `UnsolvableRoomError` — una sala irresoluble es un **bug de generación**,
-   nunca se entrega. La `Incursion` devuelta conserva SU FS intacto.
-3. **Los textos son claves, no cadenas visibles.** `Objective`/`Contract`
-   llevan `*_text_key`/`objective_key`; el render resuelve.
+   sala antes de devolverla ejecutando la secuencia canónica sobre una copia
+   (`new_session`); si algún paso no devuelve el exit esperado o la copia no
+   aparece en el USB, lanza `UnsolvableRoomError`. La `Incursion` devuelta
+   conserva SU FS intacto.
+3. **Los textos son claves, no cadenas visibles.**
 4. **JSON-plano estricto en la frontera.** `Incursion.to_dict()` atraviesa
-   `ensure_plain` sin excepción (tuples internos ⇒ listas en el dict).
+   `ensure_plain` sin excepción.
 
 ---
 
-## Diseño del andamiaje (run 0) — DECISIÓN PENDIENTE
+## Andamiaje de la run 0 — OPCIÓN B materializada
 
-El andamiaje de la run 0 (cwd inicial y rutas del dossier) queda expuesto como
-**DATOS** en `scaffold.options` bajo las 3 opciones del plan (**a/b/c**) y
-`scaffold.default = "option_b"` (la más barata de materializar por Manus).
-Esto **NO es una decisión de diseño tomada**: la decide **Gwyn esta noche**
-(🧭2, plan 28/08 §4). No la adelantamos.
+El `scaffold` expone las 3 opciones a/b/c como DATOS y `default = "option_b"`
+(🧭2: `initial_cwd = "/"` y rutas absolutas del dossier; las relativas se
+enseñan en el cap. 1). **`new_session` arranca SIEMPRE en
+`scaffold.default`'s `initial_cwd`** → la opción B es, desde hoy, el
+comportamiento real de la sesión, no solo datos. Si Gwyn materializara otra
+opción como `default`, la run arrancaría donde toca sin tocar lógica.
 
----
+## Costura 🧭8 (documentada, decisión de Gwyn esta noche)
 
-## Compromiso «piel v0 en constantes»
-
-En v0 la piel (rutas, contenidos, mtimes, secuencia canónica) vive en
-constantes tipadas de `chapter0.py`. Cuando Smough materialice `src/data/`,
-migra a `src/data/chapters/chapter0.json` (escena, textos, mtimes, decoys) y el
-generador la carga en vez de leer constantes. Dejamos la hoja `chapter0.py`
-aislada (leaf) para que esa migración sea mecánica.
-
-`CANON_STEPS` (la secuencia tipada de la solución canónica) vive en `model.py`
-convirtiendo `CANON_STEPS_RAW` de `chapter0.py` — así `chapter0` no importa
-`model` y se evita un ciclo de import. La secuencia: `ls → cat → cp → cd → ls`
-(escena de `00-la-firma.md`); gasto de ruido canónico = 6 (ls1+cat1+cp3+cd0+ls1)
-≤ `noise_budget` 12 (⚠️ v1 calibrable).
+`contract.objective_key = story.ch1.e1` exige `c.ls-la`/`c.permisos-leer`, que
+el cap. 0 no enseña. **Hoy NO se resuelve** (plan 29/08): cubierta con test
+xfail (`test_costura_navig8.py`) + comentario con el repro. Gwyn decide (a) la
+sala contrata `story.ch0.ventana` o (b) los prereqs se evalúan al abrir el
+encargo. El `objective` (la quest del cap. 0) YA contrata `story.ch0.ventana`.
 
 ---
 
@@ -80,25 +95,26 @@ convirtiendo `CANON_STEPS_RAW` de `chapter0.py` — así `chapter0` no importa
 
 ```
 src/core/generator/
-├── __init__.py    # contrato, re-exports, __version__="0.1.0"
+├── __init__.py    # contrato, re-exports, __version__ (0.2.0)
 ├── errors.py      # GeneratorError, UnsolvableRoomError (§6.4.4)
-├── model.py       # modelos inmutables ida-y-vuelta exacta (+ CANON_STEPS)
+├── model.py       # modelos inmutables (+ CANON_STEPS, RunScaffold.initial_cwd)
 ├── chapter0.py    # piel del cap. 0 como DATOS (leaf) + build_chapter0_fs
-├── generator.py   # generate() + validate_incursion()
+├── generator.py   # generate() / validate_incursion() / new_session()
 └── README.md      # este fichero
 ```
 
----
-
 ## Cómo se testea
 
-`src/tests/core/generator/` — suite determinista (seeds EXPLÍCITAS, sin
-`random`). Cubre: determinismo (misma seed, incl. cross-proceso con
-PYTHONHASHSEED distinto), semillas distintas ⇒ salas distintas, resolubilidad
-(barrido N=50), variante canónica byte a byte (= `test_session_cap0.py`),
-contrato de historia, andamiaje, errores y roundtrip dict→ensure_plain→json.
+`src/tests/core/generator/` — determinista (seeds EXPLÍCITAS). Cubre
+determinismo (misma seed, cross-PYTHONHASHSEED), semillas distintas ⇒ salas
+distintas, resolubilidad (barrido N=50), variante canónica byte a byte, consumo
+de curriculum (`test_consumo_curriculum.py`), costura 🧭8
+(`test_costura_navig8.py`, xfail), contrato, andamiaje, errores y roundtrip.
 
 ```bash
-./.venv/bin/python -m pytest src/tests/core/generator/ -o addopts= -q
+./.venv/bin/python -m pytest src/tests/core/generator -o addopts= -q
 ./.venv/bin/python -m pytest src/tests -o addopts= -q    # suite completa
 ```
+
+Harness: `tools/harness/` (mismo dueño) corre N seeds y mide resolubilidad /
+determinismo / distribución de conceptos — ver su README.

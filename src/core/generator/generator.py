@@ -23,6 +23,7 @@ from __future__ import annotations
 
 from core.common.rng import Rng
 from core.common.types import SeedLike
+from core.curriculum import Curriculum, load_curriculum
 from core.sandbox.fs import DirNode, FileNode
 from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, Shell
 
@@ -32,7 +33,7 @@ from core.generator.chapter0 import (
     OFFICE_DIR,
     build_chapter0_fs,
 )
-from core.generator.errors import UnsolvableRoomError
+from core.generator.errors import GeneratorError, UnsolvableRoomError
 from core.generator.model import (
     CANON_STEPS,
     CanonSolution,
@@ -71,10 +72,34 @@ _SCAFFOLD_OPTIONS: dict[str, dict[str, str]] = {
 }
 
 
-def _concept_pool(decoys: tuple[str, ...]) -> tuple[str, ...]:
-    """Pool de conceptos: los 4 del cap. 0 + nombres de decoys (ordenado, sin
-    duplicados). Determinista: ordenamos SIEMPRE (un set no garantiza orden)."""
-    return tuple(sorted(set(("cat", "cd", "cp", "ls") + decoys)))
+def _concept_pool(curriculum: Curriculum, chapter: int) -> tuple[str, ...]:
+    """Pool de conceptos de la sala DESDE el currículo (§6.4.2): los ids de los
+    conceptos que este capítulo ENSEÑA (`c.ls/cd/cat/cp` en el cap. 0).
+
+    Determinista (`Curriculum.chapter_concepts` ordena por id, cero RNG). Ya NO
+    mezcla los nombres de los decoys: un filename no es un concepto; los decoys
+    de ambientación viven solo en `room.decoys`.
+    """
+    return tuple(c.id for c in curriculum.chapter_concepts(chapter))
+
+
+def new_session(incursion: Incursion) -> Shell:
+    """Monta una sesión JUGABLE para la Incursion: copia del FS (la Incursión
+    conserva SU FS intacto), cwd nacido del DEFAULT del scaffold (opción B → "/")
+    y el set de comandos del cap. 0.
+
+    Esta es la sesión que PRODUCE la Incursión (🧭2, opción B como
+    comportamiento): su cwd viene de `RunScaffold.initial_cwd()`, NO del default
+    de la Shell. La usa la validación canónica y el harness; el engine montará
+    aquí al jugador.
+    """
+    room = incursion.room
+    return Shell(
+        room.fs.snapshot(),
+        host=room.host,
+        commands=DEFAULT_CAP0_COMMANDS,
+        cwd=incursion.scaffold.initial_cwd(),
+    )
 
 
 def validate_incursion(incursion: Incursion) -> None:
@@ -87,11 +112,7 @@ def validate_incursion(incursion: Incursion) -> None:
     `generate` conserva SU FS intacto.
     """
     room = incursion.room
-    shell = Shell(
-        room.fs.snapshot(),
-        host=room.host,
-        commands=DEFAULT_CAP0_COMMANDS,
-    )
+    shell = new_session(incursion)
     for index, step in enumerate(room.canon.steps):
         line = " ".join(step.argv)
         result = shell.execute(line)
@@ -142,6 +163,7 @@ def generate(
     chapter: int = 0,
     *,
     variant: str = "canonical",
+    curriculum: Curriculum | None = None,
 ) -> Incursion:
     """Genera UNA Incursion del cap. 0, determinista y validada.
 
@@ -152,9 +174,15 @@ def generate(
     - `variant`: "canonical" (la piel EXACTA del capítulo, sin decoys, byte a
       byte idéntica al test de la escena) o "practice" (añade 1–2 decoys de
       ambientación). Otro valor → ValueError.
+    - `curriculum`: Curriculum ya cargado (p.ej. el harness lo carga una vez
+      y lo reusa en N seeds). None → `load_curriculum()` lee `curriculum.json`.
 
-    Termina SIEMPRE llamando a `validate_incursion` antes de devolver la
-    Incursion (una sala irresoluble es un bug y se lanza `UnsolvableRoomError`).
+    La sala toma su quest del pool del capítulo (`quests_for_chapter`, cap. 0 →
+    `story.ch0.ventana`) y su concept_pool del currículo (`c.ls/cd/cat/cp`),
+    NO de constantes hardcodeadas: borrar esas constantes como fuente de datos
+    no rompe la generación. Termina SIEMPRE validando la sala
+    (`validate_incursion`) antes de devolverla (una sala irresoluble es un bug
+    y se lanza `UnsolvableRoomError`).
     """
     if isinstance(seed, bool):
         raise TypeError("seed bool no admitida por el generador (usa 0/1 explícitos)")
@@ -165,6 +193,10 @@ def generate(
         )
     if variant not in VARIANTS:
         raise ValueError(f"variant desconocida: {variant!r} (espera canonical|practice)")
+
+    if curriculum is None:
+        curriculum = load_curriculum()
+    concept_pool = _concept_pool(curriculum, chapter)
 
     rng = Rng(seed)
     decoy_rng = rng.fork("decoys")
@@ -188,7 +220,23 @@ def generate(
     room_id = f"room-ch0-{id_rng.below(2**32):08x}-{variant}"
 
     contract = Contract(chapter=1)
-    objective = Objective()
+    # La quest del POOL del capítulo (cap. 0 → story.ch0.ventana): el encargo
+    # que esta sala ofrece es un nodo del curriculum.json, no una constante. Su
+    # `requires` debe estar cubierto por el concept_pool (§6.4.1).
+    ch_quests = curriculum.quests_for_chapter(chapter)
+    if not ch_quests:
+        raise GeneratorError(
+            f"capítulo {chapter} sin quests en curriculum.json: no hay encargo "
+            f"que esta sala pueda ofrecer (viola §6.4.1)"
+        )
+    quest = ch_quests[0]
+    missing = set(quest.requires) - set(concept_pool)
+    if missing:
+        raise GeneratorError(
+            f"quest {quest.id!r} requiere conceptos que el capítulo {chapter} "
+            f"no enseña: {sorted(missing)} (viola §6.4.1)"
+        )
+    objective = Objective(story_key=quest.id)
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
     canon = CanonSolution(steps=CANON_STEPS)
 
@@ -198,7 +246,7 @@ def generate(
         fs=fs,
         canon=canon,
         objective=objective,
-        concept_pool=_concept_pool(decoys),
+        concept_pool=concept_pool,
         decoys=decoys,
     )
     incursion = Incursion(
@@ -213,4 +261,4 @@ def generate(
 
 
 #: Referencias públicas del módulo usadas por el README de contratos.
-__all__ = ["generate", "validate_incursion", "VARIANTS"]
+__all__ = ["generate", "new_session", "validate_incursion", "VARIANTS"]
