@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from core.sandbox.shell import Shell
@@ -65,6 +65,9 @@ class GameState:
 
     shell: Shell
     version: int = SAVE_VERSION
+    #: Inventario de conocimientos dominados por competencia (§2.7/§7.5.3):
+    #: {id_boon: True}. Opcional en el formato v1 (sub-dict hermano de "shell").
+    knowledge: dict[str, bool] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Estado completo a dict plano JSON-safe (ida y vuelta con from_dict)."""
@@ -72,6 +75,7 @@ class GameState:
             "version": self.version,
             "saved_at": self.shell.tick,  # tick SIMULADO, no reloj real (§3)
             "shell": self.shell.to_dict(),
+            "knowledge": dict(self.knowledge),
         }
 
     @classmethod
@@ -91,7 +95,11 @@ class GameState:
             shell = Shell.from_dict(raw_shell)
         except (KeyError, TypeError, ValueError) as exc:
             raise SaveIntegrityError(f"sección 'shell' inválida: {exc!r}") from exc
-        return cls(shell=shell, version=int(d["version"]))
+        return cls(
+            shell=shell,
+            version=int(d["version"]),
+            knowledge=dict(d.get("knowledge") or {}),
+        )
 
 
 def _migrate(d: dict[str, Any]) -> dict[str, Any]:

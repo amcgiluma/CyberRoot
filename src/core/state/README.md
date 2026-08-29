@@ -22,8 +22,16 @@ save(g, "save.json")                   # ATÓMICO: tmp + os.replace
 g3 = load("save.json")                 # valida versión, migra, reconstruye
 ```
 
+**Fachada (T1, 29/08):** `from core.state import GameState, save_game,
+load_game` (aliases nombrados de `save`/`load`). Los nombres de bajo nivel
+siguen disponibles desde `core.state.state` para no romper los tests previos.
+El save v1 camino a generalizarse: `GameState.knowledge` (dict boon→dominado,
+alimentado por `core.progression`) es un sub-dict OPCIONAL hermano de
+`"shell"` — un save v1 previo sin la clave carga con `{}`.
+
 - **Formato del save**: `{"version": 1, "saved_at": <tick simulado>,
-  "shell": <Shell.to_dict()>}`. `sort_keys` + `ensure_ascii=False`:
+  "shell": <Shell.to_dict()>, "knowledge": {...}}` (`knowledge` opcional).
+  `sort_keys` + `ensure_ascii=False`:
   JSON determinista y legible a mano (§1.5 — un save escrito a mano con
   `json.dump` carga exactamente igual).
 - **`version`** int monotónico desde 1 (no semver: solo lo lee `from_dict`).

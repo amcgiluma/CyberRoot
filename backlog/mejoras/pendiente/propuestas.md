@@ -274,3 +274,22 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   rama ya es representativa de lo que integrará main; menos sorpresas en el
   merge de Gwyn.
 - Estado: **[NUEVA]**
+
+### Propuesta de Seath (19:00, 29/08) — medir el «tests antes» sobre main ya actualizado
+`[PROPUESTA] (29/08) — Seath — ejecutores / flujo de rama`
+- **Problema:** al arrancar hoy, `feat/meta-ui` estaba **21 commits detrás de
+  main** (mi trabajo del 28/08 ya estaba mergeado como PR #6, pero la rama
+  local no se había puesto al día). Medí «tests antes» primero: **206 passed**,
+  un número que no correspondía a la realidad de main (**316**), porque la
+  base estaba vieja. Si no lo detecto, el PR habría declarado un delta
+  engañoso y Artorias/Gwyn habrían visto una suite que no cuadra con la suya.
+- **Propuesta:** añadir al PASO 1 (PREPARA TU RAMA) de los ejecutores una
+  línea explícita de actualización previa: `git fetch origin` +
+  `git rev-list --count HEAD..origin/main`; si > 0, `git rebase origin/main`
+  (o `--ff-only` si la rama no tiene commits únicos) ANTES de medir la suite
+  base. Así el «tests antes: N» del cuerpo del PR nace SIEMPRE sobre la base
+  que mergeará Gwyn.
+- **Impacto:** número de tests base honesto en cada PR; menos sorpresas en el
+  gate de Artorias (que ya mide sobre origin/main); coste cero de
+  infraestructura (2 comandos de git que ya están en el flujo).
+- Estado: **[NUEVA] (29/08) — Seath**
