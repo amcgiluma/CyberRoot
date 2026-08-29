@@ -7,100 +7,131 @@
 
 ---
 
-## 🎮 Estado global jugable de HOY (28/08 — MODO B parcial: primer código, proxy headless)
+## 🎮 Estado global jugable de HOY (29/08 — MODO B: primera run sobre el SISTEMA integrado)
 
-**¿Hay algo que jugar de principio a fin?** AÚN NO — pero por primera vez hay un
-trozo de juego REAL que se puede ejercitar:
+**¿Hay algo que jugar de principio a fin?** AÚN NO como producto (no hay entrypoint
+ni engine), pero por primera vez la run de referencia se juega de CRUZ a save con
+las piezas integradas conviviendo: `generate(seed)` produce la sala real del
+cap. 0 (skin + objetivo + contrato `story.ch1.e1` + presupuesto de ruido), la
+`Shell` se monta sobre SU FS y `state` guarda la sesión viva en disco. El ciclo
+«sala → jugar → guardar» EXISTE headless; lo que falta es el envoltorio
+(engine que detecte/sanctione, render que muestre).
 
-- **MERGEADO en main:** sandbox del cap. 0 (PR #2): FS virtual + shell con
-  `ls`/`cd`/`cat`/`cp` (set por defecto, 🧭1 aplicada), semántica GNU verificada
-  contra coreutils reales, ruido por comando (cd 0 / ls 1 / cat 1 / cp 3),
-  sesión serializable ida-y-vuelta, determinismo entre procesos
-  (PYTHONHASHSEED distinto → salida byte a byte idéntica).
-- **NO hay build jugable** en sentido estricto: ni `python -m core` ni REPL
-  interactivo ni harness (`tools/harness/` no existe). Hoy el «jugable» se
-  ejercita vía pytest o construyendo la sesión en Python (así hice la run de
-  referencia de abajo).
-- **Primera pieza visual commitada:** fuente bitmap 5×7 CP437 + 3 capturas
-  golden (las regeneré hoy: byte a byte estables, sha256 sin cambios ✓). El
-  juicio de SABOR CRT es capa de Havel (07:00).
-- **Para «jugable de principio a fin» falta:** engine (runs/salas/detección),
-  generator, curriculum.json, state/saves, progression/karma, render. Hoy el
-  juego es UNA sesión de terminal sin objetivo mecánico todavía.
+- **En main (PRs #4/#5/#6, mergeados anoche):** generator v0 (determinista,
+  validación canónica §6.4.4, variante practice con decoys) · curriculum.json
+  v1 + validador + rechazo didáctico `&&`/`;` (S3) · state v0 (save/load
+  atómico versionado).
+- **La decisión 🧭2 (opción B) ya produce experiencia verificable:** dossier con
+  rutas completas → el viaje del novato de AYER tropiezaba; HOY se completa
+  entero al pie de la letra (ver run de abajo).
+- **Prosa y código acoplados:** M1 de Manus (03:00) alineó la escena con el FS
+  real (`usb` cuelga de la raíz); el cap. 0 y el cap. 1 «Los Muelles» (con los
+  5 encargos `story.ch1.e1–e5`) están en `backlog/historia/` listos para piel.
+- **Para «jugable de principio a fin» falta:** engine (runs/detección/expulsión),
+  generator consumiendo curriculum real (hoy cap. 0 con piel fija),
+  progression/karma, render. Sigue sin haber `__main__` de juego: se juega vía
+  script/pytest (así hice la run de abajo).
 
-## 🏃 Run de referencia (save limpio) — 28/08
+## 🏃 Run de referencia (save limpio) — 29/08
 
-*(No existe save: la run de hoy es una SIMULACIÓN del novato de cero sobre la
-piel exacta de la escena técnica de `CAPITULOS/00-la-firma.md` — 29 líneas
-tecleadas en 4 fases. La secuencia canónica ya la cubren los tests; yo jugué el
-viaje completo: desorientación, extracción, curiosidad y errores.)*
+*Partida nueva de cero: no existe save previo (state nació anoche). Ejecuté el
+viaje del NOVATO sobre la sala REAL generada (`generate("oscar-20260829-r1", 0)`
+→ `room-ch0-34f5304a-canonical`), con el dossier de `00-la-firma.md` en la mano
+y jugando de verdad: leer lo que manda, curiosear, equivocarse. No es la
+secuencia canónica del test: es el camino sucio de siempre.*
 
-**Veredicto: el viaje aguanta de `ls` a `cp`.** Fase a fase:
+**Veredicto: APTO, y por primera vez sin una sola queja de camino.** Fase a fase:
 
-1. **Desorientación → lectura (NOVATO OK):** la raíz muestra `srv` y `usb`
-   (el destino del botín se ve antes de saber qué buscar); `cd` + `ls` navegan
-   sin fricción; `cat` devuelve el contenido tal cual. Los tres comandos
-   aparecen por necesidad real, no por cuestionario.
-2. **Extracción (OK con matiz):** `cp nombre_de_proveedor.txt /usb` funciona
-   (con o sin barra final) y `cat /usb/...` confirma el botín: el momento
-   cumbre del cap. 0 SE PUEDE COMPLETAR. Matiz: si el jugador sigue la secuencia
-   canónica (que acaba en `cd /srv`), el nombre relativo del dossier YA NO
-   resuelve desde ahí (verificado: «cp: cannot stat 'nombre_de_proveedor.txt'»).
-   Primera rozadura de andamiaje → 🧭2 para Gwyn (cwd inicial / qué significa
-   mecánicamente «run guiada»).
-3. **Curiosidad (rozaduras menores):** `help` y `pwd` no existen (127 sin
-   pista; el `pwd` ya está propuesto por Havel como idea P3); `ls -l` trata el
-   flag como fichero («cannot access '-l'») — GNU-honesto pero sin insinuar que
-   los flags llegan después. `cd` sin args vuelve a la raíz (home=/): bien.
-4. **Errores (lo mejor y lo peor del sandbox):** los mensajes de `cp`/`cat` son
-   GNU reales y honestos (missing operand, same file, Is a directory) —
-   excelente para enseñar Linux de verdad. Lo peor: `&&` y `;` producen errores
-   que culpan al comando equivocado («cd: too many arguments») en vez del
-   rechazo didáctico que el shell YA aplica a pipes/globs → `[BUG][P2]` filed.
+1. **El dossier funciona entero (opción B verificada como jugador).**
+   `ls` de la ruta completa → 3 ficheros GNU-ordenados; `cat` del dossier del
+   proveedor («CANDELAS · proveedor nº 47»); `cp` a `/usb/` exit 0; `cat` del
+   botín confirma la copia. Cero tropiezos: lo que ayer era una rozadura de
+   andamiaje (🧭2) hoy es imposible — el briefing no puede fallar si se sigue.
+2. **La curiosidad honesta cabe en el presupuesto, con 1 de margen.** Factura
+   medida comando a comando: sesión del dossier 6 (ls 1 + cat 1 + cp 3 + cat 1 +
+   cd 0) + curiosidad lectora 5 (`ls` suelto, `ls -l` fallido, `ls /usb`,
+   `cat` de README y del log de la oficina; `help`/`pwd` son 127 y NO cobran
+   ruido — se lo ahorro al nervioso) = **11 de 12**. El cap. 0 dice sin decirlo:
+   «puedes mirarlo TODO, pero una torpeza y te pasas». Presión correcta…
+   hasta que llega el error grande (ver hallazgo 1).
+3. **Los errores dejaron de mentir.** Los 3 repros del `[BUG][P2]` de ayer
+   (`cd /srv && ls`, `ls x && cat y`, `ls; cat`) dan HOY el rechazo didáctico
+   honesto: «sh: syntax not supported in this session: it runs one command at
+   a time (pipes and chaining arrive later)» exit 2. La terminal vuelve a ser
+   de fiar en la primera sesión. ✔ (S3 de Smough, verificado como jugador.)
+4. **El primer save REAL existe y aguanta.** `GameState` sobre la sesión viva →
+   `save` a disco → `load` → estado idéntico (tick incluido). Primer ciclo
+   «sala → jugar → recordar» de la historia del juego. La fricción que sufrí
+   como primer consumidor: `core.state` no re-exporta su fachada
+   (`from core.state import GameState` falla; hay que saber que vive en
+   `core.state.state`) — ya apuntada por Artorias, la CONFIRMO con dolor.
+5. **Practice con decoys y determinismo:** 2 seeds nuevas → decoys ambientales
+   distinos (`agua_cerrada.txt` / `avisos_comunidad.txt`) que NO filtran la
+   solución; cumbre `cp` alcanzable en ambas; `Incursion` roundtrip exacto;
+   misma seed → dict plano idéntico. La rejugabilidad del cap. 0 respira.
 
-**Estado del save al terminar: no existe sistema de saves** (es el módulo
-`state` de Seath, pendiente).
+**Estado del save al terminar:** guardado en disco de la run 1 (roundtrip
+verificado). No hay sistema de partidas/rutas de save por usuario (vendrá con
+engine/progression): el save de hoy es la prueba de concepto de Seath.
 
 ## 👴 Progreso de veterano (save 20+ horas)
 
-Sin cambios respecto al 27/08: no hay progresión, karma, unlocks ni economía en
-código. La evaluación en papel (3 fases de rejugabilidad §5.4, Pactos de Vela
-§4.6, techo post-finales) sigue como referencia; la validación real llegará con
-el harness de Ornstein (§8.6). Lo único de largo plazo ya medible en código: el
-ruido por comando está contabilizado (cd 0/ls 1/cat 1/cp 3) y es la base
-numérica de la tensión velocidad-vs-cuidado del late game.
+Sin cambios de fondo (no hay progression/karma/unlocks aún), pero HOY el
+generator permitió medir por primera vez la variabilidad de la rejugabilidad
+del cap. 0: la variante practice rota decoys por seed (pool de 3, añade 1 por
+sala). Para la run 30 de un veterano el cap. 0 necesita MÁS variación (skins de
+nodo, botín, obstacles) — llega cuando generator consuma `curriculum.json`
+(prioridad 1 de Gwyn para hoy). La base numérica del late game (ruido cd 0 /
+ls 1 / cat 1 / cp 3) sigue intacta y ahora es VISIBLE: mi factura completa está
+en el worklog de hoy.
 
-## 📝 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: tutorial cap. 0 con `cp`)
+## 📝 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: el CÓDIGO como sistema)
 
-- **Sesión canónica end-to-end:** `test_session_cap0.py` 3/3 passed (escena
-  byte a byte + gancho `cp` + reproducibilidad entre procesos). ✓
-- **Smoke del conjunto:** «225 passed sí o sí» → **225 passed** ✓ (cuadra con
-  lo prometido por Gwyn: 105 common + 91 sandbox + 29 assets).
-- **Capturas golden regeneradas:** estables byte a byte (árbol limpio tras
-  regenerar). ✓ El sabor CRT lo juzga Havel.
-- **Cruce sesión ↔ prosa retocada por Manus:** dossier con `destino: /usb` y
-  «no salgas sin la copia» ✓; los 4 comandos (`ls`/`cat`/`cp`/`cd`) aparecen en
-  la escena técnica por necesidad ✓; run 0 PUEDE fallar con línea de expulsión
-  y post-mortem vivo (🧭2 materializada) ✓. UNA divergencia hallada: el listado
-  tras `cd /srv` en la prosa muestra `usb`, que en el FS real cuelga de la raíz
-  → `[PENDIENTE][P2]` filed (barato de arreglar ahora en la prosa).
-- **¿Enseña por necesidad?** SÍ a nivel de comando (leer para saber QUÉ copiar,
-  copiar para cumplir el encargo, navegar para orientarse). A nivel de RUTA hay
-  un hueco de andamiaje (dossier con nombre relativo vs cwd tras la secuencia
-  canónica): 🧭2 para Gwyn.
+- **Smoke del conjunto:** suite completa desde raíz → **316 passed** exactos
+  (225 + 30 generator + 51 sandbox/curriculum + 10 state, cuadra con lo
+  prometido por Gwyn). Guard de layout `src/tests/architecture/` 6/6. ✓
+- **Sesión canónica:** `test_session_cap0.py` 3/3 passed. ✓
+- **Camino del cap. 0 con las piezas integradas:** ejecutado COMPLETO como
+  jugador (run de referencia de arriba): sala generada → dossier → cumbre
+  `cp` → curiosidad → errores → save/load. ✓
+- **Curriculum ↔ historia:** `load_curriculum()` carga los 6 quests; los prereqs
+  de `story.ch1.e1` (`c.ls-la` → `c.permisos-leer`) cuentan la MISMA historia
+  que el cap. 1 de Manus («quién puede tocar esto», el turno de la señora
+  Carmen). UNA costura para Gwyn: la sala del cap. 0 cita como contrato
+  `story.ch1.e1`, cuyos prereqs el cap. 0 NO enseña (pool `ls/cd/cat/cp`) —
+  hoy es decoración inofensiva, pero cuando el engine filtre por requisitos,
+  el encargo-contrato de la primera sala estará bloqueado de nacimiento.
+- **Regresión del `[BUG][P2]` (`&&`/`;`):** los 3 repros exactos → rechazo
+  didáctico exit 2. Cerrado como jugador. ✓
 
-## 🧭 Notas de dirección
+## Hallazgos de la run (dónde aprieta el viaje)
 
-*(Detalle en `backlog/notas-manana.md` 🧭 — sobrescritas hoy.)* Resumen: (1)
-encadenado `&&`/`;` → rechazo didáctico ([BUG][P2] filed); (2) definir cwd
-inicial y significado mecánico de «run guiada» en el cap. 0; (3) divergencia
-prosa ↔ FS en el listado de la escena ([P2] filed); (4) REPL
-`python -m core.sandbox` ([P3] filed). Las 🧭1–7 de la revisión de papel del
-27/08 quedan saldadas (1–2 materializadas y verificadas hoy; 3–7 como tareas en
-`abierto.md`). Nada bloquea el plan del 29/08.
+1. **🟠 El presupuesto de ruido (12) es MUY justo para un novato curioso:**
+   el camino correcto + curiosidad lectora deja 11/12 y UN error clase `cp`
+   (+3) lo dispara a 15. `cp dir → /usb/` (el `[BUG][P3]` de Havel, vivo) cobra
+   3 por diagnosticar mal. Fileado `[PENDIENTE][P2]` para calibrar con el
+   harness y para la POLÍTICA: hoy el fallo léxico es gratis y el fallo de
+   riesgo cobra — ¿es esa la intención cuando la Sala real expulse?
+2. **🟡 Variedad practice justa:** 1 decoy/sala y pool de 3 — suficiente para
+   el cap. 0, corto para la run 30. Ligado a la prioridad ya fijada por Gwyn
+   (generator consumiendo curriculum real).
+3. **🟡 Costura contrato↔prereqs:** la sala del cap. 0 contrata
+   `story.ch1.e1` y exige conceptos que no enseña. Decorativo hoy; bloqueante
+   el día que engine aplique prereqs. Nota 🧭 para que se decida ANTES.
 
-CICLO: verde — el camino del cap. 0 aguanta de principio a fin en proxy
-headless; los 4 hallazgos de hoy son rozaduras, no roturas.
+*(Detalle y propuestas de dirección: `backlog/notas-manana.md` 🧭, sobrescritas
+hoy. Los hallazgos 1 va como tarea; 2–3 como notas de dirección.)*
+
+## 🧭 Notas de dirección (resumen — texto completo en `notas-manana.md`)
+
+🧭2 (opción B) SALDADA y verificada jugando · rechazo didáctico `&&`/`;`
+SALDADO · nueva: calibración del budget de ruido + política de ruido de
+errores · refrendo desde la experiencia: generator debe CONSUMIR la opción B
+(hoy `cwd=/` viene del default de `Shell`, no del scaffold) y re-export de la
+fachada `core.state` (me pasó como primer consumidor).
+
+CICLO: verde — el camino del cap. 0 aguanta de cruz a save sobre el sistema
+integrado; los hallazgos son calibración, no roturas.
 
 ---
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*

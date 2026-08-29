@@ -9,64 +9,57 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 28/08 05:00 — zona 🔬 ejecutada: tutorial del cap. 0 con `cp`,
-proxy headless. Las 7 notas de la revisión de papel del 27/08 quedan saldadas:
-1–2 materializadas y verificadas hoy jugando; 3–7 viven como tareas en
-`tareas/pendiente/abierto.md`.)*
+*(SOBRESCRITA 29/08 05:00 — zona 🔬 ejecutada: el CÓDIGO como sistema. Run de
+referencia completa sobre sala REAL generada + save. Saldo de ayer: 🧭2
+SALDADA — opción B verificada jugando, el dossier se sigue al pie de la letra
+sin un tropiezo; el rechazo didáctico `&&`/`;` (🧭3) SALDADO — los 3 repros
+exactos responden honestos hoy. Las notas 1–5 viven como tareas archivadas o
+fileadas en `abierto.md`.)*
 
-**1. 🔴→🟢 SALDADA 🧭1 (`cp` en el cap. 0) — verificada hoy como jugador.**
-`cp` está en el set por defecto (`DEFAULT_CAP0_COMMANDS`), el dossier ya dice
-«destino: /usb (tu unidad; no salgas sin la copia)» y la escena técnica lo
-muestra por necesidad. Con la piel exacta del capítulo, el momento cumbre SE
-COMPLETA: `cp nombre_de_proveedor.txt /usb` → copia verificable con `cat`.
-Primera impresión del novato: APTA.
+**6. 🟠 CALIBRAR EL PRESUPUESTO DE RUIDO DEL CAP. 0 (12) — medido como
+jugador, no como testeador.**
+La factura real del viaje HONESTO de hoy (comando a comando, evidencia en el
+worklog): sesión del dossier 6 (ls 1 + cat 1 + cp 3 + cat de verificación 1 +
+cd 0) + curiosidad lectora 5 (`ls` suelto, `ls -l` fallido, `ls /usb`, `cat`
+del README y del log de la oficina; `help`/`pwd` son 127 y no cobran) =
+**11 de 12**. Un solo error clase `cp` (+3 — y el `[BUG][P3]` de Havel
+`cp dir → /usb/` cobra 3 por diagnosticar mal) dispara a 15. Y la variante
+`practice` AÑADE decoys que invitan a `cat`ear más: la sala invita a la
+curiosidad y apenas la cabe. No propongo número (eso es del harness, §8.6);
+propongo que la calibración del budget entre en el plan cuando Ornstein monte
+el runner de seeds, y que se decida la POLÍTICA: hoy el fallo léxico (127,
+flags) es gratis y el fallo de riesgo (cp dir) cobra — ¿es esa la curva que
+quieres cuando la expulsión sea real? Mi lectura: el cap. 0 debería perdonar
+el primer error grande; el cap. 3, no.
 
-**2. 🟠 ANDAMIAJE DE RUTA en el cap. 0: ¿dónde «despierta» el jugador y qué
-significa mecánicamente «run guiada»?**
-La secuencia canónica (la del test y la prosa) deja al jugador en `/srv`; el
-dossier nombra el fichero SIN ruta (`nombre_de_proveedor.txt`). Verificado: si
-tras esa secuencia intenta cumplir el encargo con el nombre del dossier, recibe
-«cp: cannot stat 'nombre_de_proveedor.txt'» — honesto (GNU real), pero es la
-primera vez que el juego le falla sin haber hecho nada «mal»: usó los nombres
-exactos del briefing. No es bug de código: es una decisión de diseño pendiente.
-Opciones (todas válidas, decides tú): (a) la run 0 arranca con cwd=/srv/
-oficina… y la navegación del tutorial es libre; (b) el dossier SIEMPRE da rutas
-completas en cap. 0 y los nombres relativos se enseñan en cap. 1; (c) el error
-se mantiene y el post-mortem nº 1 lo convierte en lección («el objetivo se
-nombra antes de mirarlo» ya apunta ahí). Lo que pido: que la decisión quede
-escrita en DESIGN §6.1 ANTES de que Ornstein monte generator+engine, para que
-la piel procedural del cap. 0 nazca con ella dentro.
+**7. 🟡 QUE EL GENERADOR CONSUMA la opción B: hoy es dict, no comportamiento.**
+Refrendo tu propia nota de anoche con dato de jugador: monté la sala como la
+montará el engine (`Shell(room.fs)`) y el `cwd=/` sale del DEFAULT de la Shell,
+NO del scaffold. La decisión 🧭2 vive hoy en un `options` decorativo + un
+default ajeno: si alguien toca ese default, la decisión se desactiva sin que
+nadie la borre. Cuando Ornstein pase generator a curriculum real (prioridad 1
+del día), que la sesión nazca del scaffold (`initial_cwd` del `default`),
+no de un default heredado.
 
-**3. 🟠 TERMINAL QUE ENSEÑA: errores que no culpen al comando equivocado.**
-Fileado como `[BUG][P2]`: `&&` y `;` escapan hoy al rechazo didáctico y
-producen mensajes engañosos («cd: too many arguments» por un `cd /srv && ls`).
-Para la experiencia importa el doble: el sandbox es GNU-honesto en TODO lo
-demás (lo verifiqué jugando: missing operand, same file, Is a directory,
-cannot access) y ESA honestidad es el argumento pedagógico del juego — un
-mensaje que miente rompe el contrato en la primera sesión. Cuando Artorias
-localice y Smough arregle, propongo que el rechazo didáctico insinúe el
-futuro («esta sesión va comando a comando; el encadenado llega después») en la
-línea del mensaje de sintaxis v0: la primera sala también enseña QUÉ no sabe
-hacer AÚN.
+**8. 🟡 COSTURA contrato↔prereqs: la sala del cap. 0 cita un encargo cuyos
+requisitos no puede cumplir.**
+Hecho: la sala lleva DOS llaves — `objective.story_key = 'story.ch0.ventana'`
+(lo que el jugador hace) y `contract.objective_key = 'story.ch1.e1'` (el
+encargo que la contrata). El curriculum exige para `story.ch1.e1`
+`c.ls-la` + `c.permisos-leer`, conceptos que el cap. 0 NO enseña (pool
+`ls/cd/cat/cp`). Hoy es decoración inofensiva; el día que engine o progression
+filtren por requisitos, el CONTRATO de la primera sala estará bloqueado de
+nacimiento. Pido decisión ANTES de que Ornstein monte el consumo de
+curriculum: (a) la sala del cap. 0 contrata `story.ch0.ventana` (existe en el
+JSON) o (b) los prereqs se evalúan al ABRIR el encargo, no al generar la sala.
+Informo; decides tú.
 
-**4. 🟡 TOCAR EL JUEGO SIN ENGINE: REPL del sandbox (fileado `[PENDIENTE][P3]`).**
-`python -m core.sandbox` con prompt y `exit`: hoy solo pytest y yo hemos
-«jugado» el cap. 0; con un REPL lo toca Juanma y cualquiera del Concilio. No
-acelera el engine, pero da primera impresión tangible semanas antes. Coste bajo
-(el Shell ya trae execute/to_dict/from_dict).
-
-**5. 🟡 Divulgación prosa↔FS (fileado `[PENDIENTE][P2]`, dueño Manus):** la
-escena técnica lista `usb` tras `cd /srv`, pero en el FS real cuelga de la
-raíz. La costumbre «tests como documento narrativo» funcionó en el sentido
-código→prosa (Manus verificó su secuencia contra el test); pido cerrar el bucle
-inverso: cuando la prosa DESCRIBA salidas de pantalla, verificarla contra el FS
-del test, o divergirá cuando el engine pinte la sesión de verdad.
-
-> **Filtro Oscar:** el cap. 0 AGUANTA de principio a fin como experiencia
-> (cumbre alcanzable, aprendizaje por necesidad real, errores honestos salvo el
-> encadenado). Nada de hoy bloquea el plan del 29/08; lo que aprieta a plazo es
-> fijar la decisión 2 (cwd/andamiaje) antes de que generator monte la piel del
-> cap. 0. CICLO: verde.
+> **Filtro Oscar:** el cap. 0 aguanta DE CRUZ A SAVE sobre el sistema
+> integrado: cumbre alcanzable, aprendizaje por necesidad, errores honestos,
+> primer save que recuerda la sesión. Nada de hoy bloquea el plan del 29/08;
+> lo que aprieta es calibración (budget de ruido + variedad practice, con el
+> harness) y las dos costuras de generator (🧭7 y 🧭8) antes del consumo real
+> de curriculum. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 
