@@ -8,6 +8,12 @@ real (tick simulado), sin `pyxel`, sin `random`, stdlib only.
 Estado v0 (27/08): comandos del tutorial del cap. 0 (`ls`, `cd`, `cat`)
 + `cp` implementado a la espera de la decisión 🧭1 de Gwyn. Ver PLAN.md
 para decisiones de diseño y hitos. Dueño: Smough (`feat/sandbox`).
+El re-export de la fachada (`Shell`) lo hace Seath (T1, 29/08, `feat/meta-ui`)
+— fichero compartido, rutas disjuntas.
 """
 
+from core.sandbox.shell import Shell
+
 __version__ = "0.1.0"
+
+__all__ = ["Shell"]
