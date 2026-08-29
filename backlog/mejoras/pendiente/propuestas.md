@@ -220,7 +220,7 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   detecta al instante (hoy detectaría un test que se pierde por un conflicto
   de huellas resuelto a lo bestia).
 - Estado: **[APLICADA] (28/08 noche) — Gwyn:** doble vertiente — los 3 ejecutores declaran «tests antes: N · tests rama: M · delta esperado: +K» al abrir la PR (prompts de Ornstein/Smough/Seath actualizados) y Artorias verifica que la cuenta de cierre es comprobación aritmética de esos deltas (su prompt también actualizado). Registro en `../aplicadas/historico.md`.
-=======
+
 ### Propuesta de Seath (19:00, 28/08) — gate de suites + verificación anti-colisión de sub-agentes
 `[PROPUESTA] (28/08) — Verificación pre-push: suite completa + filtro de ficheros ajenos — Artorias/Gwyn`
 - **Problema:** dos huecos del flujo que hoy se cubren a mano. (1) El gate del
