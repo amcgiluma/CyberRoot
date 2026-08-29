@@ -15,7 +15,7 @@
 | # | Capítulo | Fragmento (idea de DESIGN) | Estado |
 |---|---|---|---|
 | 1 | 1 | foto con los metadatos raspados | [LISTA] |
-| 2 | 2 | pulsera de hospital con fecha | [PENDIENTE] |
+| 2 | 2 | pulsera de hospital con fecha | [LISTA] |
 | 3 | 3 | contrato de alquiler a nombre de nadie | [PENDIENTE] |
 | 4 | 4 | cuenta que recibió pagos mensuales de una filial de Lumen hasta hace 3 años | [PENDIENTE] |
 | 5 | 5 | expediente médico del hospital del Muelle (el de Vela existe — ¿y este?) | [PENDIENTE] |
@@ -40,6 +40,27 @@ tela azul de uniforme con un borde blanco.
 Detrás del dedo, la puerta del edificio está entreabierta. Nadie se acuerda de
 haber tenido este día.
 
+## Fragmento 2 — La pulsera (cap. 2, botín raro)
+
+> **Formato**: objeto plano de plástico que sostiene a la vez H1 y H2. Cruza
+> Muelle (nace en la escena de recogida del cap. 0), Subestación (rack
+> `HOSP-47-C`) y Vela (su expediente existe en el hospital del Muelle, §2.4).
+> El integrador decide cuándo cae; la prosa del cap. 2 solo la describe.
+
+Pulsera de identificación de paciente, termoplástico blanco, 260 mm. Impresa
+en la banda: `HOSPITAL DEL MUELLE — PACIENTE: [campo vacío] — NHC 47-C-0191`.
+El campo del nombre no está roto ni raspado: la impresora dejó la banda lisa,
+como si nadie hubiera rellenado el formulario. La ranura de cierre conserva
+un pelo rubio ajeno a Cero. En el reverso, con bolígrafo fino y presión
+desigual: «vuelve el jueves».
+
+La fecha de admisión impresa es legible: el día de la firma. La fecha de
+alta no se llegó a imprimir. La base de datos del hospital devuelve para
+esa NHC un registro con nombre, alta y facturación completos, y un
+episodio de urgencias de diecinueve años atrás en el que el campo del
+paciente dice «no identificado». El mismo hospital gestiona ambos episodios
+con el mismo formulario y la misma oficina de archivo.
+
 ## Reglas para escribirlos
 - Nunca resuelven H1 vs H2: cada uno debe leerse plausible en ambas.
 - El último (nº 6) solo aparece si el jugador llega al Faro; alimenta
@@ -47,5 +68,5 @@ haber tenido este día.
 - No puntúan: son botín narrativo puro (§7.1).
 
 ## Estado
-0/6 escritos. Dueño: Manus. Integración a `src/data/story/` la hace el
-ejecutor integrador cuando estén `[LISTA]`.
+2/6 escritos (1 y 2 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
+la hace el ejecutor integrador cuando estén `[LISTA]`.

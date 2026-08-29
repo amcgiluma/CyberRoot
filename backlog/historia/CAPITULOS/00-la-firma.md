@@ -49,12 +49,13 @@ $ cp /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt /usb/
 $ cd /srv
 $ ls
 oficina-vecinal-muelle-norte
-usb
 $
 ```
-Copias el fichero. En `ls`, el sistema lista por su cuenta (README, log, el
-dossier); tú lees en orden humano: el proveedor, el log, qué más hay. La
-sesión se cierra sola a los 11 minutos. El dossier pedía la copia y la copia
+Copias el fichero. En el primer `ls`, el sistema lista por su cuenta (README,
+log, el proveedor); tú lees en orden humano: lo que has venido a copiar, el
+log, qué más hay. En `/srv` solo hay una entrada: el USB no cuelga de aquí,
+cuelga de la raíz, y el dossier lo nombra siempre entero. La sesión se cierra
+sola a los 11 minutos. El dossier pedía la copia y la copia
 está. Nada se rompe. Vuelves a la calle con el nombre en el USB y un número
 que ya no te importa: 11:04.
 

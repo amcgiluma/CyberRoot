@@ -35,7 +35,7 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
   propia (§6.1).
 - ✅ Fichas de voz completas (6/6, `PERSONAJES.md`) — desbloquea todo diálogo.
 - ✅ Escenarios con datos base (6/6, `ESCENARIOS.md`).
-- ✅ Fragmento 1 `[LISTA]` (`FRAGMENTOS.md`). Fragmentos 2–6 pendientes.
+- ✅ Fragmento 1 `[LISTA]` (`FRAGMENTOS.md`). Quedan 3–6 por escribir.
 - ✅ Capítulo 0 (`CAPITULOS/00-la-firma.md`, beats 1–3) — prosa RETOCADA el
   28/08 según decisión D1 de Gwyn: `cp` enseñado en la escena técnica (🧭1,
   alineado con la sesión canónica del sandbox) y run 0 falible en prosa (🧭2:
@@ -43,10 +43,25 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
 - ✅ Capítulo 1 «Los Muelles» (`CAPITULOS/01-los-muelles.md`, beats 3–4,
   28/08) — pacto, 5 encargos con karma, regla de la luz diegética (🧭3),
   cola de post-mortem de Ceniza, escenas de Zeta, gancho hacia el cap. 2.
+- ✅ Capítulo 0 prosa↔FS REALINEADA (29/08, tarea M1): el listado tras
+  `cd /srv` muestra UNA entrada (`oficina-vecinal-muelle-norte`); `/usb`
+  permanece en la RAÍZ (opción B de Gwyn, 🧭2). Verificado byte a byte contra
+  `src/tests/core/sandbox/test_session_cap0.py` (3/3 passed).
+- ✅ Fragmento 2 «La pulsera» `[LISTA]` (`FRAGMENTOS.md`, 29/08) — piel
+  HOSP-47-C propuesta por Havel; NHC 47-C-0191, fecha de admisión = día de
+  la firma; sostiene H1 y H2 a la vez.
+- ✅ Capítulo 2 «Facturas» (`CAPITULOS/02-facturas.md`, beats 5,
+  29/08) — 5 encargos (`story.ch2.e1`–`e5`: 2 azules, 1 gris, 1 rojo, 1 de
+  cierre), pipes como primera sinergia, escenas de Ceniza/Zeta, cola de
+  post-mortem con líneas de Auditor por perfil kármico, la Lista nombrada
+  por Ceniza y gancho al cap. 3 (el proceso vivo en la subestación
+  secundaria). Bloque de terminal con pipes: contrato pedagógico pendiente
+  de verificación hasta que el sandbox soporte tuberías (nota del
+  integrador).
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
+- SIGUIENTE (dirección Gwyn, 28/08): fragmento 3 (contrato de alquiler a
+  nombre de nadie) con el cap. 3 «Bombas» cuando toque colchón del Acto 2.
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
-  Materializar Manus en `FRAGMENTOS.md` cuando escriba la cadena.
-- SIGUIENTE (dirección Gwyn, 28/08): fragmentos 2–3 y beats del cap. 2
-  «Facturas» para dar colchón al Acto 1.
+  Materializarlo en `FRAGMENTOS.md` cuando se escriba la cadena.

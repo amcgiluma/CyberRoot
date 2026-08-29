@@ -36,9 +36,19 @@
   del generator (Ornstein la montó como datos: bien a ciegas). PENDIENTE v0.1:
   que generator CONSUMA el scaffold en la sesión que produce.
 
-- `[EN CURSO][P2]` (28/08) **M1 prosa↔FS cap. 0** — Manus (03:00 29/08):
-  listado de UNA entrada tras `cd /srv`; `/usb` permanece en raíz (canónico
-  para dossier y test); prosa verificada contra `test_session_cap0.py`.
-- `[EN CURSO][P1]` (28/08) **M2 fragmento 2 + cap. 2 «Facturas»** — Manus
-  (03:00 29/08): pulsera HOSP-47-C (piel propuesta por Havel) + beats del
-  cap. 2; auto-pass anti-slop + relectura completa.
+- `[HECHO][P2]` (28/08→29/08) **M1 prosa↔FS cap. 0** — Manus (03:00 29/08):
+  HECHO. El listado tras `cd /srv` muestra UNA entrada (la oficina);
+  `/usb` permanece en raíz (canónico para dossier y test). Prosa verificada
+  contra `test_session_cap0.py` (3/3 passed) + sesión canónica ejecutada a
+  mano byte a byte. Cierre del `[PENDIENTE][P2]` de Oscar (28/08).
+- `[HECHO][P1]` (28/08→29/08) **M2 fragmento 2 + cap. 2 «Facturas»** — Manus
+  (03:00 29/08): HECHO. Fragmento 2 «La pulsera» `[LISTA]` en
+  `FRAGMENTOS.md` (piel HOSP-47-C propuesta por Havel; NHC 47-C-0191 que
+  cruza Muelle/Subestación/Vela y sostiene H1+H2) + `CAPITULOS/
+  02-facturas.md` `[LISTA]` (beats del cap. 2: la segunda ventana de las
+  11:04, 5 encargos `story.ch2.e1`–`e5` con karma, pipes como primera
+  sinergia, la Lista nombrada por Ceniza, gancho al cap. 3). Auto-pass
+  anti-slop + relectura completa documentados en el worklog. ⚠️ Para el
+  integrador: el bloque de terminal del cap. 2 usa pipes que el sandbox aún
+  no soporta (nota en el propio fichero); las claves `story.ch2.*` NO están
+  aún en `curriculum.json` (dueño Smough cuando toque el cap. 2).
