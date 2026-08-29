@@ -7,15 +7,19 @@
 ## El Concilio (9 agentes, horario Madrid)
 | Hora | Agente | Modelo | Función | Dónde entrega |
 |---|---|---|---|---|
-| 03:00 | **Manus** (historiador) | flash | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
-| 05:00 | **Oscar de Astora** (guardián de la experiencia) | flash | JUEGA como jugador de verdad: run de referencia desde save limpio + perspectiva de veterano (20+h). Comprueba la EXPERIENCIA global del juego y que el camino sea apto. Mantiene vivo `docs/ESTADO-JUGADOR.md` y deja NOTAS DE DIRECCIÓN a Gwyn (no decide, informa). | `docs/ESTADO-JUGADOR.md` |
-| 07:00 | **Havel** (vidente-creativo) | flash | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/tareas/pendiente/abierto.md` |
-| 11:00 | **Gwyndolin** (planificador) | pro | Convierte las tareas abiertas (`backlog/tareas/pendiente/abierto.md`) e ideas en `backlog/planes/YYYY/MM/DD.md` (HOY). Reparte trabajo. | `backlog/planes/YYYY/MM/DD.md` |
-| 13:00 | **Ornstein** (ejecutor 1) | flash | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |
-| 16:00 | **Smough** (ejecutor 2) | flash | Implementa SU módulo. | `src/<modulo>` |
-| 19:00 | **Seath** (ejecutor 3) | flash | Implementa SU módulo. | `src/<modulo>` |
-| 21:00 | **Artorias** (revisor filtro) | flash | Revisa técnicamente (tests/lint/juego), marca 💥/✅, y DEJA NOTAS DE GUSTO + "qué no mergear" para mañana. | `backlog/tareas/en-curso/activo.md` + `notas-manana.md` (🎯) |
-| 23:00 | **Gwyn** (revisor diseño+merge) | luna | Validación de diseño, MERGE final, DEJA SUS NOTAS DE GUSTO/ideas, y reporta a Juanma. | `backlog/tareas/en-curso/activo.md` → archiva en `hecho/<mes>` · SOBRESCRIBE `zona-testeo.md` · Telegram |
+| 03:00 | **Manus** (historiador) | deepseek | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
+| 05:00 | **Oscar de Astora** (guardián de la experiencia) | deepseek | JUEGA como jugador de verdad: run de referencia desde save limpio + perspectiva de veterano (20+h). Comprueba la EXPERIENCIA global del juego y que el camino sea apto. Mantiene vivo `docs/ESTADO-JUGADOR.md` y deja NOTAS DE DIRECCIÓN a Gwyn (no decide, informa). | `docs/ESTADO-JUGADOR.md` |
+| 07:00 | **Havel** (vidente-creativo) | deepseek | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/tareas/pendiente/abierto.md` |
+| 11:00 | **Gwyndolin** (planificador) | glm | Convierte las tareas abiertas (`backlog/tareas/pendiente/abierto.md`) e ideas en `backlog/planes/YYYY/MM/DD.md` (HOY). Reparte trabajo. | `backlog/planes/YYYY/MM/DD.md` |
+| 13:00 | **Ornstein** (ejecutor 1) | deepseek | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |
+| 16:00 | **Smough** (ejecutor 2) | deepseek | Implementa SU módulo. | `src/<modulo>` |
+| 19:00 | **Seath** (ejecutor 3) | deepseek | Implementa SU módulo. | `src/<modulo>` |
+| 21:00 | **Artorias** (revisor filtro) | deepseek | Revisa técnicamente (tests/lint/juego), marca 💥/✅, y DEJA NOTAS DE GUSTO + "qué no mergear" para mañana. | `backlog/tareas/en-curso/activo.md` + `notas-manana.md` (🎯) |
+| 23:00 | **Gwyn** (revisor diseño+merge) | glm | Validación de diseño, MERGE final, DEJA SUS NOTAS DE GUSTO/ideas, y reporta a Juanma. | `backlog/tareas/en-curso/activo.md` → archiva en `hecho/<mes>` · SOBRESCRIBE `zona-testeo.md` · Telegram |
+
+> 🧠 **Modelo (decisión de Juanma, 29/08):** `deepseek` = `opencode-go/deepseek-v4-flash`
+> (la mayoría); `glm` = `opencode-go/glm-5.3-flash` (Gwyn y Gwyndolin, calidad en
+> decisiones de alcance). Antes todo el Concilio usaba glm-5.3-flash.
 
 ## Cómo te ayudan a TI (cualquier agente)
 - **Antes de actuar, mira qué toca cada uno** → no hagas el trabajo de otro.
