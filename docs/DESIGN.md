@@ -711,9 +711,33 @@ Notas:
   aprendizaje del oficio (navegar), no una trampa de andamiaje — y la cumbre del
   cap. 0 es COPIAR, no explorar: (a) arriesgaba tapar esa necesidad con tutorial de
   navegación y (c) gastaba el post-mortem nº 1 en un tropiezo artificial. El
-  scaffold expone las 3 opciones como datos (`scaffold.options`); PENDIENTE v0.1:
-  que generator CONSUMA el scaffold en la sesión que produce (hoy es dato, no
-  comportamiento).
+  scaffold expone las 3 opciones como datos (`scaffold.options`). ACTUALIZACIÓN
+  (29/08, PR #7 O1): generator ya CONSUME el scaffold — `new_session()` abre la
+  sesión en el `initial_cwd` del `default`; la opción B es comportamiento, no dict.
+
+- Costura contrato↔prereqs (🧭8, 29/08 — decisión de Gwyn al mergear O1):
+  **OPCIÓN (b)** — los prereqs de un encargo se evalúan al ABRIR el contrato,
+  NO al generar la sala. La sala es escenario; el contrato, compromiso del
+  jugador. La sala del cap. 0 sigue citando `story.ch1.e1` (la ventana de las
+  11:04), pero el día que exista el flujo de abrir encargos, sus prereqs
+  (`ls -l`, permisos — cap. 1) se exigirán EN ESE MOMENTO. Motivo: (a) habría
+  acoplado la generación al estado de conocimiento global (la primera sala
+  nacía con su contrato bloqueado de nacimiento o forzada a contratar otra
+  quest, rompiendo la diegese); (b) es la regla general que escala a los 7
+  capítulos; el filtro de la sala sigue garantizado por `concept_pool`
+  (resolubilidad, §6.4.1). Materialización: `test_costura_navig8.py` pasa de
+  xfail a verde cuando el evaluador de apertura exista.
+
+- Política de ruido (🧭6, 29/08 — decisión de Gwyn): **el cap. 0 perdona el
+  PRIMER error grande; el cap. 3, no.** Curva: el fallo léxico (127, flags
+  desconocidos) es gratis durante todo el juego; el fallo de riesgo (p. ej.
+  `cp dir`) cobra desde el cap. 0; el PRIMER fallo de riesgo del cap. 0 se
+  perdona una vez (la expulsión por ruido no puede nacer de un tropiezo
+  único); del cap. 3 en adelante la factura es real y acumulativa. La
+  CALIBRACIÓN del número (hoy 12) la cierra el harness con la política
+  corriendo (O3) — propuesta de Oscar, dirección 6 del 29/08. La operativa de
+  «primer error» (¿el más caro? ¿el que dispara expulsión?) la define Oscar
+  con datos del harness antes de escribirse en código.
 
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 

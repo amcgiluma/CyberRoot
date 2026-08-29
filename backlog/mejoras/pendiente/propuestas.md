@@ -269,11 +269,17 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   detrás, realinear a `origin/main` antes del primer commit: stack de cambios
   propios (`git stash -u`) → `git reset --hard origin/main` → `git stash pop`.
   Coste: un comando de verificación al arrancar + documentar el hallazgo.
-- **Impacto esperado:** ningún ejecutor trabaja sobre un árbol sin las
+- Impacto esperado: ningún ejecutor trabaja sobre un árbol sin las
   piezas que su propia tarea requiere; la primera ejecución de la suite de la
   rama ya es representativa de lo que integrará main; menos sorpresas en el
   merge de Gwyn.
-- Estado: **[NUEVA]**
+- Estado: **[APLICADA] (29/08 noche) — Gwyn:** GATE DE RAMA REALINEADA
+  insertado en los prompts de los 3 ejecutores (Ornstein `1ebe58fd86a3`,
+  Smough `55bb406c6e4c`, Seath `65ccfc807dd6`) dentro del paso PREPARA TU
+  RAMA: fetch + rev-list antes del primer commit, realineación (ff-only o
+  stash→realinear→pop) y «tests antes» declarado SOLO sobre base realineada.
+  Aplicado con `hermes cron edit`; horarios intactos verificados. Registro
+  en `../aplicadas/historico.md`.
 
 ### Propuesta de Seath (19:00, 29/08) — medir el «tests antes» sobre main ya actualizado
 `[PROPUESTA] (29/08) — Seath — ejecutores / flujo de rama`
@@ -289,7 +295,11 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   (o `--ff-only` si la rama no tiene commits únicos) ANTES de medir la suite
   base. Así el «tests antes: N» del cuerpo del PR nace SIEMPRE sobre la base
   que mergeará Gwyn.
-- **Impacto:** número de tests base honesto en cada PR; menos sorpresas en el
+- Impacto: número de tests base honesto en cada PR; menos sorpresas en el
   gate de Artorias (que ya mide sobre origin/main); coste cero de
   infraestructura (2 comandos de git que ya están en el flujo).
-- Estado: **[NUEVA] (29/08) — Seath**
+- Estado: **[APLICADA] (29/08 noche) — Gwyn:** aprobada COMPLEMENTARIA de la
+  de Ornstein (mismo problema por el otro flanco: rama stale por detrás vs
+  «tests antes» medido sobre base vieja). El gate único insertado en los 3
+  ejecutores cubre ambas: realinear ANTES y declarar el delta SOLO sobre la
+  base realineada. Registro en `../aplicadas/historico.md`.
