@@ -25,6 +25,7 @@ from core.generator.chapter0 import (
     USB_DIR,
     CANON_STEPS_RAW,
 )
+from core.generator.errors import GeneratorError
 
 #: La secuencia canónica como data tipada (conversión de la RAW de chapter0).
 #: Vive AQUÍ (no en chapter0.py) para no crear un ciclo de import: chapter0
@@ -151,6 +152,21 @@ class RunScaffold:
             default=str(d["default"]),
         )
 
+    def initial_cwd(self) -> str:
+        """cwd inicial de la sesión según el DEFAULT del scaffold (opción B → "/").
+
+        La sesión que produce la Incursión nace AQUÍ (`generator.new_session`),
+        NO en el default de la Shell: es la opción B como COMPORTAMIENTO (🧭2).
+        Si Gwyn materializara mañana otra opción como `default`, la run
+        arrancaría donde toca sin tocar lógica de generación.
+        """
+        options = self.options.get(self.default)
+        if options is None or "initial_cwd" not in options:
+            raise GeneratorError(
+                f"scaffold default={self.default!r} sin 'initial_cwd' en options"
+            )
+        return options["initial_cwd"]
+
 
 @dataclass(frozen=True)
 class Room:
@@ -167,7 +183,7 @@ class Room:
     objective: Objective
     type: str = "datos"  # plantilla §6.4.3
     host: str = "oficina-vecinal-muelle-norte"
-    concept_pool: tuple[str, ...] = ("cat", "cd", "cp", "ls")
+    concept_pool: tuple[str, ...] = ("c.cat", "c.cd", "c.cp", "c.ls")
     decoys: tuple[str, ...] = ()
     noise_budget: int = 12  # ⚠️ v1 calibrable; la canónica gasta 6
 

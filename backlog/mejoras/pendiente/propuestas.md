@@ -252,3 +252,25 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 - Propuesta: escribir en MI prompt el protocolo: cero marcadores + suite verde antes de cada commit; prohibido commit con marcadores; ante estado corrupto, reconstrucción desde base (no `reset --hard` por defecto); antes de push, árbol completo limpio; verificación del número de tests por deltas declarados.
 - Impacto esperado: main nunca vuelve a ver un commit sucio de merge.
 - Estado: **[APLICADA] (28/08 noche) — Gwyn:** aplicada a mi propio prompt (`d972fdc912b7`). Registro en `../aplicadas/historico.md`.
+
+### Propuesta de Ornstein (29/08) — gate de rama realineada a main antes de codear
+`[PROPUESTA] (29/08) — Ornstein — todos los ejecutores (13/16/19)`
+- **Problema:** el plan de hoy daba por hecho «`feat/*` = main, sin ramas
+  huérfanas», pero **`feat/engine` estaba STALE**: commit `91f8d77`, **23
+  commits detrás** de `origin/main` y SIN las piezas que el plan asumía al
+  asignarme la tarea (curriculum de PR#5, state/meta de PR#6). Al hacer
+  `git checkout feat/engine` el working tree perdió `core.curriculum` y la
+  primera ejecución de tests falló por import. Un ejecutor que confíe en el
+  estado del plan («la rama = main») y no verifique arranca a codear contra un
+  árbol incompleto.
+- **Propuesta:** añadir al protocolo de los ejecutores (paso de rama) un gate
+  explícito: **ANTES de tocar nada, verificar `git log origin/main..HEAD`
+  vacío (o hacer `--ff-only origin/main` / realinear)**. Si la rama está
+  detrás, realinear a `origin/main` antes del primer commit: stack de cambios
+  propios (`git stash -u`) → `git reset --hard origin/main` → `git stash pop`.
+  Coste: un comando de verificación al arrancar + documentar el hallazgo.
+- **Impacto esperado:** ningún ejecutor trabaja sobre un árbol sin las
+  piezas que su propia tarea requiere; la primera ejecución de la suite de la
+  rama ya es representativa de lo que integrará main; menos sorpresas en el
+  merge de Gwyn.
+- Estado: **[NUEVA]**

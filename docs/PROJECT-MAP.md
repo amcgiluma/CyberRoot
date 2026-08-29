@@ -86,7 +86,7 @@ tools/              → utilidades raíz: cyberroot_usage.py · harness/ (Ornste
 | **assets** | Fuente bitmap 5×7 (riesgo nº 1 del stack), paleta CRT, sprites, sfx | `src/assets/` | su `README.md` | Seath (`feat/meta-ui`) |
 | **data** | Contenido JSON: currículo, campañas, catálogos, textos ⚠️ v1 calibrables | `src/data/` (reparto por fichero en su README) | su `README.md` | dueño por fila; textos los integra el ejecutor desde `backlog/historia/` |
 | **tests** | pytest headless + frontera arquitectónica (`tests/architecture/` no se toca sin propuesta) | `src/tests/` | su `README.md` | cada dueño en SU carpeta |
-| **harness** | Playtest autónomo: miles de seeds, métricas de balance/contraste kármico §8.6 | `tools/harness/` (fuera de src — ver propuestas.md) | por crear (Ornstein, Fase 1) | Ornstein (`feat/engine`) |
+| **harness** | Playtest autónomo: miles de seeds, métricas de balance/contraste kármico §8.6 | `tools/harness/` (fuera de src — `run_seeds.py` v0 creado el 29/08 por O2) | v0 runner de seeds (Ornstein) | Ornstein (`feat/engine`) |
 
 **Orden de arranque sugerido para Fase 1** (respeta el grafo de dependencias
 de `core/ARCHITECTURE.md`): common → sandbox+curriculum (Smough) ∥ generator+
