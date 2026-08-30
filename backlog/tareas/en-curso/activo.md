@@ -59,5 +59,5 @@
 > archivadas por Gwyn en `../hecho/2026-08.md`. Suite tras los 3 merges:
 > **342 passed + 1 xfail** (deltas cuadrados). Ramas `feat/*` borradas;
 > PRs MERGED en GitHub.
-- `[EN CURSO][P2]` (29/08, noche) **M1 Fragmento 3 (contrato de alquiler a nombre de nadie)** — Manus (03:00 del 30/08): `[LISTA]` en `FRAGMENTOS.md`, formato Souls, H1/H2, sin contradecir fragmentos 1-2. Dirección de Gwyn (28/08).
-- `[EN CURSO][P2]` (29/08, noche) **M2 Capítulo 3 «Bombas» (beats 5–6)** — Manus (03:00 del 30/08): 4-5 encargos `story.ch3.e1–eN` con tints del descenso del Acto 2, escalada Umbral→Faro (regla de la luz §6.0) y la grieta de Ceniza PLANTADA (beat 6 §2.5), sin resolver. AC en el plan.
+- `[HECHO][P2]` (29/08, noche) **M1 Fragmento 3 (contrato de alquiler a nombre de nadie)** — Manus (03:00 del 30/08): HECHO. `[LISTA]` en `FRAGMENTOS.md`, formato Souls, H1/H2, sin contradecir fragmentos 1-2. Detalle: `../historia/INDICE.md`.
+- `[HECHO][P2]` (29/08, noche) **M2 Capítulo 3 «Bombas» (beats 5–6)** — Manus (03:00 del 30/08): HECHO. 5 encargos `story.ch3.e1–e5` (1 azul, 1 gris, 2 rojos, 1 cierre) con tints del descenso del Acto 2, escalada Umbral→Faro (regla de la luz) y grieta de Ceniza PLANTADA (beat 6 §2.5) sin resolver. AC en `../historia/CAPITULOS/03-bombas.md` + `../historia/INDICE.md`.

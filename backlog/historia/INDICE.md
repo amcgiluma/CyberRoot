@@ -58,10 +58,26 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
   secundaria). Bloque de terminal con pipes: contrato pedagógico pendiente
   de verificación hasta que el sandbox soporte tuberías (nota del
   integrador).
+- ✅ Fragmento 3 «El contrato» `[LISTA]` (`FRAGMENTOS.md`, 30/08) — contrato
+  de alquiler del Umbral bajo a nombre de nadie; celda del arrendatario vacía
+  de imprenta (no tachada), firma ilegible, «la llave va conmigo», 14 meses
+  de pago puntual y luego silencio. Sostiene H1 (se pidió la factura a
+  nombre de nadie) y H2 (un contrato sin arrendatario no debería haberse
+  firmado jamás) a la vez. Folio OH-UBA-14-0007, candado distinto del 47.
+- ✅ Capítulo 3 «Bombas» (`CAPITULOS/03-bombas.md`, beats 5–6,
+  30/08) — 5 encargos (`story.ch3.e1`–`e5`: 1 azul, 1 gris, 2 rojos, 1 de
+  cierre), deriva del capítulo hacia el descenso del Acto 2. Familia
+  Procesos y sistema (`ps`, `env`, `sudo`, `kill`/señales, `tar`), primer
+  `sudo` serio con credencial GANADA, y la **grieta de Ceniza PLANTADA**
+  (beat 6 §2.5: sabía que el primer trabajo era veneno, no avisó) en su
+  propia voz, sin resolver. La regla de la luz (Gris) llega viva al Alto.
+  Gancho: la ventana abierta hacia el troncal del Faro (cap. 4).
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
-- SIGUIENTE (dirección Gwyn, 28/08): fragmento 3 (contrato de alquiler a
-  nombre de nadie) con el cap. 3 «Bombas» cuando toque colchón del Acto 2.
+- SIGUIENTE (dirección Gwyn, 28/08): fragmento 4 (la cuenta que recibió
+  pagos mensuales de una filial de Lumen hasta hace 3 años) con el cap. 4
+  «Troncales» (red real: `ssh`/`scp`/túneles) cuando toque colchón del
+  Acto 2.
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
   Materializarlo en `FRAGMENTOS.md` cuando se escriba la cadena.

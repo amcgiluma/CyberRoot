@@ -16,7 +16,7 @@
 |---|---|---|---|
 | 1 | 1 | foto con los metadatos raspados | [LISTA] |
 | 2 | 2 | pulsera de hospital con fecha | [LISTA] |
-| 3 | 3 | contrato de alquiler a nombre de nadie | [PENDIENTE] |
+| 3 | 3 | contrato de alquiler a nombre de nadie | [LISTA] |
 | 4 | 4 | cuenta que recibió pagos mensuales de una filial de Lumen hasta hace 3 años | [PENDIENTE] |
 | 5 | 5 | expediente médico del hospital del Muelle (el de Vela existe — ¿y este?) | [PENDIENTE] |
 | 6 | 6 | hoja de cierre del Programa de Continuidad: sujeto 000, fecha en blanco | [PENDIENTE] |
@@ -61,6 +61,43 @@ episodio de urgencias de diecinueve años atrás en el que el campo del
 paciente dice «no identificado». El mismo hospital gestiona ambos episodios
 con el mismo formulario y la misma oficina de archivo.
 
+## Fragmento 3 — El contrato (cap. 3, botín raro)
+
+> **Formato**: papel físico, no pantalla. Su sostén H1/H2 está en un campo
+> que debería tener nombre y lo tiene vacío: mismo mecanismo que la
+> pulsera (fragmento 2), otra lectura. El 14 se repite tres veces (folio,
+> bloque, meses prorrogados) y no se explica. La firma es anterior a los
+> Apagones, así que no contradice la cronología de Vela (§2.4).
+
+Contrato de arrendamiento, dos caras de papel oficial del Umbral bajo,
+folio impreso arriba a la izquierda: `OH-UBA-14-0007`. Primer plano del
+formulario: vivienda en el bloque 14, escalera 3, piso 14, dos
+habitaciones, 41 metros. Renta mensual: 760 créditos. Duración inicial:
+un año, prorrogable. Campo «arrendatario»: vacío. No tachado ni raspado:
+la celda está limpia, como nació en la imprenta.
+
+En el reverso, bajo la cláusula de responsabilidad, tres firmas. La del
+arrendador figura con nombre claro: un número de colegiada y un sello.
+La del arrendatario es una grafía hecha a propósito ilegible, apretada,
+sin corresponder a ningún trazo repetido. El testigo firmó al lado, y en
+la casilla de su DNI escribió una cifra que la ocupa entera. En el
+margen inferior, con la misma letra que la firma ilegible: «la llave va
+conmigo».
+
+El contrato se prorrogó catorce meses. Luego deja de pagarse. En el
+libro de la inmobiliaria, el inmueble queda anotado como «cedido» un año
+después, sin fecha de cesión. El casero ya no recuerda qué arrendatario
+fue, solo que pagaba puntual los catorce primeros meses y que una vez le
+pidió, por escrito, que no le facturaran a su nombre: le dijo que estaba
+«ordenando papeles». El casero lo cuenta como una curiosidad, no como una
+amenaza. No conservó el papel donde lo pidió por escrito.
+
+Dato que sostiene H1: nadie obligó a pedir la factura a nombre de nadie;
+se pidió. Dato que sostiene H2: la celda del arrendatario nace vacía, y
+un contrato sin arrendatario no debería haberse firmado jamás. El folio
+14-0007 es la misma numeración que perfora la Subestación; nadie en dos
+mundos ha leído las dos anotaciones juntas salvo quien las busca.
+
 ## Reglas para escribirlos
 - Nunca resuelven H1 vs H2: cada uno debe leerse plausible en ambas.
 - El último (nº 6) solo aparece si el jugador llega al Faro; alimenta
@@ -68,5 +105,5 @@ con el mismo formulario y la misma oficina de archivo.
 - No puntúan: son botín narrativo puro (§7.1).
 
 ## Estado
-2/6 escritos (1 y 2 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
+3/6 escritos (1, 2 y 3 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
 la hace el ejecutor integrador cuando estén `[LISTA]`.

@@ -36,6 +36,7 @@ docs/worklog/
 
 | Día | Archivo | Principales decisiones / avances |
 |---|---|---|
+| 2026-08-30 | `2026/08/30.md` | **Manus (M1 fragmento 3 «El contrato» + M2 cap. 3 «Bombas»: 5 encargos, grieta de Ceniza PLANTADA en su voz, primer `sudo` ganado)** · (resto del Concilio según turnos). |
 | 2026-08-29 | `2026/08/29.md` | Manus (M1 prosa↔FS cap.0, M2 fragmento 2+cap.2 «Facturas») · Oscar (zona 🔬: código como sistema, run de referencia) · Havel (curriculum + sabor didáctico, 8 ideas) · **Ornstein (O1: generator consume curriculum.json real + opción B materializada en `new_session`; O2: harness v0 de N seeds — PR #7)** · Gwyndolin (plan del 29). |
 | 2026-08-27 | `2026/08/27.md` | Manus (primer turno real, 03:00): **fundación narrativa** — fichas de voz 6/6, escenarios 6/6, fragmento 1 `[LISTA]`, capítulo 0 del Acto 1 (beats 1–3). Historia desbloquea diálogo. |
 | 2026-08-26 | `2026/08/26.md` | P5 cierra el diseño (DESIGN.md ✅) + protocolo de testeo diario con 4 perfiles (Oscar integrado; relevo Gwyn→Oscar→Havel). Corrector: coherencia a 9 agentes en docs/prompts. Reestructurador: **backlog dividido en carpetas por estado** (`tareas/`, `mejoras/`, `zona-testeo.md`, `notas-manana.md`, `INDICE.md`), 12 prompts actualizados vía CLI, docs + GitHub Page cuadrados. |

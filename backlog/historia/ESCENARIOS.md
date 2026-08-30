@@ -47,6 +47,11 @@
 - Capítulos 1–3: facturas, registros civiles, centralita de facturación, nodos
   protegidos por permisos. La vigilancia crece con la luz: en el alto, la
   patrulla de auditoría pasa cada 22 minutos (dato de ritmo para retos).
+- Capítulo 3 (Procesos y sistema): es el territorio del demonio del censo
+  (E1), el bucle de reinicio (E2) y la subestación secundaria en servicio.
+  Hora muerta característica en el canon: la 03:00 (turno sin registro).
+- Cobertura del anillo (para el generador): los nodos del Alto asumen la
+  factura de E3/E4, cuando la segunda mirada de la luz ya cobra en alertas.
 
 ## Los Muelles
 - Afueras medio apagadas; base de Los Apagados. Docks con francesas de red
