@@ -30,3 +30,20 @@ def test_harness_determinismo_2da_pasada() -> None:
     cur = load_curriculum()
     iguales = run_seeds.determinismo_2da_pasada(0, N, variant="canonical", start=0, curriculum=cur)
     assert iguales == N
+
+
+def test_harness_calibrar_budget_viaje_honesto() -> None:
+    """O3 (30/08): la calibración del budget es determinista y dentro del
+    presupuesto — el viaje honesto del cap. 0 cuesta SIEMPRE lo mismo (6) y
+    nunca supera el budget 12, en ambas variantes."""
+    cur = load_curriculum()
+    canon = run_seeds.calibrar_budget(0, N, variant="canonical", start=0, curriculum=cur, noise_budget=12)
+    práct = run_seeds.calibrar_budget(0, N, variant="practice", start=0, curriculum=cur, noise_budget=12)
+    for runs in (canon, práct):
+        assert len(runs) == N
+        # Viaje honesto determinista: coste idéntico en todas las seeds.
+        assert len({r["total_noise"] for r in runs}) == 1
+        assert all(r["dentro_presupuesto"] for r in runs)
+        assert all(r["errores"] == [] for r in runs)
+    # Ambos comparten el coste del viaje honesto (la piel no lo cambia).
+    assert {r["total_noise"] for r in canon} == {r["total_noise"] for r in práct}
