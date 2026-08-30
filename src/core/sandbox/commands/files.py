@@ -40,7 +40,13 @@ def _cat_kind_message(kind: str, arg: str) -> str:
     return f"cat: {arg}: {_CP_KIND_MESSAGE.get(kind, kind)}"
 
 
-def _run_cat(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int) -> CommandResult:
+def _run_cat(
+    fs: FileSystem,
+    cwd: str,
+    argv: tuple[str, ...],
+    tick: int,
+    stdin: str = "",
+) -> CommandResult:
     """`cat`: concatena los contenidos byte a byte; exit 1 si hubo cualquier error.
 
     Cada contenido se apenda TAL CUAL (`read_file` ya trae sus newlines; NO se
@@ -96,7 +102,13 @@ def _cp_src_message(kind: str, src: str) -> str:
     return f"cp: {src}: {_CP_KIND_MESSAGE.get(kind, kind)}"
 
 
-def _run_cp(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int) -> CommandResult:
+def _run_cp(
+    fs: FileSystem,
+    cwd: str,
+    argv: tuple[str, ...],
+    tick: int,
+    stdin: str = "",
+) -> CommandResult:
     """`cp`: copia un fichero con sus metadatos; stdout vacío en éxito.
 
     El mapeo src/dst del mensaje es por ORDEN: primero pre-valido el fuente con

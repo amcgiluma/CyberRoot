@@ -35,7 +35,13 @@ def _dir_header(arg: str) -> str:
     return arg.rstrip("/") + ":"
 
 
-def _run_ls(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int) -> CommandResult:
+def _run_ls(
+    fs: FileSystem,
+    cwd: str,
+    argv: tuple[str, ...],
+    tick: int,
+    stdin: str = "",
+) -> CommandResult:
     """`ls` estilo `ls -1`: una columna ordenada por codepoint (PLAN decisión 2).
 
     Formato GNU real (verificado contra coreutils en Ubuntu, 27/08):
@@ -98,7 +104,13 @@ def _cd_kind_message(kind: str, arg: str) -> str:
     return f"cd: {arg}: Not a directory"
 
 
-def _run_cd(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int) -> CommandResult:
+def _run_cd(
+    fs: FileSystem,
+    cwd: str,
+    argv: tuple[str, ...],
+    tick: int,
+    stdin: str = "",
+) -> CommandResult:
     """`cd` builtin: valida el destino y devuelve la nueva cwd NORMALIZADA.
 
     0 argumentos → home es la raíz `/`. Un argumento → valida con `get_dir`

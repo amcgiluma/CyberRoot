@@ -12,13 +12,14 @@ from core.common.types import ensure_plain
 from core.sandbox.noise import NOISE_EVENT_TYPE, NOISE_PROFILE, NoiseMeter
 
 
-def test_perfil_contiene_los_comandos_del_cap0_y_cp() -> None:
-    assert set(NOISE_PROFILE) == {"cd", "ls", "cat", "cp"}
+def test_perfil_contiene_los_comandos_del_cap0_y_pipes() -> None:
+    # Cap. 0 (cat/cd/cp/ls) + cap. 2 (grep/wc, S1 30/08).
+    assert set(NOISE_PROFILE) == {"cd", "ls", "cat", "cp", "grep", "wc"}
 
 
 def test_cd_no_hace_ruido_y_cp_es_el_mas_ruidoso() -> None:
     assert NOISE_PROFILE["cd"] == 0
-    assert NOISE_PROFILE["cp"] > NOISE_PROFILE["ls"] == NOISE_PROFILE["cat"] == 1
+    assert NOISE_PROFILE["cp"] > NOISE_PROFILE["grep"] > NOISE_PROFILE["ls"] == NOISE_PROFILE["cat"] == NOISE_PROFILE["wc"]
 
 
 def test_emit_devuelve_forma_event_snapshot() -> None:

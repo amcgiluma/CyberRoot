@@ -7,8 +7,10 @@ from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
 from core.sandbox.fs import DirNode, FileNode, FileSystem
 from core.sandbox.shell import (
     DEFAULT_CAP0_COMMANDS,
+    DEFAULT_CH2_COMMANDS,
     SPECS_ALL,
     Shell,
+    _PIPE_MSG,
     _SYNTAX_MSG,
 )
 
@@ -67,10 +69,68 @@ def test_linea_vacia_no_hace_nada_y_no_consumira_historial() -> None:
 
 # ---- sintaxis NO soportada (caps. 1-2) -----------------------------------
 
-def test_pipe_rechazado_con_exit_2() -> None:
-    res = _shell().execute("cat /etc/passwd | wc -l")
+# ---- tubería (S1, cap. 2) ---------------------------------------------
+
+def _shell_ch2() -> Shell:
+    """Shell con el set del cap. 2 (añade grep/wc a los del cap. 0)."""
+    return Shell(_fs(), host="oficina-vecinal-muelle-norte", commands=DEFAULT_CH2_COMMANDS)
+
+
+def test_pipe_una_tuberia_ejecuta_stdout_a_stdin() -> None:
+    """`grep 11:04 log | wc -l` encadena: el stdout de grep entra a wc."""
+    fs = FileSystem(
+        root=DirNode(
+            name="/",
+            children={
+                "home": DirNode(
+                    name="home",
+                    children={
+                        "log.txt": FileNode(
+                            name="log.txt",
+                            content="11:04 sesion 000 ruido 6 objetivo f.txt\n"
+                                    "11:04 sesion 000 ruido 1 objetivo -\n"
+                                    "08:59 turno de manana\n",
+                        ),
+                    },
+                ),
+            },
+        )
+    )
+    shell = Shell(fs, host="oficina-vecinal-muelle-norte", commands=DEFAULT_CH2_COMMANDS)
+    res = shell.execute("grep 11:04 home/log.txt | wc -l")
+    assert res.exit_code == 0, res.stderr
+    assert res.stdout == "2\n"
+    # El ruido de la tubería NO es gratis: grep(2) + wc(1) = 3 (ambos facturan).
+    assert shell.total_noise == 3
+    # Historial: UNA entrada para la línea, que lleva el ruido de ambos.
+    assert len(shell.history) == 1
+
+
+def test_pipe_multiple_no_soportado_didactico() -> None:
+    """`a | b | c` (más de una tubería) se rechaza con mensaje didáctico."""
+    res = _shell_ch2().execute("cat /etc/passwd | grep root | wc -l")
     assert res.exit_code == 2
-    assert res.stderr == _SYNTAX_MSG
+    assert res.stderr == _PIPE_MSG
+    assert "grep" not in res.stderr and "cat" not in res.stderr
+
+
+def test_pipe_con_comillas_pipe_literal() -> None:
+    """Un `|` entre comillas es literal (GNU real), no una tubería."""
+    fs = FileSystem(
+        root=DirNode(
+            name="/",
+            children={
+                "home": DirNode(
+                    name="home",
+                    children={"a|b.txt": FileNode(name="a|b.txt", content="x\n")},
+                ),
+            },
+        )
+    )
+    shell = Shell(fs, host="oficina-vecinal-muelle-norte", commands=DEFAULT_CH2_COMMANDS)
+    res = shell.execute('cat "/home/a|b.txt"')
+    assert res.exit_code == 0, res.stderr
+    assert res.stdout == "x\n"
 
 
 def test_glob_y_redireccion_rechazados() -> None:
@@ -207,6 +267,6 @@ def test_sesion_roundtrip_ida_y_vuelta_exacto() -> None:
 
 
 def test_todas_las_specs_estan_disponibles_para_el_set() -> None:
-    """cp/cat/cd/ls existen como specs aunque el set del cap. 0 no incluya cp."""
-    assert {s.name for s in SPECS_ALL} == {"ls", "cd", "cat", "cp"}
+    """Las specs del módulo cubren cap. 0 (cat/cd/cp/ls) + cap. 2 (grep/wc)."""
+    assert {s.name for s in SPECS_ALL} == {"ls", "cd", "cat", "cp", "grep", "wc"}
     assert FILE_SPECS and NAVIGATION_SPECS

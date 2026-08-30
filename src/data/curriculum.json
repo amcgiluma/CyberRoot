@@ -77,6 +77,27 @@
       "chapter": 1,
       "prerequisites": ["c.cat"],
       "summary_key": "concept.man.summary"
+    },
+    {
+      "id": "c.grep",
+      "family": "texto",
+      "chapter": 2,
+      "prerequisites": ["c.cat"],
+      "summary_key": "concept.grep.summary"
+    },
+    {
+      "id": "c.wc",
+      "family": "texto",
+      "chapter": 2,
+      "prerequisites": ["c.grep"],
+      "summary_key": "concept.wc.summary"
+    },
+    {
+      "id": "c.pipe",
+      "family": "texto",
+      "chapter": 2,
+      "prerequisites": ["c.grep", "c.wc"],
+      "summary_key": "concept.pipe.summary"
     }
   ],
   "quests": [
@@ -127,6 +148,46 @@
       "requires": ["c.chmod", "c.chown", "c.permisos-leer"],
       "title_key": "story.ch1.e5.title",
       "beat_key": "story.ch1.e5.beat"
+    },
+    {
+      "id": "story.ch2.e1",
+      "chapter": 2,
+      "tint": "blue",
+      "requires": ["c.grep", "c.wc", "c.pipe"],
+      "title_key": "story.ch2.e1.title",
+      "beat_key": "story.ch2.e1.beat"
+    },
+    {
+      "id": "story.ch2.e2",
+      "chapter": 2,
+      "tint": "blue",
+      "requires": ["c.grep", "c.wc", "c.pipe"],
+      "title_key": "story.ch2.e2.title",
+      "beat_key": "story.ch2.e2.beat"
+    },
+    {
+      "id": "story.ch2.e3",
+      "chapter": 2,
+      "tint": "grey",
+      "requires": ["c.wc", "c.pipe"],
+      "title_key": "story.ch2.e3.title",
+      "beat_key": "story.ch2.e3.beat"
+    },
+    {
+      "id": "story.ch2.e4",
+      "chapter": 2,
+      "tint": "red",
+      "requires": ["c.grep", "c.wc", "c.pipe"],
+      "title_key": "story.ch2.e4.title",
+      "beat_key": "story.ch2.e4.beat"
+    },
+    {
+      "id": "story.ch2.e5",
+      "chapter": 2,
+      "tint": "grey",
+      "requires": ["c.grep", "c.wc", "c.pipe", "c.cp"],
+      "title_key": "story.ch2.e5.title",
+      "beat_key": "story.ch2.e5.beat"
     }
   ]
 }

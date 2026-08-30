@@ -23,8 +23,13 @@ from core.common.events import Event
 from core.sandbox.fs import FileSystem
 from core.sandbox.noise import NoiseMeter
 
-#: Firmado de un comando: recibe el FS, la cwd, los argv y el tick simulado.
-CommandRunner = Callable[[FileSystem, str, tuple[str, ...], int], "CommandResult"]
+#: Firmado de un comando: recibe el FS, la cwd, los argv, el tick simulado y
+#: (S1 30/08) la entrada por stdin (string) cuando el comando se alimenta de
+#: una tubería; vacío por defecto — un comando SIN stdin virtual se comporta
+#: igual que v0.
+CommandRunner = Callable[
+    [FileSystem, str, tuple[str, ...], int, str], "CommandResult"
+]
 
 
 def noise_event(

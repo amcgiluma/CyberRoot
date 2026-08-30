@@ -76,11 +76,15 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
     assert cur.version == 1
 
 
-def test_load_curriculum_11_conceptos_6_quests() -> None:
-    """El catálogo real: 11 conceptos y 6 encargos (contrato de Fase 0)."""
+def test_load_curriculum_14_conceptos_11_quests() -> None:
+    """El catálogo real: 14 conceptos y 11 encargos (S2 30/08 añade cap. 2).
+
+    Conteo del 30/08: 11 (cap. 0-1) + c.grep/c.wc/c.pipe (3) y 5 quests
+    story.ch2.e1–e5. Ornstein/generator consumen este conteo vía datos reales.
+    """
     cur = load_curriculum()
-    assert len(cur.concepts) == 11
-    assert len(cur.quests) == 6
+    assert len(cur.concepts) == 14
+    assert len(cur.quests) == 11
 
 
 def test_capitulo0_tiene_exactamente_ls_cd_cat_cp() -> None:
@@ -114,6 +118,32 @@ def test_las_cinco_quests_del_cap1_tienen_tints_esperados_por_id() -> None:
         "story.ch1.e5",
     ]
     assert [q.tint for q in quests] == ["blue", "blue", "grey", "red", "grey"]
+
+
+def test_las_cinco_quests_del_cap2_tints_y_requires_segun_manus() -> None:
+    """S2 (30/08): las 5 quests del cap. 2 siguen a Manus (02-facturas.md).
+
+    Tints E1/E2 blue, E3 grey, E4 red, E5 de cierre grey; `requires` ⊆
+    conceptos del cap. 2 (grep/wc/pipe) + básicos del cap. 0 (cp en e5).
+    """
+    cur = load_curriculum()
+    quests = cur.quests_for_chapter(2)
+    assert [q.id for q in quests] == [
+        "story.ch2.e1",
+        "story.ch2.e2",
+        "story.ch2.e3",
+        "story.ch2.e4",
+        "story.ch2.e5",
+    ]
+    assert [q.tint for q in quests] == ["blue", "blue", "grey", "red", "grey"]
+    # Cada quest usa SOLO conceptos enseñados en capítulos <= el suyo (invariante
+    # del validador, verificado además en negativo por test_validation).
+    concept_chapter = {c.id: c.chapter for c in cur.concepts}
+    for q in quests:
+        assert all(concept_chapter[r] <= q.chapter for r in q.requires)
+    # La sinergia c.pipe es la primera de texto y une grep+wc.
+    pipe = cur.concept("c.pipe")
+    assert pipe is not None and sorted(pipe.prerequisites) == ["c.grep", "c.wc"]
 
 
 def test_ningun_concepto_tiene_prereq_de_capitulo_posterior() -> None:

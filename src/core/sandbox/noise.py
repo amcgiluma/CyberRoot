@@ -28,6 +28,11 @@ NOISE_PROFILE: dict[str, int] = {
     "ls": 1,
     "cat": 1,
     "cp": 3,
+    # S1 (30/08): `grep` cruza el fichero patrón por patrón (más caro que un
+    # `cat`), `wc` cuenta sobre lo que llega (tubería incluida). ⚠️ v1
+    # calibrables con el harness (O3 de Ornstein).
+    "grep": 2,
+    "wc": 1,
 }
 
 
