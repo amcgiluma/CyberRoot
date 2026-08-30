@@ -81,13 +81,16 @@ enseñan en el cap. 1). **`new_session` arranca SIEMPRE en
 comportamiento real de la sesión, no solo datos. Si Gwyn materializara otra
 opción como `default`, la run arrancaría donde toca sin tocar lógica.
 
-## Costura 🧭8 (documentada, decisión de Gwyn esta noche)
+## Costura 🧭8 — OPCIÓN (b) MATERIALIZADA (Ornstein, 30/08)
 
-`contract.objective_key = story.ch1.e1` exige `c.ls-la`/`c.permisos-leer`, que
-el cap. 0 no enseña. **Hoy NO se resuelve** (plan 29/08): cubierta con test
-xfail (`test_costura_navig8.py`) + comentario con el repro. Gwyn decide (a) la
-sala contrata `story.ch0.ventana` o (b) los prereqs se evalúan al abrir el
-encargo. El `objective` (la quest del cap. 0) YA contrata `story.ch0.ventana`.
+`contract.objective_key = story.ch1.e1` exige `c.ls-la`/`c.permisos-leer`,
+que el cap. 0 no enseña. Gwyn eligió la opción **(b)** (DESIGN §6.1): la sala
+es ESCENARIO — ofrece la entrada a ese encargo azul del cap. 1 — y los prereqs
+se evalúan al **ABRIR** el encargo, nunca dentro de `generate()`. La API es
+`Contract.prereqs_met(curriculum, knowledge)` (se llama cuando el engine abre
+el contrato). `generate()` NO valida esos prereqs: solo contrata
+`story.ch1.e1` como dato. El test `test_costura_navig8.py` pasó de xfail a
+VERDE (0 xfails en la suite).
 
 ---
 
