@@ -9,57 +9,42 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 29/08 05:00 — zona 🔬 ejecutada: el CÓDIGO como sistema. Run de
-referencia completa sobre sala REAL generada + save. Saldo de ayer: 🧭2
-SALDADA — opción B verificada jugando, el dossier se sigue al pie de la letra
-sin un tropiezo; el rechazo didáctico `&&`/`;` (🧭3) SALDADO — los 3 repros
-exactos responden honestos hoy. Las notas 1–5 viven como tareas archivadas o
-fileadas en `abierto.md`.)*
+*(SOBRESCRITA 30/08 05:00 — zona 🔬 ejecutada: el CIRCUITO competencia→unlock→
+save, con el árbol nuevo de los PRs #7/#8/#9. Saldo: 🧭7 SALDADA (generator
+consume la opción B vía `new_session` — el cwd=`/` nace del scaffold, no de un
+default ajeno), 🧭8 SALDADA como decisión (Gwyn firmó opción (b) en DESIGN
+§6.1; Ornstein la materializa HOY), y la fricción de fachada `core.state` que
+sufrí el 29 CONFIRMADA resuelta (Seath T1). Las notas 6–8 viven como decisiones/
+tareas archivadas o en curso.)*
 
-**6. 🟠 CALIBRAR EL PRESUPUESTO DE RUIDO DEL CAP. 0 (12) — medido como
-jugador, no como testeador.**
-La factura real del viaje HONESTO de hoy (comando a comando, evidencia en el
-worklog): sesión del dossier 6 (ls 1 + cat 1 + cp 3 + cat de verificación 1 +
-cd 0) + curiosidad lectora 5 (`ls` suelto, `ls -l` fallido, `ls /usb`, `cat`
-del README y del log de la oficina; `help`/`pwd` son 127 y no cobran) =
-**11 de 12**. Un solo error clase `cp` (+3 — y el `[BUG][P3]` de Havel
-`cp dir → /usb/` cobra 3 por diagnosticar mal) dispara a 15. Y la variante
-`practice` AÑADE decoys que invitan a `cat`ear más: la sala invita a la
-curiosidad y apenas la cabe. No propongo número (eso es del harness, §8.6);
-propongo que la calibración del budget entre en el plan cuando Ornstein monte
-el runner de seeds, y que se decida la POLÍTICA: hoy el fallo léxico (127,
-flags) es gratis y el fallo de riesgo (cp dir) cobra — ¿es esa la curva que
-quieres cuando la expulsión sea real? Mi lectura: el cap. 0 debería perdonar
-el primer error grande; el cap. 3, no.
+**9. 🟠 LA PROGRESIÓN POR COMPETENCIA ES INVISIBLE PARA EL JUGADOR DE HOY.**
+El primer unlock (`c.cp`) existe en datos y persiste en el save (verificado en
+mi run: sin `cp …/usb` NO marca; con la evidencia marca y sobrevive al reload),
+pero **no hay NI UN punto donde el jugador lo vea**: ni annuncio cuando dominas
+un concepto, ni listado en el Hub, ni eco en el mundo. La única forma de
+«verlo» hoy es que un script imprima `knowledge`. La competencia es la
+moneda del diseño (REGLA DURA §4.2); la dopamina de conquistarla (§4.2, §7.5.3)
+necesita un momento diegético — Gris NOMBRANDO lo que acabas de dominar, un
+toast, un slot en el Hub del Espejo (§4.3). No propongo la forma (eso es Gwyn/
+Seath); propongo que no se considere «unlock» hasta que el jugador lo SIENTA.
+Relacionado con tu idea de anoche (el momento de Gris en el cap. 1): la
+confirmo desde la experiencia — sin ese eco, hoy el saving-kill de progresión
+es data muda.
 
-**7. 🟡 QUE EL GENERADOR CONSUMA la opción B: hoy es dict, no comportamiento.**
-Refrendo tu propia nota de anoche con dato de jugador: monté la sala como la
-montará el engine (`Shell(room.fs)`) y el `cwd=/` sale del DEFAULT de la Shell,
-NO del scaffold. La decisión 🧭2 vive hoy en un `options` decorativo + un
-default ajeno: si alguien toca ese default, la decisión se desactiva sin que
-nadie la borre. Cuando Ornstein pase generator a curriculum real (prioridad 1
-del día), que la sesión nazca del scaffold (`initial_cwd` del `default`),
-no de un default heredado.
+**10. 🟡 PARA EL POST-MORTEM que vendrá: el resumen de ruido es el caramelo.**
+Con `Shell.total_noise` y el historial ya veraces y persistidos, el futuro
+Auditor/post-mortem (PENDIENTE Havel §4.6) tiene en `to_dict` la factura exacta
+(`cd 0 · ls N · cat N · cp N · errores N`). Recomendación de dirección: que el
+resumen use la MISMA unidad numérica que el presupuesto de sala (noise_budget),
+para que el jugador lea «11/12» y no dos métricas distintas. Solo informo;
+diseño final tuyo.
 
-**8. 🟡 COSTURA contrato↔prereqs: la sala del cap. 0 cita un encargo cuyos
-requisitos no puede cumplir.**
-Hecho: la sala lleva DOS llaves — `objective.story_key = 'story.ch0.ventana'`
-(lo que el jugador hace) y `contract.objective_key = 'story.ch1.e1'` (el
-encargo que la contrata). El curriculum exige para `story.ch1.e1`
-`c.ls-la` + `c.permisos-leer`, conceptos que el cap. 0 NO enseña (pool
-`ls/cd/cat/cp`). Hoy es decoración inofensiva; el día que engine o progression
-filtren por requisitos, el CONTRATO de la primera sala estará bloqueado de
-nacimiento. Pido decisión ANTES de que Ornstein monte el consumo de
-curriculum: (a) la sala del cap. 0 contrata `story.ch0.ventana` (existe en el
-JSON) o (b) los prereqs se evalúan al ABRIR el encargo, no al generar la sala.
-Informo; decides tú.
-
-> **Filtro Oscar:** el cap. 0 aguanta DE CRUZ A SAVE sobre el sistema
-> integrado: cumbre alcanzable, aprendizaje por necesidad, errores honestos,
-> primer save que recuerda la sesión. Nada de hoy bloquea el plan del 29/08;
-> lo que aprieta es calibración (budget de ruido + variedad practice, con el
-> harness) y las dos costuras de generator (🧭7 y 🧭8) antes del consumo real
-> de curriculum. CICLO: verde.
+> **Filtro Oscar:** el circuito competencia→unlock→save se recorre ENTERO desde
+> save limpio y aguanta: camino del cap. 0 apto (cwd `/`, dossier, cumbre `cp`,
+> factura 11/12), §4.2 demostrado jugando (sin evidencia no desbloquea), y el
+> `c.cp` persiste en el roundtrip. El salto de hoy es que la progresión dejó de
+> ser «promesa de diseño». Nada bloquea el plan del 30/08; lo que aprieta es
+> feedback (🧭9) y la materialización de 🧭8=(b) que ya viene. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 

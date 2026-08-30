@@ -7,131 +7,149 @@
 
 ---
 
-## 🎮 Estado global jugable de HOY (29/08 — MODO B: primera run sobre el SISTEMA integrado)
+## 🎮 Estado global jugable de HOY (30/08 — MODO B: el circuito competencia→unlock→save existe y aguanta)
 
-**¿Hay algo que jugar de principio a fin?** AÚN NO como producto (no hay entrypoint
-ni engine), pero por primera vez la run de referencia se juega de CRUZ a save con
-las piezas integradas conviviendo: `generate(seed)` produce la sala real del
-cap. 0 (skin + objetivo + contrato `story.ch1.e1` + presupuesto de ruido), la
-`Shell` se monta sobre SU FS y `state` guarda la sesión viva en disco. El ciclo
-«sala → jugar → guardar» EXISTE headless; lo que falta es el envoltorio
-(engine que detecte/sanctione, render que muestre).
+**¿Hay algo que jugar de principio a fin?** AÚN NO como producto (sigue sin
+haber entrypoint de juego ni engine), pero el SISTEMA integrado del 29/08 dio
+un salto cualitativo: hoy el ciclo **competencia → unlock → save** se recorre
+ENTERO y es verificable como jugador. Lo que falta para producto es el
+envoltorio (engine que detecte/sancione + render que muestre), no ninguna
+pieza necesaria del camino conceptual.
 
-- **En main (PRs #4/#5/#6, mergeados anoche):** generator v0 (determinista,
-  validación canónica §6.4.4, variante practice con decoys) · curriculum.json
-  v1 + validador + rechazo didáctico `&&`/`;` (S3) · state v0 (save/load
-  atómico versionado).
-- **La decisión 🧭2 (opción B) ya produce experiencia verificable:** dossier con
-  rutas completas → el viaje del novato de AYER tropiezaba; HOY se completa
-  entero al pie de la letra (ver run de abajo).
-- **Prosa y código acoplados:** M1 de Manus (03:00) alineó la escena con el FS
-  real (`usb` cuelga de la raíz); el cap. 0 y el cap. 1 «Los Muelles» (con los
-  5 encargos `story.ch1.e1–e5`) están en `backlog/historia/` listos para piel.
-- **Para «jugable de principio a fin» falta:** engine (runs/detección/expulsión),
-  generator consumiendo curriculum real (hoy cap. 0 con piel fija),
-  progression/karma, render. Sigue sin haber `__main__` de juego: se juega vía
-  script/pytest (así hice la run de abajo).
+- **En main (PRs #7/#8/#9, mergeados anoche):**
+  - **Generator consume curriculum real (O1/Ornstein):** `generate(seed,0)`
+    saca el `concept_pool` de `curriculum.json` por ids (`c.ls/cd/cat/cp`),
+    la quest del pool del capítulo (`story.ch0.ventana`), exige `requires ⊆
+    pool` (§6.4.1) y monta la sesión con `new_session(incursion)` cuyo `cwd`
+    nace del **scaffold** (`initial_cwd=/`, opción B) — la 🧭7 de ayer es
+    COMPORTAMIENTO, no dict decorativo. 🧭7 SALDADA.
+  - **Sandbox GNU honesto (S1/S2/Smough):** `cat fichero/` → *Not a directory*
+    exit 1 y `cp dir` → *omitting directory* diagnosticando el ORIGEN (los
+    errores GNU son método de enseñanza, §2.6.8). REPL real
+    `python -m core.sandbox`: prompt diegético, se juega la secuencia del
+    dossier. Primer punto de entrada TOCABLE para Juanma.
+  - **Fachadas uniformes (T1/Seath):** `from core.state import GameState,
+    save_game, load_game` y `from core.sandbox import Shell` FUNCIONAN desde
+    raíz. La fricción de fachada del `core.state` que sufrí como primer
+    consumidor el día 29 está CERRADA.
+  - **Progression v0 (T2/Seath):** `evaluate_unlocks(state)` marca `c.cp`
+    dominado por COMPETENCIA demostrada (lee evidencia real del historial de
+    la sesión: un `cp …/usb` con exit 0), idempotente, guardado en
+    `GameState.knowledge`. PRIMER unlock de la historia del juego.
+- **La plataforma del unlock hoy:** `GameState` sabe recoger el conocimiento
+  dominado y persistirlo (`knowledge` en el save v1, opcional, backward-compat
+  con saves previos → `{}`). No hay aún sistema de partidas por usuario
+  (vendrá con engine/progression), pero el PATRÓN §4.2 está demostrado en
+  código y verificado jugando (run de referencia abajo).
+- **Decisión de Gwyn firmada en DESIGN §6.1:** costura contrato↔prereqs 🧭8 =
+  **opción (b)** — los prereqs de un encargo se evalúan al ABRIR el contrato,
+  no al generar la sala. Y política de ruido 🧭6: el cap. 0 perdona el primer
+  error grande; el cap. 3, no.
+- **Para «jugable de principio a fin» falta:** engine (runs/detección/
+  expulsión), materializar 🧭8=(b) en código (Ornstein hoy: el xfail
+  `test_costura_navig8` pasa a verde), progression leyendo la factura real y
+  algoritmos text, render.
 
-## 🏃 Run de referencia (save limpio) — 29/08
+## 🏃 Run de referencia (save limpio) — 30/08
 
-*Partida nueva de cero: no existe save previo (state nació anoche). Ejecuté el
-viaje del NOVATO sobre la sala REAL generada (`generate("oscar-20260829-r1", 0)`
-→ `room-ch0-34f5304a-canonical`), con el dossier de `00-la-firma.md` en la mano
-y jugando de verdad: leer lo que manda, curiosear, equivocarse. No es la
-secuencia canónica del test: es el camino sucio de siempre.*
+*Partida nueva de cero, misma técnica de siempre: sala REAL generada
+(`generate("oscar-20260830-r1",0)` → `room-ch0-4f60cd0a-canonical`), sesión
+montada como la montará el engine (ahora vía `new_session`, no a mano),
+jugando al NOVATO con el dossier en la mano y curioseando.*
 
-**Veredicto: APTO, y por primera vez sin una sola queja de camino.** Fase a fase:
+**Veredicto: APTO. El circuito competencia→unlock→save se recorre entero y el
+save «recuerda» tu competencia.** Fase a fase:
 
-1. **El dossier funciona entero (opción B verificada como jugador).**
-   `ls` de la ruta completa → 3 ficheros GNU-ordenados; `cat` del dossier del
-   proveedor («CANDELAS · proveedor nº 47»); `cp` a `/usb/` exit 0; `cat` del
-   botín confirma la copia. Cero tropiezos: lo que ayer era una rozadura de
-   andamiaje (🧭2) hoy es imposible — el briefing no puede fallar si se sigue.
-2. **La curiosidad honesta cabe en el presupuesto, con 1 de margen.** Factura
-   medida comando a comando: sesión del dossier 6 (ls 1 + cat 1 + cp 3 + cat 1 +
-   cd 0) + curiosidad lectora 5 (`ls` suelto, `ls -l` fallido, `ls /usb`,
-   `cat` de README y del log de la oficina; `help`/`pwd` son 127 y NO cobran
-   ruido — se lo ahorro al nervioso) = **11 de 12**. El cap. 0 dice sin decirlo:
-   «puedes mirarlo TODO, pero una torpeza y te pasas». Presión correcta…
-   hasta que llega el error grande (ver hallazgo 1).
-3. **Los errores dejaron de mentir.** Los 3 repros del `[BUG][P2]` de ayer
-   (`cd /srv && ls`, `ls x && cat y`, `ls; cat`) dan HOY el rechazo didáctico
-   honesto: «sh: syntax not supported in this session: it runs one command at
-   a time (pipes and chaining arrive later)» exit 2. La terminal vuelve a ser
-   de fiar en la primera sesión. ✔ (S3 de Smough, verificado como jugador.)
-4. **El primer save REAL existe y aguanta.** `GameState` sobre la sesión viva →
-   `save` a disco → `load` → estado idéntico (tick incluido). Primer ciclo
-   «sala → jugar → recordar» de la historia del juego. La fricción que sufrí
-   como primer consumidor: `core.state` no re-exporta su fachada
-   (`from core.state import GameState` falla; hay que saber que vive en
-   `core.state.state`) — ya apuntada por Artorias, la CONFIRMO con dolor.
-5. **Practice con decoys y determinismo:** 2 seeds nuevas → decoys ambientales
-   distinos (`agua_cerrada.txt` / `avisos_comunidad.txt`) que NO filtran la
-   solución; cumbre `cp` alcanzable en ambas; `Incursion` roundtrip exacto;
-   misma seed → dict plano idéntico. La rejugabilidad del cap. 0 respira.
+1. **El camino del cap. 0 sigue intacto con el árbol nuevo.** `cwd` nace en
+   `/` (de `scaffold.initial_cwd()` — la opción B YA es comportamiento, 🧭7
+   verificada ejecutando), mismo dossier con rutas absolutas, cumbre `cp`
+   alcanzable al pie de la letra: ls→cat→cp→cd→ls, todo exit 0. Factura 11/12
+   (ls 1 + cat 1 + cp 3 + cd 0 + ls 1 + curiosidad/error lector 5) — dentro
+   del presupuesto, igual de justo que ayer, ahora sobre un pool que nace del
+   curriculum real.
+2. **§4.2 respetado como jugador, no solo en test:** una sesión con ls/cat/
+   curiosidad pero SIN el `cp` de la extracción NO marca `c.cp`
+   (`knowledge={}`, `newly=[]`). El unlock exige la evidencia — competencia,
+   no grind. ✔
+3. **Con la evidencia, el unlock PERSISTE en el save:** tras el `cp …/usb`
+   exit 0, `evaluate_unlocks` marca `{'c.cp': True}`, `save_game` → disco →
+   `load_game` recupera `knowledge={'c.cp': True}` con tick=8 y total_noise=11
+   intactos. **Idempotente**: una segunda evaluación no re-marca (vacía). El
+   primer unlock de la historia del juego sobrevive a reiniciar. ✔
+4. **Errores honestos, método no castigo:** `ls -l` (flag no disponible en el
+   cap. 0) → `ls: cannot access '-l'` exit 2 cobrando ruido 1 (fallo léxico,
+   no de riesgo — coherente con la política de Gwyn). `cat fichero/` y `cp dir`
+   responden como coreutils real. El REPL reproduce la secuencia con prompt
+   diegético (`operator@oficina-vecinal…`, banner de conexión).
+5. **Determinismo/variedad del cap. 0 intocados:** practice rota decoys por
+   seed (1–2/sala: turnos_recepcion, avisos_comunidad, agua_cerrada) sobre
+   pool fijo — la rejugabilidad del tutorial respira.
 
-**Estado del save al terminar:** guardado en disco de la run 1 (roundtrip
-verificado). No hay sistema de partidas/rutas de save por usuario (vendrá con
-engine/progression): el save de hoy es la prueba de concepto de Seath.
+**Estado del save al terminar:** `/tmp/oscar_cap0_save.json` con `c.cp`
+dominado, roundtrip verificado. No hay sistema de partidas por usuario aún.
 
 ## 👴 Progreso de veterano (save 20+ horas)
 
-Sin cambios de fondo (no hay progression/karma/unlocks aún), pero HOY el
-generator permitió medir por primera vez la variabilidad de la rejugabilidad
-del cap. 0: la variante practice rota decoys por seed (pool de 3, añade 1 por
-sala). Para la run 30 de un veterano el cap. 0 necesita MÁS variación (skins de
-nodo, botín, obstacles) — llega cuando generator consuma `curriculum.json`
-(prioridad 1 de Gwyn para hoy). La base numérica del late game (ruido cd 0 /
-ls 1 / cat 1 / cp 3) sigue intacta y ahora es VISIBLE: mi factura completa está
-en el worklog de hoy.
+El patrón de progresión de fondo YA existe y es el correcto: `knowledge`
+persiste y se alimenta SOLO por competencia (§4.2 / DESIGN §4.2 y §7.5.3). Con
+el pool del cap. 0 fijo en 4 conceptos, la run 30 de un veterano sigue sin
+tener variedad real (sigue siendo un tutorial de 10 min) — eso NO es un defecto
+de hoy: es la naturaleza del cap. 0 (aprender por necesidad, 4 comandos), y la
+variedad llega cuando generator consuma los pools de los caps. 1–6. **Lo que el
+veterano de hoy SÍ puede validar es el patrón del unlock repetido:** un save que
+ya domina `c.cp` rejuega el cap. 0 sin que el espejo le regale nada (no hay
+atributos «por compra»), y el unlock es idempotente cruzando runs (una sesión
+nueva no vuelve a «descubrir» lo ya dominado… a costa de UNA arruga nueva, ver
+hallazgo 2 🧭9).
 
 ## 📝 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: el CÓDIGO como sistema)
 
-- **Smoke del conjunto:** suite completa desde raíz → **316 passed** exactos
-  (225 + 30 generator + 51 sandbox/curriculum + 10 state, cuadra con lo
-  prometido por Gwyn). Guard de layout `src/tests/architecture/` 6/6. ✓
-- **Sesión canónica:** `test_session_cap0.py` 3/3 passed. ✓
-- **Camino del cap. 0 con las piezas integradas:** ejecutado COMPLETO como
-  jugador (run de referencia de arriba): sala generada → dossier → cumbre
-  `cp` → curiosidad → errores → save/load. ✓
-- **Curriculum ↔ historia:** `load_curriculum()` carga los 6 quests; los prereqs
-  de `story.ch1.e1` (`c.ls-la` → `c.permisos-leer`) cuentan la MISMA historia
-  que el cap. 1 de Manus («quién puede tocar esto», el turno de la señora
-  Carmen). UNA costura para Gwyn: la sala del cap. 0 cita como contrato
-  `story.ch1.e1`, cuyos prereqs el cap. 0 NO enseña (pool `ls/cd/cat/cp`) —
-  hoy es decoración inofensiva, pero cuando el engine filtre por requisitos,
-  el encargo-contrato de la primera sala estará bloqueado de nacimiento.
-- **Regresión del `[BUG][P2]` (`&&`/`;`):** los 3 repros exactos → rechazo
-  didáctico exit 2. Cerrado como jugador. ✓
+- **Smoke del conjunto:** suite desde raíz → **342 passed + 1 xfailed** exactos
+  (cuadra con lo prometido por Gwyn + 1 xfail = `test_costura_navig8`, el de
+  🧭8, intencional). Guard de layout `src/tests/architecture/` intacto. ✓
+- **Circuito competencia→unlock→save recorrido COMPLETO como jugador** (run de
+  referencia de arriba): sala generada → sesión vía `new_session` → dossier →
+  cumbre `cp` → curiosidad+errores → `evaluate_unlocks` marca `c.cp` →
+  `save_game`/`load_game` lo recupera → idempotencia. ✓
+- **§4.2 contra-evidencia verificado:** sin `cp …/usb` no hay unlock. ✓
+- **Fachadas:** `core.state` y `core.sandbox` re-exportan (saldo de la
+  fricción/nota de calidad de Artorias). 🧭7 materializada. REPL smoke OK.
+- **Rejugabilidad:** 4 seeds × {canonical, practice} → decoys rotan
+  (1–2/sala), canon resoluble en todas, pool fijo como debe ser en el tuto.
 
 ## Hallazgos de la run (dónde aprieta el viaje)
 
-1. **🟠 El presupuesto de ruido (12) es MUY justo para un novato curioso:**
-   el camino correcto + curiosidad lectora deja 11/12 y UN error clase `cp`
-   (+3) lo dispara a 15. `cp dir → /usb/` (el `[BUG][P3]` de Havel, vivo) cobra
-   3 por diagnosticar mal. Fileado `[PENDIENTE][P2]` para calibrar con el
-   harness y para la POLÍTICA: hoy el fallo léxico es gratis y el fallo de
-   riesgo cobra — ¿es esa la intención cuando la Sala real expulse?
-2. **🟡 Variedad practice justa:** 1 decoy/sala y pool de 3 — suficiente para
-   el cap. 0, corto para la run 30. Ligado a la prioridad ya fijada por Gwyn
-   (generator consumiendo curriculum real).
-3. **🟡 Costura contrato↔prereqs:** la sala del cap. 0 contrata
-   `story.ch1.e1` y exige conceptos que no enseña. Decorativo hoy; bloqueante
-   el día que engine aplique prereqs. Nota 🧭 para que se decida ANTES.
+1. **🟠 La progresión por competencia es INVISIBLE para el jugador de hoy.**
+   El unlock existe en datos (`c.cp` en `knowledge`) y persiste, pero NO hay
+   ningún punto donde el jugador lo VEA: ni annuncio al dominarlo, ni listado
+   en el Hub, ni eco en el mundo. Yo solo lo «veo» porque el script lo imprime.
+   El Espejo de Gris (§4.3) y el momento diegético de nombrar «qué acabas de
+   dominar» aún no existen. Informo para dirección 🧭9; decide Gwyn cuándo.
+2. **🟡 Arruga de veterano (asociada):** `evaluate_unlocks` es idempotente por
+   unidad de GameState, pero cada run nueva arranca un `GameState` fresco —
+   no hay aún un inventario AGREGADO entre runs que diga «el veterano ya
+   domina cp». Es la misma incompletitud de «no hay sistema de partidas» (nodo
+   6 del mes); lo apunto para que Gwyndolin lo tenga en el plan del engine,
+   no como bug.
+3. **🟡 Costura contrato↔prereqs, estado:** 🧭8 = opción (b) firmada en DESIGN
+   §6.1 y a materializar hoy (Ornstein): el xfail pasa a verde y muere. Ya NO
+   es bloqueante; queda como seguimiento del día.
 
 *(Detalle y propuestas de dirección: `backlog/notas-manana.md` 🧭, sobrescritas
-hoy. Los hallazgos 1 va como tarea; 2–3 como notas de dirección.)*
+hoy. El hallazgo 1 va como nota de dirección 🧭9 para Gwyn; no es tarea.)*
 
 ## 🧭 Notas de dirección (resumen — texto completo en `notas-manana.md`)
 
-🧭2 (opción B) SALDADA y verificada jugando · rechazo didáctico `&&`/`;`
-SALDADO · nueva: calibración del budget de ruido + política de ruido de
-errores · refrendo desde la experiencia: generator debe CONSUMIR la opción B
-(hoy `cwd=/` viene del default de `Shell`, no del scaffold) y re-export de la
-fachada `core.state` (me pasó como primer consumidor).
+🧭7 SALDADA (generator consume opción B vía `new_session`: cwd=`/` nace del
+scaffold) · 🧭8 SALDADA como decisión (Gwyn firmó opción (b) en DESIGN §6.1;
+Ornstein la materializa hoy) · saldo de la fricción de fachada `core.state`
+CERRADA. NUEVAS para HOY: 🧭9 (la progresión por competencia necesita su eco
+visible: hoy el unlock es data invisible), 🧭10 (recomendación de feedback del
+resumen de ruido cuando haya post-mortem). Filtro: apto, camino completo hasta
+save funciona, hallazgos son de feedback/calibración, no roturas.
 
-CICLO: verde — el camino del cap. 0 aguanta de cruz a save sobre el sistema
-integrado; los hallazgos son calibración, no roturas.
+CICLO: verde — el circuito competencia→unlock→save se recorre ENTERO desde
+save limpio y aguanta; los hallazgos son feedback y calibración, no roturas.
 
 ---
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*
