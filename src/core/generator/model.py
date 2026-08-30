@@ -15,7 +15,7 @@ Solo stdlib; prohibido `import random`; sin estado global mutable.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Iterable
 
 from core.sandbox.fs import FileSystem
 
@@ -103,12 +103,40 @@ class Objective:
 
 @dataclass(frozen=True)
 class Contract:
-    """Contrato de historia: el encargo AZUL del cap. 1 que esta sala inicia."""
+    """Contrato de historia: el encargo AZUL del cap. 1 que esta sala inicia.
+
+    Tras 🧭8=(b) (Gwyn, DESIGN §6.1) la sala SIGUE contratando
+    `objectives` del cap. 1 (`story.ch1.e1`) aunque sus `requires`
+    (`c.ls-la`, `c.permisos-leer`) NO estén en el pool del cap. 0: la sala
+    es ESCENARIO (ofrece la entrada a ese encargo) y la evaluación de
+    prereqs vive en `prereqs_met`, que se llama al ABRIR el encargo — NUNCA
+    dentro de `generate()`. Un contrato cuyo objective_key no existe en el
+    currículo se reporta como NO satisfecho (no evaluable → no se abre).
+    """
 
     chapter: int
     objective_key: str = "story.ch1.e1"
     brief_text_key: str = "story.ch1.e1.brief"
     karma_hint: str = "azul"
+
+    def prereqs_met(self, curriculum: Any, knowledge: Iterable[str]) -> bool:
+        """¿Están los prereqs del encargo del contrato cubiertos por `knowledge`?
+
+        API de evaluación 🧭8=(b): se invoca al ABRIR el encargo (el engine
+        la consulta cuando el jugador lo acepta), nunca durante la
+        generación de la sala. La sala puede contratar un encargo que el
+        capítulo aún no enseña; es el JUGADOR quien debe dominar antes.
+
+        - `curriculum`: un `Curriculum` (o duck-type con `.quest(id)`); si
+          `objective_key` no existe → False (no evaluable → no se abre).
+        - `knowledge`: iterable de ids de conceptos dominados (p. ej.
+          `state.knowledge`).
+        - Devuelve True si todos los `requires` del encargo ⊆ `knowledge`.
+        """
+        quest = curriculum.quest(self.objective_key) if curriculum else None
+        if quest is None:
+            return False
+        return frozenset(quest.requires) <= frozenset(knowledge)
 
     def to_dict(self) -> dict[str, Any]:
         return {

@@ -34,6 +34,7 @@ from core.curriculum import Curriculum, load_curriculum  # noqa: E402
 from core.generator import (  # noqa: E402
     UnsolvableRoomError,
     generate,
+    new_session,
     validate_incursion,
 )
 
@@ -95,6 +96,59 @@ def distribucion_conceptos(results: list[dict[str, Any]]) -> Counter[str]:
     return c
 
 
+def viaje_honesto(
+    seed: int,
+    chapter: int,
+    variant: str,
+    curriculum: Curriculum,
+    noise_budget: int,
+) -> dict[str, Any]:
+    """Ejecuta la solución canónica sobre la sesión sembrada y mide su ruido.
+
+    El «viaje honesto» (deshacer la run bien, sin errores) genera la
+    incursión y la resuelve con su SECUENCIA CANÓNICA (`room.canon.steps`).
+    Devuelve métricas de calibración del budget de ruido (§6.0.2 / 🧭6):
+    `total_noise` del viaje honesto, si algún paso falló (primer error), y la
+    holgura respecto a `noise_budget` (misma unidad, 🧭10).
+
+    Determinsta: la secuencia canónica es fija por sala, así que el coste del
+    viaje honesto de UNA seed es igual en todas las que resevan la misma
+    sala; lo que varía entre seeds son la piel (decoys en `practice`) y el
+    error de sintaxis/flag que el jugador NO comete al ir bien.
+    """
+    inc = generate(seed, chapter, variant=variant, curriculum=curriculum)
+    shell = new_session(inc)
+    errores: list[int] = []
+    for step in inc.room.canon.steps:
+        line = " ".join(step.argv)
+        result = shell.execute(line)
+        if result.exit_code != step.expect_exit:
+            errores.append(int(step.expect_exit))
+    return {
+        "seed": seed,
+        "variant": variant,
+        "total_noise": shell.total_noise,
+        "errores": errores,
+        "dentro_presupuesto": shell.total_noise <= noise_budget,
+    }
+
+
+def calibrar_budget(
+    chapter: int,
+    n_seeds: int,
+    *,
+    variant: str,
+    start: int,
+    curriculum: Curriculum,
+    noise_budget: int,
+) -> list[dict[str, Any]]:
+    """N seeds × viaje honesto → métricas de calibración del budget (O3)."""
+    return [
+        viaje_honesto(seed, chapter, variant, curriculum, noise_budget)
+        for seed in range(start, start + n_seeds)
+    ]
+
+
 def _imprimir_reporte(
     chapter: int,
     variant: str,
@@ -132,6 +186,19 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="ruta .json opcional para volcar los resultados y métricas",
     )
+    p.add_argument(
+        "--calibrar",
+        action="store_true",
+        help="O3: 50 seeds × {canonical, practice} → distribución del RUIO del "
+        "viaje honesto vs noise_budget y frecuencia del primer error (calibración 🧭6). "
+        "Combínese con --export para la tabla JSON.",
+    )
+    p.add_argument(
+        "--budget",
+        type=int,
+        default=12,
+        help="noise_budget de la sala (misma unidad que total_noise, 🧭10; default 12 ⚠️ v1)",
+    )
     args = p.parse_args(argv)
 
     if args.chapter < 0:
@@ -141,6 +208,7 @@ def main(argv: list[str] | None = None) -> int:
 
     curriculum = load_curriculum()
     t0 = time.time()
+    payload: dict[str, Any] = {}
     results = run_batch(
         args.chapter, args.seeds, variant=args.variant, start=args.start, curriculum=curriculum
     )
@@ -167,6 +235,37 @@ def main(argv: list[str] | None = None) -> int:
         args.export.parent.mkdir(parents=True, exist_ok=True)
         args.export.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"exportado → {args.export}")
+
+    if args.calibrar:
+        print("\n== Calibración del budget (O3) — viaje honesto vs ruido ==")
+        cal = {"noise_budget": args.budget, "variants": {}}
+        for variant in ("canonical", "practice"):
+            runs = calibrar_budget(
+                args.chapter,
+                args.seeds,
+                variant=variant,
+                start=args.start,
+                curriculum=curriculum,
+                noise_budget=args.budget,
+            )
+            totales = Counter(r["total_noise"] for r in runs)
+            excede = sum(1 for r in runs if not r["dentro_presupuesto"])
+            con_error = sum(1 for r in runs if r["errores"])
+            print(f"[{variant}] total_noise del viaje honesto: {dict(sorted(totales.items()))}")
+            print(f"[{variant}] % que excede budget {args.budget}: {excede}/{len(runs)} "
+                  f"({100.0*excede/len(runs):.1f}%)")
+            print(f"[{variant}] runs con error en la secuencia canónica: {con_error}/{len(runs)}")
+            cal["variants"][variant] = {
+                "distribucion_total_noise": dict(sorted(totales.items())),
+                "excede_budget": excede,
+                "con_error_en_canonica": con_error,
+                "budget": args.budget,
+            }
+        if args.export is not None:
+            payload["calibracion_budget"] = cal
+            args.export.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"calibración exportada → {args.export}")
+
     ok = mismatch == 0 and all(r["ok"] for r in results)
     return 0 if ok else 1
 

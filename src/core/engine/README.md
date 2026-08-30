@@ -44,3 +44,29 @@
 
 ## Dueño
 Ornstein (`feat/engine`). También construye `tools/harness/` sobre esta API.
+
+---
+
+## v0 (O2, 30/08) — post-mortem del Auditor leyendo el historial real
+
+Primer fichero del módulo: `postmortem.py` (la pieza que el Hub muestra
+SIEMPRE primero, §4.7). `build_postmortem(shell_dict, state)` es una función
+PURA, testeable headless (sin I/O, sin RNG, sin estado global).
+
+- **EN**: `Shell.to_dict()` (historial de la sesión real) + `state` con
+  `noise_budget` (la MISMA unidad que `total_noise`, 🧭10; default 12 ⚠️ v1).
+- **SALIDA**: dict plano con `factura` (cuentas por comando + `errores`),
+  `total_noise` vs `noise_budget`, `dentro_presupuesto`, y una línea del
+  Auditor (`line_key` + `args`) que cita el comando CONCRETO que disparó la
+  detección — el que hace CRUZAR el presupuesto acumulado si lo hay, o el
+  pico (más ruido individual) si no. Voz: formulario seco (PERSONAJES.md).
+  El texto va como CLAVE + args; el render resuelve la prosa contra `data/`
+  (convención §3: core no hardcodea textos).
+- **Tests**: `src/tests/core/engine/test_postmortem.py` (8 tests) — factura
+  de la sesión canónica (ls 2 · cat 1 · cp 1 · cd 1 · errores 0), total 6/12,
+  pico sin cruce, cruce con presupuesto 5, errores contados, default de
+  presupuesto, helpers deterministas, informe JSON-plano.
+
+```bash
+./.venv/bin/python -m pytest src/tests/core/engine -o addopts= -q
+```

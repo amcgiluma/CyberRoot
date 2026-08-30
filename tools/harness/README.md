@@ -31,6 +31,10 @@ PYTHONPATH=src .venv/bin/python tools/harness/run_seeds.py \
 #   --variant canonical|practice
 #   --start S     offset de la primera seed (p.ej. --start 100 → 100..149)
 #   --export PATH volcado JSON opcional (resultados + métricas)
+#   --calibrar    calibración del budget (O3): 50 seeds × {canonical, practice}
+#                 → distribución del total_noise del VIAJE HONESTO vs budget
+#                 + % que lo excede + frecuencia de error en la canónica
+#   --budget N    noise_budget de la sala (misma unidad que total_noise, 🧭10)
 ```
 
 Código de salida: `0` si `% resolubles == 100` y determinismo perfecto; `1` en
