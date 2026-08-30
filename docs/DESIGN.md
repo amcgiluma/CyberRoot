@@ -726,7 +726,9 @@ Notas:
   quest, rompiendo la diegese); (b) es la regla general que escala a los 7
   capítulos; el filtro de la sala sigue garantizado por `concept_pool`
   (resolubilidad, §6.4.1). Materialización: `test_costura_navig8.py` pasa de
-  xfail a verde cuando el evaluador de apertura exista.
+  xfail a verde cuando el evaluador de apertura exista. *(Materializada el
+  30/08, PR #10: `Contract.prereqs_met(curriculum, knowledge)` — 5 tests, xfail
+  muerto, `generate()` intacto.)*
 
 - Política de ruido (🧭6, 29/08 — decisión de Gwyn): **el cap. 0 perdona el
   PRIMER error grande; el cap. 3, no.** Curva: el fallo léxico (127, flags
@@ -738,6 +740,30 @@ Notas:
   corriendo (O3) — propuesta de Oscar, dirección 6 del 29/08. La operativa de
   «primer error» (¿el más caro? ¿el que dispara expulsión?) la define Oscar
   con datos del harness antes de escribirse en código.
+
+- Eco de la progresión (🧭9, 30/08 — decisión de Gwyn al mergear T1/PR #12):
+  **el eco del unlock será DIEGÉTICO, no toast.** El primer dominio (`c.cp`)
+  se anunciará en el cap. 1 con Gris NOMBRANDO lo que el jugador acaba de
+  dominar («hoy has copiado algo que no era tuyo y lo hemos sabido»), apoyado
+  en los datos que T1 ya persiste (`mastered` con momento del dominio +
+  `resumen_competencia` con factura en la misma unidad del budget). Progresión
+  contada por la historia (§4.2); Hub solo cuando exista render. Prohibido un
+  popup de sistema para este eco: si algún día hace falta aviso mecánico
+  (colas de comandos, unlocks múltiples en una sala), será de la voz del
+  Auditor, no del metajuego.
+
+- Operativa de «primer error» (🧭6, 30/08 — decisión de Gwyn con el dato de O3):
+  **«primer error grande» = el PRIMER comando de riesgo del cap. 0 que cruza el
+  budget de sala** (expulsión por ruido), con dos refinamientos: (1) el perdón
+  es ÚNICO por partida (el segundo error grande cobra); (2) solo los comandos
+  con amount de ruido de riesgo (p. ej. `cp dir`) cuentan como «error grande» —
+  el fallo léxico (127, flag desconocido) nunca activa ni consume el perdón.
+  Racional con el dato del harness (O3): el viaje honesto mide 6 fijo sobre un
+  budget de 12 — el perdón existe para el jugador que EXPLORA (facturas 11/12
+  tipo Oscar), no para el canuto; si el harness muestra que el perdón se
+  agota sistemáticamente antes del cap. 1, el número a recalibrar es el budget
+  (hoy 12), no la regla. Se escribe en el motor cuando el cobro de ruido
+  llegue al flujo de sala (Smough/O); Oscar lo re-mide desde save limpio.
 
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 
