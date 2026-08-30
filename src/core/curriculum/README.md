@@ -4,7 +4,7 @@
 > encargos como nodos-dato) y responde: ¿qué conceptos tiene desbloqueados
 > este jugador? ¿qué pool de práctica corresponde a este capítulo? No conoce
 > runs ni salas: conocimiento puro (ARCHITECTURE §2.3, DESIGN §6.2/§6.4).
-> **Estado v0 (28/08, Smough — S2):** cap. 0–1 completos, validador del DAG,
+> **Estado (30/08, Smough — S2):** cap. 0–2 completos, validador del DAG,
 > esquema y contrato de consumo documentados.
 
 ## Piezas (v0)
@@ -53,7 +53,7 @@ Reglas estructurales que el validador impone (y testea en negativo):
   capítulos ≤ el de la quest.
 - Textos SIEMPRE como claves (`*_key`): la prosa vive en `data/`/historia.
 
-## Contenido v0 (11 conceptos, 6 quests)
+## Contenido v0 (14 conceptos, 11 quests)
 
 - **Cap. 0 (4):** `c.ls` → `c.cd` → `c.cat` → `c.cp` — EXACTAMENTE el
   `DEFAULT_CAP0_COMMANDS` del sandbox (contrato con generator: la piel del
@@ -62,8 +62,13 @@ Reglas estructurales que el validador impone (y testea en negativo):
 - **Cap. 1 (7):** `c.ls-la`, `c.permisos-leer`, `c.chmod`, `c.chown`
   (permisos, familia de §6.2 cap. 1), `c.find`, `c.fechas`, `c.man` —
   derivados de los técnicos de `story.ch1.e1–e5` (CAPITULOS/01-los-muelles.md).
+- **Cap. 2 (3, S1+S2 30/08):** `c.grep` → `c.wc` → `c.pipe` (primera
+  sinergia de la familia texto — la tubería une los dos comandos que
+  encadena). Coherentes con `DEFAULT_CH2_COMMANDS` del sandbox.
 - **Quests:** `story.ch0.ventana` (grey, los 4 del cap. 0) + `story.ch1.e1`
-  (azul), `e2` (azul), `e3` (gris), `e4` (rojo), `e5` (cierre, gris).
+  (azul), `e2` (azul), `e3` (gris), `e4` (rojo), `e5` (cierre, gris) +
+  `story.ch2.e1`–`e5` (S2, 30/08: E1/E2 azules, E3 gris, E4 rojo, E5 de
+  cierre gris — tints según `CAPITULOS/02-facturas.md` de Manus).
   La lista comando a comando de los ~60 boons se cierra contra el sandbox
   real en las fases siguientes (decisión abierta §5.1 de ARCHITECTURE).
 

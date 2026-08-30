@@ -20,6 +20,7 @@ from typing import Any
 from core.sandbox.commands.base import CommandResult, build_registry
 from core.sandbox.commands.files import SPECS as FILE_SPECS
 from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
+from core.sandbox.commands.texto import SPECS as TEXT_SPECS
 from core.sandbox.fs import FileSystem
 from core.sandbox.noise import NoiseMeter
 
@@ -28,26 +29,42 @@ from core.sandbox.noise import NoiseMeter
 #: encargo (aprender-por-necesidad, DESIGN §6.1).
 DEFAULT_CAP0_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "ls")
 
-#: Todas las specs implementadas (registro completo del módulo v0).
-SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS
+#: Comandos del set del cap. 2 (S1, 30/08): añade las tuberías (`grep`, `wc`)
+#: al set base. `DEFAULT_CAP0_COMMANDS` sigue intacto (cap. 0 es escenario sin
+#: pipes — 🧭8=(b): evalúan los prereqs al abrir, no lo genera el capítulo).
+DEFAULT_CH2_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "grep", "ls", "wc")
 
-#: Caracteres de sintaxis NO soportada en v0 (fuera de comillas). `|` = pipes,
-#: `*?<` = globs, `>` = redirección; `&`/`;` = encadenado (BUG de Oscar,
-#: zona 🔬 28/08: `cd /srv && ls` producía «cd: too many arguments» — engañoso).
-#: Entre comillas SON literales reales (`cat "a&b.txt"` es un nombre válido).
-_UNSUPPORTED_SYNTAX = frozenset("|*?<>&;")
+#: Todas las specs implementadas (registro completo del módulo v0 → S1).
+SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS
 
-#: Mensaje didáctico de sintaxis futura (caps. 1–2; PLAN §3 + 🧭3 de Oscar:
+#: Caracteres de sintaxis NO soportada todavía (fuera de comillas). `*?<` =
+#: globs, `>` = redirección, `&`/`;` = encadenado. `|` (tubería) SÍ entra en
+#: S1 (30/08): los pipes llegan en el cap. 2. Entre comillas SON literales
+#: reales (`cat "a&b.txt"` es un nombre válido).
+_UNSUPPORTED_SYNTAX = frozenset("*?<>&;")
+
+#: Mensaje didáctico de sintaxis futura (caps. 2+; PLAN §3 + 🧭3 de Oscar:
 #: la terminal también ENSEÑA qué no sabe hacer AÚN — nunca culpar al comando
-#: equivocado: «esta sesión va comando a comando; el encadenado llega después»).
+#: equivocado). Reformulado en S1 (30/08): las tuberías YA están; lo que
+#: queda pendiente es encadenado, redirección y globs.
 _SYNTAX_MSG = (
-    "sh: syntax not supported in this session: it runs one command at a time "
-    "(pipes and chaining arrive later)"
+    "sh: syntax not supported in this session: it runs one pipeline at a time "
+    "(chaining, redirection and globbing arrive later)"
+)
+
+#: Mensaje didáctico para >1 pipe (`a | b | c`): el cap. 2 pide UNA tubería.
+_PIPE_MSG = (
+    "sh: multiple pipelines not supported in this session: chain them one "
+    "at a time"
 )
 
 
 def _has_unsupported_syntax(line: str) -> bool:
-    """True si hay `|*?<>` FUERA de comillas (entre comillas son literales)."""
+    """True si hay `*?<>&;` FUERA de comillas (entre comillas son literales).
+
+    `|` (tubería) ya NO está en el set desde S1 (30/08): los pipes llegan en
+    el cap. 2 y se parsean aparte en `_split_pipeline`.
+    """
     quote: str | None = None
     for ch in line:
         if quote is not None:
@@ -59,6 +76,45 @@ def _has_unsupported_syntax(line: str) -> bool:
         elif ch in _UNSUPPORTED_SYNTAX:
             return True
     return False
+
+
+def _split_pipeline(line: str) -> list[str]:
+    """Trocea `line` por `|` FUERA de comillas (una tubería de N comandos).
+
+    Los pipes entre comillas son literales (`cat "a|b"` no es una tubería).
+    Devuelve los trozos tal cual (sin strip interior); el shell valida que
+    el cap. 2 solo necesite UNA tubería (2 comandos).
+    """
+    parts: list[str] = []
+    cur: list[str] = []
+    quote: str | None = None
+    for ch in line:
+        if quote is not None:
+            cur.append(ch)
+            if ch == quote:
+                quote = None
+            continue
+        if ch in ("'", '"'):
+            quote = ch
+            cur.append(ch)
+        elif ch == "|":
+            parts.append("".join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    parts.append("".join(cur))
+    return parts
+
+
+def _join_err(*stderrs: str) -> str:
+    """Concatena los stderr de los comandos de una tubería (orden, `\n`).
+
+    GNU escribe cada stderr a su salida; aquí los juntamos en el orden de
+    ejecución para que el post-mortem/o el jugador lea ambos diagnósticos.
+    Evita líneas en blanco y vacíos.
+    """
+    non_empty = [s for s in stderrs if s]
+    return "\n".join(non_empty)
 
 
 class Shell:
@@ -88,11 +144,35 @@ class Shell:
 
     # ---- ejecución -------------------------------------------------------
 
+    def _exec_argv(
+        self, argv: tuple[str, ...], stdin: str = ""
+    ) -> CommandResult:
+        """Ejecuta UN comando (argv ya parseado) con su stdin virtual.
+
+        Resuelve la spec, invoca `spec.run(fs, cwd, argv, tick, stdin)` y
+        aplica `new_cwd` si el comando cambió de directorio. NO registra en
+        el historial ni suma ruido: eso lo hace `execute`/`_record` una vez
+        por LÍNEA (para que una tubería quede como UNA entrada con el ruido
+        de AMBOS comandos).
+        """
+        spec = self.registry.get(argv[0])
+        if spec is None:
+            return CommandResult(
+                stderr=f"sh: command not found: {argv[0]}", exit_code=127
+            )
+        result = spec.run(self.fs, self.cwd, argv[1:], self.tick, stdin)
+        if result.new_cwd is not None:
+            self.cwd = result.new_cwd
+        return result
+
     def execute(self, line: str) -> CommandResult:
         """Ejecuta una línea; muta cwd/tick/historial y devuelve el resultado.
 
         Línea vacía → éxito sin efecto (como pulsar Enter en una terminal
         real). Comandos desconocidos → exit 127 con stderr de `sh` real.
+        Una tubería `cmd1 | cmd2` (S1, 30/08) ejecuta `cmd1` con stdin vacío,
+        captura su stdout y lo alimenta como stdin de `cmd2`; el resultado se
+        registra como UNA línea con el ruido de ambos comandos.
         """
         stripped = line.strip()
         if not stripped:
@@ -101,8 +181,13 @@ class Shell:
         if _has_unsupported_syntax(stripped):
             return self._record(line, CommandResult(stderr=_SYNTAX_MSG, exit_code=2))
 
+        pipeline = _split_pipeline(stripped)
+        if len(pipeline) > 2:
+            # El cap. 2 solo pide UNA tubería; más de un `|` es fuera de alcance.
+            return self._record(line, CommandResult(stderr=_PIPE_MSG, exit_code=2))
+
         try:
-            argv = tuple(shlex.split(stripped, posix=True))
+            argv = tuple(shlex.split(pipeline[-1], posix=True))
         except ValueError:
             # Comillas sin cerrar u otros errores léxicos de shell real.
             return self._record(
@@ -112,18 +197,39 @@ class Shell:
                 ),
             )
 
-        name, args = argv[0], argv[1:]
-        spec = self.registry.get(name)
-        if spec is None:
-            result = CommandResult(
-                stderr=f"sh: command not found: {name}", exit_code=127
-            )
-            return self._record(line, result)
+        if not argv:
+            return self._record(line, CommandResult())
 
-        result = spec.run(self.fs, self.cwd, args, self.tick)
-        if result.new_cwd is not None:
-            self.cwd = result.new_cwd
-        return self._record(line, result)
+        if len(pipeline) == 1:
+            return self._record(line, self._exec_argv(argv))
+
+        # Tubería: `cmd1 | cmd2`. El primer comando arranca sin stdin.
+        try:
+            argv1 = tuple(shlex.split(pipeline[0], posix=True))
+        except ValueError:
+            return self._record(
+                line,
+                CommandResult(
+                    stderr="sh: syntax error: unexpected end of file", exit_code=2
+                ),
+            )
+        if not argv1:
+            return self._record(
+                line, CommandResult(stderr=_PIPE_MSG, exit_code=2)
+            )
+        left = self._exec_argv(argv1)
+        # stdbuf del pipe: el stdout del izquierdo es el stdin del derecho.
+        result = self._exec_argv(argv, stdin=left.stdout)
+        # Combinar: stdout del último, stderr de ambos (el orden manda),
+        # ruido de AMBOS (la tubería no es gratis — AC S1), exit del último.
+        combined = CommandResult(
+            stdout=result.stdout,
+            stderr=_join_err(left.stderr, result.stderr),
+            exit_code=result.exit_code,
+            noise=left.noise + result.noise,
+            new_cwd=result.new_cwd,
+        )
+        return self._record(line, combined)
 
     def _record(self, line: str, result: CommandResult) -> CommandResult:
         """Anota historial, suma el ruido del resultado y avanza el tick.
