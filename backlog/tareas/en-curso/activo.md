@@ -55,9 +55,22 @@
 
 ## Asignadas por Gwyndolin (29/08, plan del día) — MERGEADAS por Gwyn (23:00)
 
-> Las 6 líneas `[HECHO]` de hoy (O1/O2 PR#7, S1/S2 PR#8, T1/T2 PR#9) fueron
+> Las 6 líneas `[HECHO]` de ayer (O1/O2 PR#7, S1/S2 PR#8, T1/T2 PR#9) fueron
 > archivadas por Gwyn en `../hecho/2026-08.md`. Suite tras los 3 merges:
 > **342 passed + 1 xfail** (deltas cuadrados). Ramas `feat/*` borradas;
 > PRs MERGED en GitHub.
+
+## Asignadas por Gwyndolin (30/08, plan del día) — ver `../planes/2026/08/30.md`
+
+- `[EN CURSO][P1]` (30/08) **O1 — Materializar 🧭8=(b): prereqs evaluados al ABRIR el encargo** — Ornstein (13:00, `feat/engine`): la sala sigue contratando `story.ch1.e1` (escenario), pero la evaluación de prereqs vive como API del contrato, llamada al abrir — nunca en `generate()`. AC: `test_costura_navig8.py` pasa de xfail a VERDE (0 xfails al cerrar el día).
+- `[EN CURSO][P2]` (30/08) **O2 — Post-mortem v0: el Auditor lee el HISTORIAL real (factura GNU + comando que delata, en la misma unidad que el budget, 🧭10)** — Ornstein (13:00, `feat/engine`, nuevo `postmortem.py`): `build_postmortem(shell_dict, state)`; función pura headless. Origen: idea de Havel 28/08 + dirección #2 de Gwyn.
+- `[EN CURSO][P2]` (30/08) **S1 — Tuberías en el sandbox + `grep`/`wc` (cap. 2)** — Smough (16:00, `feat/sandbox`): una tubería `cmd1 | cmd2`, rechazo didáctico `&&`/`;` se mantiene, ruido por comando de la tubería. AC: `grep 11:04 centralita/turnos/turno.log | wc -l` (línea EXACTA del cap. 2) golden contra GNU real.
+- `[EN CURSO][P2]` (30/08) **S2 — `story.ch2.*` al currículo (cap. 2 «Facturas» de Manus)** — Smough (16:00, `feat/sandbox` + `src/data/`): 5 quests (`e1`–`e5`, 2 azules/1 gris/1 rojo/1 cierre) + conceptos mínimos (`c.grep`/`c.wc`/`c.pipe`). AC: `load_curriculum` + validador en negativo.
+- `[EN CURSO][P2]` (30/08) **T1 — El save recuerda CUÁNDO dominaste (meta de unlock + `resumen_competencia`)** — Seath (19:00, `feat/meta-ui`): datos para el eco de 🧭9 (la FORMA la decide Gwyn; sin UI hoy). Roundtrip + idempotencia intactas.
+- `[EN CURSO][P3]` (30/08) **O3 — Calibración del budget con harness (OPCIONAL)** — Ornstein: 50 seeds × {canonical, practice}, distribución de ruido + propuesta de definición de «primer error» (decide Gwyn/Oscar). Origen: `[PENDIENTE][P2]` de Oscar 29/08.
+- `[EN CURSO][P3]` (30/08) **T2 — Mecanismo de logros por factura («Cero rastro», «Mano de seda»; OPCIONAL)** — Seath: logros §7.6 como datos del save. Origen: idea de Havel 28/08.
+
+### Manus (03:00 del 30/08) — pendientes de merge por Gwyn
+
 - `[HECHO][P2]` (29/08, noche) **M1 Fragmento 3 (contrato de alquiler a nombre de nadie)** — Manus (03:00 del 30/08): HECHO. `[LISTA]` en `FRAGMENTOS.md`, formato Souls, H1/H2, sin contradecir fragmentos 1-2. Detalle: `../historia/INDICE.md`.
-- `[HECHO][P2]` (29/08, noche) **M2 Capítulo 3 «Bombas» (beats 5–6)** — Manus (03:00 del 30/08): HECHO. 5 encargos `story.ch3.e1–e5` (1 azul, 1 gris, 2 rojos, 1 cierre) con tints del descenso del Acto 2, escalada Umbral→Faro (regla de la luz) y grieta de Ceniza PLANTADA (beat 6 §2.5) sin resolver. AC en `../historia/CAPITULOS/03-bombas.md` + `../historia/INDICE.md`.
+- `[HECHO][P2]` (29/08, noche) **M2 Capítulo 3 «Bombas» (beats 5–6)** — Manus (03:00 del 30/08): HECHO. 5 encargos `story.ch3.e1`–`e5` (1 azul, 1 gris, 2 rojos, 1 de cierre) con tints del descenso del Acto 2, escalada Umbral→Faro (regla de la luz) y grieta de Ceniza PLANTADA (beat 6 §2.5) sin resolver. AC en `../historia/CAPITULOS/03-bombas.md` + `../historia/INDICE.md`.
