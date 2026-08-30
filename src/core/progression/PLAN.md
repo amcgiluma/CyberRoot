@@ -1,82 +1,76 @@
-# PLAN — T1+T2 · 29/08 (Seath, 19:00, `feat/meta-ui`)
+# PLAN — T1+T2 · 30/08 (Seath, 19:00, `feat/meta-ui`)
 
-> Origen: plan de Gwyndolin del 29/08 (tareas T1 y T2). La rama partió de una
-> base VIEJA (21 commits detrás de main, el trabajo del 28/08 ya estaba
-> mergeado como PR #6); primero `git fetch && git rebase origin/main` → HEAD
-> == main (0/0, **316 passed**). Mi plan desglosa el detalle que Gwyndolin no puso.
+> Origen: plan de Gwyndolin del 30/08 (tareas T1 y T2). Rama
+> `feat/meta-ui-2026-08-30` creada desde `origin/main` limpia (0 commits detrás)
+> — el shell cron arrastraba `feat/sandbox-2026-08-30` (de Smough), no reutilizo
+> rama ajena. Suite base realineada: **342 passed + 1 xfailed** (el xfail es la
+> costura de Ornstein, muere hoy en SU rama, no es mío). Mi plan desglosa el
+> detalle que Gwyndolin no puso.
 
 ## Encargo y alcance
-
-- **T1 (P2) — Fachadas uniformes.** `core.state` y `core.sandbox` re-exportan
-  su API desde el paquete. Solo ~~dos~~ tres ficheros: `state/__init__.py`,
-  `sandbox/__init__.py`. Sin tocar lógica.
-- **T2 (P2) — progression v0: primer unlock por competencia.** Paquete
-  `core/progression/` nuevo + un campo serializable en `GameState`.
-- NO toco: `common/`, `engine/`, `generator/`, `karma/`, `render/`, `assets/`,
-  ni `sandbox/commands/` (Smough). Rutas disjuntas garantizadas. El
-  `__init__.py` de sandbox es MÍO (re-export) — Smough no toca ese fichero.
+- **T1 (P2) — El save recuerda CUÁNDO dominaste:** meta de unlock (tick/orden)
+  + `resumen_competencia(state)`. Prepara 🧭9 SIN UI ni forma (eso es de Gwyn).
+- **T2 (P3, ^si T1 cierra con holgura^) — Logros por factura:** mecanismo
+  + 2 logros definidos ("Cero rastro", "Mano de seda"), evaluados tras la run
+  canónica, persisten en el save.
+- Solo toco: `src/core/state/state.py` (campo nuevo) + `src/core/progression/`
+  + tests en `src/tests/core/progression/` + `src/tests/core/state/`. NO toco
+  sandbox/engine/generator/karma/render/assets (Ornstein/Smough).
 
 ## Contratos que consumo
-
-- `Shell.execute(line)` muta `cwd/tick/history/total_noise`; `to_dict/from_dict`
-  ida y vuelta exacta. El historial guarda `{"line": <str>, "result": <CommandResult.to_dict()>}`
-  (NO guarda argv: la evidencia del unlock se lee parseando `line`).
-- `CommandResult.to_dict()`: `{stdout, stderr, exit_code, noise, new_cwd}`.
-- `GameState(shell=..., version=..., knowledge=...)` dato plano (§1.5).
+- `Shell.execute` muta `cwd/tick/history/total_noise`; `history[i]` =
+  `{"line": str, "result": CommandResult.to_dict()}` (noise serializado como
+  lista de `Event.to_dict()` → `data["amount"]`).
+- `Shell.tick` = tiempo SIMULADO (§3); es el "momento" natural del dominio.
+- `GameState` agrega sub-dicts hermanos de `"shell"` (v1): `knowledge` ya vive
+  ahí. `progression` NO importa `core.state` en runtime (solo TYPE_CHECKING).
 
 ## Diseño (una decisión, un racional)
+- **`mastered: dict[boon → {"tick": int, "order": int}]`** en `GameState`.
+  `knowledge` sigue siendo la fuente de verdad de "quién domina"; `mastered`
+  le añade el MOMENTO. Backward-compat v1: save previo sin `mastered` carga
+  `{}`; `resumen_competencia` muestra `tick/order = None` para un boon ya
+  dominado sin meta (save legado). No subo SAVE_VERSION a 2 (como en el 29/08):
+  campo OPCIONAL documentado.
+- **`order`**: secuencia de dominio = `len(state.mastered) + 1` al registrarse
+  (monótono). `tick` = `state.shell.tick` en el momento de la detección (el
+  tick ya avanzado tras el comando que demuestra el dominio).
+- **`resumen_competencia(state) -> dict`** devuelve `{"dominados": [...],
+  "factura": {...}}`. `dominados` = [{concepto, tick, order}] ordenado por
+  order/concepto. `factura` = GNU de la sesión (§7.2/🧭10): `{por_comando:
+  {cmd: {usos, ruido, errores}}, total_usos, total_ruido, total_errores}`.
+- **`logros`**: `dict[str, bool]` en `GameState` (opcional v1). Constantes
+  `LOGRO_CERO_RASTRO` / `LOGRO_MANO_SEDA` + `UMBRAL_CERO_RASTRO = 4` ⚠️ v1
+  calibrable (cliente O3). Sin popup moral: el logro es un dato del save.
 
-- **Fachadas por ALIAS**: `from core.state import GameState, save_game, load_game`.
-  Los nombres de bajo nivel `save`/`load` de `core.state.state` se conservan
-  para no romper los 10 tests existentes; la fachada pública nombra `save_game/
-  load_game` (el contrato que consume `main.py`). `from core.sandbox import Shell`.
-- **`knowledge` en GameState como `dict[str, bool]`** (inventario de boons/
-  competencias dominadas, id → dominado). Sub-dict hermano de `"shell"` en el
-  save (GameState agrega, no aplana — coherente con la decisión v1 del estado).
-- **Backward-compat v1**: `from_dict` lee `d.get("knowledge", {})` → un save
-  v1 previo (sin la clave) carga con `knowledge == {}`. No subo `SAVE_VERSION`
-  a 2 (rompería los tests de migración existentes y no hay usuarios reales);
-  es un campo OPCIONAL en el formato, documentado.
-- **Progression NO importa `core.state` en runtime** (solo `TYPE_CHECKING`):
-  recibe el `GameState` por composición, lee `state.shell.history` (evidencia)
-  y escribe `state.knowledge`. Así no hay ciclo state↔progression; quien
-  conecta ambos es el orquestador (`game.py` futuro) o el test.
-- **Evidencia del contrato del cap. 0**: un `cp` con `exit_code == 0` en el
-  historial cuyo destino (último argv) cae bajo `/usb` (la extracción canónica
-  del dossier §6.4.4 hace `cp <oficina>/<proveedor> /usb/`). Detecta
-  "contrato completado" SOLO desde el estado, sin depender de generator/engine.
+## Hitos (secuenciales; pequeños y dominados → los hago directo, sin delegar)
+- **H1** — Rama limpia + identidad `Seath` + plan escrito. ✅
+- **H2** — `state.py`: campos `mastered` + `logros` (to_dict/from_dict).
+  Hecho si: roundtrip exacto; save v1 previo sin ellos carga `{}`.
+- **H3** — `progression.py`: registrar momento en `evaluate_unlocks` (idempotencia
+  intacta) + `resumen_competencia` + `_factura_capitulo`.
+  Hecho si: run canónica → mastered[c.cp]={tick:2, order:1}; resumen coherente.
+- **H4** — `progression.py`: `evaluate_logros` (Cero rastro / Mano de seda).
+  Hecho si: canónica gana ambos; ruido extra mata Cero; error mata Mano.
+- **H5** — `__init__.py` re-exporta los símbolos nuevos.
+- **H6** — Tests en `test_progression.py` (+1 en `test_state.py`); suite completa
+  verde. Hecho si: progression+state verdes y `pytest src/tests` = base + delta.
 
-## Hitos (secuenciales; H3-H5 pequeños y dominados → los hago directo)
-
-- **H1** — Rama al día (rebase a main) + identidad git `Seath`. ✅
-- **H2** — T1 fachadas: `state/__init__.py` + `sandbox/__init__.py`.
-  Hecho si: `from core.state import GameState, save_game, load_game` y
-  `from core.sandbox import Shell` funcionan con `PYTHONPATH=src`.
-- **H3** — T2 estado: campo `knowledge` en `GameState` (to_dict/from_dict).
-  Hecho si: roundtrip v1 previo sin `knowledge` → `{}`; save nuevo conserva el dict.
-- **H4** — T2 módulo: `core/progression/{__init__.py, progression.py}` con
-  `evaluate_unlocks(state) -> list[str]` idempotente.
-  Hecho si: cap-0 completado → marca `c.cp`; parcial/sin historial → no.
-- **H5** — Tests: `src/tests/core/state/test_fachada.py` (facade) +
-  `src/tests/core/progression/test_progression.py` (7 tests). Suite completa verde.
-  Hecho si: `PYTHONPATH=src python -m pytest` verde, delta 316→+_.
-
-## Los tests
-
-- T1 (fachada, `test_fachada.py`): expose API state, expose Shell, roundtrip
-  disco vía `save_game/load_game`.
-- T2 (`test_progression.py`): cap-0 completo marca `c.cp`; idempotente (2.ª
-  llamada `[]`); sesión parcial NO desbloquea; shell vacía NO desbloquea;
-  persiste en save (load lo recupera); roundtrip exacto de `knowledge`;
-  save v1 previo sin `knowledge` → `{}`.
-- Reutilizo la piel del cap. 0 SIN importar de `src/tests/core/sandbox/` (regla O1).
+## Los tests (nuevos)
+- T1: registra momento (tick/order); roundtrip de `mastered`; save v1 previo →
+  `{}`; `resumen_competencia` canónica (dominados + factura cat:1/cp:3, ruido 4);
+  resumen legado sin momento → tick/order None.
+- T2: canónica gana ambos logros; idempotente; +`ls` (ruido 5) → solo Mano;
+  comando con error → solo Cero; logros persisten en save (load los recupera).
+- `test_state.py`: roundtrip de los campos opcionales nuevos.
 
 ## Riesgos y bordes
+- Igualdad a nivel de dicts (sin `__eq__`), igual que v1.
+- Factura parsea `line` con shlex (stdlib, permitido); líneas no parseables →
+  comando `"sh"` (no rompe la suma).
+- Un boon dominado en save legano (knowledge=True, sin mastered) → el momento
+  es None, no se inventa.
+- Delta del PR: base 342 + 1 xfail → los +N míos; el xfail muere en la rama de
+  Ornstein, no en la mía. N = nº de funciones de test nuevas.
 
-- Igualdad a nivel de dicts (`Knowledge` por dict, sin `__eq__`). Documentado.
-- `_parsed_argv` tolera líneas no parseables tirando del historial con shlex
-  (stdlib, permitido por `test_core_stdlib_only.py`).
-- El unlock marca presence dict; no hay "árbol entero" ni espejo completo en
-  v0 — UNA regla, estructura de funciones preparada para ampliar.
-
-— Seath, 19:00 (29/08/2026)
+— Seath, 19:00 (30/08/2026)

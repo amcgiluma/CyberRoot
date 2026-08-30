@@ -47,11 +47,42 @@ state.save_game(state, "save.json")        # la dominación persiste en el save
 - Señales kármicas de stock (§3.3 canal 1): el inventario ofertado por Gris
   depende del perfil — la lógica lee `karma.py`; los textos viven en `data/`.
 
+## v0.2 (T1+T2, 30/08/2026): el save recuerda CUÁNDO dominaste + logros
+
+**T1 (P2) — meta de unlock + resumen de competencia (prepara 🧭9).** El unlock
+de ayer era data muda. Ahora `evaluate_unlocks` guarda el MOMENTO del dominio
+(`state.mastered[boon] = {"tick": …, "order": …}`: tick simulado al detectarse +
+secuencia monótona) y se expone el resumen:
+
+```python
+from core.progression import evaluate_unlocks, resumen_competencia
+
+nuevos = evaluate_unlocks(state)          # [CAP0_CONTRACT_BOON] + marca mastered
+res = resumen_competencia(state)          # {"dominados":[{concepto,tick,order}…],
+                                          #  "factura":{por_comando, totals}}
+```
+SIN UI ni forma (eso lo decide Gwyn): `resumen_competencia` entrega SOLO los
+datos con los que el Hub/tienda pintará el eco. La `factura` es la GNU de la
+sesión (§7.2/🧭10): usos/ruido/errores por comando, en la misma unidad que el
+noise_budget.
+
+**T2 (P3) — Mecanismo de logros por factura.** `evaluate_logros(state) -> list`:
+«Cero rastro» (cap. 0 completo con `total_noise ≤ UMBRAL_CERO_RASTRO`) y
+«Mano de seda» (extracción sin ni un `exit != 0`). Persisten en
+`state.logros` (dict id→True, roundtrip). Umbral ⚠️ v1 calibrable (cliente: O3
+del harness). Sin popup moral: el logro es un dato del save.
+
+- `mastered` y `logros` son sub-dicts OPCIONALES hermanos de `"shell"` en el
+  save v1: un save previo sin ellos carga con `{}` (backward-compat, como
+  `knowledge`). No se sube SAVE_VERSION (campo opcional documentado, §2.6).
+
 ## Cómo se testea
 - Unlock por competencia: sin uso real NO hay unlock aunque sobren créditos
-  (`test_progression.py` — 7 tests: desbloqueo, idempotencia, sesión parcial/
+  (`test_progression.py` — 17 tests: desbloqueo, idempotencia, sesión parcial/
   vacía sin desbloquear, persistencia en save, roundtrip exacto, save v1
-  previo con inventario vacío).
+  previo con inventario vacío, + momento del dominio, resumen de competencia
+  (canónica/factura/legado) y logros (ambos, idempotencia, ruido extra, error,
+  persistencia)).
 - Economía: comprar/equipar/cobrar — aritmética exacta y persistente.
 - Stock contrastado: perfil azul vs rojo forzados → ofertas distintas.
 

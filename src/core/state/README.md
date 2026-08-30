@@ -30,7 +30,9 @@ alimentado por `core.progression`) es un sub-dict OPCIONAL hermano de
 `"shell"` — un save v1 previo sin la clave carga con `{}`.
 
 - **Formato del save**: `{"version": 1, "saved_at": <tick simulado>,
-  "shell": <Shell.to_dict()>, "knowledge": {...}}` (`knowledge` opcional).
+  "shell": <Shell.to_dict()>, "knowledge": {...}, "mastered": {...},
+  "logros": {...}}` (`knowledge`/`mastered`/`logros` OPCIONALES, sub-dicts
+  hermanos de "shell"; un save v1 previo sin ellos carga con `{}`).
   `sort_keys` + `ensure_ascii=False`:
   JSON determinista y legible a mano (§1.5 — un save escrito a mano con
   `json.dump` carga exactamente igual).

@@ -68,6 +68,12 @@ class GameState:
     #: Inventario de conocimientos dominados por competencia (§2.7/§7.5.3):
     #: {id_boon: True}. Opcional en el formato v1 (sub-dict hermano de "shell").
     knowledge: dict[str, bool] = field(default_factory=dict)
+    #: Momento del dominio (§7.5.3/🧭9, T1 30/08): {id_boon: {"tick": int,
+    #: "order": int}}. `knowledge` dice QUIÉN domina; `mastered` CUÁNDO. Opcional
+    #: en el formato v1 (save previo sin la clave carga con {}).
+    mastered: dict[str, dict[str, int]] = field(default_factory=dict)
+    #: Logros ganados por la sesión (§7.6, T2 30/08): {logro_id: True}. Opcional v1.
+    logros: dict[str, bool] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         """Estado completo a dict plano JSON-safe (ida y vuelta con from_dict)."""
@@ -76,6 +82,8 @@ class GameState:
             "saved_at": self.shell.tick,  # tick SIMULADO, no reloj real (§3)
             "shell": self.shell.to_dict(),
             "knowledge": dict(self.knowledge),
+            "mastered": {k: dict(v) for k, v in self.mastered.items()},
+            "logros": dict(self.logros),
         }
 
     @classmethod
@@ -99,6 +107,8 @@ class GameState:
             shell=shell,
             version=int(d["version"]),
             knowledge=dict(d.get("knowledge") or {}),
+            mastered=dict(d.get("mastered") or {}),
+            logros=dict(d.get("logros") or {}),
         )
 
 

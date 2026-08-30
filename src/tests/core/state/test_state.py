@@ -254,3 +254,24 @@ def test_session_cap0_roundtrip(tmp_path) -> None:
     )
     assert len(disk.shell.history) == 2
     assert disk.shell.total_noise == 4
+
+
+# --------------------------------------------------------------------------
+# 11 · campos meta opcionales (mastered/logros, T1/T2 30/08) roundtrip
+# --------------------------------------------------------------------------
+
+def test_optional_meta_fields_roundtrip() -> None:
+    """`mastered` y `logros` viajan en el save y vuelven idénticos; v1 previo → {}."""
+    g = GameState(shell=_cap0_shell())
+    g.mastered["c.cp"] = {"tick": 2, "order": 1}
+    g.logros["logro.cero_rastro"] = True
+    rebuilt = GameState.from_dict(g.to_dict())
+    assert rebuilt.mastered == g.mastered
+    assert rebuilt.logros == g.logros
+    assert rebuilt.to_dict() == g.to_dict()
+
+    # Save previo v1 sin las claves → carga con dict vacío (backward-compat):
+    d = {"version": 1, "shell": _cap0_shell().to_dict()}
+    legado = GameState.from_dict(d)
+    assert legado.mastered == {}
+    assert legado.logros == {}
