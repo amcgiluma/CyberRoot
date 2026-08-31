@@ -765,6 +765,29 @@ Notas:
   (hoy 12), no la regla. Se escribe en el motor cuando el cobro de ruido
   llegue al flujo de sala (Smough/O); Oscar lo re-mide desde save limpio.
 
+- El `sudo` GANADO (cap. 3, 31/08 — decisión de Gwyn con los datos de S1/S2
+  del PR #14 delante): **el sudo es una CREDENCIAL NARRATIVA, nunca una
+  contraseña tecleada.** Se GANA: la narrativa la otorga (credencial robada u
+  objeto de estado del cap. 3, como pedía §6.0.3 — la puerta visible antes de
+  la llave); sin credencial, el rechazo es diegético y accionable (el sistema
+  responde como respondería un Linux real, la lección llega por el post-mortem
+  del Auditor, no por un tooltip). Con credencial, `sudo` factura ruido PREMIUM
+  (es poder, y el poder deja factura) y deja FIRMA en el auth.log simulado
+  (columna USER de `ps`, S1 PR #14): usar sudo es aceptar que el sistema te
+  esté leyendo con más atención. Prohibido: prompts de contraseña, sudo sin
+  coste, sudo persistente entre runs sin justificación narrativa.
+
+- Red simulada del cap. 4 (31/08 — decisión de Gwyn, forma para la tarea propia
+  en `abierto.md`): **los hosts remotos son FS simultáneos del MISMO Shell.**
+  `ssh host` cambia el FS activo de la sesión (auth.log en el remoto registra
+  la conexión con la columna USER que delata); `scp [host:]ruta [host:]ruta`
+  copia entre FS; los hosts se DESCUBREN leyendo el mundo (`/etc/hosts`,
+  configs, la prosa de «Troncales» — necesidad como currículo, RM §1.4). El
+  proceso local (familia Procesos del cap. 3) y la red (cap. 4) comparten la
+  misma cuenta de ruido: entrar a una máquina ajena cuesta desde el intento
+  (regla de la luz en MÁXIMO, Faro). Prohibido: abstracción «red» paralela al
+  FS (sería otro sandbox); máx. 2–3 hosts por sala v1.
+
 ### 6.2 Reparto curricular (~60 boons, familias de §4.4)
 
 ENSEÑANZA = el capítulo lo presenta como boon de currículo (§4.4.1);
@@ -987,6 +1010,16 @@ El Hub también cosquillea, sin traicionar la calma narrativa (§4.7):
 - **Progreso de unlocks casi-cerrados**: «te falta 1 uso de `tee` para el
   siguiente dominio» — el gancho de «una run más» de RM §2.2.5, mostrado con
   honestidad: solo cuenta lo que hiciste de verdad.
+- **Logros como expediente del Auditor** (T2 PR #12 + T1 PR #15, 31/08 —
+  decisión de Gwyn): los logros («Cero rastro», «Mano de seda») son DATOS del
+  save, nunca medallas con popup. **Recalibrado 🧭11 (VALIDADO con datos
+  medidos por Oscar+Havel: min honesto 5, canónico 6, puro `cp` memorizado 3):
+  `UMBRAL_CERO_RASTRO=5` + condición «sin `exit≠0`»** — el logro premia la
+  frugalidad del NOVATO que descubre (ls→cat→cp sin errores), no la
+  memorización del veterano; la canónica queda fuera a propósito (que cueste),
+  y «Mano de seda» (cero fallos) queda intacta y distinta. Cuando exista
+  Hub/render, se pintan como anotaciones frías en tu expediente (voz §2.4),
+  no como logros de plataforma.
 - **Titulares y stock** (canales kármicos §3.3): su variación ES el feedback
   macro. Que cambien entre runs es parte del ritmo de recompensa, no solo
   narrativa.

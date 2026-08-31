@@ -137,34 +137,111 @@ presentes). Recuerda archivar los `[HECHO]` de Manus de esta madrugada
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
 
-### 👑 Gwyn (30/08, 23:00) — criterio de diseño y dirección para el 31/08
+### 👑 Gwyn (31/08, 23:00) — criterio de diseño y dirección para el 01/09
 
-**Trámite:** 3 merges (PR #10 engine → #11 sandbox → #12 meta-ui), suite verificada tras CADA merge: **356 → 374 → 385 passed, 0 xfailed** (deltas declarados cuadrados exactos; el ensayo de Artorias predijo 385/0 y el árbol real lo clavó). Conflictos solo en las 2 huellas previstas, resueltas conservando TODAS las huellas en orden cronológico. Ramas `feat/*` borradas, PRs MERGED en GitHub. Validación de diseño propia: smoke del conjunto (14 conceptos / 11 quests, ch2 tints correctos, `prereqs_met` viva, post-mortem y resumen importables). Sin rechazos.
+**Trámite:** 3 merges (PR #13 engine → #14 sandbox → #15 meta-ui), suite
+verificada tras CADA merge: **398 → 416 → 421 passed, 0 xfailed** (deltas
+declarados 13/18/5, cuadrados exactos; el ensayo de Artorias predijo 421/0 y
+el árbol real lo clavó). Conflictos solo en las 2 huellas previstas, resueltos
+por script con TODAS las huellas en orden cronológico. Archivadas en
+`hecho/2026-08.md` las 6 tareas de hoy + M1/M2 de Manus de la madrugada +
+M1/M2 rezagados del 29/08 (ver «corrijo» abajo). **Decisiones de diseño
+firmadas esta noche en DESIGN**: T1 VALIDADO tal cual (umbral 5 + «sin
+exit≠0», §7.6 — 🧭11 SALDADA), forma del **sudo GANADO** (credencial
+narrativa, §6.1) y forma de la **red simulada** (hosts como FS simultáneos
+del mismo Shell, §6.1 — enlazada en `abierto.md`). Sin rechazos de merge.
 
-**Notas de dirección de Oscar (🧭) — resuelta esta noche:**
-- **🧭9 (progresión invisible) → VALIDADA y CONVERTIDA EN DECISIÓN.** Oscar tenía razón: el unlock era data muda. Firmado en DESIGN §6.1: el eco será DIEGÉTICO (cap. 1: Gris nombra lo que dominas) con los datos que T1 trajo (`mastered` + momento + `resumen_competencia`). Prohibido el toast de sistema; si algún día hace falta aviso mecánico, será voz del Auditor. Gwyndolin: esta decisión es la PUERTA del cap. 1 — cuando Seath haga render/Hub, el eco ya tiene forma y datos.
-- **🧭10 (post-mortem en la misma unidad) → SALDADA.** O2 de Ornstein trae `factura` + `total_noise` vs `noise_budget` en la MISMA unidad; la línea del Auditor va como clave+args (el texto lo resuelve data/). Zona 🔬 de mañana la hace jugar desde save limpio.
+**Notas de dirección de Oscar (🧭) — resueltas esta noche:**
+- **🧭11 (logro «Cero rastro» imposible) → SALDADA.** Oscar y Havel midieron
+  números independientes y coincidentes; T1 los convirtió en umbral 5 + sin
+  errores; validado al mergear con los datos delante. El bug de la mañana
+  nació, se diagnosticó, se planificó, se arregló y se verificó EN UN MISMO
+  DÍA: ese es exactamente el circuito que queríamos.
+- **🧭12 (`postmortem.auditor.*` sin texto en `data/`) → ACOGIDA como
+  criterio**: es el nodo de packaging PRIORITARIO cuando se plantee
+  data/render. El motor ya pasa `line_key`+`args`; el primer contacto real con
+  «el sistema te estuvo leyendo» (§2.4) ocurrirá cuando ese formulario sea
+  texto. Mientras no haya superficie que lo pinte, no es deuda — es orden de
+  cola correcto.
+- **🧭9 → confirmada**: el tubo (T2, evento en bus) ya existe junto a los
+  datos (T1, PR #12). Falta quien lo pinte (render) y lo dice (texto).
 
 **Qué me ha gustado (sabor):**
-- **El día que el sistema dejó de prometer y empezó a cumplir.** La costura 🧭8 más vieja del plan murió con un test verde; las tuberías del cap. 2 ejecutan la línea EXACTA de Manus (`grep 11:04 … | wc -l` → `2`) con semántica GNU real; el Auditor puede leerte el HISTORIAL (factura y comando que delata). Diseño §5.2, §2.4 y §6.1 ya son comportamiento.
-- **O3 le da a la política 🧭6 su primer dato duro**: viaje honesto = 6 fijo sobre budget 12. Con eso firmé la operativa de «primer error» (perdón único por partida, solo ruido de riesgo cuenta; el 127 léxico nunca activa ni consume el perdón). Escrita en DESIGN §6.1 — ejecutores: se escribe en el motor cuando el cobro de ruido llegue al flujo de sala.
-- **Manus sostiene el colchón como el mejor de sus turnos**: fragmento 3 (el contrato a nombre de nadie) y cap. 3 «Bombas» (escalada Umbral→Faro, grieta de Ceniza plantada) — coherentes con H1/H2 y la Lista. El motor narrativo va DOS capítulos por delante del motor de juego: es exactamente el colchón que queríamos.
+- **El día que el cap. 2 se JUGÓ de verdad.** O1 de Ornstein convirtió la
+  línea golden de demo del sandbox a ENCARGO dentro del flujo: listar → abrir
+  → golden → cerrar, con rechazo accionable que dice lo que te falta en
+  lenguaje del juego y post-mortem adjunto al cierre. La «puerta del cap. 2»
+  del plan ya no es una API, es una experiencia. Es el mejor paso de gameplay
+  desde que empezó Fase 1.
+- **La columna USER de `ps` que delata (ceniza-521 vs censo-522).** El diseño
+  de «el sistema te lee» ya no vive solo en el post-mortem: el SISTEMA
+  OPERATIVO simulado te delata en una columna. Es coherencia profunda con la
+  prosa del demonio gemelo de Manus — tema (identidad como dato) convertido en
+  verbo técnico, que es exactamente lo que Havel pide para la familia conteo.
+- **El giro del Auditor del cap. 4 RETROALIMENTA la mecánica del post-mortem.**
+  Manus plantó «la primera pregunta fuera de registro» y de golpe el
+  `build_postmortem` de O2 (PR #10) no es una pantalla de estadísticas: es la
+  primera vez que te juzga la entidad que mañana te preguntará. Historia y
+  sistema empujando en la misma dirección, sin que nadie lo coordinara
+  explícitamente. El motor narrativo va DOS capítulos por delante y ahora
+  además conectado hacia atrás.
+- **El circuito 🧭 funcionó de punta a punta en un solo día** (ver 🧭11 arriba).
+  Cuatro miradas distintas, cero solape, un bug muerto antes de medianoche.
 
 **Qué NO me ha gustado / corrijo:**
-- `UMBRAL_CERO_RASTRO=4` nació descalibrado: está POR DEBAJO del coste honesto (6) — un logro de excelencia que el jugador honesto no puede alcanzar es un logro de consuelo mal diseñado. No lo recalibro a ciegas: la zona 🔬 de mañana pide a Havel la factura mínima alcanzable; con ese dato se re-fija (probablemente 4→5 con «sin errores» como condición extra, o sube a 6). Seath/Ornstein: no lo toquéis sin el dato.
-- Las tres ramas tocaron las mismas huellas y los tres merges conflictuaron igual (patrón HEAD `[HECHO]` vs rama `[EN CURSO]`). Ya está fijado en MI prompt (auto-mejora de esta noche: lado HEAD gana, worklog nunca pierde entradas, resolución por script). Coste de la noche: ~3 resoluciones manuales que mañana serán mecánicas.
-- [Menor] El bloque de terminal del cap. 2 menciona `sort`/`uniq`/`>` que el sandbox aún no soporta — Manus lo dejó anotado en el propio fichero. Cola natural del cap. 2, no urgente hasta que los encargos ch2 lo pidan.
+- **Las líneas `[HECHO]` de Manus del 29/08 vivieron DOS noches de más en
+  `activo.md`**: mis cierres del 29 y el 30 archivaron solo las líneas del día
+  y pasaron por alto las de prosa. Corregido hoy (archivadas con nota de
+  retraso). Regla que me aplico desde esta noche (auto-mejora aplicada a mi
+  prompt): el archivado nocturno es INVENTARIO COMPLETO de `activo.md`
+  (`grep -n '\[HECHO\]'` antes de cerrar), no solo las líneas de hoy.
+- [Menor] La rama de Ornstein trajo `src/core/engine/PLAN-2026-08-31.md` —
+  documentación de planificación de rama VIVIENDO en `src/` (la convención
+  dice que el plan del día vive en `backlog/planes/` y el CÓMO en el PR). No
+  lo quito ahora (inofensivo, suite verde, hay gente que lo citó en el
+  worklog), pero mañana el dueño lo reubica en `docs/` o lo elimina. Nota
+  para Artorias como higiene, no como defecto de la PR.
+- [Menor] El plan de S1 pedía «procesos como pide la idea de Havel sobre
+  /proc» y la implementación usa `fs.processes` como piel del generador
+  (zero-RNG). La solución entregada es MEJOR que la pedida (determinista y
+  testeable), pero la idea /proc original sigue viva y es más diegética a
+  largo plazo (montar `/proc` como FS de solo lectura). Recámara, no deuda.
 
-**Dirección para el plan del 31/08 (mi lectura, por prioridad):**
-1. **Puerta del cap. 2 en juego real (Smough)**: los encargos `story.ch2.e1–e5` ya existen en datos — que una sesión pueda ABRIR uno y validarlo (aunque la sala del cap. 2 no se genere aún: contrato→apertura→validación con `prereqs_met`, el flujo que O1 dejó como API). Es el primer encargo FUERA del cap. 0.
-2. **Cap. 3 «Bombas» hacia datos (Smough o Seath, según holgura)**: `story.ch3.*` al currículo + `ps`/`env` y el sudo GANADO (nota de Artorias: es un salto de diseño — el sudo se otorga por narrativa, no por contraseña; decidir forma conmigo antes de codearlo).
-3. **Eco 🧭9 pre-render (Ornstein)**: nada de UI — un EVENTO de bus `progression.unlocked` (concepto, momento) que el futuro render pinte y que HOY ya permita al REPL anunciarlo como línea del Auditor. Barato, y el cap. 1 de Manus lo conecta.
-4. **Recalibrado del umbral «Cero rastro»** cuando Havel traiga la factura mínima (mañana).
-5. **Manus mantiene el colchón**: cap. 4 «Troncales» + fragmento 4 ya en su plan de madrugada. El ssh/scp de «Troncales» avisa: el sandbox necesitará red simulada — que Gwyndolin lo planifique como tarea propia, no como apunte.
+**Dirección para el plan del 01/09 (mi lectura, por prioridad):**
+1. **Zona 🔬 al cap. 2 (ver `zona-testeo.md`)**: Oscar recorre el flujo de
+   encargo desde save limpio — es el primer día que el viaje del novato puede
+   cruzar del cap. 0 al cap. 2 jugando.
+2. **El `sudo` GANADO al motor (Smough)**: forma firmada en DESIGN §6.1; con
+   `ps`/`env` ya dentro, el cap. 3 tiene su familia Procesos casi completa.
+   AC sugerido: sin credencial → rechazo diegético accionable; con credencial
+   → ruido premium + firma en auth.log.
+3. **Primer paquete de textos (Seath/data, 🧭12)**: claves
+   `postmortem.auditor.*` + las del cap. 1 — el eco 🧭9 tiene tubo y datos; el
+   texto es lo único que falta para que el unlock SE SIENTA. Empieza por las
+   claves del post-mortem: ya hay consumidor en el flujo (O2).
+4. **Familia conteo de Havel (sort/uniq/head/tail/tee)**: ensancha el tracto
+   de pipes que desde HOY se juega dentro del flujo — es la barrera técnica
+   natural hacia el cap. 6 y encaja con la zona ya jugable.
+5. **Manus mantiene el colchón**: cap. 5 «Subestación» + fragmento 5 (ya en su
+   plan de madrugada). El censo del cap. 6 sigue debiendo worldbuilding.
+6. **Render v0 en el horizonte**: fuente bitmap validada + paleta + SEMANTIC
+   castellano listos desde PR #3; con el flujo del cap. 2 jugable y el eco en
+   bus, render es el desbloqueo natural del deploy `[P1]`. Si mañana va verde,
+   Gwyndolin debería reservar la primera tarea de render esta misma semana
+   (fuente → 1 sala pintada del cap. 0, el smoke visual más barato).
 
 **Ideas propias (recámara, no para el plan de mañana):**
-- La factura del post-mortem puede volverse OBJETO de historia: que Gris te la pida («enséñame cómo entraste») y el juego valide que tu propio informe coincide con el save — el jugador que mintió en su factura se delata solo. H1/H2 lo sostienen.
-- Los logros como líneas que el Auditor TE ESCRIBE en el Hub cuando exista: «Mano de seda» no es una medalla, es una anotación fría en tu expediente. §7.6 sin traicionar el formulario §2.4.
-- El `resumen_competencia` con factura es la SEMILLA del ranking interno de runs (ruido más bajo con más encargos) — solo si algún día Juanma pide puntuación; la REGLA DURA §4.2 prohíbe que el grind compita con la competencia.
+- La fila 000 VACÍA del expediente (cap. 4, beat 7): que la fila que falta sea
+  LA DEL JUGADOR — tu post-mortem real se cuela en el expediente del sistema y
+  el juego valida que tu factura coincide con el auth.log simulado. El que
+  mintió en su factura se delata solo. H1/H2 lo sostienen (ya lo apunté el
+  30/08; el giro del Auditor del cap. 4 lo hace URGENTE de diseño, no de código).
+- «La cuenta» (fragmento 4) puede materializarse como UN BUG VISIBLE: un
+  recibo del Banco del Muelle perdido en el FS de algún encargo del cap. 2.
+  El mundo contándote la historia que nadie te va a contar (loot narrativo
+  §2.2 sin tocar probabilidad).
+- Eco de Gris: primer CONSUMIDOR barato del evento `progression.unlocked` —
+  una línea del Auditor en el REPL al dominar (opcional, Ornstein). Solo si
+  respeta la ficha de voz; si duda, que espere al render.
 
 *(Fin de la entrada de Gwyn — Gwyndolin consume esta sección a las 11:00.)*
