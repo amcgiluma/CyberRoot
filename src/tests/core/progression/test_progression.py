@@ -8,10 +8,12 @@ construye aquí SIN importar de `src/tests/core/sandbox/`.
 
 from __future__ import annotations
 
+from core.common.events import Event, EventBus
 from core.progression import (
     CAP0_CONTRACT_BOON,
     LOGRO_CERO_RASTRO,
     LOGRO_MANO_SEDA,
+    UNLOCK_EVENT_TYPE,
     evaluate_logros,
     evaluate_unlocks,
     resumen_competencia,
@@ -105,6 +107,53 @@ def test_empty_shell_no_unlock() -> None:
     st = GameState(shell=Shell(FileSystem(root=DirNode(name="/"))))
     assert evaluate_unlocks(st) == []
     assert st.knowledge == {}
+
+
+# --------------------------------------------------------------------------
+# 4b-4e · T2 (31/08): eco 🧭9 — evaluate_unlocks emite progression.unlocked
+# --------------------------------------------------------------------------
+
+def test_unlock_emits_event_with_full_payload() -> None:
+    """Unlock → el suscriptor del bus recibe UN `progression.unlocked` con
+    payload completo {concepto, tick, order} (eco 🧭9 pre-render)."""
+    bus = EventBus(record_history=10)
+    received: list[Event] = []
+    bus.subscribe(UNLOCK_EVENT_TYPE, lambda ev: received.append(ev))
+
+    st = GameState(shell=_cap0_completed_shell())
+    evaluate_unlocks(st, bus=bus)
+
+    assert len(received) == 1
+    ev = received[0]
+    assert ev.type == UNLOCK_EVENT_TYPE
+    # Canónica: cat (tick 1) + cp (tick 2) → dominio detectado en tick 2, order 1.
+    assert ev.data == {"concepto": CAP0_CONTRACT_BOON, "tick": 2, "order": 1}
+    assert ev.tick == 2  # tiempo simulado del dominio (§3)
+    # El save sigue escribiendo CUÁNDO, igual que antes de esta tarea.
+    assert st.mastered[CAP0_CONTRACT_BOON] == {"tick": 2, "order": 1}
+
+
+def test_unlock_no_event_when_no_bus() -> None:
+    """Sin bus (None, comportamiento previo) `evaluate_unlocks` NO emite y solo
+    devuelve la lista; no se rompe ningún llamador existente (backward-compat)."""
+    other = EventBus(record_history=1)  # bus no pasado a evaluate_unlocks
+    st = GameState(shell=_cap0_completed_shell())
+    assert evaluate_unlocks(st) == [CAP0_CONTRACT_BOON]  # sin bus: no emite
+    assert other.history() == ()                          # y no fugó a otro bus
+
+
+def test_unlock_reemit_no_duplicate_on_resubmit() -> None:
+    """Idempotencia del eco: re-evaluar un estado ya dominado NO re-emite el
+    evento (nada nuevo → el bus no recibe duplicados)."""
+    bus = EventBus(record_history=10)
+    received: list[Event] = []
+    bus.subscribe(UNLOCK_EVENT_TYPE, lambda ev: received.append(ev))
+    st = GameState(shell=_cap0_completed_shell())
+
+    assert evaluate_unlocks(st, bus=bus) == [CAP0_CONTRACT_BOON]
+    assert len(received) == 1
+    assert evaluate_unlocks(st, bus=bus) == []  # ya dominado → nada nuevo
+    assert len(received) == 1                   # sin re-emisión duplicada
 
 
 # --------------------------------------------------------------------------
@@ -208,21 +257,49 @@ def test_evaluate_logros_idempotent() -> None:
 
 
 def test_extra_noise_kills_cero_rastro() -> None:
-    """Un `ls` extra (ruido 5 > umbral 4) mata «Cero rastro» pero no «Mano de seda»."""
+    """Ruido > umbral (6 > 5) mata «Cero rastro» pero no «Mano de seda» (limpias)."""
     shell = _cap0_completed_shell()
     assert shell.execute("ls /srv").exit_code == 0
+    assert shell.execute("ls /srv").exit_code == 0
+    assert shell.execute("ls /srv").exit_code == 0
     st = GameState(shell=shell)
-    assert st.shell.total_noise == 5
+    assert st.shell.total_noise == 7
     assert evaluate_logros(st) == [LOGRO_MANO_SEDA]
     assert LOGRO_CERO_RASTRO not in st.logros
 
 
-def test_error_kills_mano_seda() -> None:
-    """Un exit != 0 (comando desconocido, exit 127) mata «Mano de seda» no «Cero rastro»."""
+def test_noise_just_over_threshold_kills_cero_rastro() -> None:
+    """Ruido 6 (canónica + 2 ls, sin errores) ya NO gana «Cero rastro»: con umbral\n
+    5 la canónica §6.4.4 (6) deja de ser alcanzable (🧭11, refuerza el AC)."""
+    shell = _cap0_completed_shell()
+    assert shell.execute("ls /srv").exit_code == 0
+    assert shell.execute("ls /srv").exit_code == 0
+    st = GameState(shell=shell)
+    assert st.shell.total_noise == 6
+    assert evaluate_logros(st) == [LOGRO_MANO_SEDA]
+    assert LOGRO_CERO_RASTRO not in st.logros
+
+
+def test_min_honesto_ruido5_sin_errores_gana_cero_rastro() -> None:
+    """🧭11: una sesión min-honesta (ruido exactamente 5, sin errores) SÍ gana
+    «Cero rastro» — el umbral 5 vuelve el logro alcanzable de forma honesta."""
+    shell = _cap0_completed_shell()
+    assert shell.execute("ls /srv").exit_code == 0
+    st = GameState(shell=shell)
+    assert st.shell.total_noise == 5
+    assert evaluate_logros(st) == [LOGRO_CERO_RASTRO, LOGRO_MANO_SEDA]
+    assert st.logros[LOGRO_CERO_RASTRO] is True
+
+
+def test_error_kills_cero_rastro_y_mano_seda() -> None:
+    """Un exit != 0 (comando desconocido, exit 127) mata AMBOS logros: «Mano de
+    seda» (exigía cero errores) y ahora también «Cero rastro» (pulcritud, 🧭11)."""
     shell = _cap0_completed_shell()
     shell.execute("comando_fantasma")
     st = GameState(shell=shell)
-    assert evaluate_logros(st) == [LOGRO_CERO_RASTRO]
+    assert st.shell.total_noise == 4  # el error no añade ruido
+    assert evaluate_logros(st) == []
+    assert LOGRO_CERO_RASTRO not in st.logros
     assert LOGRO_MANO_SEDA not in st.logros
 
 

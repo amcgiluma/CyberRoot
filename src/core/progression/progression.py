@@ -20,6 +20,8 @@ from __future__ import annotations
 import shlex
 from typing import TYPE_CHECKING, Any
 
+from core.common.events import Event, EventBus
+
 if TYPE_CHECKING:  # solo anotaciones: evita el ciclo state↔progression
     from core.state.state import GameState
 
@@ -27,20 +29,34 @@ if TYPE_CHECKING:  # solo anotaciones: evita el ciclo state↔progression
 #: hace `cp <oficina>/<proveedor> /usb/`).
 CAP0_CONTRACT_BOON = "c.cp"
 
+#: Evento `progression.unlocked` (eco 🧭9 pre-render, T2 31/08): emitido por
+#: `evaluate_unlocks` en el bus común cuando UN concepto se domina. Payload:
+#: `{"concepto", "tick", "order"}` (los tres datos ya viven en `state.mastered`).
+#: Catálogo abierto del bus (§5.2): constante propia de progression, NO toca
+#: `common/` (frontera de Ornstein respetada; el render futuro pinta el eco de
+#: Gris subscribiéndose a este tipo sin tocar el core).
+UNLOCK_EVENT_TYPE = "event.progression.unlocked"
+
 #: La extracción del cap. 0 aterriza SIEMPRE bajo `/usb` (skin del dossier).
 _CAP0_USB_DEST = "/usb"
 
-#: Logro «Cero rastro» (§7.6, T2 30/08): cap. 0 completo con `total_noise`
-#: igual o inferior al umbral. Umbral ⚠️ v1 calibrable (cliente: O3 harness).
+#: Logro «Cero rastro» (§7.6, T2 30/08, recalibrado T1 31/08): cap. 0 completo,
+#: `total_noise` igual o inferior al umbral Y sin ni un `exit != 0` (pulcritud +
+#: frugalidad; 🧭11). Umbral ⚠️ v1 calibrable (cliente: O3 harness).
 LOGRO_CERO_RASTRO = "logro.cero_rastro"
 
 #: Logro «Mano de seda» (§7.6, T2 30/08): extracción canónica sin ni un
 #: `exit != 0` en toda la sesión.
 LOGRO_MANO_SEDA = "logro.mano_de_seda"
 
-#: Umbral de ruido del «Cero rastro» ⚠️ v1. La run canónica del cap. 0
-#: (cat 1 + cp 3, §6.4.4) cierra en `total_noise == 4`.
-UMBRAL_CERO_RASTRO = 4
+#: Umbral de ruido del «Cero rastro» ⚠️ v1, recalibrado (T1, 31/08, 🧭11).
+#: Datos medidos hoy por Oscar (05:00) y Havel (07:00), independientes:
+#: min honesto = 5, canónico §6.4.4 = 6, puro `cp` memorizado = 3. El umbral 4
+#: era imposible de ganar honesto (la canónica cierra en 6). Con 5, la
+#: canónica NO lo gana y un min-honesto sin errores SÍ. Se exige además
+#: factura limpia (`_no_exit_errors`): «Cero rastro» = frugalidad + pulcritud,
+#: distinto de «Mano de seda» (que solo mide ausencia de errores).
+UMBRAL_CERO_RASTRO = 5
 
 
 def _parsed_argv(line: str) -> tuple[str, ...] | None:
@@ -73,13 +89,21 @@ def _cap0_extraction_completed(shell: Any) -> bool:
     return False
 
 
-def evaluate_unlocks(state: "GameState") -> list[str]:
+def evaluate_unlocks(
+    state: "GameState", *, bus: EventBus | None = None
+) -> list[str]:
     """Aplica la regla v0 y marca dominados los boons cuya competencia se demostró.
 
     Idempotente: si el concepto ya estaba dominado no se re-marca ni se repite
     en la lista de retorno. Devuelve los boons RECIÉN dominados en esta llamada
     (vacía si nada nuevo). La persistencia del estado la decide el llamador
     (normalmente `state.save(...)` o `save_game(...)`).
+
+    Opcional `bus` (eco 🧭9 pre-render, T2 31/08): si se pasa un `EventBus`,
+    emite `UNLOCK_EVENT_TYPE` con `{"concepto", "tick", "order"}` por cada
+    concepto recién dominado (el render futuro pinta el eco de Gris sin tocar
+    el core). Sin `bus` (None, comportamiento previo) no emite nada; los tres
+    datos ya viven en `state.mastered`.
     """
     newly_dominated: list[str] = []
     if _cap0_extraction_completed(state.shell):
@@ -92,6 +116,18 @@ def evaluate_unlocks(state: "GameState") -> list[str]:
                 "order": len(state.mastered) + 1,
             }
             newly_dominated.append(CAP0_CONTRACT_BOON)
+    if bus is not None:
+        for boon in newly_dominated:
+            meta = state.mastered[boon]
+            bus.publish(
+                UNLOCK_EVENT_TYPE,
+                data={
+                    "concepto": boon,
+                    "tick": meta["tick"],
+                    "order": meta["order"],
+                },
+                tick=meta["tick"],  # tiempo SIMULADO del dominio (§3)
+            )
     return newly_dominated
 
 
@@ -176,6 +212,7 @@ def evaluate_logros(state: "GameState") -> list[str]:
     if _cap0_extraction_completed(state.shell):
         if (
             state.shell.total_noise <= UMBRAL_CERO_RASTRO
+            and _no_exit_errors(state.shell)  # 🧭11: pulcritud (mata con error)
             and not state.logros.get(LOGRO_CERO_RASTRO)
         ):
             state.logros[LOGRO_CERO_RASTRO] = True
