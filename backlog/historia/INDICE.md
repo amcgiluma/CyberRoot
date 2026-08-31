@@ -72,12 +72,29 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
   (beat 6 §2.5: sabía que el primer trabajo era veneno, no avisó) en su
   propia voz, sin resolver. La regla de la luz (Gris) llega viva al Alto.
   Gancho: la ventana abierta hacia el troncal del Faro (cap. 4).
+- ✅ Fragmento 4 «La cuenta» `[LISTA]` (`FRAGMENTOS.md`, 31/08) — estado de
+  cuenta impreso del Banco del Muelle (SUCURSAL 47) a nombre de una sociedad
+  instrumental llamada como la ciudad, con nómina mensual de `LUMEN DIV.
+  ESTRUCTURAS` (filial 44) durante 36 meses y un único recibo HOSP-47-C;
+  cerrada por falta de actividad. Sostiene H1 (un estilo de vida pagado con
+  un nombre que no existe) y H2 (la nómina de la división de Lumen es la
+  factura de mantener a un sujeto sin registro) a la vez. Cruz con la Lista
+  (§2.4). Cruza el 47 y el 44 con fragmentos 2-3 sin romper nada.
+- ✅ Capítulo 4 «Troncales» (`CAPITULOS/04-troncales.md`, beats 7–8,
+  31/08) — 5 encargos (`story.ch4.e1`–`e5`: 1 azul, 1 gris, 2 rojos, 1 de
+  cierre), familia Red real (`ssh`, `scp`, túneles) con la regla de la luz
+  en su MÁXIMO (Faro: entrar es fácil de intentar, caro de pagar). El
+  **giro del Auditor PLANTADO** (beat 8 §2.5: primera pregunta fuera de
+  registro, sin resolver — arco §9) y el **expediente** (beat 7) con la
+  fila 000 vacía y las dos lecturas sin elegir. El troncal se reescribe los
+  días de la firma (11:04 del cap. 2 vuelve como marca). Gancho: la puerta
+  que pregunta, presión hacia el cap. 5.
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
-- SIGUIENTE (dirección Gwyn, 28/08): fragmento 4 (la cuenta que recibió
-  pagos mensuales de una filial de Lumen hasta hace 3 años) con el cap. 4
-  «Troncales» (red real: `ssh`/`scp`/túneles) cuando toque colchón del
-  Acto 2.
+- SIGUIENTE (dirección Gwyn, 28/08): fragmento 5 (el expediente médico del
+  hospital del Muelle — el de Vela existe, ¿y este?) con el cap. 5 (asalto
+  invertido a la Subestación, presión máxima de Vela, beat 9) cuando toque
+  colchón del Acto 2 hacia el giro final.
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
   Materializarlo en `FRAGMENTOS.md` cuando se escriba la cadena.

@@ -17,7 +17,7 @@
 | 1 | 1 | foto con los metadatos raspados | [LISTA] |
 | 2 | 2 | pulsera de hospital con fecha | [LISTA] |
 | 3 | 3 | contrato de alquiler a nombre de nadie | [LISTA] |
-| 4 | 4 | cuenta que recibió pagos mensuales de una filial de Lumen hasta hace 3 años | [PENDIENTE] |
+| 4 | 4 | cuenta que recibió pagos mensuales de una filial de Lumen hasta hace 3 años | [LISTA] |
 | 5 | 5 | expediente médico del hospital del Muelle (el de Vela existe — ¿y este?) | [PENDIENTE] |
 | 6 | 6 | hoja de cierre del Programa de Continuidad: sujeto 000, fecha en blanco | [PENDIENTE] |
 
@@ -98,6 +98,41 @@ un contrato sin arrendatario no debería haberse firmado jamás. El folio
 14-0007 es la misma numeración que perfora la Subestación; nadie en dos
 mundos ha leído las dos anotaciones juntas salvo quien las busca.
 
+## Fragmento 4 — La cuenta (cap. 4, botín raro)
+
+> **Formato**: estado de cuenta impreso de un cajero del Umbral norte. El
+> 47 vuelve a sonar (Banco del Muelle, sucursal 47), y la cuenta lleva un NHC
+> que no cuadra con un titular. Cruza con la Lista (§2.4): un pago recurrente
+> a nombre de nadie es exactamente lo que la Lista registra por debajo de
+> cada purga.
+
+Estado de cuenta, papel térmico, arrugado por el doblez de haber guardado
+durante años en una cartera. Cabecera en negrita: `BANCO DEL MUELLE —
+SUCURSAL 47`. Titular impreso: `VESPER DE GESTIÓN S.L. — CUENTA 44-0191-7`.
+Columna de movimientos: un único concepto, repetido, un día al mes, durante
+treinta y seis meses:
+
+- `A/ NÓMINA · LUMEN DIV. ESTRUCTURAS · +2.140,00`
+- (treinta y cuatro entradas más, mismas letras, mismo importe)
+- `L/ RECIBO HOSP-47-C · −760,00` (una sola vez, el segundo mes)
+
+El último movimiento lleva fecha de cierre y un sello en seco: `CUENTA CERRADA
+POR FALTA DE ACTIVIDAD`. La letra del sello es la misma que factura la
+Subestación; el sello en seco no deja tinta que la IA pudiera haber raspado.
+
+En el margen, con bolígrafo y presión de administración: «nómina 36 meses,
+respaldada por contrato. Revisar vigencia del contrato.» Nadie la revisó.
+
+Dato que sostiene H1: una cuenta a nombre de una sociedad instrumental
+(llamada como la propia ciudad, nombre común de fachada), con nómina puntual
+de la división de Lumen y un único recibo del hospital, es la facturación de
+un estilo de vida que se pagó con un nombre que no existe. Dato que sostiene
+H2: el pago `.RECIBO HOSP-47-C` a la sucursal que emitió la pulsera del
+fragmento 2 cruza la identidad del titular con el hospital que guarda una
+habitación con tu carpeta vacía. La nómina de la División Estructuras de
+Lumen es la factura de mantener a un sujeto sin registro, y la truncó un
+sistema que solo cierra cuentas que el censo ya no reclama.
+
 ## Reglas para escribirlos
 - Nunca resuelven H1 vs H2: cada uno debe leerse plausible en ambas.
 - El último (nº 6) solo aparece si el jugador llega al Faro; alimenta
@@ -105,5 +140,5 @@ mundos ha leído las dos anotaciones juntas salvo quien las busca.
 - No puntúan: son botín narrativo puro (§7.1).
 
 ## Estado
-3/6 escritos (1, 2 y 3 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
+4/6 escritos (1, 2, 3 y 4 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
 la hace el ejecutor integrador cuando estén `[LISTA]`.

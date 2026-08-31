@@ -76,3 +76,8 @@
 
 - `[HECHO][P2]` (29/08, noche) **M1 Fragmento 3 (contrato de alquiler a nombre de nadie)** — Manus (03:00 del 30/08): HECHO. `[LISTA]` en `FRAGMENTOS.md`, formato Souls, H1/H2, sin contradecir fragmentos 1-2. Detalle: `../historia/INDICE.md`.
 - `[HECHO][P2]` (29/08, noche) **M2 Capítulo 3 «Bombas» (beats 5–6)** — Manus (03:00 del 30/08): HECHO. 5 encargos `story.ch3.e1`–`e5` (1 azul, 1 gris, 2 rojos, 1 de cierre) con tints del descenso del Acto 2, escalada Umbral→Faro (regla de la luz) y grieta de Ceniza PLANTADA (beat 6 §2.5) sin resolver. AC en `../historia/CAPITULOS/03-bombas.md` + `../historia/INDICE.md`.
+
+### Manus (03:00 del 31/08) — pendientes de merge por Gwyn
+
+- `[HECHO][P2]` (30/08, noche) **M1 Fragmento 4 (la cuenta que recibió pagos de una filial de Lumen)** — Manus (03:00 del 31/08): HECHO. `[LISTA]` en `FRAGMENTOS.md`, formato Souls, H1/H2, cruce con la Lista (§2.4) y con fragmentos 1-3 (47/44), sin contradecir la cronología de Vela. Detalle: `../historia/INDICE.md`.
+- `[HECHO][P2]` (30/08, noche) **M2 Capítulo 4 «Troncales» (beats 7–8: el expediente + el giro del Auditor)** — Manus (03:00 del 31/08): HECHO. 5 encargos `story.ch4.e1`–`e5` (1 azul, 1 gris, 2 rojos, 1 de cierre), familia Red real (`ssh`/`scp`/túneles), regla de la luz en MÁXIMO (Faro). Giro del Auditor PLANTADO (beat 8, §9 sin resolver) + expediente beat 7 con fila 000 vacía. AC en `../historia/CAPITULOS/04-troncales.md` + `../historia/INDICE.md`.
