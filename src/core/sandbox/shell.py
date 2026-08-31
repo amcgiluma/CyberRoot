@@ -20,6 +20,7 @@ from typing import Any
 from core.sandbox.commands.base import CommandResult, build_registry
 from core.sandbox.commands.files import SPECS as FILE_SPECS
 from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
+from core.sandbox.commands.procesos import SPECS as PROCESOS_SPECS
 from core.sandbox.commands.texto import SPECS as TEXT_SPECS
 from core.sandbox.fs import FileSystem
 from core.sandbox.noise import NoiseMeter
@@ -34,8 +35,15 @@ DEFAULT_CAP0_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "ls")
 #: pipes — 🧭8=(b): evalúan los prereqs al abrir, no lo genera el capítulo).
 DEFAULT_CH2_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "grep", "ls", "wc")
 
+#: Comandos del set del cap. 3 (S1, 31/08): añade la familia procesos (`ps`,
+#: `env`) al set del cap. 2. Cap. 0 y cap. 2 quedan INTACTOS (el proceso solo
+#: existe cuando el currículo lo presenta — regresión explícita en tests).
+DEFAULT_CH3_COMMANDS: tuple[str, ...] = (
+    "cat", "cd", "cp", "env", "grep", "ls", "ps", "wc",
+)
+
 #: Todas las specs implementadas (registro completo del módulo v0 → S1).
-SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS
+SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS
 
 #: Caracteres de sintaxis NO soportada todavía (fuera de comillas). `*?<` =
 #: globs, `>` = redirección, `&`/`;` = encadenado. `|` (tubería) SÍ entra en

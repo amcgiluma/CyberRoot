@@ -267,6 +267,9 @@ def test_sesion_roundtrip_ida_y_vuelta_exacto() -> None:
 
 
 def test_todas_las_specs_estan_disponibles_para_el_set() -> None:
-    """Las specs del módulo cubren cap. 0 (cat/cd/cp/ls) + cap. 2 (grep/wc)."""
-    assert {s.name for s in SPECS_ALL} == {"ls", "cd", "cat", "cp", "grep", "wc"}
+    """Las specs del módulo cubren cap. 0 (cat/cd/cp/ls) + cap. 2 (grep/wc)
+    + cap. 3 (ps/env, S1 31/08)."""
+    assert {s.name for s in SPECS_ALL} == {
+        "ls", "cd", "cat", "cp", "grep", "wc", "ps", "env",
+    }
     assert FILE_SPECS and NAVIGATION_SPECS

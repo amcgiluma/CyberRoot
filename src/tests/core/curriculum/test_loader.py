@@ -76,15 +76,16 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
     assert cur.version == 1
 
 
-def test_load_curriculum_14_conceptos_11_quests() -> None:
-    """El catálogo real: 14 conceptos y 11 encargos (S2 30/08 añade cap. 2).
+def test_load_curriculum_16_conceptos_16_quests() -> None:
+    """El catálogo real: 16 conceptos y 16 encargos (S2 31/08 añade cap. 3).
 
-    Conteo del 30/08: 11 (cap. 0-1) + c.grep/c.wc/c.pipe (3) y 5 quests
-    story.ch2.e1–e5. Ornstein/generator consumen este conteo vía datos reales.
+    Conteo del 31/08: 14 (cap. 0-2) + c.ps/c.env (2, familia procesos, cap. 3)
+    y 5 quests story.ch3.e1–e5. El cap. 3 «Bombas» abre la familia procesos.
+    Ornstein/generator consumen este conteo vía datos reales.
     """
     cur = load_curriculum()
-    assert len(cur.concepts) == 14
-    assert len(cur.quests) == 11
+    assert len(cur.concepts) == 16
+    assert len(cur.quests) == 16
 
 
 def test_capitulo0_tiene_exactamente_ls_cd_cat_cp() -> None:
@@ -144,6 +145,38 @@ def test_las_cinco_quests_del_cap2_tints_y_requires_segun_manus() -> None:
     # La sinergia c.pipe es la primera de texto y une grep+wc.
     pipe = cur.concept("c.pipe")
     assert pipe is not None and sorted(pipe.prerequisites) == ["c.grep", "c.wc"]
+
+
+def test_las_cinco_quests_del_cap3_tints_y_requires_segun_manus() -> None:
+    """S2 (31/08): las 5 quests del cap. 3 «Bombas» siguen a Manus.
+
+    El cap. 3 abre la familia procesos con c.ps/c.env (cap. 3). Tints E1 blue,
+    E2 grey, E3 red, E4 red, E5 de cierre grey; `requires` ⊆ conceptos del
+    cap. 3 (ps/env) + básicos del cap. 0 (ls como prereq de ps).
+    """
+    cur = load_curriculum()
+    quests = cur.quests_for_chapter(3)
+    assert [q.id for q in quests] == [
+        "story.ch3.e1",
+        "story.ch3.e2",
+        "story.ch3.e3",
+        "story.ch3.e4",
+        "story.ch3.e5",
+    ]
+    assert [q.tint for q in quests] == ["blue", "grey", "red", "red", "grey"]
+    # Cada quest usa SOLO conceptos enseñados en capítulos <= el suyo (invariante
+    # del validador, verificado además en negativo por test_validation).
+    concept_chapter = {c.id: c.chapter for c in cur.concepts}
+    for q in quests:
+        assert all(concept_chapter[r] <= q.chapter for r in q.requires)
+    # La familia procesos la abren exactamente c.ps (prereq c.ls) y c.env
+    # (prereq c.ps) en el cap. 3.
+    ps = cur.concept("c.ps")
+    env = cur.concept("c.env")
+    assert ps is not None and ps.family == "procesos" and ps.chapter == 3
+    assert env is not None and env.family == "procesos" and env.chapter == 3
+    assert sorted(ps.prerequisites) == ["c.ls"]
+    assert sorted(env.prerequisites) == ["c.ps"]
 
 
 def test_ningun_concepto_tiene_prereq_de_capitulo_posterior() -> None:
