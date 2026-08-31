@@ -1,10 +1,12 @@
-# `core/generator` — generador procedural determinista (v0.2)
+# `core/generator` — generador procedural determinista (v0.3)
 
-Entrega de **O1/O2 del plan 29/08** (Gwyndolin). La API pública
-`generate(seed, chapter, *, variant, curriculum)` produce **UNA Incursion** del
-cap. 0 «Trabajo en frío» con la piel EXACTA del capítulo. **La sala consume el
-curriculum.json real**: su `concept_pool` y su `objective` (la quest) vienen del
-currículo, no de constantes hardcodeadas.
+Entrega de **O1/O2 del plan 29/08** (Gwyndolin, v0.2) y **O1 del 31/08**
+(Ornstein, v0.3: soporte del cap. 2 «Facturas»). La API pública
+`generate(seed, chapter, *, variant, curriculum, contract_id)` produce **UNA
+Incursion** del cap. 0 «Trabajo en frío» o del cap. 2 «Facturas» con la piel
+EXACTA del capítulo. **La sala consume el curriculum.json real**: su
+`concept_pool` y su `objective` (la quest) vienen del currículo, no de
+constantes hardcodeadas.
 
 Contrato §4.5 (dueño Ornstein): el módulo ENTREGA `Incursion` (y sus dicts
 planos); el render/engine los consume. Los textos visibles van como CLAVES
@@ -16,15 +18,17 @@ planos); el render/engine los consume. Los textos visibles van como CLAVES
 
 ```python
 generate(seed: int|str|bytes, chapter=0, *, variant="canonical",
-         curriculum: Curriculum|None = None) -> Incursion
+         curriculum: Curriculum|None = None,
+         contract_id: str|None = None) -> Incursion
 ```
 
 | Entrada | Reglas |
 |---|---|
 | `seed` | Seed ORIGINAL de la run. `bool` → `TypeError` (coherente con `Rng`). `str`/`bytes` se dispersan vía sha256. |
-| `chapter` | DEBE ser `0`; otro valor → `ValueError` (ch1+ llega cuando curriculum cubra más capítulos y exista piel). |
+| `chapter` | v0: `0` (Trabajo en frío) o `2` (Facturas). Otro → `ValueError` (el resto llega cuando curriculum cubra más capítulos y exista piel). |
 | `variant` | `"canonical"` (piel EXACTA del capítulo, sin decoys) \| `"practice"` (1–2 decoys de ambientación). Otro → `ValueError`. |
 | `curriculum` | Curriculum ya cargado (el harness lo carga UNA vez y lo reusa en N seeds). `None` → `load_curriculum()``. |
+| `contract_id` | Cap. 2: el encargo concreto del pool (`story.ch2.e1`–`e5`); omitido → el primero. Cap. 0 → `ValueError` (ofrece su única quest). |
 
 Salida: `Incursion` (`seed`, `chapter`, `contract`, `scaffold`, `room`).
 
@@ -36,8 +40,9 @@ new_session(incursion) -> Shell           # sesión jugable (copia del FS, cwd d
 **`new_session`, la sesión que produce la Incursión** (🧭2, opción B como
 comportamiento): copia del FS (la Incursión conserva el suyo intacto), cwd
 nacido de `RunScaffold.initial_cwd()` (default `option_b` → `/`), y el set de
-comandos del cap. 0. La usa `validate_incursion` y el harness; el engine
-montará aquí al jugador.
+comandos POR CAPÍTULO (cap. 0 → `DEFAULT_CAP0_COMMANDS`; cap. 2 →
+`DEFAULT_CH2_COMMANDS`, que añade `grep`/`wc`). La usa `validate_incursion` y
+el harness; el engine monta aquí al jugador.
 
 ---
 
@@ -94,6 +99,20 @@ VERDE (0 xfails en la suite).
 
 ---
 
+## v0.3 — Cap. 2 «Facturas» (O1, 31/08)
+
+`generate(seed, chapter=2, contract_id="story.ch2.e1")` construye la sala del
+cap. 2: el FS de la oficina (cap. 0) EXTENDIDO con `centralita/turnos/
+turno.log` (nueva hoja `chapter2.py`) y una secuencia canónica que VERIFICA la
+línea golden del capítulo (`grep 11:04 centralita/turnos/turno.log | wc -l`
+→ `2`). La validación canónica es POR CAPÍTULO (cap. 0 → copia CANDELAS al
+USB; cap. 2 → el conteo de la golden). `generate(seed,0)` queda byte-a-byte
+idéntico (regresión cubierta). `generate()` sigue sin evaluar prereqs
+(🧭8=(b)): el pool acumulado (§6.4.1) se comprueba contra lo enseñado en
+capítulos ≤ `chapter` (e5 usa `c.cp` del cap. 0).
+
+---
+
 ## Estructura
 
 ```
@@ -102,6 +121,7 @@ src/core/generator/
 ├── errors.py      # GeneratorError, UnsolvableRoomError (§6.4.4)
 ├── model.py       # modelos inmutables (+ CANON_STEPS, RunScaffold.initial_cwd)
 ├── chapter0.py    # piel del cap. 0 como DATOS (leaf) + build_chapter0_fs
+├── chapter2.py    # piel del cap. 2 como DATOS (leaf) + build_chapter2_fs (v0.3)
 ├── generator.py   # generate() / validate_incursion() / new_session()
 └── README.md      # este fichero
 ```

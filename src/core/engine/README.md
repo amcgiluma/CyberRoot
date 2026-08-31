@@ -70,3 +70,33 @@ PURA, testeable headless (sin I/O, sin RNG, sin estado global).
 ```bash
 ./.venv/bin/python -m pytest src/tests/core/engine -o addopts= -q
 ```
+
+---
+
+## v0.2 (O1+O2, 31/08) — flujo de ENCARGO del cap. 2 + post-mortem conectado
+
+Segundo fichero del módulo: `session.py` — el flujo completo de un encargo del
+currículo REAL: **listar → abrir (validando prereqs) → generar la sala del
+contrato → jugar → cerrar.** Un `postmortem.py` lo consume al CERRAR (O2).
+
+- `listar_encargos(curriculum, chapter, knowledge=None)` → vitrina de la mesa
+  del Hub: los encargos del capítulo ordenados por id, con `abrible`/`falta`
+  si se pasa `knowledge`. NO genera nada (🧭8=(b)).
+- `rechazo_accionable(...)` → qué conceptos faltan (el «no puedes» es un dato,
+  no una negativa).
+- `abrir_encargo(curriculum, quest_id, knowledge, run_seed=0)` → valida
+  `Contract.prereqs_met` al ABRIR (nunca en `generate()`); si procede, genera
+  la sala (seed determinista `quest_id:run_seed`) y devuelve un
+  `EncargoSession` (Incursion + Shell viva). `session.ejecutar(line)` juega.
+- `cerrar_encargo(session, modo="completado"|"expulsión")` → adjunta
+  `build_postmortem(shell_dict, state)` como dato estructurado del cierre.
+
+Para que la golden del cap. 2 (`grep 11:04 centralita/turnos/turno.log |
+wc -l` → `2`) fuera JUGABLE dentro del flujo, el generador ganó soporte del
+cap. 2: `generate(seed, chapter=2, contract_id="story.ch2.e1")` construye la
+sala de la centralita (nueva hoja `src/core/generator/chapter2.py`, canon con
+la golden) y `generate(seed,0)` queda byte-a-byte idéntico (regresión).
+
+El módulo consume `build_postmortem` como función PURA e intacta: el post-
+mortem del cap. 2 factura la línea del pipe (grep/wc) bajo su comando primario
+y `total_noise` con el ruido real (grep 2 + wc 1 + cd 0).

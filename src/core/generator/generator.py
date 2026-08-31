@@ -25,7 +25,7 @@ from core.common.rng import Rng
 from core.common.types import SeedLike
 from core.curriculum import Curriculum, load_curriculum
 from core.sandbox.fs import DirNode, FileNode
-from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, Shell
+from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, Shell
 
 from core.generator.chapter0 import (
     DECOY_CONTENT,
@@ -33,9 +33,16 @@ from core.generator.chapter0 import (
     OFFICE_DIR,
     build_chapter0_fs,
 )
+from core.generator.chapter2 import (
+    CH2_GREP_WC_EXPECTED,
+    TURNO,
+    TURNO_FILE,
+    build_chapter2_fs,
+)
 from core.generator.errors import GeneratorError, UnsolvableRoomError
 from core.generator.model import (
     CANON_STEPS,
+    CANON_STEPS_CH2,
     CanonSolution,
     Contract,
     Incursion,
@@ -46,6 +53,16 @@ from core.generator.model import (
 
 #: Variantes de sala soportadas en v0.
 VARIANTS = ("canonical", "practice")
+
+#: Tinte kármico del curriculum (blue/red/grey) → pista legible del contrato
+#: (azul/rojo/gris). El Scheme de tintes del diseño usa la forma en español
+#: como `karma_hint` del `Contract`.
+_TINT_ES: dict[str, str] = {"blue": "azul", "red": "rojo", "grey": "gris"}
+
+#: Comandos de la sesión por capítulo (el cap. 0 es escenario sin pipes; el
+#: cap. 2 añade grep/wc — sets ya definidos en el sandbox).
+def _session_commands(chapter: int) -> tuple[str, ...]:
+    return DEFAULT_CH2_COMMANDS if chapter == 2 else DEFAULT_CAP0_COMMANDS
 
 #: Nota del andamiaje de la run 0 (decisión pendiente de Gwyn, 🧭2 plan 28/08 §4).
 _SCAFFOLD_NOTE = (
@@ -83,6 +100,17 @@ def _concept_pool(curriculum: Curriculum, chapter: int) -> tuple[str, ...]:
     return tuple(c.id for c in curriculum.chapter_concepts(chapter))
 
 
+def _taught_up_to(curriculum: Curriculum, chapter: int) -> frozenset[str]:
+    """Conceptos enseñados en capítulos ≤ `chapter` (invariante §6.4.1).
+
+    Un encargo puede depender de herramientas de capítulos ANTERIORES
+    (p.ej. `story.ch2.e5` usa `c.cp`, enseñado en el cap. 0): el invariante
+    pedagógico exige que `quest.requires` ⊆ acciones enseñadas en ≤ `chapter`,
+    no solo las del propio capítulo. Determinista, sin RNG.
+    """
+    return frozenset(c.id for c in curriculum.concepts if c.chapter <= chapter)
+
+
 def new_session(incursion: Incursion) -> Shell:
     """Monta una sesión JUGABLE para la Incursion: copia del FS (la Incursión
     conserva SU FS intacto), cwd nacido del DEFAULT del scaffold (opción B → "/")
@@ -97,7 +125,7 @@ def new_session(incursion: Incursion) -> Shell:
     return Shell(
         room.fs.snapshot(),
         host=room.host,
-        commands=DEFAULT_CAP0_COMMANDS,
+        commands=_session_commands(room.chapter),
         cwd=incursion.scaffold.initial_cwd(),
     )
 
@@ -125,37 +153,54 @@ def validate_incursion(incursion: Incursion) -> None:
                 stderr=result.stderr,
             )
 
-    # La copia debe existir en el USB (del FS DE VALIDACIÓN, el que el cp
-    # mutó) y conservar el contenido del dossier. El FS de la Incursion
-    # devuelta queda intacto (se trabaja sobre la snapshot).
-    obj = room.objective
-    target_path = f"{obj.dst_dir}/{obj.file}"
-    try:
-        target = shell.fs.resolve(target_path, "/")
-    except Exception as exc:  # FsError -> no resuelve
-        raise UnsolvableRoomError.from_step(
-            step_index=len(room.canon.steps),
-            argv=("resolve", target_path),
-            expect_exit=0,
-            exit_code=1,
-            stderr=f"fs.resolve: {exc!r}",
-        ) from exc
-    if isinstance(target, DirNode):
-        raise UnsolvableRoomError.from_step(
-            step_index=len(room.canon.steps),
-            argv=("cat", target_path),
-            expect_exit=0,
-            exit_code=1,
-            stderr=f"{target_path} existe pero es un directorio",
-        )
-    if not target.content.startswith("CANDELAS"):
-        raise UnsolvableRoomError.from_step(
-            step_index=len(room.canon.steps),
-            argv=("cat", target_path),
-            expect_exit=0,
-            exit_code=1,
-            stderr="copiada sin el prefijo CANDELAS",
-        )
+    # La aserción de resolubilidad final es POR CAPÍTULO (§6.4.4): cada sala
+    # debe dejar resolverse con su solución canónica.
+    if room.chapter == 0:
+        # La copia debe existir en el USB (del FS DE VALIDACIÓN, el que el cp
+        # mutó) y conservar el contenido del dossier. El FS de la Incursion
+        # devuelta queda intacto (se trabaja sobre la snapshot).
+        obj = room.objective
+        target_path = f"{obj.dst_dir}/{obj.file}"
+        try:
+            target = shell.fs.resolve(target_path, "/")
+        except Exception as exc:  # FsError -> no resuelve
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("resolve", target_path),
+                expect_exit=0,
+                exit_code=1,
+                stderr=f"fs.resolve: {exc!r}",
+            ) from exc
+        if isinstance(target, DirNode):
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("cat", target_path),
+                expect_exit=0,
+                exit_code=1,
+                stderr=f"{target_path} existe pero es un directorio",
+            )
+        if not target.content.startswith("CANDELAS"):
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("cat", target_path),
+                expect_exit=0,
+                exit_code=1,
+                stderr="copiada sin el prefijo CANDELAS",
+            )
+    elif room.chapter == 2:
+        # La golden del cap. 2: la tubería `grep 11:04 ... | wc -l` del canon
+        # debe producir EXACTAMENTE la doble apertura (`2`). El exit 0 de la
+        # tubería no basta (siempre es 0): el CONTENIDO es la invariante.
+        last = shell.history[-1]["result"]
+        raw = str(last.get("stdout", ""))
+        if raw.strip() != CH2_GREP_WC_EXPECTED:
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps) - 1,
+                argv=("grep", "11:04", TURNO, "|", "wc", "-l"),
+                expect_exit=0,
+                exit_code=0,
+                stderr=f"golden cap. 2 devolvió {raw.strip()!r}, esperaba {CH2_GREP_WC_EXPECTED!r}",
+            )
 
 
 def generate(
@@ -164,38 +209,52 @@ def generate(
     *,
     variant: str = "canonical",
     curriculum: Curriculum | None = None,
+    contract_id: str | None = None,
 ) -> Incursion:
-    """Genera UNA Incursion del cap. 0, determinista y validada.
+    """Genera UNA Incursion determinista y validada, consciente del capítulo.
 
     - `seed`: int | str | bytes (SEED ORIGINAL de la run; bool → TypeError,
       coherente con `Rng`).
-    - `chapter`: DEBE ser 0 (v0); otro valor → ValueError con aviso de
-      `curriculum.json` (ch1+ llega en la siguiente fase).
-    - `variant`: "canonical" (la piel EXACTA del capítulo, sin decoys, byte a
-      byte idéntica al test de la escena) o "practice" (añade 1–2 decoys de
-      ambientación). Otro valor → ValueError.
-    - `curriculum`: Curriculum ya cargado (p.ej. el harness lo carga una vez
-      y lo reusa en N seeds). None → `load_curriculum()` lee `curriculum.json`.
+    - `chapter`: 0 (la firma) o 2 (facturas). Otro valor → ValueError.
+      Para el cap. 2, `contract_id` elige el encargo concreto del pool
+      (`story.ch2.e1`–`e5`); si se omite, el primero del capítulo.
+    - `variant`: "canonical" (la piel EXACTA del capítulo, sin decoys) o
+      "practice" (añade decoys de ambientación). Otro valor → ValueError.
+    - `curriculum`: Curriculum ya cargado (el harness lo reusa en N seeds).
+      None → `load_curriculum()` lee `curriculum.json`.
+    - `contract_id`: solo para el cap. 2; el encargo que la sala ofrece.
 
-    La sala toma su quest del pool del capítulo (`quests_for_chapter`, cap. 0 →
-    `story.ch0.ventana`) y su concept_pool del currículo (`c.ls/cd/cat/cp`),
-    NO de constantes hardcodeadas: borrar esas constantes como fuente de datos
-    no rompe la generación. Termina SIEMPRE validando la sala
-    (`validate_incursion`) antes de devolverla (una sala irresoluble es un bug
-    y se lanza `UnsolvableRoomError`).
+    La sala toma su quest del pool del capítulo (`quests_for_chapter`) y su
+    concept_pool del currículo, NO de constantes hardcodeadas (borrar las
+    constantes como fuente de datos no rompe la generación). Termina SIEMPRE
+    validando la sala (`validate_incursion`) antes de devolverla: una sala
+    irresoluble es un bug (UnsolvableRoomError).
     """
     if isinstance(seed, bool):
         raise TypeError("seed bool no admitida por el generador (usa 0/1 explícitos)")
-    if chapter != 0:
+    if chapter not in (0, 2):
         raise ValueError(
-            f"solo el cap. 0 está disponible en v0; ch1+ llega con curriculum.json "
-            f"(recibido chapter={chapter})"
+            f"solo los caps. 0 (la firma) y 2 (facturas) están disponibles en v0; "
+            f"el resto llega con curriculum.json (recibido chapter={chapter})"
         )
     if variant not in VARIANTS:
         raise ValueError(f"variant desconocida: {variant!r} (espera canonical|practice)")
+    if contract_id is not None and chapter != 2:
+        raise ValueError("contract_id solo aplica al cap. 2 (el cap. 0 ofrece su única quest)")
 
     if curriculum is None:
         curriculum = load_curriculum()
+
+    if chapter == 0:
+        return _generate_cap0(seed, variant, curriculum)
+    return _generate_cap2(seed, variant, curriculum, contract_id)
+
+
+def _generate_cap0(
+    seed: SeedLike, variant: str, curriculum: Curriculum
+) -> Incursion:
+    """Ruta del cap. 0 — EXACTAMENTE el comportamiento histórico (regresión)."""
+    chapter = 0
     concept_pool = _concept_pool(curriculum, chapter)
 
     rng = Rng(seed)
@@ -242,12 +301,93 @@ def generate(
 
     room = Room(
         id=room_id,
-        chapter=0,
+        chapter=chapter,
         fs=fs,
         canon=canon,
         objective=objective,
         concept_pool=concept_pool,
         decoys=decoys,
+    )
+    incursion = Incursion(
+        seed=seed,
+        chapter=chapter,
+        contract=contract,
+        scaffold=scaffold,
+        room=room,
+    )
+    validate_incursion(incursion)
+    return incursion
+
+
+def _generate_cap2(
+    seed: SeedLike,
+    variant: str,
+    curriculum: Curriculum,
+    contract_id: str | None,
+) -> Incursion:
+    """Ruta del cap. 2 «Facturas»: la oficina con centralita y su golden.
+
+    Construye una sala del cap. 2 determinista por seed. La quest del encargo
+    es `contract_id` (si se da, p.ej. `story.ch2.e1`) o la primera del pool
+    del capítulo. `generate()` NO evalúa prereqs (🧭8=(b)): la decisión de
+    abrir el encargo vive en el engine (`Contract.prereqs_met`), no aquí.
+    """
+    chapter = 2
+    concept_pool = _concept_pool(curriculum, chapter)
+
+    rng = Rng(seed)
+    id_rng = rng.fork("room-id")
+    fs_rng = rng.fork("fs")
+
+    fs = build_chapter2_fs(fs_rng)
+    room_id = f"room-ch2-{id_rng.below(2**32):08x}-{variant}"
+
+    ch_quests = curriculum.quests_for_chapter(chapter)
+    if not ch_quests:
+        raise GeneratorError(
+            f"capítulo {chapter} sin quests en curriculum.json: no hay encargo "
+            f"que esta sala pueda ofrecer (viola §6.4.1)"
+        )
+    if contract_id is not None:
+        quest = curriculum.quest(contract_id)
+        if quest is None or quest.chapter != chapter:
+            raise GeneratorError(
+                f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}"
+            )
+    else:
+        quest = ch_quests[0]
+    # Invariante §6.4.1 sobre el pool ACUMULADO (≤ capítulo), no solo el del
+    # propio cap. 2 (e5 usa `c.cp` del cap. 0).
+    missing = set(quest.requires) - _taught_up_to(curriculum, chapter)
+    if missing:
+        raise GeneratorError(
+            f"quest {quest.id!r} requiere conceptos que ningún capítulo ≤ {chapter} "
+            f"enseña: {sorted(missing)} (viola §6.4.1)"
+        )
+
+    objective = Objective(
+        id=f"serie-{quest.id}",
+        story_key=quest.id,
+        summary_text_key=quest.title_key,
+        file=TURNO_FILE,
+        src=f"{OFFICE_DIR}/{TURNO}",
+    )
+    contract = Contract(
+        chapter=chapter,
+        objective_key=quest.id,
+        brief_text_key=f"{quest.id}.brief",
+        karma_hint=_TINT_ES.get(quest.tint, "gris"),
+    )
+    scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
+    canon = CanonSolution(steps=CANON_STEPS_CH2)
+
+    room = Room(
+        id=room_id,
+        chapter=chapter,
+        fs=fs,
+        canon=canon,
+        objective=objective,
+        concept_pool=concept_pool,
     )
     incursion = Incursion(
         seed=seed,

@@ -23,13 +23,27 @@ from core.engine.postmortem import (
     LINE_KEY_PICO,
     build_postmortem,
 )
+from core.engine.session import (
+    EncargoSession,
+    SUPPORTED_CHAPTERS,
+    abrir_encargo,
+    cerrar_encargo,
+    listar_encargos,
+    rechazo_accionable,
+)
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "build_postmortem",
     "DEFAULT_NOISE_BUDGET",
     "LINE_KEY_CRUCE",
     "LINE_KEY_PICO",
+    "EncargoSession",
+    "SUPPORTED_CHAPTERS",
+    "abrir_encargo",
+    "cerrar_encargo",
+    "listar_encargos",
+    "rechazo_accionable",
     "__version__",
 ]

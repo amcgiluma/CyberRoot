@@ -25,6 +25,7 @@ from core.generator.chapter0 import (
     USB_DIR,
     CANON_STEPS_RAW,
 )
+from core.generator.chapter2 import CANON_STEPS_RAW_CH2
 from core.generator.errors import GeneratorError
 
 #: La secuencia canónica como data tipada (conversión de la RAW de chapter0).
@@ -52,6 +53,10 @@ class CanonStep:
 
 #: Rellenamos la constante con los pasos reales (tras definir la clase).
 CANON_STEPS = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW)
+
+#: Secuencia canónica del cap. 2 («Facturas»): cd a la oficina + la golden
+#: `grep 11:04 centralita/turnos/turno.log | wc -l` → "2" (S1 / O1, 31/08).
+CANON_STEPS_CH2 = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH2)
 
 
 @dataclass(frozen=True)
