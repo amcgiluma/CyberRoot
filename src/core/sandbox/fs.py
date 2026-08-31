@@ -42,6 +42,63 @@ class FsError(Exception):
         return f"{self.kind}: {self.path}"
 
 
+@dataclass(frozen=True)
+class Proceso:
+    """Un proceso simulado de la sala (S1, 31/08 — familia procesos, cap. 3).
+
+    CERO RNG aquí: los procesos son PIEL del generador (se deducen del FS o se
+    inyectan por quien construye la sala); el sandbox solo los RENDERIZA. Los
+    campos cubren el formato GNU de `ps` (cabecera compacta: PID TTY TIME CMD)
+    y `ps aux` (USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND).
+    Frozen: estado inmutable, propio de datos del core (ARCHITECTURE §3).
+    """
+
+    pid: int
+    user: str
+    cmd: str
+    tty: str = "?"
+    cpu: str = "0.0"
+    mem: str = "0.0"
+    vsz: str = "0"
+    rss: str = "0"
+    stat: str = "S"
+    start: str = "00:00"
+    time: str = "00:00:00"
+
+    def to_dict(self) -> DictData:
+        """Serialize a dict plano (ida y vuelta EXACTO, ARCHITECTURE §1.5)."""
+        return {
+            "pid": self.pid,
+            "user": self.user,
+            "cmd": self.cmd,
+            "tty": self.tty,
+            "cpu": self.cpu,
+            "mem": self.mem,
+            "vsz": self.vsz,
+            "rss": self.rss,
+            "stat": self.stat,
+            "start": self.start,
+            "time": self.time,
+        }
+
+    @classmethod
+    def from_dict(cls, d: DictData) -> "Proceso":
+        """Inverso exacto de `to_dict`; tolerante a claves ausentes (v0)."""
+        return cls(
+            pid=int(d.get("pid", 0)),
+            user=str(d.get("user", "")),
+            cmd=str(d.get("cmd", "")),
+            tty=str(d.get("tty", "?")),
+            cpu=str(d.get("cpu", "0.0")),
+            mem=str(d.get("mem", "0.0")),
+            vsz=str(d.get("vsz", "0")),
+            rss=str(d.get("rss", "0")),
+            stat=str(d.get("stat", "S")),
+            start=str(d.get("start", "00:00")),
+            time=str(d.get("time", "00:00:00")),
+        )
+
+
 @dataclass
 class FileNode:
     """Fichero: contenido de texto + metadatos (ARCHITECTURE §2.2)."""
@@ -128,24 +185,59 @@ class DirNode:
 
 
 class FileSystem:
-    """FS virtual con rutas absolutas/relativas y cwd (ARCHITECTURE §2.2)."""
+    """FS virtual con rutas absolutas/relativas y cwd (ARCHITECTURE §2.2).
 
-    def __init__(self, root: DirNode | None = None) -> None:
+    Lleva además (S1, 31/08) los PROCESOS VIRTUALES de la sala y las VARIABLES
+    DE ENTORNO de la sesión: piel del generador que el sandbox solo renderiza
+    (`ps`/`env`). Serializable ida y vuelta exacta junto al árbol.
+    """
+
+    def __init__(
+        self,
+        root: DirNode | None = None,
+        *,
+        processes: tuple[Proceso, ...] = (),
+        environment: dict[str, str] | None = None,
+    ) -> None:
         """Crea un FS; sin argumento parte de la raíz `/` vacía."""
         self.root = root if root is not None else DirNode(name="/")
+        self.processes = processes
+        self.environment = dict(environment) if environment is not None else {}
 
     # ---- serialización / copia (ARCHITECTURE §1.5) ---------------------
 
     def to_dict(self) -> DictData:
-        """Serializa el árbol completo a dict plano."""
-        return {"root": self.root.to_dict()}
+        """Serializa el árbol + procesos + entorno a dict plano."""
+        return {
+            "root": self.root.to_dict(),
+            "processes": [p.to_dict() for p in self.processes],
+            "environment": dict(self.environment),
+        }
 
     @classmethod
     def from_dict(cls, d: DictData) -> "FileSystem":
-        """Reconstruye un FS desde dict; copia profunda, independiente."""
+        """Reconstruye un FS; copia profunda, independiente.
+
+        Backward-compat (S1 31/08): un dict v0 sin `processes`/`environment`
+        carga con procesos vacíos y entorno `{}` — un save viejo no explota.
+        """
         root = d["root"]
         assert isinstance(root, dict)
-        return cls(root=DirNode.from_dict(root))
+        raw_procs = d.get("processes", [])
+        raw_env = d.get("environment", {})
+        processes = tuple(
+            Proceso.from_dict(p)
+            for p in raw_procs
+            if isinstance(p, dict)
+        )
+        environment = {
+            str(k): str(v) for k, v in raw_env.items()
+        } if isinstance(raw_env, dict) else {}
+        return cls(
+            root=DirNode.from_dict(root),
+            processes=processes,
+            environment=environment,
+        )
 
     def snapshot(self) -> "FileSystem":
         """Copia profunda e independiente vía roundtrip de dict."""

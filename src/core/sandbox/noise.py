@@ -33,6 +33,11 @@ NOISE_PROFILE: dict[str, int] = {
     # calibrables con el harness (O3 de Ornstein).
     "grep": 2,
     "wc": 1,
+    # S1 (31/08): `ps` y `env` son LECTURA, como `ls`/`cat` — observar no
+    # perturba (DESIGN §7.2: el ruido viene de la acción, no de la mirada).
+    # ⚠️ v1 calibrables con el harness.
+    "ps": 1,
+    "env": 1,
 }
 
 

@@ -98,6 +98,20 @@
       "chapter": 2,
       "prerequisites": ["c.grep", "c.wc"],
       "summary_key": "concept.pipe.summary"
+    },
+    {
+      "id": "c.ps",
+      "family": "procesos",
+      "chapter": 3,
+      "prerequisites": ["c.ls"],
+      "summary_key": "concept.ps.summary"
+    },
+    {
+      "id": "c.env",
+      "family": "procesos",
+      "chapter": 3,
+      "prerequisites": ["c.ps"],
+      "summary_key": "concept.env.summary"
     }
   ],
   "quests": [
@@ -188,6 +202,46 @@
       "requires": ["c.grep", "c.wc", "c.pipe", "c.cp"],
       "title_key": "story.ch2.e5.title",
       "beat_key": "story.ch2.e5.beat"
+    },
+    {
+      "id": "story.ch3.e1",
+      "chapter": 3,
+      "tint": "blue",
+      "requires": ["c.ps", "c.env"],
+      "title_key": "story.ch3.e1.title",
+      "beat_key": "story.ch3.e1.beat"
+    },
+    {
+      "id": "story.ch3.e2",
+      "chapter": 3,
+      "tint": "grey",
+      "requires": ["c.ps"],
+      "title_key": "story.ch3.e2.title",
+      "beat_key": "story.ch3.e2.beat"
+    },
+    {
+      "id": "story.ch3.e3",
+      "chapter": 3,
+      "tint": "red",
+      "requires": ["c.ps"],
+      "title_key": "story.ch3.e3.title",
+      "beat_key": "story.ch3.e3.beat"
+    },
+    {
+      "id": "story.ch3.e4",
+      "chapter": 3,
+      "tint": "red",
+      "requires": ["c.ps", "c.env"],
+      "title_key": "story.ch3.e4.title",
+      "beat_key": "story.ch3.e4.beat"
+    },
+    {
+      "id": "story.ch3.e5",
+      "chapter": 3,
+      "tint": "grey",
+      "requires": ["c.ps", "c.env"],
+      "title_key": "story.ch3.e5.title",
+      "beat_key": "story.ch3.e5.beat"
     }
   ]
 }

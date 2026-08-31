@@ -3,8 +3,9 @@
 > **Qué hace:** filesystem virtual + shell con semántica REAL de Linux
 > (GNU/coreutils). Todo lo que el jugador escribe pasa por aquí. No sabe que
 > existen partidas, salas ni Pyxel — es autónomo y reutilizable
-> (ARCHITECTURE §2.2). **Estado (30/08, Smough):** comandos del cap. 0
+> (ARCHITECTURE §2.2). **Estado (31/08, Smough):** comandos del cap. 0
 > (`ls`, `cd`, `cat`, `cp`) + cap. 2 (`grep`, `wc`) y tubería `cmd1 | cmd2`
+> + cap. 3 (`ps`, `env` — familia procesos).
 
 ## Piezas (v0)
 
@@ -16,10 +17,12 @@
 | `commands/navigation.py` | `ls` (columna única, orden codepoint), `cd` (builtin: valida→normaliza, errores antes de tocar cwd) |
 | `commands/files.py` | `cat` (bytes exactos, exit 1 si cualquier error), `cp` (sobrescribe, copia-DENTRO de dirs, `same_file`) |
 | `commands/texto.py` | `grep` (patrón, fichero o stdin de tubería) y `wc` (`-l`/`-c`; **S1, 30/08** — cap. 2) |
-| `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
+| `commands/procesos.py` | `ps` (`ps aux` con columna USER) y `env` (solo-lectura, orden por clave; **S1, 31/08** — cap. 3) |
+| `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1, ps:1, env:1` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
 | `__main__.py` | **REPL (S2, 29/08):** `PYTHONPATH=src python -m core.sandbox` abre una sesión real del cap. 0 con prompt diegético (`operador@oficina-vecinal:~$`, DESIGN §6.1); `run_repl` reutilizable y testeable programáticamente |
 | `PLAN.md` | Decisiones de diseño e hitos del turno 27/08 |
 | `PLAN-2026-08-30.md` | Plan de implementación S1+S2 del turno 30/08 (pipes+grep/wc, currículo cap. 2) |
+| `PLAN-2026-08-31.md` | Plan de implementación S1+S2 del turno 31/08 (ps/env, currículo cap. 3) |
 
 ## Decisiones que un revisor debe conocer
 
@@ -83,6 +86,13 @@
 - **Golden de `grep`/`wc`** (`test_texto.py`, S1 30/08): casos de borde
   aislados (sin match, fichero inexistente con el mensaje que cita la prosa
   del post-mortem, stdin, `wc` con/sin flags) verificados contra GNU real.
+- **Golden de `ps`/`env`** (`test_procesos.py` + `test_session_ch3.py`, S1
+  31/08): cabeceras GNU (`ps` → `    PID TTY          TIME CMD`; `ps aux` →
+  cabecera completa con USER) verificadas contra coreutils real; `env` ordenado
+  por clave (reproducibilidad §5); sesión end-to-end del cap. 3 donde `ps aux`
+  DELATA al propietario compartido (prosa de Manus); roundtrip de la sesión
+  conserva procesos+entorno byte a byte. Regresión explícita: cap. 0 y cap. 2
+  NO exponen `ps`/`env` (exit 127).
 - Regla del módulo: si un comando no se comporta como Linux real, ES un bug
   (fantasía = competencia real, DESIGN §8.4). Los desvíos se detectaron
   contrastando con coreutils real, no de memoria.
