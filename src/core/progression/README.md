@@ -76,13 +76,36 @@ del harness). Sin popup moral: el logro es un dato del save.
   save v1: un save previo sin ellos carga con `{}` (backward-compat, como
   `knowledge`). No se sube SAVE_VERSION (campo opcional documentado, §2.6).
 
+## v0.3 (T1+T2, 31/08/2026): recalibrado 🧭11 + eco 🧭9 pre-render
+
+**T1 (P2, 🧭11) — recalibrado «Cero rastro».** `UMBRAL_CERO_RASTRO` pasa de 4
+→ 5 y «Cero rastro» exige además factura limpia (`_no_exit_errors`). Datos
+medidos 31/08 por Oscar y Havel, independientes: min honesto = 5, canónico
+§6.4.4 = 6, puro `cp` memorizado = 3. El umbral 4 era imposible de ganar
+honesto (la canónica cierra en 6). Con 5, la canónica NO lo gana y un
+min-honesto sin errores SÍ. «Cero rastro» = frugalidad + pulcritud; «Mano de
+seda» (solo ausencia de errores) queda intacto y distinto. Gwyn valida al
+mergear (puede rectificar con el mismo dato a otra opción de 🧭11: medir solo
+la extracción — cambio de una constante + una condición, mismo coste).
+
+**T2 (P2, 🧭9) — eco pre-render: `evaluate_unlocks` emite `progression.unlocked`**
+al bus común. Al dominar un concepto, emite `{"concepto", "tick", "order"}`
+(los tres datos ya viven en `state.mastered` desde T1/PR #12). La forma del eco
+(firmada por Gwyn en DESIGN §6.1: diegético, cap. 1, Gris nombra lo dominado,
+prohibido el toast de sistema) la pintará el render futuro SIN tocar el core —
+el render solo se suscribe a este tipo. ⚠️ Frontera respetada: la constante
+`UNLOCK_EVENT_TYPE` vive en `progression/`, NO se toca `common/` (de Ornstein);
+el parámetro `bus` es OPCIONAL (None = comportamiento previo, backward-compat).
+`evaluate_unlocks(state, *, bus=None) -> list[str]`.
+
 ## Cómo se testea
 - Unlock por competencia: sin uso real NO hay unlock aunque sobren créditos
-  (`test_progression.py` — 17 tests: desbloqueo, idempotencia, sesión parcial/
-  vacía sin desbloquear, persistencia en save, roundtrip exacto, save v1
-  previo con inventario vacío, + momento del dominio, resumen de competencia
-  (canónica/factura/legado) y logros (ambos, idempotencia, ruido extra, error,
-  persistencia)).
+  (`test_progression.py` — 22 tests: desbloqueo, idempotencia, sesión parcial/
+  vacía sin desbloquear, eco 🧭9 (payload, sin bus, re-evaluar no re-emite),
+  persistencia en save, roundtrip exacto, save v1 previo con inventario vacío,
+  + momento del dominio, resumen de competencia (canónica/factura/legado) y
+  logros (ambos, idempotencia, ruido extra >5, ruido 6 no gana, min-honesto
+  ruido 5 gana, error mata ambos, persistencia)).
 - Economía: comprar/equipar/cobrar — aritmética exacta y persistente.
 - Stock contrastado: perfil azul vs rojo forzados → ofertas distintas.
 

@@ -15,18 +15,20 @@ from core.progression.progression import (
     LOGRO_CERO_RASTRO,
     LOGRO_MANO_SEDA,
     UMBRAL_CERO_RASTRO,
+    UNLOCK_EVENT_TYPE,
     evaluate_logros,
     evaluate_unlocks,
     resumen_competencia,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "CAP0_CONTRACT_BOON",
     "LOGRO_CERO_RASTRO",
     "LOGRO_MANO_SEDA",
     "UMBRAL_CERO_RASTRO",
+    "UNLOCK_EVENT_TYPE",
     "evaluate_logros",
     "evaluate_unlocks",
     "resumen_competencia",
