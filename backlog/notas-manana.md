@@ -9,42 +9,45 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 30/08 05:00 — zona 🔬 ejecutada: el CIRCUITO competencia→unlock→
-save, con el árbol nuevo de los PRs #7/#8/#9. Saldo: 🧭7 SALDADA (generator
-consume la opción B vía `new_session` — el cwd=`/` nace del scaffold, no de un
-default ajeno), 🧭8 SALDADA como decisión (Gwyn firmó opción (b) en DESIGN
-§6.1; Ornstein la materializa HOY), y la fricción de fachada `core.state` que
-sufrí el 29 CONFIRMADA resuelta (Seath T1). Las notas 6–8 viven como decisiones/
-tareas archivadas o en curso.)*
+*(SOBRESCRITA 31/08 05:00 — zona 🔬 ejecutada: run de referencia desde SAVE
+LIMPIO + POST-MORTEM nuevo sobre MI sesión + veterano (run 30) + cap. 2 en
+datos. Saldo: 🧭7/🧭8 SALDADAS en código y verificadas HOY ejecutando (cwd nace
+en `/`; prereqs al abrir el contrato, el xfail de 🧭8 murió: suite 385/0). La
+nota 9 sigue viva (el eco 🧭9 lo firmó Gwyn como decisión en DESIGN §6.1). El
+hallazgo de hoy más caliente es UN NÚMERO mal calibrado, abajo.)*
 
-**9. 🟠 LA PROGRESIÓN POR COMPETENCIA ES INVISIBLE PARA EL JUGADOR DE HOY.**
-El primer unlock (`c.cp`) existe en datos y persiste en el save (verificado en
-mi run: sin `cp …/usb` NO marca; con la evidencia marca y sobrevive al reload),
-pero **no hay NI UN punto donde el jugador lo vea**: ni annuncio cuando dominas
-un concepto, ni listado en el Hub, ni eco en el mundo. La única forma de
-«verlo» hoy es que un script imprima `knowledge`. La competencia es la
-moneda del diseño (REGLA DURA §4.2); la dopamina de conquistarla (§4.2, §7.5.3)
-necesita un momento diegético — Gris NOMBRANDO lo que acabas de dominar, un
-toast, un slot en el Hub del Espejo (§4.3). No propongo la forma (eso es Gwyn/
-Seath); propongo que no se considere «unlock» hasta que el jugador lo SIENTA.
-Relacionado con tu idea de anoche (el momento de Gris en el cap. 1): la
-confirmo desde la experiencia — sin ese eco, hoy el saving-kill de progresión
-es data muda.
+**11. 🔴 EL LOGRO «CERO RASTRO» (umbral 4) ES IMPOSIBLE DE GANAR HONESTO.**
+Dato verificado jugando y midiendo: el comentario del código asume «`cat` 1 +
+`cp` 3 = 4», pero **omite el `ls` del descubrimiento**. El viaje honesto mínimo
+del novato (ls→cat→cp) suma **5**, y la canónica §6.4.4 (ls→cat→cp→cd→ls) suma
+**6** (el harness O3 ya reportó el viaje honesto en 6 fijo). Solo un veterano
+con la ruta memorizada (puro `cp` = 3) cruza el 4. Un logro nacido para premiar
+la frugalidad del NOVATO (idea P3 de Havel 28/08) queda fuera de su alcance:
+se premia la memorización y se castiga el descubrimiento que el juego enseña.
+**Propuesta de dirección (sin decidir):** recalibrar el umbral a ≥ 6 (el coste
+veraz), o redefinir la factura que cuenta «Cero rastro» (solo la secuencia de
+extracción). Dato tuyo, decide tú. (Relacionado: la idea de Havel `[PENDIENTE]`
+«Parábola del proveedor 47» pedía exactamente esto.)
 
-**10. 🟡 PARA EL POST-MORTEM que vendrá: el resumen de ruido es el caramelo.**
-Con `Shell.total_noise` y el historial ya veraces y persistidos, el futuro
-Auditor/post-mortem (PENDIENTE Havel §4.6) tiene en `to_dict` la factura exacta
-(`cd 0 · ls N · cat N · cp N · errores N`). Recomendación de dirección: que el
-resumen use la MISMA unidad numérica que el presupuesto de sala (noise_budget),
-para que el jugador lea «11/12» y no dos métricas distintas. Solo informo;
-diseño final tuyo.
+**12. 🟡 PUBLICAR LAS CLAVES `postmortem.auditor.*` EN `data/` CUANDO EXISTA
+EL PAQUETE DE TEXTOS.** El motor ya devuelve la línea del Auditor como
+`line_key` + `args` correctos (comando y amount concretos, voz formulario seco
+§2.4), pero las claves `postmortem.auditor.cruce|pico` NO existen aún en
+`data/`. No es bug (convención §3: core no hardcodea prosa, el render resuelve),
+**es un nodo pendiente de packaging**: «el sistema te estuvo leyendo» (la pieza
+§2.4, el primer contacto con el informe post-mortem) ocurrirá de verdad cuando
+ese formulario sea texto, no dato. Cuando se plantee `data/`/render, estas dos
+claves son prioridad (voz Ceniza/Auditor); el motor ya les pasa todo.
 
-> **Filtro Oscar:** el circuito competencia→unlock→save se recorre ENTERO desde
-> save limpio y aguanta: camino del cap. 0 apto (cwd `/`, dossier, cumbre `cp`,
-> factura 11/12), §4.2 demostrado jugando (sin evidencia no desbloquea), y el
-> `c.cp` persiste en el roundtrip. El salto de hoy es que la progresión dejó de
-> ser «promesa de diseño». Nada bloquea el plan del 30/08; lo que aprieta es
-> feedback (🧭9) y la materialización de 🧭8=(b) que ya viene. CICLO: verde.
+**9. (vigente, ya es DECISIÓN tuya en DESIGN §6.1)** El eco de la progresión por
+competencia (Gris nombrando lo dominado, cap. 1) sigue siendo la pieza que hace
+tocar el unlock: hoy solo se imprime. Confirmada tu decisión diegética.
+
+> **Filtro Oscar:** el camino del cap. 0 + post-mortem se recorre ENTERO desde
+> save limpio y aguanta (cwd `/`, dossier, cumbre `cp`, factura 9/12, el Auditor
+> te cita el `cp` que sentiste); el mastered persiste tras reload y la run-30
+> veterano no re-descubre. Los hallazgos de hoy son un número mal calibrado
+> (🧭11) y un texto a publicar (🧭12) — ninguno rompe el camino. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 

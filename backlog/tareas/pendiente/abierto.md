@@ -110,3 +110,14 @@ La novedad FUNCIONA y las ideas de abajo salen de jugarla — decidir Gwyn/Gwynd
 - `[PENDIENTE][P3]` **Gris reacciona con MERCADO, no con diálogo: tu stock cambia con lo que dominas** — Havel: refuerza el canal de karma §3.3 (stock de Gris) y la 🧭9 a la vez: además del color kármico, que el stock de Gris rote según `knowledge` (dominas `c.cp` → aparece la mejora de tarros/USB; dominas `head` → aparece el manual). La tienda es el espejo del currículo: si no ves algo a la venta, es que no lo dominas. Módulo: `src/core/progression/` + economía (§4.3 espejo de Gris). Por qué mola: convierte el progreso en un INVENTARIO VISIBLE sin HUD — el mercado habla, nadie te dice qué sabes.
 
 *Nota de novedad al revisar (para Artorias/Gwyn, no decisión): la NUEVA GUIÓN de los errores GNU (`cp dir` → «omitting directory», `cat dir/` → «Is a directory») NO estorba — ambos nombran el flag que falta (`-r`/el tipo de fichero), así que son método, no castigo. Verificado contra coreutils. El prompt del REPL muestra `~` cuando cwd es `/` (estilo diégesis): a un novato acostumbrado a rutas absolutas no le confunde (el dossier usa `/srv/...`), lo dejo como decisión de sabor, no bug.*
+
+## 🔍 Hallazgos de Oscar (31/08 — run de referencia con post-mortem + veterano)
+
+*Run de referencia desde SAVE LIMPIO con el post-mortem NUEVO (zona 🔬 de Gwyn):
+verificado que el Auditor cita el `cp` que sentí, mastered persiste tras reload,
+cwd nace en `/`, idempotencia entre-runs del veterano. Dos hallazgos, ambos de
+calibración/packaging — ninguno rompe el camino (CICLO verde). Detalle en
+`docs/ESTADO-JUGADOR.md` y notas 🧭11/12.*
+
+- `[BUG][P2]` (31/08) **El logro «Cero rastro» (umbral 4) es imposible de ganar con el viaje honesto — recalibrar** — Oscar: el comentario del código asume «cat 1 + cp 3 = 4» pero omite el `ls` del descubrimiento; el viaje honesto mínimo (ls→cat→cp) suma **5** y la canónica §6.4.4 suma **6** (harness O3: viaje honesto 6 fijo). Solo un veterano con ruta memorizada (puro `cp`=3) lo cruza. Un logro pensado para premiar la frugalidad del NOVATO queda fuera de su alcance. Proponer recalibrar a ≥6 o redefinir la factura que cuenta. Módulo: `src/core/progression/` (`UMBRAL_CERO_RASTRO`, modelo de `evaluate_logros`). Decisión de balance para Gwyn (🧭11); Gwyndolin decide si entra al plan como ajuste. No rompe el camino hoy.
+- `[PENDIENTE][P3]` (31/08) **Publicar las claves `postmortem.auditor.*` en `data/` cuando exista el paquete de textos/render** — Oscar: el motor ya devuelve `line_key`+`args` correctos (comando/amount concretos, voz formulario §2.4) pero las claves `postmortem.auditor.cruce|pico` NO existen en `data/`. Es la pieza §2.4 («el sistema te estuvo leyendo») que pasará de dato a vivencia cuando haya quien resuelva la prosa. No es bug; es packaging pendiente (🧭12). Módulo: `src/data/` + render futuro.
