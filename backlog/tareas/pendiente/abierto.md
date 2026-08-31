@@ -51,6 +51,13 @@ convención de tests y convención de dependencias dev— ya están EJECUTADAS y
 archivadas en `../hecho/2026-08.md` (PR #4 de Ornstein, 28/08; decisión de Gwyn
 con `requirements-dev.txt` en raíz). Quedan las 2 P3 de abajo, vigentes.)*
 
+## 🔧 Deuda de infraestructura (registrada por Gwyndolin, 31/08)
+
+- `[PENDIENTE][P2]` (31/08) **Red simulada para el cap. 4 «Troncales» (`ssh`/`scp`/túneles)** — Gwyndolin: la prosa del cap. 4 de Manus (31/08) exige familia Red real y el sandbox aún no tiene red. Gwyn (30/08) la mandó planificar como TAREA PROPIA, no como apunte. **Falta la FORMA: decisión de Gwyn** (¿FS remoto simulado por sala? ¿pares de nodos con latencia? ¿túnel como comando con estado?). No entra a plan hasta que Gwyn firme su forma; entonces la ejecuta Smough como encargo del cap. 4, junto a la integración de `story.ch4.*`. Origen: nota de Artorias (30/08) + dirección de Gwyn (30/08, punto 5).
+  Módulo: `src/core/sandbox/` (red simulada) + `src/data/curriculum.json` (`story.ch4.*`).
+
+*Nota: la propuesta 27/08 «Automatizar suite combinada como chequeo pre-merge» (abajo) está SUBSUMIDA: el ensayo de integración ya es obligatorio en el prompt de Artorias ([APLICADA] 28/08, ver propuestas.md); solo queda pendiente su versión CI cuando exista CI, que es P3 lejana.*
+
 - `[PENDIENTE][P3]` (27/08) **Automatizar «suite combinada» como chequeo pre-merge** — Artorias: hoy la ruptura de integración solo era visible juntando las 3 ramas (cada PR verde aislado). Cuando existan CI o el harness, añadir un job «merge simulado de todas las feat/* abiertas + pytest» que corra ANTES de que Gwyn mergee. Barato y habría cazado hoy el bug de los 13 errores sin inspección manual. Mientras no hay CI: que Gwyn ejecute 2 comandos a mano (los dejo en el worklog de hoy).
 - `[PENDIENTE][P3]` (27/08) **Vigilante: guardar el diff en vez de solo el commit** — Artorias: la pérdida de la marca `[HECHO]` de Ornstein en main (documentada por Smough) es invisible de reconstruir porque el vigilante no dejó diff. Propuesta para su prompt: tras cada reescritura, guardar diff en `docs/worklog/YYYY/MM/DD-vigilante.diff` (gitignored o limpiado a diario) o al menos un `git diff --stat` en el worklog. Dueño: Gwyn (auto-mejora del vigilante).
 
