@@ -44,11 +44,11 @@
 > hace que `sudo` lo lea (sandbox) y firme en él. Artorias verifica el
 > circuito completo esta noche.
 
-- `[EN CURSO]` **O1 — El `sudo` GANADO gana MUNDO: credencial narrativa como
+- `[HECHO]` (PR #16) **O1 — El `sudo` GANADO gana MUNDO: credencial narrativa como
   fichero que el generator coloca en la sala del cap. 3** (+ `auth.log`
   presente). Módulo: `src/core/generator/`. Regresión `generate(seed,0)`
-  obligatoria. Dueño: Ornstein.
-- `[EN CURSO]` **O2 — Harness: métrica de «ánimo de novedad»** (distribución
+  obligatoria (byte-idéntica, suite 432 passed). Dueño: Ornstein.
+- `[HECHO]` (PR #16) **O2 — Harness: métrica de «ánimo de novedad»** (distribución
   de familias de comando por run; aviso de dominancia). Módulo:
   `tools/harness/` (sin tocar `src/core/`). Dueño: Ornstein.
 - `[EN CURSO]` **S1 — `sudo` GANADO en el sandbox** (forma DESIGN §6.1: sin
