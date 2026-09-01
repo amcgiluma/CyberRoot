@@ -126,8 +126,19 @@ cwd nace en `/`, idempotencia entre-runs del veterano. Dos hallazgos, ambos de
 calibración/packaging — ninguno rompe el camino (CICLO verde). Detalle en
 `docs/ESTADO-JUGADOR.md` y notas 🧭11/12.*
 
-- `[BUG][P2]` (31/08) **El logro «Cero rastro» (umbral 4) es imposible de ganar con el viaje honesto — recalibrar** — Oscar: el comentario del código asume «cat 1 + cp 3 = 4» pero omite el `ls` del descubrimiento; el viaje honesto mínimo (ls→cat→cp) suma **5** y la canónica §6.4.4 suma **6** (harness O3: viaje honesto 6 fijo). Solo un veterano con ruta memorizada (puro `cp`=3) lo cruza. Un logro pensado para premiar la frugalidad del NOVATO queda fuera de su alcance. Proponer recalibrar a ≥6 o redefinir la factura que cuenta. Módulo: `src/core/progression/` (`UMBRAL_CERO_RASTRO`, modelo de `evaluate_logros`). Decisión de balance para Gwyn (🧭11); Gwyndolin decide si entra al plan como ajuste. No rompe el camino hoy.
-- `[PENDIENTE][P3]` (31/08) **Publicar las claves `postmortem.auditor.*` en `data/` cuando exista el paquete de textos/render** — Oscar: el motor ya devuelve `line_key`+`args` correctos (comando/amount concretos, voz formulario §2.4) pero las claves `postmortem.auditor.cruce|pico` NO existen en `data/`. Es la pieza §2.4 («el sistema te estuvo leyendo») que pasará de dato a vivencia cuando haya quien resuelva la prosa. No es bug; es packaging pendiente (🧭12). Módulo: `src/data/` + render futuro.
+- `[BUG][P2]` (31/08) **El logro «Cero rastro» (umbral 4) es imposible de ganar con el viaje honesto — recalibrar** — Oscar: el comentario del código asume «cat 1 + cp 3 = 4» pero omite el `ls` del descubrimiento; el viaje honesto mínimo (ls→cat→cp) suma **5** y la canónica §6.4.4 suma **6** (harness O3: viaje honesto 6 fijo). Solo un veterano con ruta memorizada (puro `cp`=3) lo cruza. Un logro pensado para premiar la frugalidad del NOVATO queda fuera de su alcance. Proponer recalibrar a ≥6 o redefinir la factura que cuenta. Módulo: `src/core/progression/` (`UMBRAL_CERO_RASTRO`, modelo de `evaluate_logros`). Decisión de balance para Gwyn (🧭11); Gwyndolin decide si entra al plan como ajuste. No rompe el camino hoy. **✅ RESUELTO (01/09, PR #15/T1):** umbral → 5 + exige factura limpia; verificado HOY por Oscar ejecutando (canónica noise 6 NO gana; min-honesto noise 5 SÍ; con error NO). Mantengo la línea archivada en el historial, corregida en código y en `ESTADO-JUGADOR.md`.
+- `[PENDIENTE][P3]` (31/08, 🧭12) **Publicar las claves `postmortem.auditor.*` en `data/` cuando exista el paquete de textos/render** — Oscar: el motor ya devuelve `line_key`+`args` correctos (comando/amount concretos, voz formulario §2.4) pero las claves `postmortem.auditor.cruce|pico` NO existen en `data/`. Es la pieza §2.4 («el sistema te estuvo leyendo») que pasará de dato a vivencia cuando haya quien resuelva la prosa. No es bug; es packaging pendiente. Módulo: `src/data/` + render futuro.
+
+## 🔍 Hallazgos de Oscar (01/09 — el PRIMER CRUCE de capítulo: cap. 0 → cap. 2)
+
+*Zona 🔬 de Gwyn ejecutada COMPLETA desde SAVE LIMPIO: el flujo de encargo del
+cap. 2 (listar→abrir→jugar golden→cerrar con post-mortem), el logro recalibrado
+🧭11 verificado con números propios, el eco 🧭9 verificado (payload + idempotencia
+entre-runs), y smoke del conjunto 421/0. El camino del novato ya engloba DOS
+capítulos y aguanta. Un hallazgo de UX fina, sin roturas (CICLO verde). Detalle en
+`docs/ESTADO-JUGADOR.md` y notas 🧭13.*
+
+- `[PENDIENTE][P3]` (01/09, 🧭13) **UX del cap. 2: la golden relativa pide un `cd` previo que el scaffold no sugiere** — Oscar: al `abrir story.ch2.e1` la sesión nace con `cwd=/` y la golden usa ruta relativa (`grep 11:04 centralita/turnos/turno.log | wc -l`); ejecutada desde `/` el `grep` falla y el pipeline devuelve `0\n` con exit 0 (semántica GNU real: el exit lo da el `wc`). No es bug de sandbox, es fricción de orientación en el primer cruce entre capítulos (el cap. 0 solo usó rutas absolutas). Propuesta de dirección (sin decidir, para Gwyn): que el scaffold de e1 sugiera/cologue el cwd en la oficina (o exponga `pwd`), o que la sala dé una pista diegética de ubicación. Módulo: `src/core/generator/` (scaffold) cuando haya render/tutorial. No rompe el camino hoy.
 
 ## 🪨 Ideas de Havel (31/08 — quinta jornada: el cap. 2 + el tracto de tuberías ya se juega)
 

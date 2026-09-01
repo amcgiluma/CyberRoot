@@ -9,45 +9,43 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 31/08 05:00 — zona 🔬 ejecutada: run de referencia desde SAVE
-LIMPIO + POST-MORTEM nuevo sobre MI sesión + veterano (run 30) + cap. 2 en
-datos. Saldo: 🧭7/🧭8 SALDADAS en código y verificadas HOY ejecutando (cwd nace
-en `/`; prereqs al abrir el contrato, el xfail de 🧭8 murió: suite 385/0). La
-nota 9 sigue viva (el eco 🧭9 lo firmó Gwyn como decisión en DESIGN §6.1). El
-hallazgo de hoy más caliente es UN NÚMERO mal calibrado, abajo.)*
+*(SOBRESCRITA 01/09 05:00 — zona 🔬 ejecutada: el PRIMER CRUCE de capítulo en
+juego real (cap. 0 → cap. 2) desde SAVE LIMPIO, logro recalibrado 🧭11
+verificado con números propios, eco 🧭9 verificado (payload + idempotencia
+entre-runs), smoke del conjunto 421/0. Saldo: 🧭11 RESUELTA anoche
+(recalibrado a umbral 5 + pulcritud); 🧭9 con tubo (evento al bus) e idempotente;
+🧭12 sigue vigente (texto del Auditor en `data/`). La nota nueva de hoy es de UX
+fina en el primer cruce real entre capítulos, abajo.)*
 
-**11. 🔴 EL LOGRO «CERO RASTRO» (umbral 4) ES IMPOSIBLE DE GANAR HONESTO.**
-Dato verificado jugando y midiendo: el comentario del código asume «`cat` 1 +
-`cp` 3 = 4», pero **omite el `ls` del descubrimiento**. El viaje honesto mínimo
-del novato (ls→cat→cp) suma **5**, y la canónica §6.4.4 (ls→cat→cp→cd→ls) suma
-**6** (el harness O3 ya reportó el viaje honesto en 6 fijo). Solo un veterano
-con la ruta memorizada (puro `cp` = 3) cruza el 4. Un logro nacido para premiar
-la frugalidad del NOVATO (idea P3 de Havel 28/08) queda fuera de su alcance:
-se premia la memorización y se castiga el descubrimiento que el juego enseña.
-**Propuesta de dirección (sin decidir):** recalibrar el umbral a ≥ 6 (el coste
-veraz), o redefinir la factura que cuenta «Cero rastro» (solo la secuencia de
-extracción). Dato tuyo, decide tú. (Relacionado: la idea de Havel `[PENDIENTE]`
-«Parábola del proveedor 47» pedía exactamente esto.)
+**13. 🟡 LA GOLDEN DEL CAP. 2 ES REBELDE: pide un `cd` previo que el scaffold no
+sugiere.** Al `abrir story.ch2.e1`, la sesión nace con `cwd=/` y la golden usa
+RUTA RELATIVA (`grep 11:04 centralita/turnos/turno.log | wc -l`). Si el novato la
+ejecuta tal cual desde `/`, el `grep` falla (`No such file or directory`) y el
+pipeline devuelve `0\n` con **exit 0** (el exit lo decide el `wc`, no el `grep`,
+semántica GNU real). Hay que `cd /srv/oficina-vecinal-muelle-norte` antes (la
+canónica CH2 lo hace). **No es bug — el sandbox reproduce GNU con honestidad —
+pero es la primera fricción del viaje entre capítulos**: el cap. 0 siempre usó
+rutas absolutas (`ls /srv/oficina-vecinal-muelle-norte`), y de golpe el cap. 2
+exige relativas desde un cwd que el jugador no sabe cuál es. Si el juego quiere
+«aprender por necesidad», aquí la necesidad es de ORIENTACIÓN, no de concepto.
+**Propuesta de dirección (sin decidir):** (a) que el scaffold de la sala e1 ya
+sugiera/cologue el cwd dentro de la oficina (o exponga `pwd`), o (b) aceptar la
+fricción y dejarla como lección de `cd`/relativas, pero entonces la sala debe dar
+una pista diegética («estás en la raíz del nodo; la centralita vive en la
+oficina»). Importa cuando haya render/tutorial. Dato tuyo, decide tú.
 
-**12. 🟡 PUBLICAR LAS CLAVES `postmortem.auditor.*` EN `data/` CUANDO EXISTA
-EL PAQUETE DE TEXTOS.** El motor ya devuelve la línea del Auditor como
-`line_key` + `args` correctos (comando y amount concretos, voz formulario seco
-§2.4), pero las claves `postmortem.auditor.cruce|pico` NO existen aún en
-`data/`. No es bug (convención §3: core no hardcodea prosa, el render resuelve),
-**es un nodo pendiente de packaging**: «el sistema te estuvo leyendo» (la pieza
-§2.4, el primer contacto con el informe post-mortem) ocurrirá de verdad cuando
-ese formulario sea texto, no dato. Cuando se plantee `data/`/render, estas dos
-claves son prioridad (voz Ceniza/Auditor); el motor ya les pasa todo.
+**12. (vigente) PUBLICAR LAS CLAVES `postmortem.auditor.*` EN `data/` CUANDO
+EXISTA EL PAQUETE DE TEXTOS.** El flujo del cap. 2 ya devuelve la línea del
+Auditor como `line_key` + `args` (cruce del presupuesto o pico; comando y amount
+concretos, voz formulario seco §2.4), pero las claves NO existen aún en `data/`.
+Es la pieza §2.4 («el sistema te estuvo leyendo») que pasará de dato a vivencia
+cuando haya quien resuelva la prosa. Prioridad de packaging cuando arranque
+`data/`/render.
 
-**9. (vigente, ya es DECISIÓN tuya en DESIGN §6.1)** El eco de la progresión por
-competencia (Gris nombrando lo dominado, cap. 1) sigue siendo la pieza que hace
-tocar el unlock: hoy solo se imprime. Confirmada tu decisión diegética.
-
-> **Filtro Oscar:** el camino del cap. 0 + post-mortem se recorre ENTERO desde
-> save limpio y aguanta (cwd `/`, dossier, cumbre `cp`, factura 9/12, el Auditor
-> te cita el `cp` que sentiste); el mastered persiste tras reload y la run-30
-> veterano no re-descubre. Los hallazgos de hoy son un número mal calibrado
-> (🧭11) y un texto a publicar (🧭12) — ninguno rompe el camino. CICLO: verde.
+> **Filtro Oscar:** el cruce cap. 0→cap. 2 se recorre ENTERO desde save limpio y
+> aguanta (listar → abrir → golden → cerrar con post-mortem → logro verificado →
+> eco idempotente); los hallazgos de hoy son una pista de UX (🧭13) y packaging
+> (🧭12), ninguno rompe el camino. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 

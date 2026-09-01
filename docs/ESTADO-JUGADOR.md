@@ -7,177 +7,173 @@
 
 ---
 
-## 🎮 Estado global jugable de HOY (31/08 — MODO B: el círculo se cierra con el post-mortem)
+## 🎮 Estado global jugable de HOY (01/09 — MODO B: YA HAY CRUCE DE CAPÍTULO jugable)
 
-**¿Hay algo que jugar de principio a fin?** Mismo diagnóstico de fondo que ayer:
-sigue sin haber **entrypoint de run único** que arranque una incursión y la
-lleve a liquidación (el `engine`/`game.py` orquestador aún no existe), pero el
-**círculo del juego ya se cierra entero**: ayer se recorría
-`competencia → unlock → save`; hoy, al cierre de la run, el **post-mortem del
-Auditor** (§4.7) lee tu sesión REAL y te devuelve tu factura en la misma unidad
-que el presupuesto. Ya existe, jugando:
+**¿Hay algo que jugar de principio a fin?** Sí, y HOY es el primer día en que el
+viaje del novato puede **CRUZAR de un capítulo a otro jugando**. Gracias al flujo
+de encargo de Ornstein (session.py, PR #13) y el cap. 2 en datos (PR #11/#13),
+el camino real del jugador ya NO termina en el cap. 0: se puede listar la mesa,
+abrir un encargo del cap. 2 (`story.ch2.e1`), jugar su sala y cerrar con
+post-mortem adjunto. La espina roguelite del juego —capítulo a capítulo, concepto
+por necesidad— ya tiene su primer cruce.
 
 ```
-salida limpia → generate(seed) → new_session (cwd=/) → descubrir → extraer (cp)
-→ evaluate_unlocks (c.cp) → evaluate_logros → save → [reload conserva mastered]
-→ build_postmortem(session real) = la pieza que el Hub muestra SIEMPRE primero
+cap. 0 completo (ls→cat→cp→/usb, noise 6) → c.cp dominado + logro evaluado (save)
+→ listar_encargos(cap.2) → abrir story.ch2.e1 (prereqs al ABRIR, seed determinista)
+→ cd oficina → grep 11:04 … | wc -l → "2" → cerrar_encargo → post-mortem (noise 3/12)
 ```
 
-- **En main (PRs #10/#11/#12 + los de ayer, todos mergeados):**
-  - **Post-mortem del Auditor (O2/Ornstein):** `build_postmortem(shell.to_dict(),
-    state)` — factura GNU por comando + errores, `total_noise` vs `noise_budget`
-    en la MISMA unidad (🧭10), y una línea del Auditor (`line_key` + `args`) que
-    cita el comando CONCRETO que te delató (cruce del presupuesto) o el pico.
-    Voz formulario seco (§2.4); el prosa viaja como CLAVE contra `data/`.
-  - **Costura 🧭8=(b) muerta (O1/Ornstein):** los prereqs de un encargo se
-    evalúan al ABRIR el contrato (`Contract.prereqs_met`), no al generar la
-    sala. El único xfail histórico pasó a verde y murió.
-  - **Tuberías + familia texto (S1/S2/Smough):** `cmd | cmd2` (una tubería),
-    `grep`/`wc` GNU honestos (ruido 2/1, la tubería suma ambos), y `story.ch2.*`
-    (e1–e5, tints blue/blue/grey/red/grey) al currículo. Cap. 2 ya tiene
-    ejercitable la línea EXACTA de Manus (`grep 11:04 … | wc -l` → `2`).
-  - **Meta del dominio + logros (T1/T2/Seath):** `GameState.mastered`
-    {boon→{tick,order}} + `resumen_competencia` (dominados + factura), y logros
-    «Cero rastro»/«Mano de seda» como datos del save (idempotentes).
-  - **Decisiones de Gwyn firmadas en DESIGN §6.1:** eco 🧭9 DIEGÉTICO (cap. 1,
-    Gris nombra lo dominado) y operativa de «primer error» (perdón único por
-    partida, solo ruido de riesgo).
-- **Para «jugable de principio a fin» sigue faltando:** el **engine** que
-  orqueste run→sala→expulsión/liquidación (el post-mortem ya es su primera
-  pieza), el **render**, y que alguien **publique las claves `postmortem.*`
-  en `data/`** para que ese formulario del Auditor pase de dato a texto vívela
-  (detalle en hallazgos).
+- **En main (todo mergeado hasta ayer, PRs #10–#15):**
+  - **Flujo de ENCARGO del cap. 2 (`session.py`):** `listar_encargos` (vitrina de
+    la mesa con `abrible`/`falta`), `abrir_encargo` (valida prereqs al ABRIR, 🧭8,
+    genera la sala seed `quest_id:run_seed`), `cerrar_encargo` (adjunta
+    `build_postmortem` al completado Y a la expulsión). El cap. 2 se abre, se juega
+    la golden (`grep 11:04 centralita/turnos/turno.log | wc -l` → `2`, noise 3) y
+    se cierra con el informe del Auditor. **Es la primera sala FUERA del cap. 0.**
+  - **Familia Procesos + cap. 3 en datos (PR #14):** `ps`/`ps aux` (columna USER
+    que DELATA: ceniza-521 vs censo-522), `env` ordenado por clave; `story.ch3.e1–
+    e5` al currículo. El cap. 3 NO se expone en cap. 0/2 (exit 127, regresión ok).
+  - **Logro «Cero rastro» RECALIBRADO (PR #15, 🧭11 RESUELTA):** umbral 5 + exige
+    factura limpia (`_no_exit_errors`). **Verificado HOY ejecutando:** la canónica
+    (noise 6) NO lo gana; un min-honesto sin errores (ls→cat→cp, noise 5) SÍ; un
+    min con error NO gana nada. El logro vuelve a su intención (frugalidad del
+    novato) y se distingue de «Mano de seda».
+  - **Eco de progresión (PR #15, 🧭9 tubo):** `evaluate_unlocks(state, bus)` emite
+    `event.progression.unlocked` con `{concepto, tick, order}` al dominar
+    (`c.cp` → `{c.cp, tick, order}`). **Verificado HOY:** el evento llega con
+    payload completo al bus; re-evaluar tras run nueva (veterano run 30) NO re-
+    emite. El render futuro solo se suscribe.
+- **Para «jugable de principio a fin» sigue faltando:** el **engine/game.py**
+  orquestador que encadene runs de capítulos consecutivos (hoy los cruces se
+  ejercitan vía API, aún sin un entrypoint de run único), el **render**, y el
+  **primer paquete de textos** (`postmortem.auditor.*`, 🧭12) para que el Auditor
+  pase de dato a vivencia.
 
-**CICLO (línea de Oscar):** verde — el camino del cap. 0 se recorre ENTERO desde
-save limpio con el post-mortem nuevo y aguanta; los hallazgos de hoy son
-calibración (un número) y packaging del texto, no roturas.
+**CICLO (línea de Oscar):** verde — la zona 🔬 de Gwyn (cruce cap. 0→cap. 2) se
+ejecutó COMPLETA desde save limpio y el viaje aguanta; el logro recalibrado hace
+lo que prometió; el eco viaja sin duplicados. Los hallazgos de hoy son de ajuste
+fino (una pista de UX en el pipeline del cap. 2), no roturas.
 
-## 🏃 Run de referencia (save limpio) — 31/08
+## 🏃 Run de referencia (save limpio) — 01/09
 
-*Nueva partida, sala REAL generada (`generate("oscar-2026-08-31-r1", 0)`),
-sesión vía `new_session` (opción B), jugando al NOVATO EN FRÍO: sin saber qué
-existe, leyendo el dossier, curioseando (un flag que no existe, el log), y al
-final la extracción + la verificación.* Esta vez, además, **corrí el post-mortem
-nuevo sobre MI propia sesión**, como pide la zona 🔬.
+*Nueva partida, sala REAL del cap. 0 (`generate("oscar-2026-09-01-r1", 0)`,
+opción B, cwd `/`), jugando la canónica del novato; luego el CRUCE al cap. 2 con
+el flujo de encargo. Como manda la zona de Gwyn, esta vez mi pregunta NO era solo
+«¿recorro el cap. 0?» sino «¿y si el jugador quiere pasar al Facturas?».*
 
 **Veredicto: APTO.** Fase a fase:
 
-1. **cwd nace en `/` (opción B intacta tras tocar `model.py`):** `new_session`
-   arranca con `cwd='/'`, `host='oficina-vecinal-muelle-norte'`, registro
-   `['cat','cd','cp','ls']` — el árbol nuevo no rompió el arranque. ✔
-2. **El camino del novato se recorre sin atasco:** `ls` (descubrir) → `cat`
-   dossier → curiosidad (`ls -l` fallido: *ls: cannot access '-l'*, exit 2 →
-   fallo léxico, cobra 1, no riesgo) → `cat` del log → `cd /srv` → `ls` → `cp`
-   a `/usb` (cumbre, exit 0) → `cat` de verificación. **Factura de MI viaje:
-   9/12, dentro de presupuesto** (ls 3·cat 3·cd 1·cp 1, 1 error léxico). ✔
-3. **El unlock y su momento PERSISTEN tras reload:** tras el `cp`, `evaluate_
-   unlocks` marca `c.cp` y `mastered={'c.cp':{tick:8,order:1}}`; `save`→`load`
-   recupera knowledge Y mastered intactos (tick 8, order 1), con total_noise 9
-   y cwd `/srv` también conservados. Idempotente (2.ª eval vacía). ✔
-4. **El post-mortem NUEVO lee tu sesión real y te delata con el comando que
-   sientes:** sobre mi viaje, factura {cat:3, cd:1, cp:1, ls:3, errores:1},
-   `total_noise=9 ≤ 12` → dentro_presupuesto, y el Auditor cita como PICO
-   **`cp` (amount 3)** — exactamente el comando que yo sentí que jugaba la run
-   (la extracción, el gesto que cruza el sistema). La unidad coincide con la del
-   budget (🧭10 cumplida en la práctica). ✔ La línea CORRECTA (cruce de
-   presupuesto) no se dispara porque no crucé 12 — correcto; el pico es el caso
-   de una run limpia.
-5. **Los errores GNU siguen método, no castigo:** `ls -l` sobre el cap. 0 →
-   *cannot access '-l'* exit 2 (flag no disponible aún), `cat dir/` y `cp dir`
-   diagnosticando el origen. El novato aprende qué comandos NO tocan todavía. ✔
-6. **Rejugabilidad intacta:** 4 seeds × {canonical, practice} → decoys rotan,
-   canon resoluble en todas, pool del cap. 0 fijo en 4 conceptos como debe ser
-   en el tutorial.
+1. **El cap. 0 se completa desde cero igual que ayer:** cwd nace en `/`, host
+   `oficina-vecinal-muelle-norte`, canónica `ls /srv/oficina-vecinal-muelle-norte`
+   → `cat …/nombre_de_proveedor.txt` → `cp … /usb/` → `cd /srv` → `ls`. **Total
+   de la run: 6 / budget 12, sin errores.** Tras ella, `evaluate_unlocks` domina
+   `c.cp` (mastered `{tick:5, order:1}`) y `evaluate_logros` da «Mano de seda»
+   (no «Cero rastro», correcto: la canónica no es frugal). ✔
+2. **El unlock tiene ECO (🧭9 verificado hoy):** al dominar `c.cp`, el bus común
+   recibe `event.progression.unlocked` con `{concepto:'c.cp', tick:5, order:1}`.
+   El dato que el render pintará. ✔
+3. **El CRUCE al cap. 2 existe y es real (lo nuevo de la zona):** con el
+   knowledge del cap. 0 (`c.ls/cd/cat/cp`) la vitrina del cap. 2 muestra los 5
+   encargos **NO abribles** (falta `c.grep/c.wc/c.pipe`), y cada uno dice
+   exactamente QUÉ falta (`falta=[...]`). Sin documentation previa se entiende:
+   «para abrir esto te falta dominar grep, wc y la tubería». Con knowledge
+   amplio (caps previos), `abrir story.ch2.e1` genera la sala (cwd `/`) y la
+   golden se juega: `grep 11:04 centralita/turnos/turno.log | wc -l` → `2`, exit
+   0. ✔ **El paso de «Trabajo en frío» a «Facturas» se siente como el MISMO
+   oficio con más herramientas**: mismo FS, misma oficina, mismo cobre de ruido;
+   solo cambia el verbo (contar, no copiar). Coherente con DESIGN §6.1.✔
+4. **El post-mortem se adjunta al CIERRE del encargo (no solo al cap. 0):**
+   `cerrar_encargo(session, modo="completado")` devuelve `total_noise=3 ≤
+   noice_budget=12`, `dentro_presupuesto=True`, factura `{cd:1, grep:1, errores:0}`,
+   y el Auditor cita su **línea PICO: `grep` (amount 3)** — el comando de la
+   tubería, exactamente el que sentí que resolvió la sala. La unidad del informe
+   vuelve a coincidir con la del budget. ✔
+5. **Logro «Cero rastro» recalibrado (🧭11 RESUELTA, verificada con números
+   propios):** canónica noise 6 (sin errores) **NO** gana; min-honesto sin
+   errores (ls→cat→cp) noise **5** SÍ gana; min con error (ls -l falla) noise 5 NO
+   gana nada. El umbral 5 ya distingue frugalidad de pulcritud como diseñó Gwyn. ✔
+6. **Rechazo accionable del cap. 2 (la pregunta de la zona):** se entiende sin
+   documentación — `abrible=False, missing=[c.grep, c.pipe, c.wc]` es un dato que
+   el jugador puede leer e ir a buscar; no un «no puedes». ✔
 
-**Estado del save:** `/tmp/` (desechable), `c.cp` dominado + logros evaluados,
-roundtrip verificado. Sigue sin haber sistema de partidas por usuario.
+**Estado del save:** `/tmp/` (desechable), `c.cp` dominado, logros evaluados,
+cruce del cap. 2 jugado y cerrado. Sigue sin haber sistema de partidas por
+usuario (nodo conocido).
 
-## 👴 Progreso de veterano (20+ h → validación de la run 30)
+## 👴 Progreso de veterano (20+ h → la run 30)
 
-La zona me pedía validar el bucle a largo plazo. El dato que puedo aportar hoy:
+La zona de hoy mandaba el cruce, pero mi capa sigue siendo el LARGO plazo. Lo que
+revalido HOY con las piezas nuevas:
 
-- **La progression por competencia es IDEMPOTENTE CRUZANDO RUNS como debe
-  ser**: guardé un estado veterano que YA domina `c.cp` (`knowledge` +
-  `mastered` {order:1, tick:3}), y una run NUEVA (run 30 simulada) con ese
-  inventario cargado NO re-descubre nada (`newly=[]`) ni altera el `order`
-  del mastered. El espejo no regala por dominado. ✔
-- **Sigue faltando el inventario AGREGADO (mi 🧭/P3 del 30/08):** la prueba de
-  hoy la hice cargando a mano `knowledge`+`mastered` de un save previo en la
-  nueva run; aún **no hay un sistema de partidas** que lo haga por ti entre
-  runs. Eso es lo que permitirá que el Hub «sepa» qué dominas — la llave del
-  eco 🧭9 que Gwyn ya firmó (diegoético, cap. 1).
-- **La variedad del veterano sigue siendo la del cap. 0** (4 conceptos, 10-min
-  tutorial): no es defecto (es la naturaleza del cap. 0), la variedad llegará
-  cuando generator consuma los pools de caps. 1–6 (ya en currículo: 14
-  conceptos / 11 quests). El cap. 2 **ya es ejercitable** en la línea exacta de
-  Manus (`grep 11:04 centralita/turnos/turno.log | wc -l` → `2`, ruido 3) — el
-  veterano tiene un primer sabor de encadenado.
-- **Dificultad/ritmo:** con presupuesto 12 y viaje honesto 6 fijo, el cap. 0
-  da margen; el primer error real (cp a destino equivocado, +3) lo dispararía a
-  9 — justo, coherente con la política de «primer error perdonado» firmada hoy.
-  El ritmo tutorial no se cae.
+- **El eco es idempotente cruzando runs (🧭9 aguanta el largo plazo):** una run
+  nueva (run 30) con el inventario que YA domina `c.cp` (`knowledge` + `mastered`
+  `{tick:3, order:1}`) cargado NO re-descubre (`newly=[]`) y **NO re-emite** el
+  evento al bus. El render se suscribirá y no recibirá ecos fantasma del mismo
+  dominio. ✔
+- **La variedad del veterano sigue creciendo:** ayer era un solo encadenado del
+  cap. 2 (grep|wc, noise 3); hoy el flujo de encargo completa la puerta (abrir →
+  jugar → cerrar). El veterano puede ya componer «factura mínima» entre capítulos
+  distintos (cap. 0 noise 6 + cap. 2 noise 3). El siguiente salto de variedad es
+  materializar los pools de cap. 1–3 (ya en currículo: 16 conceptos / 16 quests).
+- **Sigue faltando el inventario AGREGADO multi-run** (mi 🧭3 del 30/08): el eco
+  viaja bien entre runs pero aún cargo `knowledge`+`mastered` a mano; no hay
+  sistema de partidas que lo haga por el jugador. Es la llave del Hub «que sepa
+  qué dominas».
 
-## 🔬 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: post-mortem + cap. 2 en datos)
+## 🔬 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: CRUCE cap. 0 → cap. 2)
 
-- **Smoke del conjunto:** suite desde raíz → **385 passed / 0 xfailed** exactos
-  (lo prometido por Gwyn, con el xfail de 🧭8 muerto). Guard de layout intacto. ✓
-- **Run de referencia con post-mortem NUEVO** (arriba): la unidad del informe
-  coincide con la del presupuesto y el comando-delator coincide con el que
-  sentí. ✓
-- **Persistencia del mastered tras reload** + **cwd nace en `/`**: ambos
-  verificados ejecutando hoy. ✓
-- **Idempotencia entre-runs del veteran** verificado. ✓
-- **Cap. 2 en datos:** `story.ch2.e1–e5` cargan y la tubería exacta se resuelve
-  (sabor técnico confirmado en test; la línea la juega Havel a las 07:00 en
-  REPL). ✓
+- **Smoke del conjunto:** suite desde raíz → **421 passed / 0 xfailed** exactos
+  (lo que dejó Gwyn: 385 + 13 + 18 + 5). ✓
+- **El flujo de encargo del cap. 2 se cruza DESDE SAVE LIMPIO** (no solo en test):
+  listar (vitrina con abrible/falta) → abrir `story.ch2.e1` (prereqs al ABRIR) →
+  jugar la golden → cerrar con post-mortem. El camino del jugador ya engloba dos
+  capítulos. ✓
+- **Logro recalibrado verificado con números propios** (canónica-no / min-sí /
+  error-no) y **eco verificado** (payload completo + idempotencia entre runs). ✓
+- **`ps`/`env` del cap. 3** (la 2.ª prioridad es para Havel con ojos de novedad);
+  yo confirmé que NO se exponen en cap. 0/2 (regresión del PR #14 intacta en la
+  suite). ✓
 
 ## Hallazgos de la run (dónde aprieta el viaje)
 
-1. **🔴 DATO DE CALIBRACIÓN — el logro «Cero rastro» (umbral 4) es
-   matemáticamente IMPOSIBLE de ganar con el viaje honesto.** El comentario del
-   código asume «cat 1 + cp 3 = 4», pero ese conteo **omite el `ls` del
-   descubrimiento**: el viaje honesto mínimo (ls→cat→cp) suma **5**, y la
-   canónica completa §6.4.4 (ls→cat→cp→cd→ls) suma **6** (medido: 6 fijo en el
-   harness, O3). Solo un veterano con la ruta memorizada (puro `cp` = 3) lo
-   cruzará. Consecuencia: un logro nacido para premiar la frugalidad del novato
-   queda fuera de su alcance — contradicción directa con la intención de la
-   idea P3 de Havel (28/08), que era para el NOVATO que aprende a no leer de
-   más. **Dato para Gwyn**: el umbral realista es ≥ 6 (o el logro debería
-   contar solo la secuencia de extracción, no todo el descubrimiento). **No
-   decido: informo.** Relacionado con la idea de Havel 30/08 «Parábola del
-   proveedor 47» (ruido ≤ umbral) que pedía exactamente esto.
-2. **🟡 Las claves `postmortem.auditor.*` NO existen aún en `data/`.** El
-   core devuelve `line_key` + `args` correctos (factura, pico, comando,
-   amount), pero la prosa del formulario no está publicada en `data/` — hoy el
-   "informe" es dato, no texto vívelo. **No es bug** (convención §3: core no
-   hardcodea prosa; el render resuelve y aún no existe render), **pero es un
-   nodo pendiente**: el primer contacto del jugador con «el sistema te estuvo
-   leyendo» (la pieza §2.4) necesita su texto. Para la dirección: cuando se
-   plantee `data/` de textos, las claves `postmortem.auditor.cruce|pico` son
-   prioridad (voz Ceniza/Auditor, formulario seco) — y el motor ya les pasa el
-   comando y el amount concretos.
-3. **🟡 Sigue sin variedad para el veterano de 20+ h** (el cap. 0 es un
-   tutorial de 4 comandos): lo apunto como seguimiento, no como bug — la
-   variedad real llega con los pools caps. 1–6. El cap. 2 en datos es la primera
-   semilla.
+1. **🟡 UX del cap. 2 — la golden es REBELDE si no sabes dónde estás.** Cuando
+   `abrir story.ch2.e1` monta la sesión, `cwd` nace en **`/`** y la golden usa
+   RUTA RELATIVA (`centralita/turnos/turno.log`). Si el novato ejecuta
+   `grep 11:04 centralita/turnos/turno.log | wc -l` tal cual desde `/`, obtiene
+   `grep: … No such file or directory` (aunque el pipeline devuelve exit 0 con
+   `0\n`, porque el exit lo da el `wc`, no el `grep`). Hay que `cd` a la oficina
+   primero (la canónica del cap. 2 lo hace). **No es bug** (semántica GNU real del
+   pipeline), **pero es una pista de dirección para cuando haya render/tutorial**:
+   si el juego quiere «aprender por necesidad», la sala debería dar una pista
+   diegética de dónde estás (un `pwd` en el scaffold, o que la golden nazca ya
+   dentro de la oficina). Dato para Gwyn (ver notas 🧭13).
+2. **🟡 Sigue sin entrypoint de run ÚNICO que encadene capítulos** (el cruce lo
+   ejercito vía API del flujo, no por un launcher): el `engine/game.py`
+   orquestador sigue siendo la pieza que convierte «puedo recorrer cada capítulo»
+   en «puedo jugar la partida completa». Es el mismo nodo de ayer, ahora con más
+   superficie jugable detrás. Seguimiento, no bug.
+3. **🟡 Las claves `postmortem.auditor.*` siguen sin texto en `data/`** (🧭12,
+   vigente): el flujo devuelve la línea del Auditor como dato con `line_key` +
+   `args`; falta el paquete de textos que la pinte. Es EL nodo de packaging cuando
+   arranque `data/`/render.
 
 *(Detalle y propuestas de dirección: `backlog/notas-manana.md` 🧭, sobrescritas
-hoy. La pieza más caliente es el hallazgo 1: número mal calibrado, dato para
-Gwyn.)*
+hoy. La pieza más útil para Gwyn es el hallazgo 1 — una pista de UX en el primer
+cruce real entre capítulos.)*
 
 ## 🧭 Notas de dirección (resumen — texto completo en `notas-manana.md`)
 
-Saldos: 🧭7/🧭8 SALDADAS en código (verificadas hoy ejecutando: cwd=`/`; prereqs
-al abrir, xfail muerto). NUEVAS para HOY: **🧭11** (logro «Cero rastro»
-injugable: umbral 4 < viaje honesto 6; recalibrar, dato verificado), **🧭12**
-(publicar las claves `postmortem.auditor.*` en `data/` cuando exista el
-paquete de textos: el formulario del Auditor es hoy un dato, no una vivencia).
-Filtro: apto — el camino del cap. 0 con post-mortem se recorre ENTERO desde
-save limpio y aguanta; los hallazgos son calibración y packaging, no roturas.
+Saldos: **🧭11 RESUELTA esta noche** (logro «Cero rastro» recalibrado, umbral 5 +
+pulcritud) — verificado HOY ejecutando; **🧭9 con tubo** (eco en bus, verificado).
+NUEVAS para HOY: **🧭13** (UX del cap. 2: la golden relativa exige `cd` previo que
+el scaffold no sugiere — pista diegética de ubicación al abrir e1, o cwd en la
+oficina), **🧭12** (invariante) publicar claves `postmortem.auditor.*` en `data/`.
+Filtro: apto — el cruce cap. 0→cap. 2 se recorre ENTERO desde save limpio y
+aguanta; los hallazgos son ajuste de UX y packaging, no roturas.
 
-CICLO: verde — el circuito con post-mortem se recorre ENTERO desde save limpio
-y aguanta; los hallazgos son un número mal calibrado (🧭11) y un texto pendiente
-(🧭12), ninguno rompe el camino.
+CICLO: verde — la zona 🔬 (cruce de capítulo) se ejecutó completa y el viaje del
+novato ya engloba dos capítulos; logro y eco verificados; los hallazgos son una
+pista de UX (🧭13) y packaging (🧭12), ninguno rompe el camino.
 
 ---
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*
