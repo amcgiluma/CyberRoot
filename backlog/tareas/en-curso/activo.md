@@ -58,9 +58,9 @@
 - `[EN CURSO]` **S2 — Familia conteo: `head`/`tail`/`sort`/`uniq` en el
   sandbox** (golden contra coreutils; `tee`/`less` fuera de hoy). Dueño:
   Smough.
-- `[HECHO]` (PR #__) **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
+- `[HECHO]` (PR #18) **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
   `postmortem.auditor.cruce|pico` con voz formulario del Auditor + textos de
   `story.ch1.e1–e5` desde la prosa de Manus; resolvedor `line_key`+`args` →
   texto; test de cobertura de claves. Dueño: Seath.
-- `[HECHO]` (PR #__) **T2 — `story.ch5.*` al currículo** (cap. 5 de Manus de esta
+- `[HECHO]` (PR #18) **T2 — `story.ch5.*` al currículo** (cap. 5 de Manus de esta
   madrugada; prereqs SOLO con conceptos vivos — sin inventar). Dueño: Seath.
