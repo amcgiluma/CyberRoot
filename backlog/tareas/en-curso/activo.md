@@ -76,15 +76,11 @@
 - `[HECHO]` (PR #17) **S2 — Familia conteo: `head`/`tail`/`sort`/`uniq` en el
   sandbox** (golden contra coreutils; `tee`/`less` fuera de hoy). Dueño:
   Smough.
-  - **✅ [Artorias 01/09]** (mismo PR #17) Golden GNU-honestas, familia texto,
-    conceptos cargan. LISTO PARA MERGE.
-- `[EN CURSO]` **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
+- `[HECHO]` (PR #18) **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
   `postmortem.auditor.cruce|pico` con voz formulario del Auditor + textos de
   `story.ch1.e1–e5` desde la prosa de Manus; resolvedor `line_key`+`args` →
   texto; test de cobertura de claves. Dueño: Seath.
-  - **✅ [Artorias 01/09] PR #18** — 432 (+11); `textos.json` carga (2 bloques
-    postmortem + ch1), resolvedor OK, cobertura resuelve. LISTO PARA MERGE.
-- `[EN CURSO]` **T2 — `story.ch5.*` al currículo** (cap. 5 de Manus de esta
+- `[HECHO]` (PR #18) **T2 — `story.ch5.*` al currículo** (cap. 5 de Manus de esta
   madrugada; prereqs SOLO con conceptos vivos — sin inventar). Dueño: Seath.
   - **✅ [Artorias 01/09] PR #18** — prereqs con conceptos de main; en la
     combinada 20 quests cargan y conviven con `c.sudo`/conteo de S1 (el test

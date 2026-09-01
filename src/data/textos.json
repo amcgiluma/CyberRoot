@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "texts": {
+    "postmortem.auditor.cruce": "Expediente 000: superación del presupuesto de ruido. Última entrada antes del corte: {command} ({amount} puntos). Continuidad del ensayo: estable.",
+    "postmortem.auditor.pico": "Expediente 000: se mantiene dentro del presupuesto. Pico de la sesión: {command} ({amount} puntos). Continuidad del ensayo: estable.",
+
+    "story.ch1.e1.title": "El turno de la señora Carmen",
+    "story.ch1.e1.beat": "El nodo del Muelle Oeste guarda los partes de la escuela pública 3. Alguien con permisos de administración los consulta de noche. Se leen las columnas de `ls -l` para saber quién puede tocar qué antes de tocar nada.",
+
+    "story.ch1.e2.title": "Cobro por agua",
+    "story.ch1.e2.beat": "Un técnico de Lumen filtra las tablas de contadores: hay bloques que pagan agua que nunca llega. Verificar fechas con `find` y extraer solo lo que vale antes del viernes.",
+
+    "story.ch1.e3.title": "El censo baja al puerto",
+    "story.ch1.e3.beat": "La Oficina monta contadores de presencia en los almacenes. Leer configuraciones con `cat` y entender qué campo identifica a cada uno antes de decidir si se pueden falsificar.",
+
+    "story.ch1.e4.title": "La lista del embargo",
+    "story.ch1.e4.beat": "La lista de viviendas embargadas circula entre dos familias del Muelle. Copia rápida de la red la inmobiliaria y salir antes del turno de auditoría.",
+
+    "story.ch1.e5.title": "El nodo de las francesas",
+    "story.ch1.e5.beat": "El repeater de la grúa nº 9 da red a media docena de casas fuera del censo. Ajustar permisos con `chmod`/`chown` sobre lo justo, dejarlo vivo y marcharse sin ruido.",
+
+    "story.ch5.e1.title": "La puerta que dejaste",
+    "story.ch5.e1.beat": "Hay una conexión registrada a tu nombre desde un host del Alto, de la hora muerta de ayer. Leer las sesiones del host y cerrar la puerta que quedó tocada para que Lumen no mida la casa desde dentro.",
+
+    "story.ch5.e2.title": "Los permisos de la casa",
+    "story.ch5.e2.beat": "Tres recursos de la Subestación están más abiertos de lo que la casa sobrevive. Auditar `ls -l` y cerrar con `chmod`/`chown` lo justo para que nadie de fuera los toque y dentro se siga viviendo.",
+
+    "story.ch5.e3.title": "La visita",
+    "story.ch5.e3.beat": "Un proceso ajeno corre escondido en el rack de informes, obra de quien pasó cuando el repeater calló. Leer qué corre y de quién con `ps` y decidir qué hacer con el termómetro que mide la casa.",
+
+    "story.ch5.e4.title": "El que se queda",
+    "story.ch5.e4.beat": "El asalto llega a la puerta del dique. Cerrar el perímetro con lo aprendido de defensa (`chmod` sobre accesos, leer los logs de entrada) en un solo recorrido apretado por el ruido, y decidir qué entra en la sombra antes de que entren ellos."
+  }
+}
