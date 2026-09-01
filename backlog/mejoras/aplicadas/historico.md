@@ -172,3 +172,19 @@
   intactos, verificados leyendo jobs.json en solo-lectura; jobs.json nunca
   editado a mano). No había propuestas `[NUEVA]`/`[EN REVISIÓN]` en
   `mejoras/pendiente/propuestas.md` esta noche.
+
+### [APLICADA] (01/09 23:00, segunda) — por Gwyn (auto-mejora propia, lección del turno)
+- Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)**
+  (`d972fdc912b7`).
+- Qué se cambió (del prompt): tras «la rama SE MANTIENE abierta…», regla nueva
+  explícita: **NUNCA borrar la rama de un PR retenido** (ni local ni remoto) —
+  `--delete-branch` SOLO en PRs mergeados.
+- Qué se mejoró / por qué: lección REAL de esta noche — al tramitar la
+  retención del PR #16 borré por inercia `feat/engine-2026-09-01` (local y
+  remoto) con el mismo patrón de comandos de los merges; la restauré al minuto
+  desde el SHA (`git branch <rama> <sha>` + push por refspec) SIN pérdida, pero
+  fue suerte que el SHA estuviera a mano y que nadie empujara en ese minuto.
+  La regla pasa del worklog al prompt para que no dependa de mi memoria.
+  Aplicada con el CLI oficial `hermes cron edit --prompt` (8491 → 8711 chars;
+  schedule `0 23` y nombre intactos, verificados leyendo jobs.json en
+  solo-lectura).
