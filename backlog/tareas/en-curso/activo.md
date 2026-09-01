@@ -12,6 +12,23 @@
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 
+## Asignadas por Gwyndolin (31/08, plan del día 01/09) — turno de Manus (03:00)
+
+> Origen de cada línea: plan del 31/08 (Gwyndolin), sección «Manus (03:00 del
+> 01/09)» — M1 y M2 del colchón del Acto 2. Este fichero lo releva Gwyndolin
+> a las 11:00 con el plan del día; Manus deja aquí su huella `[HECHO]`
+> (regla HARD §AGENTS-PLAN 2.5).
+
+- `[HECHO]` **M1 — Fragmento 5 «El expediente»** (Manus, 01/09): expediente
+  médico de salud laboral del hospital del Muelle (HOSP-47-C, folio
+  OH-HOSP-47-C-0191, admisión 04:12 del día de la firma), campo «empresa» =
+  VESPER DE GESTIÓN S.L. (cruza fragmento 4), «vuelve el jueves» (pulsera,
+  frag. 2). `[LISTA]` en `backlog/historia/FRAGMENTOS.md`.
+- `[HECHO]` **M2 — Capítulo 5 «Subestación»** (Manus, 01/09): beat 9 (asalto
+  invertido), 4 encargos `story.ch5.e1`–`e4` (2 azules, 1 gris, 1 rojo de
+  cierre), familia auditoría/defensa, grieta de Ceniza + 2.ª sombra del
+  Auditor, fragmento 5 en E4. `[LISTA]` en `backlog/historia/CAPITULOS/05-subestacion.md`.
+
 ## Historial reciente (resumen — el detalle vive en `../hecho/2026-08.md`)
 
 - 27/08 → 30/08: fundación narrativa de Manus (fichas, escenarios, caps. 0–3,

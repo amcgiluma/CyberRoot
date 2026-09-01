@@ -89,12 +89,31 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
   fila 000 vacía y las dos lecturas sin elegir. El troncal se reescribe los
   días de la firma (11:04 del cap. 2 vuelve como marca). Gancho: la puerta
   que pregunta, presión hacia el cap. 5.
+- ✅ Fragmento 5 «El expediente» `[LISTA]` (`FRAGMENTOS.md`, 01/09) —
+  expediente médico de salud laboral del hospital del Muelle (HOSP-47-C,
+  folio OH-HOSP-47-C-0191, admisión 04:12 del día de la firma), con
+  campo «empresa» = VESPER DE GESTIÓN S.L. (cruza con el fragmento 4),
+  nombre legible que no es el de los Apagados, tarjeta de cita que repite
+  «vuelve el jueves» de la pulsera (2). El que cuelga al lado del de Vela.
+  Sostiene H1 (lo pediste tú: un nombre a propósito, una cita reescrita) y
+  H2 (el empleador fachada, la revisión muerta «sin emplazar» por un censo
+  que no lo tiene) a la vez. Estado 5/6.
+- ✅ Capítulo 5 «Subestación» (`CAPITULOS/05-subestacion.md`, beat 9,
+  01/09) — 4 encargos (`story.ch5.e1`–`e4`: 2 azules, 1 gris, 1 rojo, cierre
+  de doble salida) en la ÚNICA incursión invertida del juego (§6.1):
+  defensa del Hub, no intrusión. Regla de la luz invertida (los Muelles:
+  Lumen entra con hombres, no sensores; el ruido ES volumen). Familia
+  auditoría/defensa (leer logs, cerrar permisos, detectar movimiento).
+  Grieta de Ceniza (beat 6) escrita en la casa (E2), el giro del Auditor
+  (beat 8) suma su 2.ª sombra, fragmento 5 cae en E4 (cajón 29 del archivo).
+  Gancho: el censo, cap. 6.
 - PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
   en Fase 1). No bloquea capítulos 0–4.
-- SIGUIENTE (dirección Gwyn, 28/08): fragmento 5 (el expediente médico del
-  hospital del Muelle — el de Vela existe, ¿y este?) con el cap. 5 (asalto
-  invertido a la Subestación, presión máxima de Vela, beat 9) cuando toque
-  colchón del Acto 2 hacia el giro final.
+- SIGUIENTE (dirección Gwyn, 28/08 + plan 31/08): cap. 6 «Faro» (beats
+  10–12: la Lista al alcance, confrontación con Vela, finales) cuando toque
+  colchón del Acto 2 → Acto 3, con el worldbuilding del censo como puerta
+  (fragmento 6 = hoja de cierre, GARANTIZADO por completar la cadena final
+  del cap. 6, 🧭5).
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
   Materializarlo en `FRAGMENTOS.md` cuando se escriba la cadena.

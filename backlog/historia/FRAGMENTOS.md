@@ -18,7 +18,7 @@
 | 2 | 2 | pulsera de hospital con fecha | [LISTA] |
 | 3 | 3 | contrato de alquiler a nombre de nadie | [LISTA] |
 | 4 | 4 | cuenta que recibió pagos mensuales de una filial de Lumen hasta hace 3 años | [LISTA] |
-| 5 | 5 | expediente médico del hospital del Muelle (el de Vela existe — ¿y este?) | [PENDIENTE] |
+| 5 | 5 | expediente médico del hospital del Muelle (el de Vela existe — ¿y este?) | [LISTA] |
 | 6 | 6 | hoja de cierre del Programa de Continuidad: sujeto 000, fecha en blanco | [PENDIENTE] |
 
 ## Fragmento 1 — La foto (cap. 1, botín raro)
@@ -133,6 +133,51 @@ habitación con tu carpeta vacía. La nómina de la División Estructuras de
 Lumen es la factura de mantener a un sujeto sin registro, y la truncó un
 sistema que solo cierra cuentas que el censo ya no reclama.
 
+## Fragmento 5 — El expediente (cap. 5, botín raro)
+
+> **Formato**: el historial del Muelle que cuelga al lado del de Vela. La
+> dirección dice que el suyo existe (§2.4); este es el fleco que acompaña.
+> Misma admisión que la pulsera (fragmento 2: día de la firma, NHC) y misma
+> facturera que la cuenta (fragmento 4: VESPER DE GESTIÓN S.L., el recibo
+> HOSP-47-C). El nombre está escrito y se puede leer, y por eso es el
+> fragmento que más cerca empuja de H1 (lo pediste tú) o H2 (te lo dieron
+> ellos) sin resolver cuál.
+
+Expediente médico de salud laboral, impreso a dos caras, folio
+`OH-HOSP-47-C-0191`. La misma numeración que la pulsera (fragmento 2), con
+cabecera de la sucursal 47 y fecha de admisión estampada: el día de la firma,
+04:12. Morfología, grupo y factor, alergias conocidas. Campo «empresa»:
+`VESPER DE GESTIÓN S.L.` — el mismo nombre de la cuenta (fragmento 4), ahora
+como empleador. El recibo que la cuenta pagó el segundo mes (`RECIBO
+HOSP-47-C`, −760,00) es la liquidación de la consulta de este folio.
+
+El campo «paciente», sin embargo, no está vacío. Hay un nombre, escrito con
+la letra de un formulario administrativo que llena muchos sobres en un
+turno. Datos de contacto: una dirección del Umbral bajo y un teléfono de
+nueve cifras que el censo no devuelve. En la casilla de fotocopia del DNI,
+una mancha de tinta que repite el borde del documento rasgado. Al pie de la
+segunda hoja, la línea de «revisiones periódicas» marca un hueco: la última
+revisión se programó y no se hizo, y nadie la quiere emplazar porque la
+empresa del encabezado «ya no figura en el registro de empleadores».
+
+Entre los folios, sin banda del archivo, una tarjeta de cita del mismo
+hospital, posterior en tres meses a la admisión, con una hora tachada y
+encima, con presión distinta: «vuelve el jueves». La misma frase del reverso
+de la pulsera (fragmento 2). Una sola carta manuscrita escrita por dos manos
+en dos fechas.
+
+Dato que sostiene H1: un nombre pedido a propósito, una empresa fachada que
+paga la consulta, una cita que una hora después se tachó y se reescribió. Hay
+una firma de alguien que decidió, sobre el papel, cómo quería llamarse y
+cuándo volver. El nombre se puede leer, y no es el que te llaman los
+Apagados. Dato que sostiene H2: el nombre apunta a una empresa que solo
+existe como número, el NHC cruza con la pulsera y con la cuenta, y la línea
+de revisiones muere «sin emplazar» porque el empleador del encabezado ya no
+existe en el censo. Un sistema que no reemplaza una revisión de un empleado
+que no consta no está cuidando a nadie: está archivando a alguien que no
+debería dejar rastro, y dejándolo por si quien lo borró quiere comprobar que
+sigue.
+
 ## Reglas para escribirlos
 - Nunca resuelven H1 vs H2: cada uno debe leerse plausible en ambas.
 - El último (nº 6) solo aparece si el jugador llega al Faro; alimenta
@@ -140,5 +185,7 @@ sistema que solo cierra cuentas que el censo ya no reclama.
 - No puntúan: son botín narrativo puro (§7.1).
 
 ## Estado
-4/6 escritos (1, 2, 3 y 4 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
+5/6 escritos (1–5 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
 la hace el ejecutor integrador cuando estén `[LISTA]`.
+Queda el nº 6 (hoja de cierre del Programa de Continuidad, cap. 6) — ver
+nº 6 en la tabla; GARANTIZADO al completar la cadena final del cap. 6 (🧭5).
