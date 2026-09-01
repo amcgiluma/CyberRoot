@@ -48,19 +48,50 @@
   fichero que el generator coloca en la sala del cap. 3** (+ `auth.log`
   presente). Módulo: `src/core/generator/`. Regresión `generate(seed,0)`
   obligatoria. Dueño: Ornstein.
+  - **✅ [Artorias 01/09]** El código O1↔S1 verifica PERFECTO en la combinada
+    (credencial+auth.log colocados; literales coinciden con sandbox; smoke
+    real: `sudo cat` ejecuta, factura base+premium=4, firma en auth.log).
+    **PERO el PR #16 lleva 2 tests STALE** (los 2 abajo) → **💥 PR #16**.
+- **💥 PR #16 — FIX OBLIGATORIO para Ornstein (2 tests stale, rompen la
+  combinada).** Con S1 aterrizado, `c.sudo`+su quest (story.ch3.e4/e5) YA están
+  en el currículo REAL; dos tests de O1 asumen el estado pre-S1 y fallan en la
+  integración (`test_errores.py::test_chapter3_curriculum_real_sin_quest_sudo_generator_error`
+  y `test_sala_sudo.py::test_generate_cap3_sin_quest_sudo_es_error_accionable`).
+  Arreglo exacto (validado en el ensayo, 478 passed):
+  - `test_errores.py`: renombrar a `test_chapter3_curriculo_real_genera_sala_sudo`
+    y asertar que `generate(1, chapter=3)` SÍ produce la sala
+    (assert `inc.chapter == 3` y `inc.room.id.startswith("room-ch3-")`).
+  - `test_sala_sudo.py`: sustituir el caso stale por uno positivo
+    (`generate(1,3,curriculum=load_curriculum())` → sala con la credencial) y
+    conservar el guard de honestidad construyendo un currículo SIN quest sudo
+    (`_real_sin_quest_sudo()`), que debe seguir lanzando `GeneratorError`.
+  Hecho esto el PR #16 es ✅. Gwyn: NO mergear #16 hasta que el fix entre.
 - `[EN CURSO]` **O2 — Harness: métrica de «ánimo de novedad»** (distribución
   de familias de comando por run; aviso de dominancia). Módulo:
   `tools/harness/` (sin tocar `src/core/`). Dueño: Ornstein.
+  - **✅ [Artorias 01/09]** `run_seeds.py` reporta histograma por familia +
+    dominancia; tests O2 verdes; no toca `src/core/`. (Mismo PR #16 que O1;
+    el bloqueo de merge de #16 es solo por los 2 tests stale de O1.)
 - `[EN CURSO]` **S1 — `sudo` GANADO en el sandbox** (forma DESIGN §6.1: sin
   credencial → rechazo diegético accionable; con credencial → ejecuta + ruido
   premium + firma en auth.log) + concepto `c.sudo` a `curriculum.json` con
   prereq en la quest sudo del cap. 3. Dueño: Smough.
+  - **✅ [Artorias 01/09] PR #17** — 455 (+34); 9 tests escalada + 3 sesión
+    sudo verdes; gate por capítulo (sudo→127 en cap.0/2) correcto; `c.sudo`
+    carga (21 conceptos / 20 quests en la combinada). LISTO PARA MERGE.
 - `[EN CURSO]` **S2 — Familia conteo: `head`/`tail`/`sort`/`uniq` en el
   sandbox** (golden contra coreutils; `tee`/`less` fuera de hoy). Dueño:
   Smough.
+  - **✅ [Artorias 01/09]** (mismo PR #17) Golden GNU-honestas, familia texto,
+    conceptos cargan. LISTO PARA MERGE.
 - `[EN CURSO]` **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
   `postmortem.auditor.cruce|pico` con voz formulario del Auditor + textos de
   `story.ch1.e1–e5` desde la prosa de Manus; resolvedor `line_key`+`args` →
   texto; test de cobertura de claves. Dueño: Seath.
+  - **✅ [Artorias 01/09] PR #18** — 432 (+11); `textos.json` carga (2 bloques
+    postmortem + ch1), resolvedor OK, cobertura resuelve. LISTO PARA MERGE.
 - `[EN CURSO]` **T2 — `story.ch5.*` al currículo** (cap. 5 de Manus de esta
   madrugada; prereqs SOLO con conceptos vivos — sin inventar). Dueño: Seath.
+  - **✅ [Artorias 01/09] PR #18** — prereqs con conceptos de main; en la
+    combinada 20 quests cargan y conviven con `c.sudo`/conteo de S1 (el test
+    de conteo 21/20 reconciliado en el ensayo). LISTO PARA MERGE.
