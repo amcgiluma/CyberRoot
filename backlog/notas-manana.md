@@ -129,111 +129,89 @@ primero** arregla #16 (2 tests), luego lo demás.
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
 
-### 👑 Gwyn (31/08, 23:00) — criterio de diseño y dirección para el 01/09
+### 👑 Gwyn (01/09, 23:00) — criterio de diseño y dirección para el 02/09
 
-**Trámite:** 3 merges (PR #13 engine → #14 sandbox → #15 meta-ui), suite
-verificada tras CADA merge: **398 → 416 → 421 passed, 0 xfailed** (deltas
-declarados 13/18/5, cuadrados exactos; el ensayo de Artorias predijo 421/0 y
-el árbol real lo clavó). Conflictos solo en las 2 huellas previstas, resueltos
-por script con TODAS las huellas en orden cronológico. Archivadas en
-`hecho/2026-08.md` las 6 tareas de hoy + M1/M2 de Manus de la madrugada +
-M1/M2 rezagados del 29/08 (ver «corrijo» abajo). **Decisiones de diseño
-firmadas esta noche en DESIGN**: T1 VALIDADO tal cual (umbral 5 + «sin
-exit≠0», §7.6 — 🧭11 SALDADA), forma del **sudo GANADO** (credencial
-narrativa, §6.1) y forma de la **red simulada** (hosts como FS simultáneos
-del mismo Shell, §6.1 — enlazada en `abierto.md`). Sin rechazos de merge.
+**Trámite:** mergeados **#17** (sandbox: sudo GANADO + familia conteo; suite
+455, 421+34) y **#18** (textos 🧭12 + cap. 5 a datos; suite **466**, +11) —
+deltas declarados cuadrados, gate de datos 21/20, conflicto de `test_loader.py`
+reconciliado 21/20 según el ensayo de Artorias. **PR #16 NO mergeado** (2 tests
+stale que rompen la combinada; fix exacto en el PR y en `activo.md`; rama
+abierta para Ornstein). Archivado en `hecho/2026-09.md`: S1, S2, T1, T2 **+ la
+brecha de Manus** (fragmento 5 + cap. 5 salieron de `activo.md` el lunes sin
+archivar; reparado con nota). Auto-mejora aplicada: la higiene de Gwyndolin ya
+NO toca `[HECHO]` ajenos (registro en `mejoras/aplicadas/historico.md`).
+Confesión de proceso: al tramitar #16 borré su rama por inercia de los merges
+y la restauré al minuto desde el SHA (sin pérdida); regla que me apunto:
+`--delete-branch` SOLO en PRs mergeados, nunca en retenidos.
 
-**Notas de dirección de Oscar (🧭) — resueltas esta noche:**
-- **🧭11 (logro «Cero rastro» imposible) → SALDADA.** Oscar y Havel midieron
-  números independientes y coincidentes; T1 los convirtió en umbral 5 + sin
-  errores; validado al mergear con los datos delante. El bug de la mañana
-  nació, se diagnosticó, se planificó, se arregló y se verificó EN UN MISMO
-  DÍA: ese es exactamente el circuito que queríamos.
-- **🧭12 (`postmortem.auditor.*` sin texto en `data/`) → ACOGIDA como
-  criterio**: es el nodo de packaging PRIORITARIO cuando se plantee
-  data/render. El motor ya pasa `line_key`+`args`; el primer contacto real con
-  «el sistema te estuvo leyendo» (§2.4) ocurrirá cuando ese formulario sea
-  texto. Mientras no haya superficie que lo pinte, no es deuda — es orden de
-  cola correcto.
-- **🧭9 → confirmada**: el tubo (T2, evento en bus) ya existe junto a los
-  datos (T1, PR #12). Falta quien lo pinte (render) y lo dice (texto).
+**Nota de dirección de Oscar (🧭13) — resuelta esta noche:** VALIDADA, opción
+(a) con enmienda — el scaffold coloca el cwd dentro de la oficina y el PROMPT
+muestra la ruta (la convención Unix `usuario@nodo:/ruta$` es la pista diegética
+gratis; `pwd` como comando NO se regala). Entra con render/tutorial. Bonus para
+el diseñador de salas: el matiz GNU del exit del pipe (`grep` fallido + `wc` =
+exit 0) es una sala-trampa esperando a ser diseñada. La decisión vive junto a
+la línea en `abierto.md`.
 
 **Qué me ha gustado (sabor):**
-- **El día que el cap. 2 se JUGÓ de verdad.** O1 de Ornstein convirtió la
-  línea golden de demo del sandbox a ENCARGO dentro del flujo: listar → abrir
-  → golden → cerrar, con rechazo accionable que dice lo que te falta en
-  lenguaje del juego y post-mortem adjunto al cierre. La «puerta del cap. 2»
-  del plan ya no es una API, es una experiencia. Es el mejor paso de gameplay
-  desde que empezó Fase 1.
-- **La columna USER de `ps` que delata (ceniza-521 vs censo-522).** El diseño
-  de «el sistema te lee» ya no vive solo en el post-mortem: el SISTEMA
-  OPERATIVO simulado te delata en una columna. Es coherencia profunda con la
-  prosa del demonio gemelo de Manus — tema (identidad como dato) convertido en
-  verbo técnico, que es exactamente lo que Havel pide para la familia conteo.
-- **El giro del Auditor del cap. 4 RETROALIMENTA la mecánica del post-mortem.**
-  Manus plantó «la primera pregunta fuera de registro» y de golpe el
-  `build_postmortem` de O2 (PR #10) no es una pantalla de estadísticas: es la
-  primera vez que te juzga la entidad que mañana te preguntará. Historia y
-  sistema empujando en la misma dirección, sin que nadie lo coordinara
-  explícitamente. El motor narrativo va DOS capítulos por delante y ahora
-  además conectado hacia atrás.
-- **El circuito 🧭 funcionó de punta a punta en un solo día** (ver 🧭11 arriba).
-  Cuatro miradas distintas, cero solape, un bug muerto antes de medianoche.
+- **El día que el diseño de papel hizo CÓDIGO sin torcerse.** El sudo GANADO
+  estaba firmado en §6.1 el 31/08 y esta noche `sudo cat` factura 4 y firma
+  auth.log en el árbol real. Rechazo diegético que NOMBRA el fichero, ruido 0
+  al intentar, premium al ejecutar: «el poder deja factura» dejó de ser una
+  frase mía y pasó a ser comportamiento verificado. El circuito O1↔S1 por
+  literales compartidos (sin import entre módulos) es exactamente el tipo de
+  acoplamiento sano que queríamos.
+- **La primera vez que el juego ME habló.** Probé el resolvedor a mano y me
+  devolvió: «Expediente 000: se mantiene dentro del presupuesto. Pico de la
+  sesión: sort turnos.log (9 puntos). Continuidad del ensayo: estable». Llevo
+  días diciendo que §2.4 («el sistema te estuvo leyendo») pasará de dato a
+  vivencia; hoy el sistema me leyó A MÍ. El test de cobertura de claves de
+  Seath es el guard correcto: ninguna voz huérfana jamás.
+- **La disciplina invisible que hizo fácil el merge.** Seath no inventó
+  `c.sudo` en sus prereqs (venía en la rama de Smough), Smough contrastó sus 4
+  comandos contra coreutils real. El único conflicto de datos se reconcilió en
+  una línea porque AMBOS respetaron la frontera del otro. El gate de datos pasó
+  sin fricción POR la ética del día anterior, no por suerte.
+- **Los 2 tests stale de O1, leída como lección de proceso:** cuando otro PR
+  aterriza el dato que tu test asumía ausente, tu contrato con el mundo cambia
+  de signo. No es culpa de Ornstein (su PR fue verde aislado TODO el día); es
+  la primera vez que vemos el coste real de mergear en desorden. El orden
+  engine→sandbox→meta-ui que Artorias ensayó era el correcto y #16 lo paga
+  por ir primero. Instrucciones exactas en su PR.
 
-**Qué NO me ha gustado / corrijo:**
-- **Las líneas `[HECHO]` de Manus del 29/08 vivieron DOS noches de más en
-  `activo.md`**: mis cierres del 29 y el 30 archivaron solo las líneas del día
-  y pasaron por alto las de prosa. Corregido hoy (archivadas con nota de
-  retraso). Regla que me aplico desde esta noche (auto-mejora aplicada a mi
-  prompt): el archivado nocturno es INVENTARIO COMPLETO de `activo.md`
-  (`grep -n '\[HECHO\]'` antes de cerrar), no solo las líneas de hoy.
-- [Menor] La rama de Ornstein trajo `src/core/engine/PLAN-2026-08-31.md` —
-  documentación de planificación de rama VIVIENDO en `src/` (la convención
-  dice que el plan del día vive en `backlog/planes/` y el CÓMO en el PR). No
-  lo quito ahora (inofensivo, suite verde, hay gente que lo citó en el
-  worklog), pero mañana el dueño lo reubica en `docs/` o lo elimina. Nota
-  para Artorias como higiene, no como defecto de la PR.
-- [Menor] El plan de S1 pedía «procesos como pide la idea de Havel sobre
-  /proc» y la implementación usa `fs.processes` como piel del generador
-  (zero-RNG). La solución entregada es MEJOR que la pedida (determinista y
-  testeable), pero la idea /proc original sigue viva y es más diegética a
-  largo plazo (montar `/proc` como FS de solo lectura). Recámara, no deuda.
+**Dirección para el plan del 02/09 (mi lectura, por prioridad):**
+1. **Ornstein PRIMERO arregla #16** (2 tests, receta exacta en `activo.md`);
+   suite esperada tras el fix: **478**. Es corto y desbloquea que la sala del
+   cap. 3 sea generable de verdad. Después, su tarea nueva del día.
+2. **RENDER v0 (reservado por Gwyndolin, confirmo la reserva):** fuente bitmap
+   → UNA sala del cap. 0 pintada. Con textos en `data/`, eco en bus y flujo del
+   cap. 2 jugable, render es el desbloqueo natural del deploy `[P1]`. AC
+   barato: la sala pintada ya puede mostrar el prompt con cwd (`usuario@nodo:/ruta$`)
+   — avanza 🧭13 gratis.
+3. **Consumidor del resolvedor en el cierre de encargo (pieza pequeña, gran
+   dopamina):** el motor emite `line_key`+`args` y el resolvedor existe; falta
+   que el cierre del post-mortem IMPRIMA el texto resuelto en el REPL (sin
+   render). El jugador vería la voz del Auditor HOY, no cuando haya UI. dueño
+   natural: quien toque engine (post-#16) — una tarea de 1-2 h.
+4. **`kill`/señales sobre el par ceniza/censo (idea P2 de Havel del 01/09):**
+   con `ps`/`env`/`sudo` dentro, el cap. 3 pide su verbo final. La bifurcación
+   kármica de Havel (matar el demonio = rojo; `kill -HUP` reconfigurándolo =
+   azul) es la mejor candidata de su lista. S1 handler, cap. 3 — AC en su idea.
+5. **Manus mantiene el colchón de madrugada:** M1 censo (mecanismo de la Lista)
+   + M2 cap. 6 «Faro» ya asignados para las 03:00. La familia conteo (S2) es su
+   alfabeto: el doc de M1 debe pensar en filas contables.
 
-**Dirección para el plan del 01/09 (mi lectura, por prioridad):**
-1. **Zona 🔬 al cap. 2 (ver `zona-testeo.md`)**: Oscar recorre el flujo de
-   encargo desde save limpio — es el primer día que el viaje del novato puede
-   cruzar del cap. 0 al cap. 2 jugando.
-2. **El `sudo` GANADO al motor (Smough)**: forma firmada en DESIGN §6.1; con
-   `ps`/`env` ya dentro, el cap. 3 tiene su familia Procesos casi completa.
-   AC sugerido: sin credencial → rechazo diegético accionable; con credencial
-   → ruido premium + firma en auth.log.
-3. **Primer paquete de textos (Seath/data, 🧭12)**: claves
-   `postmortem.auditor.*` + las del cap. 1 — el eco 🧭9 tiene tubo y datos; el
-   texto es lo único que falta para que el unlock SE SIENTA. Empieza por las
-   claves del post-mortem: ya hay consumidor en el flujo (O2).
-4. **Familia conteo de Havel (sort/uniq/head/tail/tee)**: ensancha el tracto
-   de pipes que desde HOY se juega dentro del flujo — es la barrera técnica
-   natural hacia el cap. 6 y encaja con la zona ya jugable.
-5. **Manus mantiene el colchón**: cap. 5 «Subestación» + fragmento 5 (ya en su
-   plan de madrugada). El censo del cap. 6 sigue debiendo worldbuilding.
-6. **Render v0 en el horizonte**: fuente bitmap validada + paleta + SEMANTIC
-   castellano listos desde PR #3; con el flujo del cap. 2 jugable y el eco en
-   bus, render es el desbloqueo natural del deploy `[P1]`. Si mañana va verde,
-   Gwyndolin debería reservar la primera tarea de render esta misma semana
-   (fuente → 1 sala pintada del cap. 0, el smoke visual más barato).
-
-**Ideas propias (recámara, no para el plan de mañana):**
-- La fila 000 VACÍA del expediente (cap. 4, beat 7): que la fila que falta sea
-  LA DEL JUGADOR — tu post-mortem real se cuela en el expediente del sistema y
-  el juego valida que tu factura coincide con el auth.log simulado. El que
-  mintió en su factura se delata solo. H1/H2 lo sostienen (ya lo apunté el
-  30/08; el giro del Auditor del cap. 4 lo hace URGENTE de diseño, no de código).
-- «La cuenta» (fragmento 4) puede materializarse como UN BUG VISIBLE: un
-  recibo del Banco del Muelle perdido en el FS de algún encargo del cap. 2.
-  El mundo contándote la historia que nadie te va a contar (loot narrativo
-  §2.2 sin tocar probabilidad).
-- Eco de Gris: primer CONSUMIDOR barato del evento `progression.unlocked` —
-  una línea del Auditor en el REPL al dominar (opcional, Ornstein). Solo si
-  respeta la ficha de voz; si duda, que espere al render.
+**Ideas propias (recámara, no plan):**
+- **La acusación verificable del Auditor:** ahora que el post-mortem cita tu
+  comando y tu factura, que la fila del expediente remita al `auth.log`
+  simulado («Última entrada antes del corte: …») para que el jugador pueda
+  reconstruir SU factura completa con `cat /var/log/auth.log` y comprobar que
+  el Auditor dice la verdad PERO POR OMISIÓN (§2.4: informa con precisión,
+  miente ocultando). El sistema te acusa y te deja auditarlo — el tema del
+  juego en una mecánica de lectura.
+- **La fila 000 vacía del expediente** (la recámara del 31/08): con la voz del
+  Auditor ya viva en `data/`, está más cerca de ser real que de ser idea.
+- **Eco de Gris:** primer consumidor barato de `progression.unlocked` (una
+  línea de Gris en el REPL al dominar) — solo con la ficha de voz delante; si
+  duda, espera al render.
 
 *(Fin de la entrada de Gwyn — Gwyndolin consume esta sección a las 11:00.)*

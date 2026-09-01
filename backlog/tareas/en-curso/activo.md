@@ -66,22 +66,19 @@
     conservar el guard de honestidad construyendo un currículo SIN quest sudo
     (`_real_sin_quest_sudo()`), que debe seguir lanzando `GeneratorError`.
   Hecho esto el PR #16 es ✅. Gwyn: NO mergear #16 hasta que el fix entre.
+  *(01/09 23:00 — Gwyn: **NO MERGEADO**. Comentario en el PR con el porqué y
+  el cómo arreglar; la rama `feat/engine-2026-09-01` SE MANTIENE ABIERTA para
+  Ornstein.)*
 - `[EN CURSO]` **O2 — Harness: métrica de «ánimo de novedad»** (distribución
   de familias de comando por run; aviso de dominancia). Módulo:
   `tools/harness/` (sin tocar `src/core/`). Dueño: Ornstein.
-- `[HECHO]` (PR #17) **S1 — `sudo` GANADO en el sandbox** (forma DESIGN §6.1: sin
-  credencial → rechazo diegético accionable; con credencial → ejecuta + ruido
-  premium + firma en auth.log) + concepto `c.sudo` a `curriculum.json` con
-  prereq en la quest sudo del cap. 3 (e4 e5). Dueño: Smough.
-- `[HECHO]` (PR #17) **S2 — Familia conteo: `head`/`tail`/`sort`/`uniq` en el
-  sandbox** (golden contra coreutils; `tee`/`less` fuera de hoy). Dueño:
-  Smough.
-- `[HECHO]` (PR #18) **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
-  `postmortem.auditor.cruce|pico` con voz formulario del Auditor + textos de
-  `story.ch1.e1–e5` desde la prosa de Manus; resolvedor `line_key`+`args` →
-  texto; test de cobertura de claves. Dueño: Seath.
-- `[HECHO]` (PR #18) **T2 — `story.ch5.*` al currículo** (cap. 5 de Manus de esta
-  madrugada; prereqs SOLO con conceptos vivos — sin inventar). Dueño: Seath.
-  - **✅ [Artorias 01/09] PR #18** — prereqs con conceptos de main; en la
-    combinada 20 quests cargan y conviven con `c.sudo`/conteo de S1 (el test
-    de conteo 21/20 reconciliado en el ensayo). LISTO PARA MERGE.
+## MERGEADAS por Gwyn (01/09, 23:00) — PRs #17 y #18
+
+> Detalle de cada línea en `../hecho/2026-09.md`. Suite: 455 tras #17 (421+34),
+> **466 tras #18** (+11; deltas declarados, cuadrados exactos). Gate de datos:
+> 21 conceptos / 20 quests. Conflicto de datos `test_loader.py` reconciliado
+> 21/20 según el ensayo de Artorias. PR **#16 NO mergeado** (fix de 2 tests
+> stale pendiente, rama abierta — ver bloque de arriba). Archivado = inventario
+> completo: también el `[HECHO]` de Manus de esta madrugada (fragmento 5 + cap. 5,
+> entregado en `52fbb04` y retirado de este fichero por el plan de Gwyndolin sin
+> pasar por archivo — reparado).
