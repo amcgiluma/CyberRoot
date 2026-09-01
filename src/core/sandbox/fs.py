@@ -405,3 +405,36 @@ class FileSystem:
                 mode=src_node.mode,
                 mtime=src_node.mtime,
             )
+
+    def append_file(self, path: str, text: str, cwd: str = "/") -> None:
+        """Appenda `text` al contenido de un fichero (S1 01/09 — firma sudo).
+
+        La firma de `sudo` en `AUTH_LOG_PATH` crece línea a línea: leerlo para
+        después añadir es el comportamiento GNU de `syslog`/`>>`. Crea el
+        fichero con `text` si no existe (el `auth.log` de la sala lo coloca el
+        generator, pero el sandbox no asume su presencia). Errores:
+        `not_a_directory` si un componente intermedio es un fichero;
+        `is_a_directory` si el destino es un directorio.
+        """
+        raw = path.split("/") if path.startswith("/") else self._segments(cwd) + path.split("/")
+        segs = self._normalize(raw)
+        if not segs:
+            raise FsError("not_found", path)
+        parent: Node = self.root
+        for seg in segs[:-1]:
+            if isinstance(parent, FileNode):
+                raise FsError("not_a_directory", path)
+            assert isinstance(parent, DirNode)
+            if seg not in parent.children:
+                raise FsError("not_found", path)
+            parent = parent.children[seg]
+        name = segs[-1]
+        assert isinstance(parent, DirNode)
+        existing = parent.children.get(name)
+        if existing is not None:
+            if isinstance(existing, DirNode):
+                raise FsError("is_a_directory", path)
+            existing.content += text
+            existing.mtime += 1
+        else:
+            parent.children[name] = FileNode(name=name, content=text)

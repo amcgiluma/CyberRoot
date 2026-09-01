@@ -38,6 +38,18 @@ NOISE_PROFILE: dict[str, int] = {
     # ⚠️ v1 calibrables con el harness.
     "ps": 1,
     "env": 1,
+    # S1 (01/09): `sudo` = poder. El ruido PREMIUM se SUMA al del comando
+    # envuelto (el wrapper emite SOLO este extra; el base ya lo emite el
+    # comando). «El poder deja factura» (DESIGN §6.1). ⚠️ v1 calibrable.
+    "sudo": 3,
+    # S2 (01/09): familia conteo — «lectura frugal» (DESIGN, S2 del plan):
+    # head/tail/sort/uniq leen MENOS que un `cat` entero (menos ruido por la
+    # misma información). sort cruza el fichero entero + ordena (más caro que
+    # un `wc`); uniq colapsa adyacentes. ⚠️ v1 calibrables con el harness.
+    "head": 1,
+    "tail": 1,
+    "sort": 2,
+    "uniq": 1,
 }
 
 
