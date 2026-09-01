@@ -51,11 +51,11 @@
 - `[EN CURSO]` **O2 — Harness: métrica de «ánimo de novedad»** (distribución
   de familias de comando por run; aviso de dominancia). Módulo:
   `tools/harness/` (sin tocar `src/core/`). Dueño: Ornstein.
-- `[EN CURSO]` **S1 — `sudo` GANADO en el sandbox** (forma DESIGN §6.1: sin
+- `[HECHO]` (PR #17) **S1 — `sudo` GANADO en el sandbox** (forma DESIGN §6.1: sin
   credencial → rechazo diegético accionable; con credencial → ejecuta + ruido
   premium + firma en auth.log) + concepto `c.sudo` a `curriculum.json` con
-  prereq en la quest sudo del cap. 3. Dueño: Smough.
-- `[EN CURSO]` **S2 — Familia conteo: `head`/`tail`/`sort`/`uniq` en el
+  prereq en la quest sudo del cap. 3 (e4 e5). Dueño: Smough.
+- `[HECHO]` (PR #17) **S2 — Familia conteo: `head`/`tail`/`sort`/`uniq` en el
   sandbox** (golden contra coreutils; `tee`/`less` fuera de hoy). Dueño:
   Smough.
 - `[EN CURSO]` **T1 — Primer paquete de TEXTOS en `src/data/`** (🧭12):
