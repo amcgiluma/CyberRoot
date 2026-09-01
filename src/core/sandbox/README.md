@@ -1,11 +1,11 @@
 # sandbox/ — El Linux de mentira que dice verdades
 
 > **Qué hace:** filesystem virtual + shell con semántica REAL de Linux
-> (GNU/coreutils). Todo lo que el jugador escribe pasa por aquí. No sabe que
-> existen partidas, salas ni Pyxel — es autónomo y reutilizable
-> (ARCHITECTURE §2.2). **Estado (31/08, Smough):** comandos del cap. 0
-> (`ls`, `cd`, `cat`, `cp`) + cap. 2 (`grep`, `wc`) y tubería `cmd1 | cmd2`
-> + cap. 3 (`ps`, `env` — familia procesos).
+> (ARCHITECTURE §2.2), autónomo y reutilizable, sin I/O ni reloj real.<br>
+> **Estado (01/09, Smough):** comandos del cap. 0 (`ls`, `cd`, `cat`,
+> `cp`) + cap. 2 (`grep`, `wc`) y tubería `cmd1 | cmd2` + cap. 3 (`ps`, `env`
+> — familia procesos; `sudo` GANADO con credencial narrativa) + familia conteo
+> (`head`/`tail`/`sort`/`uniq`, cap. 6 — lectura frugal).
 
 ## Piezas (v0)
 
@@ -18,11 +18,14 @@
 | `commands/files.py` | `cat` (bytes exactos, exit 1 si cualquier error), `cp` (sobrescribe, copia-DENTRO de dirs, `same_file`) |
 | `commands/texto.py` | `grep` (patrón, fichero o stdin de tubería) y `wc` (`-l`/`-c`; **S1, 30/08** — cap. 2) |
 | `commands/procesos.py` | `ps` (`ps aux` con columna USER) y `env` (solo-lectura, orden por clave; **S1, 31/08** — cap. 3) |
-| `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1, ps:1, env:1` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
+| `commands/escalada.py` | `sudo` GANADO (**S1, 01/09**): wrapper de orquestación del shell que arbitra la CREDENCIAL narrativa (fichero del mundo, contrato O1↔S1); sin credencial → rechazo diegético accionable (ruido 0, exit 1); con credencial → eleva + ruido premium + firma en `/var/log/auth.log`. Constantes del contrato (`SUDO_CREDENTIAL_PATH`, `AUTH_LOG_PATH`, `SUDO_AUTHZ_MARKER`, `SUDO_PREMIUM_NOISE`). |
+| `commands/conteo.py` | Familia conteo (**S2, 01/09**): `head`/`tail` (`-n N`, default 10), `sort` (`-u`), `uniq` (`-c`, cuenta ancho 7). «Lectura frugal»: leen menos que un `cat` entero. Semántica GNU real contrastada. Cap. 6 (barrera hacia el Faro). |
+| `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1, ps:1, env:1, sudo:3, head:1, tail:1, sort:2, uniq:1` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
 | `__main__.py` | **REPL (S2, 29/08):** `PYTHONPATH=src python -m core.sandbox` abre una sesión real del cap. 0 con prompt diegético (`operador@oficina-vecinal:~$`, DESIGN §6.1); `run_repl` reutilizable y testeable programáticamente |
 | `PLAN.md` | Decisiones de diseño e hitos del turno 27/08 |
 | `PLAN-2026-08-30.md` | Plan de implementación S1+S2 del turno 30/08 (pipes+grep/wc, currículo cap. 2) |
 | `PLAN-2026-08-31.md` | Plan de implementación S1+S2 del turno 31/08 (ps/env, currículo cap. 3) |
+| `PLAN-2026-09-01.md` | Plan de implementación S1+S2 del turno 01/09 (sudo GANADO + familia conteo, currículo + contrato O1↔S1) |
 
 ## Decisiones que un revisor debe conocer
 
@@ -66,6 +69,19 @@
    directory 'dir'` exit 1 diagnosticando el ORIGEN, no el destino. `mtime` de
    `cp` sin `-p` queda como limitación deliberada (se preserva, GNU lo
    actualiza).
+10. **`sudo` es un WRAPPER del shell, no una spec (S1, 01/09):** necesita el
+    registry de la sesión para despachar el comando envuelto, igual que las
+    tuberías se orquestan en `execute`. No está en `SPECS_ALL`; se intercepta
+    en `_exec_argv` solo si `available_commands` lo expone (cap. 3 nada más).
+    Su ruido es PREMIUM (extra sobre el base del envuelto). La credencial es
+    un FICHERO del mundo (contrato O1↔S1), NO una contraseña; si las rutas
+    `SUDO_CREDENTIAL_PATH`/`AUTH_LOG_PATH` cambian, cambian A LA VEZ en la
+    rama de Ornstein (`feat/engine`, chapter3.py) y en la mía.
+11. **Familia conteo (S2, 01/09):** `uniq -c` usa ancho 7 derecha-alineado
+    (GNU real); `uniq` NO ordena (solo adyacentes); `sort` ordena por byte
+    (LC_ALL=C, determinismo §5). Errores GNU honestos: `head`/`tail`/`uniq`
+    fichero ausente → exit 1; `sort` → exit 2; `uniq` reporta DISTINTO que
+    head/tail (sin «cannot open»).
 
 ## Cómo se testea
 

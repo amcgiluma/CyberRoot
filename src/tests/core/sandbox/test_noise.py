@@ -13,8 +13,12 @@ from core.sandbox.noise import NOISE_EVENT_TYPE, NOISE_PROFILE, NoiseMeter
 
 
 def test_perfil_contiene_los_comandos_del_cap0_y_pipes() -> None:
-    # Cap. 0 (cat/cd/cp/ls) + cap. 2 (grep/wc, S1 30/08) + cap. 3 (ps/env, 31/08).
-    assert set(NOISE_PROFILE) == {"cd", "ls", "cat", "cp", "grep", "wc", "ps", "env"}
+    # Cap. 0 (cat/cd/cp/ls) + cap. 2 (grep/wc, S1 30/08) + cap. 3 (ps/env, 31/08;
+    # sudo, S1 01/09) + familia conteo (head/tail/sort/uniq, S2 01/09).
+    assert set(NOISE_PROFILE) == {
+        "cd", "ls", "cat", "cp", "grep", "wc", "ps", "env", "sudo",
+        "head", "tail", "sort", "uniq",
+    }
 
 
 def test_cd_no_hace_ruido_y_cp_es_el_mas_ruidoso() -> None:

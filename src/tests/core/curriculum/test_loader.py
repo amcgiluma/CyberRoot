@@ -76,16 +76,26 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
     assert cur.version == 1
 
 
-def test_load_curriculum_16_conceptos_16_quests() -> None:
-    """El catálogo real: 16 conceptos y 16 encargos (S2 31/08 añade cap. 3).
+def test_load_curriculum_21_conceptos_16_quests() -> None:
+    """El catálogo real: 21 conceptos y 16 encargos (S2 01/09 añade cap. 3).
 
-    Conteo del 31/08: 14 (cap. 0-2) + c.ps/c.env (2, familia procesos, cap. 3)
-    y 5 quests story.ch3.e1–e5. El cap. 3 «Bombas» abre la familia procesos.
-    Ornstein/generator consumen este conteo vía datos reales.
+    Conteo del 01/09: 16 (31/08: caps. 0–3) + c.sudo (escalada, cap. 3) + la
+    familia conteo c.head/c.tail/c.sort/c.uniq (texto, cap. 6, barrera hacia
+    el Faro). Ornstein/generator consumen este conteo vía datos reales; el
+    generator de O1 EXIGE al menos una quest del cap. 3 con `c.sudo`
+    (story.ch3.e4 y e5 la llevan desde 01/09).
     """
     cur = load_curriculum()
-    assert len(cur.concepts) == 16
+    assert len(cur.concepts) == 21
     assert len(cur.quests) == 16
+
+
+def test_capitulo6_conteo_enseñado() -> None:
+    """La familia conteo se ENSEÑA en el cap. 6 (barrera técnica hacia el
+    Faro): c.head/c.tail/c.sort/c.uniq, todos a chapter 6 — prereqs vivos."""
+    cur = load_curriculum()
+    ids = {c.id for c in cur.chapter_concepts(6)}
+    assert {"c.head", "c.tail", "c.sort", "c.uniq"} <= ids
 
 
 def test_capitulo0_tiene_exactamente_ls_cd_cat_cp() -> None:
