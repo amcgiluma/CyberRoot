@@ -54,17 +54,28 @@ def run_batch(
         try:
             inc = generate(seed, chapter, variant=variant, curriculum=curriculum)
             validate_incursion(inc)
+            familias = distribucion_familias_run(curriculum, inc.room.canon)
             results.append(
                 {
                     "seed": seed,
                     "ok": True,
                     "room_id": inc.room.id,
                     "concepts": sorted(inc.room.concept_pool),
+                    "familias": dict(sorted(familias.items())),
+                    "familia_dominante": dominancia_familia(familias),
                 }
             )
         except UnsolvableRoomError as exc:
             results.append(
-                {"seed": seed, "ok": False, "room_id": None, "concepts": [], "error": str(exc)}
+                {
+                    "seed": seed,
+                    "ok": False,
+                    "room_id": None,
+                    "concepts": [],
+                    "familias": {},
+                    "familia_dominante": None,
+                    "error": str(exc),
+                }
             )
     return results
 
@@ -93,6 +104,79 @@ def distribucion_conceptos(results: list[dict[str, Any]]) -> Counter[str]:
     for r in results:
         for cpt in r.get("concepts", []):
             c[cpt] += 1
+    return c
+
+
+# ---------------------------------------------------------------------------
+# O2 (01/09, Ornstein) — «ánimo de novedad»: distribución de FAMILIAS de
+# comando por run. El mapa comando→familia vive en curriculum.json (cada
+# concepto `c.<comando>` tiene su `family`); aquí lo consultamos por run de
+# la solución canónica (la huella de comandos REAL de la sala).
+# ---------------------------------------------------------------------------
+
+def _comandos_de_paso(argv: tuple[str, ...]) -> list[str]:
+    """Comandos efectivos de un paso del canon, respetando las tuberías.
+
+    Cada `CanonStep` es una LÍNEA de shell: el 1.er token es un comando y
+    cada token tras `|` también (`grep … | wc -l` → [`grep`, `wc`]). Flag y
+    rutas no cuentan.
+    """
+    cmds: list[str] = []
+    if not argv:
+        return cmds
+    cmds.append(argv[0])
+    for prev, tok in zip(argv, argv[1:]):
+        if prev == "|":
+            cmds.append(tok)
+    return cmds
+
+
+def familia_comando(curriculum: Curriculum, comando: str) -> str | None:
+    """Familia del comando vía su concepto `c.<comando>` (curriculum.json)."""
+    cpt = curriculum.concept(f"c.{comando}")
+    return cpt.family if cpt else None
+
+
+def distribucion_familias_run(
+    curriculum: Curriculum, canon: Any
+) -> Counter[str]:
+    """Distribución de familias de comando que UNA run ejercita (su canon).
+
+    Devuelve un `Counter` familia→nº de comandos de la solución canónica.
+    Es la base del «ánimo de novedad»: si el generador repitiera siempre la
+    misma familia, el histograma lo delata.
+    """
+    fams: Counter[str] = Counter()
+    for step in canon.steps:
+        for cmd in _comandos_de_paso(step.argv):
+            fam = familia_comando(curriculum, cmd)
+            if fam:
+                fams[fam] += 1
+    return fams
+
+
+def dominancia_familia(
+    fams: Counter[str], umbral: float = 0.6
+) -> tuple[str, float] | None:
+    """Si una familia concentra > `umbral` de los comandos de la run, la avisa.
+
+    Devuelve `(familia, fracción)` o None. Umbral AC: >60 % → dominancia.
+    """
+    total = sum(fams.values())
+    if total == 0:
+        return None
+    fam, n = fams.most_common(1)[0]
+    frac = n / total
+    if frac > umbral:
+        return (fam, round(frac, 3))
+    return None
+
+
+def distribucion_familias_global(results: list[dict[str, Any]]) -> Counter[str]:
+    """Histograma global de familias sumando todas las runs."""
+    c: Counter[str] = Counter()
+    for r in results:
+        c.update(r.get("familias", {}))
     return c
 
 
@@ -155,6 +239,7 @@ def _imprimir_reporte(
     results: list[dict[str, Any]],
     mismatch: int,
     dist: Counter[str],
+    fam_global: Counter[str],
     elapsed: float,
 ) -> None:
     total = len(results)
@@ -168,6 +253,23 @@ def _imprimir_reporte(
     print("conceptos (veces en el pool de las salas):")
     for cpt, n in sorted(dist.items()):
         print(f"  {cpt:<12} {n}")
+    # O2 — «ánimo de novedad»: distribución de familias de comando por run.
+    print("\nfamilias de comando por run (del canon — «ánimo de novedad»):")
+    for r in results:
+        fams = r.get("familias") or {}
+        if fams:
+            print(f"  seed {r['seed']:<5} {dict(sorted(fams.items()))}")
+    print("distribución GLOBAL de familias:")
+    for fam, n in sorted(fam_global.items()):
+        print(f"  {fam:<12} {n}")
+    dominancias = [r for r in results if r.get("familia_dominante")]
+    if dominancias:
+        print("⚠️  DOMINANCIA (>60 % de los comandos en una familia):")
+        for r in dominancias:
+            fam, frac = r["familia_dominante"]
+            print(f"  seed {r['seed']}: {fam} {frac*100:.1f}%")
+    else:
+        print("  (ninguna run con familia dominante)")
     if mismatch:
         print("⚠️  ALERTA: hay seeds cuya 2.ª pasada difiere — inviable determinismo.")
     if resolubles < total:
@@ -217,9 +319,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     mismatch = args.seeds - misma
     dist = distribucion_conceptos(results)
+    fam_global = distribucion_familias_global(results)
     elapsed = time.time() - t0
 
-    _imprimir_reporte(args.chapter, args.variant, results, mismatch, dist, elapsed)
+    _imprimir_reporte(
+        args.chapter, args.variant, results, mismatch, dist, fam_global, elapsed
+    )
 
     if args.export is not None:
         payload = {
@@ -230,6 +335,7 @@ def main(argv: list[str] | None = None) -> int:
             "resolubles": sum(1 for r in results if r["ok"]),
             "determinismo_2da_pasada_iguales": misma,
             "conceptos": dict(sorted(dist.items())),
+            "familias_global": dict(sorted(fam_global.items())),
             "runs": results,
         }
         args.export.parent.mkdir(parents=True, exist_ok=True)

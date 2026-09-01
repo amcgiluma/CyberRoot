@@ -14,6 +14,7 @@ métricas que alimentan la calibración de los números ⚠️ v1 de DESIGN:
 | **% resolubles** | Cuántas salas generadas se auto-resuelven con su secuencia canónica (§6.4.4). Una irresoluble (`UnsolvableRoomError`) es **bug de generación**, no dificultad. | 100 % |
 | **Determinismo** | Si la 2.ª pasada con la misma seed produce la Incursión **byte-idéntica** (misma seed ⇒ misma sala, en cualquier proceso). | 2.ª pasada ≡ 1.ª |
 | **Distribución de conceptos** | Cuántas veces aparece cada concepto en el `concept_pool` de las salas. Es la base de 🧭6 y del «ánimo de novedad» de Havel: si el cap. 0 reparte siempre el mismo pool, el harness lo ve. | pool = conceptos del cap. |
+| **«Ánimo de novedad» (O2, 01/09)** | Distribución de **familias de comando por run** (del canon): histograma por seed + agregado global + **aviso cuando una familia domina** (>60 % de los comandos de una run). Detecta si el generador repite demasiado una familia y alimenta la calibración del `noise_budget`. | canon → conceptos `c.<comando>` → `family` |
 
 ## Cómo se ejecuta
 

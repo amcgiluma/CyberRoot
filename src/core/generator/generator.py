@@ -25,7 +25,7 @@ from core.common.rng import Rng
 from core.common.types import SeedLike
 from core.curriculum import Curriculum, load_curriculum
 from core.sandbox.fs import DirNode, FileNode
-from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, Shell
+from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH3_COMMANDS, Shell
 
 from core.generator.chapter0 import (
     DECOY_CONTENT,
@@ -39,10 +39,17 @@ from core.generator.chapter2 import (
     TURNO_FILE,
     build_chapter2_fs,
 )
+from core.generator.chapter3 import (
+    AUTH_LOG_PATH,
+    SUDO_CREDENTIAL_FILE,
+    SUDO_CREDENTIAL_PATH,
+    build_chapter3_fs,
+)
 from core.generator.errors import GeneratorError, UnsolvableRoomError
 from core.generator.model import (
     CANON_STEPS,
     CANON_STEPS_CH2,
+    CANON_STEPS_CH3_SUDO,
     CanonSolution,
     Contract,
     Incursion,
@@ -60,9 +67,14 @@ VARIANTS = ("canonical", "practice")
 _TINT_ES: dict[str, str] = {"blue": "azul", "red": "rojo", "grey": "gris"}
 
 #: Comandos de la sesión por capítulo (el cap. 0 es escenario sin pipes; el
-#: cap. 2 añade grep/wc — sets ya definidos en el sandbox).
+#: cap. 2 añade grep/wc; el cap. 3 añade ps/env — sets ya definidos en el
+#: sandbox).
 def _session_commands(chapter: int) -> tuple[str, ...]:
-    return DEFAULT_CH2_COMMANDS if chapter == 2 else DEFAULT_CAP0_COMMANDS
+    if chapter == 2:
+        return DEFAULT_CH2_COMMANDS
+    if chapter == 3:
+        return DEFAULT_CH3_COMMANDS
+    return DEFAULT_CAP0_COMMANDS
 
 #: Nota del andamiaje de la run 0 (decisión pendiente de Gwyn, 🧭2 plan 28/08 §4).
 _SCAFFOLD_NOTE = (
@@ -201,6 +213,22 @@ def validate_incursion(incursion: Incursion) -> None:
                 exit_code=0,
                 stderr=f"golden cap. 2 devolvió {raw.strip()!r}, esperaba {CH2_GREP_WC_EXPECTED!r}",
             )
+    elif room.chapter == 3:
+        # AC de O1 (01/09): la sala sudo del cap. 3 contiene la credencial en
+        # `SUDO_CREDENTIAL_PATH` Y el `auth.log` en `AUTH_LOG_PATH`. El canon
+        # (`cat` de la credencial) ya prueba la 1.ª; aquí se verifica que
+        # AMBAS existen en el FS de validación (la credencial sigue siendo
+        # legible y el auth.log está presente para que S1 firme).
+        for path in (SUDO_CREDENTIAL_PATH, AUTH_LOG_PATH):
+            node = shell.fs.resolve(path, "/")
+            if isinstance(node, DirNode):
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps),
+                    argv=("resolve", path),
+                    expect_exit=0,
+                    exit_code=1,
+                    stderr=f"{path} existe pero es un directorio",
+                )
 
 
 def generate(
@@ -232,22 +260,25 @@ def generate(
     """
     if isinstance(seed, bool):
         raise TypeError("seed bool no admitida por el generador (usa 0/1 explícitos)")
-    if chapter not in (0, 2):
+    if chapter not in (0, 2, 3):
         raise ValueError(
-            f"solo los caps. 0 (la firma) y 2 (facturas) están disponibles en v0; "
-            f"el resto llega con curriculum.json (recibido chapter={chapter})"
+            f"solo los caps. 0 (la firma), 2 (facturas) y 3 (Bombas, sala sudo) "
+            f"están disponibles en v0.1; el resto llega con curriculum.json "
+            f"(recibido chapter={chapter})"
         )
     if variant not in VARIANTS:
         raise ValueError(f"variant desconocida: {variant!r} (espera canonical|practice)")
-    if contract_id is not None and chapter != 2:
-        raise ValueError("contract_id solo aplica al cap. 2 (el cap. 0 ofrece su única quest)")
+    if contract_id is not None and chapter not in (2, 3):
+        raise ValueError("contract_id solo aplica a los caps. 2 y 3 (el cap. 0 ofrece su única quest)")
 
     if curriculum is None:
         curriculum = load_curriculum()
 
     if chapter == 0:
         return _generate_cap0(seed, variant, curriculum)
-    return _generate_cap2(seed, variant, curriculum, contract_id)
+    if chapter == 2:
+        return _generate_cap2(seed, variant, curriculum, contract_id)
+    return _generate_cap3(seed, variant, curriculum, contract_id)
 
 
 def _generate_cap0(
@@ -380,6 +411,105 @@ def _generate_cap2(
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
     canon = CanonSolution(steps=CANON_STEPS_CH2)
+
+    room = Room(
+        id=room_id,
+        chapter=chapter,
+        fs=fs,
+        canon=canon,
+        objective=objective,
+        concept_pool=concept_pool,
+    )
+    incursion = Incursion(
+        seed=seed,
+        chapter=chapter,
+        contract=contract,
+        scaffold=scaffold,
+        room=room,
+    )
+    validate_incursion(incursion)
+    return incursion
+
+
+def _generate_cap3(
+    seed: SeedLike,
+    variant: str,
+    curriculum: Curriculum,
+    contract_id: str | None,
+) -> Incursion:
+    """Ruta de la sala sudo del cap. 3 «Bombas» (O1, 01/09).
+
+    Materializa la forma FIRMADA de Gwyn (DESIGN §6.1): la credencial
+    narrativa de `sudo` es un FICHERO del mundo que coloca el scaffold
+    (`SUDO_CREDENTIAL_PATH`) y el `auth.log` presente (`AUTH_LOG_PATH`) donde
+    S1 firmará cada `sudo`. La canónica de HOY la LEE (`cat`); la ejecución
+    real del `sudo` es de S1 y la cubre el ensayo de integración.
+
+    ALCANCE v0: genera SOLO la sala-credencial (la quest del cap. 3 que exige
+    `c.sudo`). La generación completa del cap. 3 para las quests de procesos
+    (`c.ps`/`c.env`) es una tarea aparte y se apoya en que el sandbox exponga
+    el resto; pedir una quest de procesos hoy es un `GeneratorError` claro, no
+    una sala de mentira.
+    """
+    chapter = 3
+    concept_pool = _concept_pool(curriculum, chapter)
+
+    rng = Rng(seed)
+    id_rng = rng.fork("room-id")
+    fs_rng = rng.fork("fs")
+
+    fs = build_chapter3_fs(fs_rng)
+    room_id = f"room-ch3-{id_rng.below(2**32):08x}-{variant}"
+
+    ch_quests = curriculum.quests_for_chapter(chapter)
+    if not ch_quests:
+        raise GeneratorError(
+            f"capítulo {chapter} sin quests en curriculum.json: no hay encargo "
+            f"que esta sala pueda ofrecer (viola §6.4.1)"
+        )
+    if contract_id is not None:
+        quest = curriculum.quest(contract_id)
+        if quest is None or quest.chapter != chapter:
+            raise GeneratorError(
+                f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}"
+            )
+    else:
+        sudo_quests = [q for q in ch_quests if "c.sudo" in q.requires]
+        if not sudo_quests:
+            raise GeneratorError(
+                f"capítulo {chapter}: ninguna quest del pool exige `c.sudo` — la "
+                f"generación completa del cap. 3 (procesos) es una tarea aparte; "
+                f"hoy solo se genera la sala-credencial (quest que exige c.sudo)"
+            )
+        quest = sudo_quests[0]
+    if "c.sudo" not in quest.requires:
+        raise GeneratorError(
+            f"quest {quest.id!r} del cap. {chapter} no exige `c.sudo`: la "
+            f"generación v0 del cap. 3 cubre SOLO la sala-credencial sudo"
+        )
+    # Invariante §6.4.1: `c.sudo` debe estar enseñado en un capítulo ≤ 3.
+    missing = set(quest.requires) - _taught_up_to(curriculum, chapter)
+    if missing:
+        raise GeneratorError(
+            f"quest {quest.id!r} requiere conceptos que ningún capítulo ≤ {chapter} "
+            f"enseña: {sorted(missing)} (viola §6.4.1)"
+        )
+
+    objective = Objective(
+        id=f"serie-{quest.id}",
+        story_key=quest.id,
+        summary_text_key=quest.title_key,
+        file=SUDO_CREDENTIAL_FILE,
+        src=SUDO_CREDENTIAL_PATH,
+    )
+    contract = Contract(
+        chapter=chapter,
+        objective_key=quest.id,
+        brief_text_key=f"{quest.id}.brief",
+        karma_hint=_TINT_ES.get(quest.tint, "gris"),
+    )
+    scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
+    canon = CanonSolution(steps=CANON_STEPS_CH3_SUDO)
 
     room = Room(
         id=room_id,
