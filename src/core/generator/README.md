@@ -113,6 +113,38 @@ capítulos ≤ `chapter` (e5 usa `c.cp` del cap. 0).
 
 ---
 
+## v0.4 — Sala sudo del cap. 3 «Bombas» (O1, 01/09)
+
+`generate(seed, chapter=3, contract_id=<quest-sudo>)` construye la
+sala-credencial del cap. 3: el scaffold coloca en el FS de la sala la
+**credencial narrativa** (`SUDO_CREDENTIAL_PATH`, una orden firmada por
+Ceniza — DESIGN §6.1: nunca una contraseña tecleada) y el **`auth.log`**
+presente (`AUTH_LOG_PATH`), donde S1 firmará cada `sudo` («el poder deja
+factura»). La canónica v0 la LEE (`cat`); la ejecución real del `sudo` es de
+S1 (sandbox) y la cubre el ensayo de integración de Artorias.
+
+### ⚠️ CONTRATO O1↔S1 (por literales, NO por import)
+
+El sandbox NO importa del generator (dependencia prohibida, ARCHITECTURE §2).
+La coordinación es por CONVENCIÓN, verificada por Artorias en el gate:
+
+| Constante (chapter3.py) | Valor | Lo hace |
+|---|---|---|
+| `SUDO_CREDENTIAL_PATH` | `/srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt` | O1 la coloca; S1 la LEE (sin credencial → rechazo diegético; con credencial → ejecuta + ruido premium) |
+| `AUTH_LOG_PATH` | `/var/log/auth.log` | O1 la deja presente; S1 AÑADE la firma de cada sudo |
+
+Si cambian, cambian A LA VEZ en `feat/engine` (este módulo) y en
+`feat/sandbox` (S1).
+
+### Alcance v0
+
+Solo la sala-credencial: una quest del cap. 3 que exija `c.sudo`. La
+generación completa del cap. 3 (quests de procesos `c.ps`/`c.env`) es una
+tarea aparte; pedirla hoy es un `GeneratorError` claro. `c.sudo` y su quest
+llegan a `curriculum.json` con S1 (16:00); el generator lo detecta por
+`requires ⊇ {c.sudo}` sin cambios. Test: `test_sala_sudo.py` (currículo
+aumentado en memoria).
+
 ## Estructura
 
 ```

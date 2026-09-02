@@ -26,6 +26,7 @@ from core.generator.chapter0 import (
     CANON_STEPS_RAW,
 )
 from core.generator.chapter2 import CANON_STEPS_RAW_CH2
+from core.generator.chapter3 import CANON_STEPS_RAW_CH3_SUDO
 from core.generator.errors import GeneratorError
 
 #: La secuencia canónica como data tipada (conversión de la RAW de chapter0).
@@ -57,6 +58,11 @@ CANON_STEPS = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW)
 #: Secuencia canónica del cap. 2 («Facturas»): cd a la oficina + la golden
 #: `grep 11:04 centralita/turnos/turno.log | wc -l` → "2" (S1 / O1, 31/08).
 CANON_STEPS_CH2 = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH2)
+
+#: Secuencia canónica de la sala sudo del cap. 3 («Bombas», O1 01/09): en v0
+#: lee la credencial (`cat`) — la ejecución real del `sudo` es de S1 y la
+#: cubre el ensayo de integración. Ver cabecera de `chapter3.py`.
+CANON_STEPS_CH3_SUDO = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH3_SUDO)
 
 
 @dataclass(frozen=True)

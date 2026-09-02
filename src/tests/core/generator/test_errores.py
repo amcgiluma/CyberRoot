@@ -7,6 +7,7 @@ import pytest
 from core.generator import (
     generate,
     validate_incursion,
+    GeneratorError,
     UnsolvableRoomError,
 )
 from core.generator.chapter0 import OFFICE_DIR
@@ -17,8 +18,18 @@ def test_chapter_distinto_de_cero_value_error() -> None:
     with pytest.raises(ValueError) as e:
         generate(1, chapter=1)
     assert "curriculum.json" in str(e.value)
+    # Los caps. 0, 2 y 3 están soportados; cualquier otro sigue dando
+    # ValueError (el resto llega con curriculum.json).
     with pytest.raises(ValueError):
-        generate(1, chapter=3)
+        generate(1, chapter=4)
+
+
+def test_chapter3_curriculo_real_genera_sala_sudo() -> None:
+    """Con S1 aterrizado, `c.sudo`+su quest YA están en el currículo REAL;
+    `generate(1, chapter=3)` SÍ produce la sala (fix stale #16)."""
+    inc = generate(1, chapter=3)
+    assert inc.chapter == 3
+    assert inc.room.id.startswith("room-ch3-")
 
 
 def test_seed_bool_type_error() -> None:
