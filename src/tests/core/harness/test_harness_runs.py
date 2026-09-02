@@ -47,3 +47,49 @@ def test_harness_calibrar_budget_viaje_honesto() -> None:
         assert all(r["errores"] == [] for r in runs)
     # Ambos comparten el coste del viaje honesto (la piel no lo cambia).
     assert {r["total_noise"] for r in canon} == {r["total_noise"] for r in práct}
+
+
+# ---------------------------------------------------------------------------
+# O2 (01/09) — «ánimo de novedad»: distribución de familias de comando por run
+# ---------------------------------------------------------------------------
+
+def test_distribucion_familias_run_cap0() -> None:
+    """El canon del cap. 0 son 5 comandos de la familia navegacion."""
+    cur = load_curriculum()
+    inc = run_seeds.generate(7, 0, variant="canonical", curriculum=cur)
+    fams = run_seeds.distribucion_familias_run(cur, inc.room.canon)
+    assert dict(fams) == {"navegacion": 5}
+
+
+def test_dominancia_familia_detecta_monofamilia() -> None:
+    """100 % navegacion en el cap. 0 ⇒ dominancia (>60 %) avisada."""
+    from collections import Counter
+
+    assert run_seeds.dominancia_familia(Counter({"navegacion": 5})) == (
+        "navegacion",
+        1.0,
+    )
+    # Una mezcla equilibrada NO domina (2/4 = 50 % ≤ 60 %).
+    assert run_seeds.dominancia_familia(Counter({"texto": 2, "red": 2})) is None
+
+
+def test_tuberia_cuenta_ambos_comandos() -> None:
+    """`grep … | wc -l` cuenta grep Y wc (ambos de la familia texto)."""
+    cur = load_curriculum()
+    # Reutilizamos la golden del cap. 2 (prosa "11:04"): la tubería viaja en
+    # UN CanonStep.
+    pasos = run_seeds._comandos_de_paso(("grep", "11:04", "f.log", "|", "wc", "-l"))
+    assert pasos == ["grep", "wc"]
+    assert all(run_seeds.familia_comando(cur, c) == "texto" for c in pasos)
+
+
+def test_global_familias_desde_run_batch() -> None:
+    """El agregado de familias se computa de los resultados enriquecidos."""
+    cur = load_curriculum()
+    results = run_seeds.run_batch(0, 4, variant="canonical", start=0, curriculum=cur)
+    assert all(r["ok"] for r in results)
+    # Cada run enganchó su distribución y (cap. 0) avisó dominancia.
+    assert all(r["familias"] == {"navegacion": 5} for r in results)
+    assert all(r["familia_dominante"] is not None for r in results)
+    g = run_seeds.distribucion_familias_global(results)
+    assert g["navegacion"] == 4 * 5
