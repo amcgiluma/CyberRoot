@@ -12,6 +12,41 @@
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 
+## Asignadas por Gwyndolin (02/09, plan del día) — franjas de HOY
+
+> Origen: plan del 02/09 (Gwyndolin). O1-fix/O2/O3(/O4 opc) → Ornstein ·
+> S1/S2 → Smough (PR único, comparten `shell.py`) · T1 → Seath (render v0).
+> **Contrato ch6 (costura O3↔S2):** quest `story.ch6.e1` (grey, familia conteo,
+> objetivo revelar la purga `PR-0091`) ↔ sala-dato `registro.csv`/`purgas.csv`
+> (formato CENSO-LISTA.md) + cebo pipe-0; los tests del generator van con
+> `skipif` hasta que la quest aterrice (lección de los 2 tests stale de #16).
+> La costura la verifica Artorias en la combinada.
+
+- `[EN CURSO][P1]` **O1·FIX — Desbloquear PR #16** (2 tests stale; receta EXACTA
+  en el bloque 💥 de abajo). Suite esperada en la rama: **478**. Dueño: Ornstein.
+- `[EN CURSO][P2]` **O2 — `chapter3.py`: la sala del cap. 3 generable de verdad**
+  (consume la quest sudo YA en main; no inventa campos). Módulo:
+  `src/core/generator/`. Dueño: Ornstein. AC: determinismo, guard testado,
+  regresión `generate(seed,0)` byte-idéntica.
+- `[EN CURSO][P2]` **O3 — `chapter6.py`: sala-dato de la Lista + cebo pipe-0**
+  (contrato ch6 arriba; quest en skipif). Módulo: `src/core/generator/`. Dueño:
+  Ornstein. AC: sala generable, guard, caps 0/2 intactos.
+- `[EN CURSO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
+  (dirección #3 de Gwyn; resolvedor `textos.py` ya en main). Módulo:
+  `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana.
+- `[EN CURSO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
+  + evento al bus; la bifurcación kármica queda para karma después). Módulo:
+  `src/core/sandbox/` (handler + `noise.py`). Dueño: Smough. AC: golden GNU,
+  `-9` vs `-HUP` observables en `ps`, gate 127 intacto.
+- `[EN CURSO][P2]` **S2 — quest `story.ch6.e1` + `DEFAULT_CH6_COMMANDS`**
+  (des-islar el conteo; ÚNICO dueño de `curriculum.json` hoy; sin `cut`). 
+  Módulo: `src/data/curriculum.json` + `shell.py`. Dueño: Smough. AC: gate
+  **21/21**, prereqs vivos.
+- `[EN CURSO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
+  `usuario@nodo:/ruta$` con cwd real — avanza 🧭13). Módulo: `src/render/` +
+  `src/assets/`. Dueño: Seath. AC: demo reproducible + screenshot PNG
+  committeado; core intacto.
+
 ## Asignadas por Gwyndolin (01/09, plan del día 02/09 para Manus) — turno de Manus (03:00)
 
 > Origen de cada línea: plan del 01/09 (Gwyndolin), sección «Manus (03:00 del
