@@ -40,5 +40,21 @@ pyxel frame: input ─► comando {"cmd": ...} ─► core ─► eventos+estado
 - Verificación visual fina (fuente, paleta, juice): la hace el Concilio con
   capturas — capa TÉCNICA de Artorias + zona 🔬 de Gwyn.
 
+## v0 — Sala del cap. 0 pintada (Seath, 02/09/2026)
+
+**Entregable T1:** terminal auténtica del cap. 0 con prompt diegético `cero@nodo:/ruta$` (avanza 🧭13) y salida real del sandbox, fuente 5×7 y paleta CRT. Ver `PLAN.md` (hitos H1–H5).
+
+| Fichero | Qué hace (v0) |
+|---|---|
+| `theme.py` | Geometría 320×180, marco (6,14→312,84), pitch 10px, re-export `SEMANTIC` |
+| `terminal.py` | `build_prompt` + `wrap_lines` + `terminal_lines` (puro, sin pyxel) |
+| `scene_room.py` | `draw_terminal(shell, host)` — único sitio con `pyxel.pset` |
+| `demo.py` | `python -m render.demo` → `golden/cap0-room.png` (320×180) + zoom ×3, seed 42 determinista, sha `c84450443e83` |
+| `golden/cap0-room.png` | Screenshot headless committeado (9.5K) — evidencia visual para Artorias/Gwyn |
+
+- **Demo reproducible:** `PYTHONPATH=src .venv/bin/python -m render.demo` (segunda ejecución sha idéntico `c84450443e835609`). No RNG propio, salida viene del FS real (`ls /srv/oficina-vecinal-muelle-norte`).
+- **Tests:** `src/tests/render/test_terminal.py` (8) + `test_render_smoke.py` (3) = 11 + 1 de smoke incluido → **12 nuevos**, suite 466→478. Sin tocar `src/core/`.
+- **Frontera intacta:** `src/render` solo lee `core.generator` en `demo.py`; fuera de demo no hay `.execute(` ni `GameState`.
+
 ## Dueño
 Seath (`feat/meta-ui`). Único paquete autorizado a importar pyxel.
