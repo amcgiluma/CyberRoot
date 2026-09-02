@@ -145,6 +145,27 @@ llegan a `curriculum.json` con S1 (16:00); el generator lo detecta por
 `requires ⊇ {c.sudo}` sin cambios. Test: `test_sala_sudo.py` (currículo
 aumentado en memoria).
 
+## v0.5 — Sala-dato del cap. 6 «Faro» + cebo pipe-0 (O3, 02/09)
+
+`generate(seed, chapter=6, curriculum=…)` construye la **sala-dato de la
+Lista**: el FS de la cámara del Faro con `registro.csv`/`purgas.csv` al
+formato EXACTO de `backlog/historia/CENSO-LISTA.md` (delimitador `|`,
+cabeceras, `PR-0091|EN BLANCO|000|--|ENSAYO` — la purga de nadie, pista
+`grep 000`) + el **cebo pipe-0** `censo-borrador.csv` (sin `000`,
+`grep 000 censo-borrador.csv | wc -l` →0, el «0 miente» de Havel/Gwyn).
+Secuencia canónica `CANON_STEPS_CH6` (`grep ENSAYO purgas.csv | wc -l` →1).
+
+Contrato O3↔S2 (por literales, lección de los tests stale de #16): Ornstein
+no toca `curriculum.json` (dueño Smough); el test con la quest real
+`story.ch6.e1` va con `skipif` hasta que S2 aterrice, la costura la verifica
+Artorias en la combinada. Guard: sin quest ch6 → `GeneratorError`
+accionable. Capítulos 0/2 intactos (regresión byte-idéntica).
+
+Hoja: `chapter6.py` (leaf, sin importar `model.py`); `generator.py` añade
+dispatch 6, `validate` por capítulo y `_session_commands(6)` (familia
+conteo `head/tail/sort/uniq` + `grep/wc`). Tests: `test_chapter6.py`
+(6 passed +1 skipped).
+
 ## Estructura
 
 ```
@@ -154,6 +175,8 @@ src/core/generator/
 ├── model.py       # modelos inmutables (+ CANON_STEPS, RunScaffold.initial_cwd)
 ├── chapter0.py    # piel del cap. 0 como DATOS (leaf) + build_chapter0_fs
 ├── chapter2.py    # piel del cap. 2 como DATOS (leaf) + build_chapter2_fs (v0.3)
+├── chapter3.py    # piel del cap. 3 credencial sudo (leaf) + build_chapter3_fs (v0.4)
+├── chapter6.py    # piel del cap. 6 sala-dato Lista + cebo (leaf) + build_chapter6_fs (v0.5)
 ├── generator.py   # generate() / validate_incursion() / new_session()
 └── README.md      # este fichero
 ```

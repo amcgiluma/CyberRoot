@@ -100,3 +100,22 @@ la golden) y `generate(seed,0)` queda byte-a-byte idéntico (regresión).
 El módulo consume `build_postmortem` como función PURA e intacta: el post-
 mortem del cap. 2 factura la línea del pipe (grep/wc) bajo su comando primario
 y `total_noise` con el ruido real (grep 2 + wc 1 + cd 0).
+
+---
+
+## v0.3 (O4, 02/09) — el post-mortem entrega la VOZ resuelta
+
+`build_postmortem` construye la línea del Auditor como `line_key` + `args`
+(convención §3: core no hardcodea prosa) y desde esta entrega RESUELVE la
+prosa contra `data/textos` antes de devolverla, sin romper la API pura. El
+dict de cierre gana dos campos legibles sin render:
+
+- `auditor_text`: la cadena final (`resolve(line_key, args)`), p. ej.
+  `Expediente 000 …` para la factura del cap. 2 (`grep 11:04 …`).
+- `lines_resolved`: lista con las líneas de auditoría formatadas.
+
+El import `core/data/textos → resolve/load_textos` está permitido por
+ADR-0001 (`data` no trae deps de core). `_resolve_auditor_text` es honesto:
+si `data.textos` falla o devuelve vacío, devuelve la CLAVE cruda en lugar de
+crash o de un hueco `{...}` — nunca rompe el cierre de la run. El REPL puede
+imprimir la voz del Auditor HOY, sin esperar al render.

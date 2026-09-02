@@ -151,6 +151,10 @@ def build_postmortem(
             noise_budget}} — la línea del Auditor citando el comando CONCRETO
             (cruce si lo hubo, pico si no), con su amount de `history`.
             `args` va resuelto para que render/test pueble la clave.
+          - `auditor_text` / `lines_resolved`: texto ya resuelto vía
+            `core.data.textos.resolve` (O4, 02/09) — la voz «Expediente 000…»
+            audible sin render. Fallback honesto: clave cruda si no resuelve,
+            nunca crash.
     """
     total_noise = int(shell_dict.get("total_noise", 0))
     noise_budget = int(state.get("noise_budget", DEFAULT_NOISE_BUDGET)) if state else DEFAULT_NOISE_BUDGET
@@ -181,7 +185,34 @@ def build_postmortem(
                 "noise_budget": noise_budget,
             },
         },
+        "auditor_text": _resolve_auditor_text(line_key, {
+                "command": command,
+                "amount": amount,
+                "total_noise": total_noise,
+                "noise_budget": noise_budget,
+            }),
+        "lines_resolved": [_resolve_auditor_text(line_key, {
+                "command": command,
+                "amount": amount,
+                "total_noise": total_noise,
+                "noise_budget": noise_budget,
+            })],
     }
+
+
+def _resolve_auditor_text(line_key: str, args: dict[str, Any]) -> str:
+    """Intenta resolver `line_key`+`args` vía `data.textos.resolve`.
+
+    Core→data: import permitido por ADR-0001. Fallback honesto: devuelve la
+    clave cruda si la resolución falla (clave ausente o placeholder sin valor),
+    nunca lanza — el post-mortem siempre es imprimible.
+    """
+    try:
+        from data.textos import resolve as _resolve  # type: ignore
+
+        return _resolve(line_key, args)
+    except Exception:
+        return line_key
 
 
 __all__ = [

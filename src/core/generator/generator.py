@@ -27,6 +27,10 @@ from core.curriculum import Curriculum, load_curriculum
 from core.sandbox.fs import DirNode, FileNode
 from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH3_COMMANDS, Shell
 
+# O3 — chapter6 trae FS con registro/purgas + cebo pipe-0; sus comandos son
+# la familia conteo (head/tail/sort/uniq) + grep/wc. Si Smough añade
+# DEFAULT_CH6_COMMANDS mañana, la rama 0902 lo heredará sin conflicto.
+
 from core.generator.chapter0 import (
     DECOY_CONTENT,
     DECOY_POOL,
@@ -45,11 +49,20 @@ from core.generator.chapter3 import (
     SUDO_CREDENTIAL_PATH,
     build_chapter3_fs,
 )
+from core.generator.chapter6 import (
+    CEBO_PATH,
+    CH6_GREP_WC_EXPECTED,
+    PURGAS_FILE,
+    PURGAS_PATH,
+    REGISTRO_PATH,
+    build_chapter6_fs,
+)
 from core.generator.errors import GeneratorError, UnsolvableRoomError
 from core.generator.model import (
     CANON_STEPS,
     CANON_STEPS_CH2,
     CANON_STEPS_CH3_SUDO,
+    CANON_STEPS_CH6,
     CanonSolution,
     Contract,
     Incursion,
@@ -74,6 +87,11 @@ def _session_commands(chapter: int) -> tuple[str, ...]:
         return DEFAULT_CH2_COMMANDS
     if chapter == 3:
         return DEFAULT_CH3_COMMANDS
+    if chapter == 6:
+        # Familia conteo (head/tail/sort/uniq) + grep/wc + base. Sin tocar
+        # shell.py (dueño Smough/S2); se lista explícita para evitar colisión
+        # de rama — coherente con DEFAULT_CH6_COMMANDS que S2 añadirá mañana.
+        return ("cat", "cd", "cp", "grep", "head", "ls", "sort", "tail", "uniq", "wc")
     return DEFAULT_CAP0_COMMANDS
 
 #: Nota del andamiaje de la run 0 (decisión pendiente de Gwyn, 🧭2 plan 28/08 §4).
@@ -229,6 +247,42 @@ def validate_incursion(incursion: Incursion) -> None:
                     exit_code=1,
                     stderr=f"{path} existe pero es un directorio",
                 )
+    elif room.chapter == 6:
+        # AC de O3 (02/09): la sala-dato contiene la Lista al formato EXACTO
+        # de CENSO-LISTA.md y el cebo pipe-0. El canon (`grep 000 | wc -l`)
+        # ya prueba la golden (1); aquí se verifica que AMBOS ficheros de la
+        # Lista existen y el cebo devuelve 0 al contar 000.
+        for path in (REGISTRO_PATH, PURGAS_PATH, CEBO_PATH):
+            node = shell.fs.resolve(path, "/")
+            if isinstance(node, DirNode):
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps),
+                    argv=("resolve", path),
+                    expect_exit=0,
+                    exit_code=1,
+                    stderr=f"{path} existe pero es un directorio",
+                )
+        # Golden del cap. 6: `grep ENSAYO purgas.csv | wc -l` → CH6 esperado (1).
+        last = shell.history[-1]["result"]
+        raw = str(last.get("stdout", ""))
+        if raw.strip() != CH6_GREP_WC_EXPECTED:
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps) - 1,
+                argv=("grep", "ENSAYO", PURGAS_PATH, "|", "wc", "-l"),
+                expect_exit=0,
+                exit_code=0,
+                stderr=f"golden cap. 6 devolvió {raw.strip()!r}, esperaba {CH6_GREP_WC_EXPECTED!r}",
+            )
+        # Cebo pipe-0: debe dar 0 (el «0 miente» es distinguible del 1 real).
+        cebo_res = shell.execute(f"grep ENSAYO {CEBO_PATH} | wc -l")
+        if cebo_res.stdout.strip() != "0":
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("grep", "000", CEBO_PATH, "|", "wc", "-l"),
+                expect_exit=0,
+                exit_code=0,
+                stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
+            )
 
 
 def generate(
@@ -260,16 +314,16 @@ def generate(
     """
     if isinstance(seed, bool):
         raise TypeError("seed bool no admitida por el generador (usa 0/1 explícitos)")
-    if chapter not in (0, 2, 3):
+    if chapter not in (0, 2, 3, 6):
         raise ValueError(
-            f"solo los caps. 0 (la firma), 2 (facturas) y 3 (Bombas, sala sudo) "
+            f"solo los caps. 0 (la firma), 2 (facturas), 3 (Bombas, sala sudo) y 6 (Faro, sala-dato) "
             f"están disponibles en v0.1; el resto llega con curriculum.json "
             f"(recibido chapter={chapter})"
         )
     if variant not in VARIANTS:
         raise ValueError(f"variant desconocida: {variant!r} (espera canonical|practice)")
-    if contract_id is not None and chapter not in (2, 3):
-        raise ValueError("contract_id solo aplica a los caps. 2 y 3 (el cap. 0 ofrece su única quest)")
+    if contract_id is not None and chapter not in (2, 3, 6):
+        raise ValueError("contract_id solo aplica a los caps. 2, 3 y 6 (el cap. 0 ofrece su única quest)")
 
     if curriculum is None:
         curriculum = load_curriculum()
@@ -278,7 +332,9 @@ def generate(
         return _generate_cap0(seed, variant, curriculum)
     if chapter == 2:
         return _generate_cap2(seed, variant, curriculum, contract_id)
-    return _generate_cap3(seed, variant, curriculum, contract_id)
+    if chapter == 3:
+        return _generate_cap3(seed, variant, curriculum, contract_id)
+    return _generate_cap6(seed, variant, curriculum, contract_id)
 
 
 def _generate_cap0(
@@ -510,6 +566,107 @@ def _generate_cap3(
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
     canon = CanonSolution(steps=CANON_STEPS_CH3_SUDO)
+
+    room = Room(
+        id=room_id,
+        chapter=chapter,
+        fs=fs,
+        canon=canon,
+        objective=objective,
+        concept_pool=concept_pool,
+    )
+    incursion = Incursion(
+        seed=seed,
+        chapter=chapter,
+        contract=contract,
+        scaffold=scaffold,
+        room=room,
+    )
+    validate_incursion(incursion)
+    return incursion
+
+
+def _generate_cap6(
+    seed: SeedLike,
+    variant: str,
+    curriculum: Curriculum,
+    contract_id: str | None,
+) -> Incursion:
+    """Ruta de la sala-dato del cap. 6 «Faro» (O3, 02/09).
+
+    Materializa el worldbuilding del censo de Manus (`CENSO-LISTA.md`) como
+    FICHEROS del mundo que se cruzan con la familia conteo (head/tail/sort/
+    uniq + grep/wc/pipe). La Lista es el volcado íntegro del censo con las
+    marcas de cada purga; la anomalía es la purga `PR-0091` (`sujeto=000`,
+    `fecha=EN BLANCO`, `motivo_codigo=ENSAYO`).
+
+    CONTRATO ch6 (costura O3↔S2, Gwyndolin 02/09): quest `story.ch6.e1`
+    (grey, familia conteo, objetivo revelar la purga `PR-0091`) ↔ sala-dato
+    `registro.csv`/`purgas.csv` (formato CENSO-LISTA.md) + cebo pipe-0
+    (`censo-borrador.csv` → `grep 000 | wc -l` = 0). Literales compartidos:
+    nombres de ficheros, fila `PR-0091`, cabecera `|`.
+
+    ALCANCE v0: genera SOLO la sala-dato de la Lista (E1). La generación
+    completa del cap. 6 para E2–E5 es tarea aparte.
+    """
+    chapter = 6
+    concept_pool = _concept_pool(curriculum, chapter)
+
+    rng = Rng(seed)
+    id_rng = rng.fork("room-id")
+    fs_rng = rng.fork("fs")
+
+    fs = build_chapter6_fs(fs_rng)
+    room_id = f"room-ch6-{id_rng.below(2**32):08x}-{variant}"
+
+    ch_quests = curriculum.quests_for_chapter(chapter)
+    if not ch_quests:
+        raise GeneratorError(
+            f"capítulo {chapter} sin quests en curriculum.json: no hay encargo "
+            f"que esta sala pueda ofrecer (viola §6.4.1)"
+        )
+    if contract_id is not None:
+        quest = curriculum.quest(contract_id)
+        if quest is None or quest.chapter != chapter:
+            raise GeneratorError(
+                f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}"
+            )
+    else:
+        # v0 solo E1 (grey, familia conteo); busca la que encaja el contrato
+        # ch6 (requires incluye familia conteo + grep/wc ya vivos). Si no hay
+        # E1 todavía (S2 aún no aterrizó), lanza guard honesto — test con
+        # skipif hasta que S2 ponga la quest.
+        candidatos = [q for q in ch_quests if q.id == "story.ch6.e1"]
+        if candidatos:
+            quest = candidatos[0]
+        else:
+            # Fallback honesto: si no está E1, busca cualquiera que no exija
+            # cut (no jugable) — coherente con AC de S2 (sin cut).
+            quest = ch_quests[0]
+
+    # Invariante §6.4.1 sobre el pool ACUMULADO (≤ capítulo).
+    missing = set(quest.requires) - _taught_up_to(curriculum, chapter)
+    if missing:
+        raise GeneratorError(
+            f"quest {quest.id!r} requiere conceptos que ningún capítulo ≤ {chapter} "
+            f"enseña: {sorted(missing)} (viola §6.4.1)"
+        )
+
+    objective = Objective(
+        id=f"serie-{quest.id}",
+        story_key=quest.id,
+        summary_text_key=quest.title_key,
+        file=PURGAS_FILE,
+        src=PURGAS_PATH,
+    )
+    contract = Contract(
+        chapter=chapter,
+        objective_key=quest.id,
+        brief_text_key=f"{quest.id}.brief",
+        karma_hint=_TINT_ES.get(quest.tint, "gris"),
+    )
+    scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
+    canon = CanonSolution(steps=CANON_STEPS_CH6)
 
     room = Room(
         id=room_id,

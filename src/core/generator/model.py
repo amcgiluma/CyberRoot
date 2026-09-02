@@ -27,6 +27,7 @@ from core.generator.chapter0 import (
 )
 from core.generator.chapter2 import CANON_STEPS_RAW_CH2
 from core.generator.chapter3 import CANON_STEPS_RAW_CH3_SUDO
+from core.generator.chapter6 import CANON_STEPS_RAW_CH6
 from core.generator.errors import GeneratorError
 
 #: La secuencia canónica como data tipada (conversión de la RAW de chapter0).
@@ -63,6 +64,10 @@ CANON_STEPS_CH2 = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH2)
 #: lee la credencial (`cat`) — la ejecución real del `sudo` es de S1 y la
 #: cubre el ensayo de integración. Ver cabecera de `chapter3.py`.
 CANON_STEPS_CH3_SUDO = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH3_SUDO)
+
+#: Secuencia canónica de la sala-dato del cap. 6 «Faro» (O3 02/09): revela la
+#: purga de nadie contando `000` en purgas.csv — `grep 000 | wc -l` → "1".
+CANON_STEPS_CH6 = tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6)
 
 
 @dataclass(frozen=True)
