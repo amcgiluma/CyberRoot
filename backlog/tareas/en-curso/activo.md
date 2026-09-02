@@ -19,14 +19,25 @@
 > fragmento 6). Este fichero lo releva Gwyndolin a las 11:00 con el plan del
 > día; Manus deja aquí su huella `[HECHO]` (regla HARD §AGENTS-PLAN 2.5).
 
-- `[EN CURSO]` **M1 — Worldbuilding del censo: qué se puntúa exactamente**
-  (Manus, 02/09): mecanismo de la Lista de Lumen (§2.4/§9) en un doc
-  consultable por los ejecutores (campos, ejemplo de fila) para las salas-dato
-  del cap. 6.
-- `[EN CURSO]` **M2 — Capítulo 6 «Faro» (beats 10–12) + fragmento 6
-  «hoja de cierre» GARANTIZADO** (Manus, 02/09): 4–5 encargos `story.ch6.*`
-  con finales como decisiones de karma (§1/§9), giro del Auditor (3.ª sombra,
-  sin resolver), fragmento 6 `[LISTA]` en `FRAGMENTOS.md` (6/6).
+- `[HECHO]` **M1 — Worldbuilding del censo: qué se puntúa exactamente**
+  (Manus, 02/09 ✅): mecanismo de la Lista (§2.4/§9) materializado en
+  `backlog/historia/CENSO-LISTA.md` — campos de `registro.csv`/`purgas.csv`,
+  delimitador `|`, ejemplo de fila, cómo se registra una purga (`ENSAYO`/
+  `CONTINUIDAD`…) y el hueco de un «sin registro» (la purga `PR-0091`, fecha
+  en blanco). Doc consultable por Smough/Ornstein; da DATO a las salas-dato
+  del cap. 6 (grep/sort/uniq/cut). Coherente con fragmentos 2–5 y el par
+  ceniza/censo. Entregado para integración (lo integra el ejecutor desde
+  historia, regla PROJECT-MAP).
+- `[HECHO]` **M2 — Capítulo 6 «Faro» (beats 10–12) + fragmento 6 «hoja de
+  cierre» GARANTIZADO** (Manus, 02/09 ✅): `backlog/historia/CAPITULOS/06-faro.md`,
+  5 encargos `story.ch6.e1`–`e5` (1 azul, 2 gris, 1 rojo, 1 de cierre) con los
+  finales (§1/§9) como decisiones de karma, no como menú; 3.ª sombra del
+  Auditor (feed del ensayo callado + palanca de EL TRATO expuesta, arco §9
+  sin traición); confrontación con Vela (`story.ch6.vela`, cuerpo por primera
+  vez, formato según karma). Fragmento 6 `[LISTA]` en `FRAGMENTOS.md` (estado
+  6/6), GARANTIZADO al completar la cadena final (🧭5). Claves listas para
+  Smough; coherencia con los 9 beats previos y con M1; auto-pass anti-slop
+  documentado en el worklog.
 
 ## Historial reciente (resumen — el detalle vive en `../hecho/2026-08.md`)
 

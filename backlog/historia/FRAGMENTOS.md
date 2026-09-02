@@ -19,7 +19,7 @@
 | 3 | 3 | contrato de alquiler a nombre de nadie | [LISTA] |
 | 4 | 4 | cuenta que recibió pagos mensuales de una filial de Lumen hasta hace 3 años | [LISTA] |
 | 5 | 5 | expediente médico del hospital del Muelle (el de Vela existe — ¿y este?) | [LISTA] |
-| 6 | 6 | hoja de cierre del Programa de Continuidad: sujeto 000, fecha en blanco | [PENDIENTE] |
+| 6 | 6 | hoja de cierre del Programa de Continuidad: sujeto 000, fecha en blanco | [LISTA] |
 
 ## Fragmento 1 — La foto (cap. 1, botín raro)
 
@@ -178,6 +178,53 @@ que no consta no está cuidando a nadie: está archivando a alguien que no
 debería dejar rastro, y dejándolo por si quien lo borró quiere comprobar que
 sigue.
 
+## Fragmento 6 — La hoja de cierre (cap. 6, botín GARANTIZADO de la cadena final)
+
+> **Formato**: la pieza que cierra la cadena. Cae AL COMPLETAR la cadena final
+> del cap. 6 (🧭5, 27/08): no depende del azar, porque alimenta APAGÓN PROPIO
+> (requisito «último fragmento», §3.4.1) y premiar haber jugado bien no puede
+> depender de una tirada. Mismo formato que los demás: dato técnico arriba,
+> grieta humana abajo, la fecha en blanco como el verdadero dato. Es la cuarta
+> pieza del hueco que la pulsera (2), el contrato (3) y el expediente (5) dejan
+> sobre la mesa, y la única que está escrita para cerrarse en el cap. 6.
+
+Hoja de cierre del Programa de Continuidad, impreso administrativo a una cara,
+folio `OH-HOSP-47-C-0191` en el margen y el mismo tipo de letra del formulario
+del hospital del Muelle. Cabecera: `PROGRAMA DE CONTINUIDAD — SUJETO 000`.
+Una sola vía de campos:
+
+```
+SUJETO:            000
+NOMBRE:            [celda vacía, como nació en la imprenta]
+ESTADO:            ENSAYO COMPLETADO
+FECHA DE INICIO:   19 años atrás (día de la firma, 04:12)
+FECHA DE CIERRE:   [no impresa]
+VALIDADO POR:      OFICINA DE CONTINUIDAD — sello en seco
+```
+
+El sello en seco no deja tinta, igual que el de la cuenta (fragmento 4). El
+campo `ESTADO` fue escrito con la misma letra que completó el expediente
+(fragmento 5): la de un empleado que llena muchos sobres por turno. Debajo, una
+línea manuscrita añadida después, con la presión de alguien que corrige sobre
+lo ya impreso: «La fecha de cierre se sustituye por el registro del archivo de
+la cámara.» No hay un segundo folio con esa fecha.
+
+Si la hoja tiene un número que no es el 000, es el que cuelga del armario de
+la cámara que la persiana velaba (cap. 6, E4): el del informe del Auditor que
+documenta la purga `PR-0091`, motivo `ENSAYO`, fecha en blanco
+(`CENSO-LISTA.md`).
+
+Dato que sostiene H1: cerró un experimento y dejó la fecha vacía a propósito
+porque la decisión de cuándo se cierra es tuya, no de la Oficina; la nota
+manuscrita de sustituir la fecha por el registro de la cámara es de alguien que
+sabía que la hoja se iba a leer dos veces. Dato que sostiene H2: «ensayo
+completado» con fecha de cierre en blanco es la firma de un experimento que
+nunca se dio por terminado — el sujeto 000 no es el que sobrevivió por azar, es
+el que sigue corriendo porque la Oficina necesita saber cuánto sobrevive una
+persona sin registro. La purga `PR-0091` lo confirma: existes en el libro de
+purgas y no existes en el censo, a la vez, y la fecha del cierre la fueron a
+buscar al archivo de la cámara en vez de escribirla en la hoja.
+
 ## Reglas para escribirlos
 - Nunca resuelven H1 vs H2: cada uno debe leerse plausible en ambas.
 - El último (nº 6) solo aparece si el jugador llega al Faro; alimenta
@@ -185,7 +232,7 @@ sigue.
 - No puntúan: son botín narrativo puro (§7.1).
 
 ## Estado
-5/6 escritos (1–5 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
-la hace el ejecutor integrador cuando estén `[LISTA]`.
-Queda el nº 6 (hoja de cierre del Programa de Continuidad, cap. 6) — ver
-nº 6 en la tabla; GARANTIZADO al completar la cadena final del cap. 6 (🧭5).
+6/6 escritos (1–6 `[LISTA]`). Dueño: Manus. Integración a `src/data/story/`
+la hace el ejecutor integrador cuando estén `[LISTA]`. El nº 6 (hoja de cierre
+del Programa de Continuidad, cap. 6) está GARANTIZADO al completar la cadena
+final del cap. 6 (🧭5, decisión firmada el 27/08).
