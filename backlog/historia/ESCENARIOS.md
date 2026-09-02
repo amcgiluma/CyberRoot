@@ -80,10 +80,14 @@
   expedientes cerrados; escenario de los beats 7 y del hallazgo del propio
   número vacío.
 - **Nodo maestro del censo** (Faro): el núcleo contable. Quemarlo es abrir
-  NOCHE LARGA; extraerlo en limpio, la palanca de LUZ PLENA.
+  NOCHE LARGA; extraerlo en limpio, la palanca de LUZ PLENA. Los ficheros
+  físicos de la Lista (`registro.csv`, `purgas.csv`) y su formato: ver
+  `backlog/historia/CENSO-LISTA.md`.
 
 ## Estado
 Escenarios con datos base: 6/6 (Subestación, Faro, Umbral bajo/alto, Muelles,
 nodos tipo). ✅
-Pendiente: el worldbuilding fino del censo (qué se puntúa exactamente) — dueño
-Manus/Fase 1, bloquea las salas-dato del cap. 6 (§9, §6.6.4), no los cap. 0–4.
+El worldbuilding fino del censo (qué se puntúa exactamente) está materializado
+en `CENSO-LISTA.md` (M1, Manus 02/09): campos de `registro.csv` y `purgas.csv`,
+delimitador `|`, ejemplo de fila y el hueco que deja Cero (`PR-0091`). Desbloquea
+las salas-dato del cap. 6 (§9, §6.6.4). No deja pendiente de escenario.

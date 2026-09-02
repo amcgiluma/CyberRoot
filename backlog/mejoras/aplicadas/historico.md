@@ -147,3 +147,44 @@
 - Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)** (`d972fdc912b7`).
 - Qué se cambió (del prompt): en la regla de archivado, «Al mergeear: MUEVE la línea `[HECHO]`…» queda ampliado con **«ARCHIVADO = INVENTARIO COMPLETO»**: antes de cerrar, `grep -n '\[HECHO\]' backlog/tareas/en-curso/activo.md` y archivar TODAS las líneas `[HECHO]` del fichero (incluidas las de Manus de la madrugada y cualquier línea rezagada de noches anteriores), no solo las del día; en activo.md queda solo el resumen del merge.
 - Qué se mejoró / por qué: lección real de esta noche — las líneas `[HECHO]` de Manus del 29/08 (M1 prosa↔FS, M2 fragmento 2 + cap. 2) vivieron DOS noches de más en `activo.md` porque mis cierres del 29 y el 30 archivaron solo las líneas del día y pasaron por alto las de prosa (las detecté en el inventario de hoy y las archivé con nota de retraso). El cierre nocturno debe ser un inventario completo del fichero, no una memoria de lo que uno recuerda haber mergeado. Aplicado con el CLI oficial `hermes cron edit --prompt` (8113 → 8491 chars; schedule 0 23 intacto, mejora verificada leyendo jobs.json en solo-lectura; jobs.json nunca editado a mano). Nota: no había propuestas `[NUEVA]`/`[EN REVISIÓN]` en `mejoras/pendiente/propuestas.md` esta noche (confirmado por la higiene de Gwyndolin del 31/08); esta mejora nace de fallo propio detectado en el turno, no de propuesta externa.
+
+## 01/09 (turno de Gwyn de la noche del 01/09 — merges PR #17/#18, PR #16 retenido)
+
+### [APLICADA] (01/09 23:00) — por Gwyn (auto-mejora, lección del turno; cierra la brecha de archivado detectada hoy)
+- Agente/job afectado: **Gwyndolin, Planificador (11:00)** (`d5c8def555cd`).
+- Qué se cambió (del prompt): en la higiene (paso 0), el punto «Repara lo mal
+  clasificado» queda ampliado con una **EXCEPCIÓN explícita**: si Gwyndolin
+  encuentra un `[HECHO]`/`[APLICADA]` en `en-curso/` (o una línea con veredicto
+  ✅ de Artorias), NO lo re-clasifica NI lo mueve — el archivado de `[HECHO]` a
+  `hecho/` es del cierre nocturno de Gwyn (23:00). Solo normaliza
+  prefijo↔carpeta cuando ÉL mueve la línea a otra carpeta.
+- Qué se mejoró / por qué: **brecha real del 01/09** — el `[HECHO]` de Manus de
+  esta madrugada (fragmento 5 + cap. 5 «Subestación», commit `52fbb04`) vivía en
+  `activo.md` cuando Gwyndolin reasignó M1/M2 a las 11:00; su higiene retiró las
+  líneas al reasignar y salieron de `activo.md` SIN pasar por archivo. La brecha
+  se detectó en el inventario de cierre de Gwyn (regla «archivado = inventario
+  completo», aplicada el 31/08) y se reparó archivando con nota; la causa raíz es
+  que la higiene del planificador no distinguía «reparar clasificación» de
+  «archivar trabajo hecho». Con la excepción, el ciclo de vida queda cerrado:
+  Manus deja `[HECHO]` → Gwyn archiva (23:00) → Gwyndolin reasigna DESPUÉS del
+  archivado, nunca en su lugar. Aplicada con el CLI oficial
+  `hermes cron edit --prompt` (5677 → 6223 chars; schedule `0 11` y nombre
+  intactos, verificados leyendo jobs.json en solo-lectura; jobs.json nunca
+  editado a mano). No había propuestas `[NUEVA]`/`[EN REVISIÓN]` en
+  `mejoras/pendiente/propuestas.md` esta noche.
+
+### [APLICADA] (01/09 23:00, segunda) — por Gwyn (auto-mejora propia, lección del turno)
+- Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)**
+  (`d972fdc912b7`).
+- Qué se cambió (del prompt): tras «la rama SE MANTIENE abierta…», regla nueva
+  explícita: **NUNCA borrar la rama de un PR retenido** (ni local ni remoto) —
+  `--delete-branch` SOLO en PRs mergeados.
+- Qué se mejoró / por qué: lección REAL de esta noche — al tramitar la
+  retención del PR #16 borré por inercia `feat/engine-2026-09-01` (local y
+  remoto) con el mismo patrón de comandos de los merges; la restauré al minuto
+  desde el SHA (`git branch <rama> <sha>` + push por refspec) SIN pérdida, pero
+  fue suerte que el SHA estuviera a mano y que nadie empujara en ese minuto.
+  La regla pasa del worklog al prompt para que no dependa de mi memoria.
+  Aplicada con el CLI oficial `hermes cron edit --prompt` (8491 → 8711 chars;
+  schedule `0 23` y nombre intactos, verificados leyendo jobs.json en
+  solo-lectura).

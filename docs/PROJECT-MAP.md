@@ -56,12 +56,12 @@ tools/              → utilidades raíz: cyberroot_usage.py · harness/ (Ornste
 ## 2. Cómo se atribuye trabajo (quién escribe DÓNDE)
 | Agente (hora) | Modelo | Lee (SOLO esto del backlog) | Escritura/Entregas DÓNDE |
 |---|---|---|---|
-| **Manus** (03:00) | deepseek-v4-flash | plan de HOY + `en-curso/activo.md` | `backlog/historia/<...>.md` (story, humanizer). Marca sus piezas `[HECHO]` en `en-curso/activo.md`. |
-| **Oscar de Astora** (05:00) | deepseek-v4-flash | `zona-testeo.md` + su `ESTADO-JUGADOR.md` | `docs/ESTADO-JUGADOR.md` (run de referencia/veterano) + `[BUG]`/ideas en `tareas/pendiente/abierto.md` + notas de dirección en `notas-manana.md` (🧭). |
-| **Havel** (07:00) | deepseek-v4-flash | `zona-testeo.md` + `ESTADO-JUGADOR.md` | bugs `[BUG]` + ideas `[PENDIENTE]` en `tareas/pendiente/abierto.md`. Smoke del conjunto SIN save limpio (esa capa es de Oscar). Worklog del día. |
+| **Manus** (03:00) | muse-spark-1.2-contributor | plan de HOY + `en-curso/activo.md` | `backlog/historia/<...>.md` (story, humanizer). Marca sus piezas `[HECHO]` en `en-curso/activo.md`. |
+| **Oscar de Astora** (05:00) | muse-spark-1.2-contributor | `zona-testeo.md` + su `ESTADO-JUGADOR.md` | `docs/ESTADO-JUGADOR.md` (run de referencia/veterano) + `[BUG]`/ideas en `tareas/pendiente/abierto.md` + notas de dirección en `notas-manana.md` (🧭). |
+| **Havel** (07:00) | muse-spark-1.2-contributor | `zona-testeo.md` + `ESTADO-JUGADOR.md` | bugs `[BUG]` + ideas `[PENDIENTE]` en `tareas/pendiente/abierto.md`. Smoke del conjunto SIN save limpio (esa capa es de Oscar). Worklog del día. |
 | **Gwyndolin** (11:00) | glm-5.3-flash | `pendiente/abierto.md` (entero) + `en-curso/activo.md` + `notas-manana.md` (🎯/🧭 validadas) | plan de HOY en `planes/YYYY/MM/DD.md`; mueve elegidas → `en-curso/activo.md`; descartes con motivo → `descartado/historico.md`. Propone mejoras en `mejoras/pendiente/propuestas.md` (las aplica Gwyn). |
-| **Ornstein/Smough/Seath** (13/16/19) | deepseek-v4-flash | SU línea en `en-curso/activo.md` + plan de HOY | Código en su RAMA `feat/<modulo>` + PR a main. Marcan `[HECHO]` (+PR) junto a su línea en `en-curso/activo.md`. README del módulo. Ornstein: + harness. |
-| **Artorias** (21:00) | deepseek-v4-flash | `en-curso/activo.md` + `[BUG]` de `pendiente/abierto.md` | 💥/✅ junto a cada línea en `en-curso/activo.md`; aviso + gusto en `notas-manana.md` (🎯); ideas nuevas → `pendiente/abierto.md`. |
+| **Ornstein/Smough/Seath** (13/16/19) | muse-spark-1.2-contributor | SU línea en `en-curso/activo.md` + plan de HOY | Código en su RAMA `feat/<modulo>` + PR a main. Marcan `[HECHO]` (+PR) junto a su línea en `en-curso/activo.md`. README del módulo. Ornstein: + harness. |
+| **Artorias** (21:00) | muse-spark-1.2-contributor | `en-curso/activo.md` + `[BUG]` de `pendiente/abierto.md` | 💥/✅ junto a cada línea en `en-curso/activo.md`; aviso + gusto en `notas-manana.md` (🎯); ideas nuevas → `pendiente/abierto.md`. |
 | **Gwyn** (23:00) | glm-5.3-flash | `en-curso/activo.md` + `notas-manana.md` (🧭/🎯) + `mejoras/pendiente/propuestas.md` | MERGE final (solo él); tras merge MUEVE las líneas `[HECHO]` → `hecho/<AAAA-MM>.md`; rechazos documentados junto a la línea; SOBRESCRIBE `zona-testeo.md`; notas en `notas-manana.md` (🎯); aplica auto-mejora (`hermes cron edit`) y registra `[APLICADA]` en `mejoras/aplicadas/historico.md`. |
 | **Juanma** (feedback) | — | — | Escribe en la libreta (INDICE/DESIGN) o me dice a mí. ← EL CONTROL |
 

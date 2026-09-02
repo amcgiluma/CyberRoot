@@ -18,6 +18,14 @@ import shlex
 from typing import Any
 
 from core.sandbox.commands.base import CommandResult, build_registry
+from core.sandbox.commands.conteo import SPECS as CONTEO_SPECS
+from core.sandbox.commands.escalada import (
+    AUTH_LOG_PATH,
+    SUDO_NAME,
+    SUDO_NO_CRED_MSG,
+    check_credential,
+    signature_line,
+)
 from core.sandbox.commands.files import SPECS as FILE_SPECS
 from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
 from core.sandbox.commands.procesos import SPECS as PROCESOS_SPECS
@@ -38,12 +46,17 @@ DEFAULT_CH2_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "grep", "ls", "wc")
 #: Comandos del set del cap. 3 (S1, 31/08): añade la familia procesos (`ps`,
 #: `env`) al set del cap. 2. Cap. 0 y cap. 2 quedan INTACTOS (el proceso solo
 #: existe cuando el currículo lo presenta — regresión explícita en tests).
+#: S1 (01/09): `sudo` entra en el cap. 3 — es donde se GANA la credencial
+#: narrativa (DESIGN §6.1). NO existe en cap. 0/2 (exit 127, como `ps`/`env`).
 DEFAULT_CH3_COMMANDS: tuple[str, ...] = (
-    "cat", "cd", "cp", "env", "grep", "ls", "ps", "wc",
+    "cat", "cd", "cp", "env", "grep", "ls", "ps", "sudo", "wc",
 )
 
-#: Todas las specs implementadas (registro completo del módulo v0 → S1).
-SPECS_ALL = NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS
+#: Todas las specs implementadas (registro completo del módulo v0 → S1; conteo
+#: añadido en S2 01/09). `sudo` NO es una spec: es un wrapper del shell.
+SPECS_ALL = (
+    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + CONTEO_SPECS
+)
 
 #: Caracteres de sintaxis NO soportada todavía (fuera de comillas). `*?<` =
 #: globs, `>` = redirección, `&`/`;` = encadenado. `|` (tubería) SÍ entra en
@@ -146,6 +159,7 @@ class Shell:
         self.total_noise = 0
         self.history: list[dict[str, Any]] = []
         wanted = set(commands)
+        self.available_commands = wanted.copy()
         self.registry = build_registry(
             tuple(spec for spec in SPECS_ALL if spec.name in wanted)
         )
@@ -162,7 +176,14 @@ class Shell:
         el historial ni suma ruido: eso lo hace `execute`/`_record` una vez
         por LÍNEA (para que una tubería quede como UNA entrada con el ruido
         de AMBOS comandos).
+
+        `sudo` (S1, 01/09) es un WRAPPER de orquestación, no una spec: se
+        despacha aquí SI la sesión lo expone (`available_commands`). Si la
+        sesión no lo expone (cap. 0/2), `SUDO_NAME` no está en el registry y
+        cae al `command not found` de abajo (exit 127), igual que `ps`/`env`.
         """
+        if argv[0] == SUDO_NAME and SUDO_NAME in self.available_commands:
+            return self._exec_sudo(argv, stdin)
         spec = self.registry.get(argv[0])
         if spec is None:
             return CommandResult(
@@ -172,6 +193,54 @@ class Shell:
         if result.new_cwd is not None:
             self.cwd = result.new_cwd
         return result
+
+    def _exec_sudo(
+        self, argv: tuple[str, ...], stdin: str = ""
+    ) -> CommandResult:
+        """`sudo <cmd> [args...]` — elevación con credencial narrativa (cap. 3).
+
+        Forma firma DESIGN §6.1 (S1, 01/09):
+          - sin credencial  → rechazo diegético accionable, exit 1, ruido 0.
+          - con credencial  → ejecuta el comando envuelto (registry), factura
+            ruido PREMIUM (extra sobre el base del comando) y deja firma en
+            `AUTH_LOG_PATH` (usuario, comando, tick) via `fs.append_file`.
+        Si el comando envuelto no existe → `sh: command not found: cmd`
+        (exit 127), igual que el shell sin sudo. La credencial vive en el FS de
+        la sala (contrato O1↔S1); NO es una contraseña tecleada.
+        """
+        if len(argv) < 2:
+            return CommandResult(
+                stderr="sudo: no command given\n", exit_code=1
+            )
+        # Sin credencial: intentar no es delinquir — rechazo sin ruido.
+        if not check_credential(self.fs, self.cwd):
+            return CommandResult(stderr=SUDO_NO_CRED_MSG + "\n", exit_code=1)
+
+        wrapped = argv[1:]
+        spec = self.registry.get(wrapped[0])
+        if spec is None:
+            return CommandResult(
+                stderr=f"sh: command not found: {wrapped[0]}", exit_code=127
+            )
+        result = spec.run(self.fs, self.cwd, wrapped[1:], self.tick, stdin)
+        if result.new_cwd is not None:
+            self.cwd = result.new_cwd
+
+        # Ruido PREMIUM: el wrapper emite el extra (base + premium = factura)
+        # y deja firma en el auth.log — el poder deja factura (§6.1).
+        premium = NoiseMeter().emit(SUDO_NAME, tuple(wrapped), self.tick)
+        noise = result.noise + (premium,)
+        self.fs.append_file(
+            AUTH_LOG_PATH,
+            signature_line(self.user, wrapped[0], tuple(wrapped[1:]), self.tick),
+        )
+        return CommandResult(
+            stdout=result.stdout,
+            stderr=result.stderr,
+            exit_code=result.exit_code,
+            noise=noise,
+            new_cwd=result.new_cwd,
+        )
 
     def execute(self, line: str) -> CommandResult:
         """Ejecuta una línea; muta cwd/tick/historial y devuelve el resultado.

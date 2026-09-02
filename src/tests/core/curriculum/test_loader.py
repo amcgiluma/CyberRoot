@@ -76,16 +76,30 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
     assert cur.version == 1
 
 
-def test_load_curriculum_16_conceptos_16_quests() -> None:
-    """El catálogo real: 16 conceptos y 16 encargos (S2 31/08 añade cap. 3).
+def test_load_curriculum_21_conceptos_20_quests() -> None:
+    """El catálogo real: 21 conceptos y 20 encargos (conteo 01/09).
 
-    Conteo del 31/08: 14 (cap. 0-2) + c.ps/c.env (2, familia procesos, cap. 3)
-    y 5 quests story.ch3.e1–e5. El cap. 3 «Bombas» abre la familia procesos.
-    Ornstein/generator consumen este conteo vía datos reales.
+    Conteo del 01/09 reconciliado (Artorias, ensayo de integración): conceptos
+    16 (31/08: caps. 0–3, familia procesos) + c.sudo (escalada, cap. 3) + la
+    familia conteo c.head/c.tail/c.sort/c.uniq (texto, cap. 6, barrera hacia
+    el Faro). Quests 16 (31/08: caps. 0–3) + 4 `story.ch5.e1`–`e4` (T2, cap. 5
+    «Subestación», defensa/auditoría, sin conceptos nuevos — reutiliza
+    `chmod`/`chown`/`ps`/`env`/`ls-la`/`cat`/`grep`, §6.0.4). El generator de
+    O1 EXIGE al menos una quest del cap. 3 con `c.sudo` (story.ch3.e4 y e5 la
+    llevan desde 01/09); Ornstein/generator consumen este conteo vía datos
+    reales.
     """
     cur = load_curriculum()
-    assert len(cur.concepts) == 16
-    assert len(cur.quests) == 16
+    assert len(cur.concepts) == 21
+    assert len(cur.quests) == 20
+
+
+def test_capitulo6_conteo_enseñado() -> None:
+    """La familia conteo se ENSEÑA en el cap. 6 (barrera técnica hacia el
+    Faro): c.head/c.tail/c.sort/c.uniq, todos a chapter 6 — prereqs vivos."""
+    cur = load_curriculum()
+    ids = {c.id for c in cur.chapter_concepts(6)}
+    assert {"c.head", "c.tail", "c.sort", "c.uniq"} <= ids
 
 
 def test_capitulo0_tiene_exactamente_ls_cd_cat_cp() -> None:
@@ -177,6 +191,33 @@ def test_las_cinco_quests_del_cap3_tints_y_requires_segun_manus() -> None:
     assert env is not None and env.family == "procesos" and env.chapter == 3
     assert sorted(ps.prerequisites) == ["c.ls"]
     assert sorted(env.prerequisites) == ["c.ps"]
+
+
+def test_las_cuatro_quests_del_cap5_tints_y_requires_segun_manus() -> None:
+    """T2 (01/09): las 4 quests del cap. 5 «Subestación» siguen a Manus.
+
+    Capítulo INVERTIDO (defensa/auditoría, §6.1 cap. 5): no enseña conceptos
+    nuevos — reutiliza `chmod`/`chown`/`ls-la`/`cat`/`grep`/`ps`/`env` como
+    mantenimiento bajo presión. Tints E1/E4 blue, E2 grey, E3 red según Manus
+    (2 blue = el cierre E4 sale azul); `requires` ⊆ conceptos teachados en
+    capítulos ≤ 5 (todos ≤ 3), invariante §6.4.1.
+    """
+    cur = load_curriculum()
+    quests = cur.quests_for_chapter(5)
+    assert [q.id for q in quests] == [
+        "story.ch5.e1",
+        "story.ch5.e2",
+        "story.ch5.e3",
+        "story.ch5.e4",
+    ]
+    assert [q.tint for q in quests] == ["blue", "grey", "red", "blue"]
+    concept_chapter = {c.id: c.chapter for c in cur.concepts}
+    for q in quests:
+        assert all(concept_chapter[r] <= q.chapter for r in q.requires)
+    # Sin prereqs fantasma: cada requires apunta a un concepto existente.
+    ids = {c.id for c in cur.concepts}
+    for q in quests:
+        assert set(q.requires) <= ids
 
 
 def test_ningun_concepto_tiene_prereq_de_capitulo_posterior() -> None:

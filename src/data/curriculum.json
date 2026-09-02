@@ -112,6 +112,41 @@
       "chapter": 3,
       "prerequisites": ["c.ps"],
       "summary_key": "concept.env.summary"
+    },
+    {
+      "id": "c.sudo",
+      "family": "escalada",
+      "chapter": 3,
+      "prerequisites": ["c.ps", "c.env"],
+      "summary_key": "concept.sudo.summary"
+    },
+    {
+      "id": "c.head",
+      "family": "texto",
+      "chapter": 6,
+      "prerequisites": ["c.cat"],
+      "summary_key": "concept.head.summary"
+    },
+    {
+      "id": "c.tail",
+      "family": "texto",
+      "chapter": 6,
+      "prerequisites": ["c.cat"],
+      "summary_key": "concept.tail.summary"
+    },
+    {
+      "id": "c.sort",
+      "family": "texto",
+      "chapter": 6,
+      "prerequisites": ["c.wc"],
+      "summary_key": "concept.sort.summary"
+    },
+    {
+      "id": "c.uniq",
+      "family": "texto",
+      "chapter": 6,
+      "prerequisites": ["c.sort"],
+      "summary_key": "concept.uniq.summary"
     }
   ],
   "quests": [
@@ -231,7 +266,7 @@
       "id": "story.ch3.e4",
       "chapter": 3,
       "tint": "red",
-      "requires": ["c.ps", "c.env"],
+      "requires": ["c.ps", "c.env", "c.sudo"],
       "title_key": "story.ch3.e4.title",
       "beat_key": "story.ch3.e4.beat"
     },
@@ -239,9 +274,41 @@
       "id": "story.ch3.e5",
       "chapter": 3,
       "tint": "grey",
-      "requires": ["c.ps", "c.env"],
+      "requires": ["c.ps", "c.env", "c.sudo"],
       "title_key": "story.ch3.e5.title",
       "beat_key": "story.ch3.e5.beat"
+    },
+    {
+      "id": "story.ch5.e1",
+      "chapter": 5,
+      "tint": "blue",
+      "requires": ["c.ls-la", "c.cat", "c.chmod"],
+      "title_key": "story.ch5.e1.title",
+      "beat_key": "story.ch5.e1.beat"
+    },
+    {
+      "id": "story.ch5.e2",
+      "chapter": 5,
+      "tint": "grey",
+      "requires": ["c.ls-la", "c.chmod", "c.chown"],
+      "title_key": "story.ch5.e2.title",
+      "beat_key": "story.ch5.e2.beat"
+    },
+    {
+      "id": "story.ch5.e3",
+      "chapter": 5,
+      "tint": "red",
+      "requires": ["c.ps", "c.env"],
+      "title_key": "story.ch5.e3.title",
+      "beat_key": "story.ch5.e3.beat"
+    },
+    {
+      "id": "story.ch5.e4",
+      "chapter": 5,
+      "tint": "blue",
+      "requires": ["c.chmod", "c.chown", "c.cat", "c.grep"],
+      "title_key": "story.ch5.e4.title",
+      "beat_key": "story.ch5.e4.beat"
     }
   ]
 }

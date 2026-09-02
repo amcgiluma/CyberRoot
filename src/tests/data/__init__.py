@@ -1,0 +1,1 @@
+# tests para src/data/ — la carpeta nace con textos.json y su resolvedor (01/09).

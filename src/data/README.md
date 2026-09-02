@@ -11,7 +11,9 @@
 
 | Fichero/carpeta | Contenido | Referencia DESIGN | Dueño |
 |---|---|---|---|
-| `curriculum.json` | DAG de conceptos (~60 boons, 8 familias, prerrequisitos, capítulos enseñanza/mantenimiento) | §6.2 | Smough |
+| `curriculum.json` | DAG de conceptos (~60 boons, 8 familias, prerrequisitos, capítulos enseñanza/mantenimiento) | §6.2 | Smough (esquema) · Seath (cap. 5, T2) |
+| `textos.json` | Primer paquete de TEXTOS (🧭12): post-mortem del Auditor + quests ch1/ch5 | §2.4, §2.6 | **Seath** (integrator desde `backlog/historia/`) |
+| `textos.py` | Resolvedor mínimo `line_key`+`args` → texto con placeholders | ARCHITECTURE §3 | Seath |
 | `chapters/*.json` | plantillas por campaña: 0–6 (pools, tipos de sala, encargos base, puertas finales) | §6.1–6.3 | Ornstein (estructura) · Smough (retos) |
 | `boons.json` | tarjetas: nombre real, familia, pista diegética, condición de unlock | §4.4, §7.5 | Smough |
 | `items.json` | ~12 objetos de Gris + efectos (objeto×comando §5.2) | §4.3 | Seath |
@@ -30,6 +32,24 @@
    sin PRs de lógica.
 3. Textos: español de España; salidas técnicas en su forma real (§2.6.8).
 4. Cambiar `data/` = hacerlo desde la rama del dueño de esa fila.
+
+## Textos (`textos.json` + `textos.py`) — contrato del resolvedor (T1, 01/09)
+- **`textos.json`** mapea `line_key` → plantilla. Los placeholders siguen la
+  forma `{nombre}` (p. ej. `postmortem.auditor.*` recibe `{command}`/`{amount}`/
+  `{total_noise}`/`{noise_budget}` de `build_postmortem`).
+- **`textos.py`** expone `resolve(line_key, args=None)` (y `load_textos()`).
+  Reglas del resolvedor: clave ausente → `TextResolutionError` accionable;
+  plantilla con placeholder sin arg → `TextResolutionError` accionable
+  (romper claro > mostrar un hueco `{...}`); cero lógica de juego y cero
+  dependencias del core (ARCHITECTURE §3: «core carga claves, el render (o el
+  resolvedor) las resuelve»).
+- **Cobertura** (`src/tests/data/test_textos.py`): toda clave que emite
+  `build_postmortem` + todo `title_key`/`beat_key` de las quests integradas
+  (ch1 T1, ch5 T2) resolviendo a texto no vacío — falla si se añade una clave
+  sin su texto.
+- Las claves narrativas entran integradas por el ejecutor desde
+  `backlog/historia/` (regla PROJECT-MAP): Manus escribe prosa, nunca toca
+  este fichero.
 
 ## Cómo se testea
 ```bash

@@ -107,13 +107,25 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
   Grieta de Ceniza (beat 6) escrita en la casa (E2), el giro del Auditor
   (beat 8) suma su 2.ª sombra, fragmento 5 cae en E4 (cajón 29 del archivo).
   Gancho: el censo, cap. 6.
-- PENDIENTE bloqueante para cap. 6: worldbuilding del censo (§9, dueño Manus
-  en Fase 1). No bloquea capítulos 0–4.
-- SIGUIENTE (dirección Gwyn, 28/08 + plan 31/08): cap. 6 «Faro» (beats
-  10–12: la Lista al alcance, confrontación con Vela, finales) cuando toque
-  colchón del Acto 2 → Acto 3, con el worldbuilding del censo como puerta
-  (fragmento 6 = hoja de cierre, GARANTIZADO por completar la cadena final
-  del cap. 6, 🧭5).
+- ✅ **M1 — Worldbuilding del censo** (`CENSO-LISTA.md`, 02/09): QUÉ se puntúa
+  exactamente — campos de `registro.csv` y `purgas.csv`, delimitador `|`,
+  ejemplo de fila real, cómo se registra una purga (`ENSAYO`/`CONTINUIDAD`…
+  y el hueco que deja un «sin registro» (la purga `PR-0091`, fecha en blanco,
+  sujeto sin fila hermana). Doc de CONSULTA para Smough/Ornstein; da DATO a
+  las salas-dato del cap. 6 (grep/sort/uniq/cut). Cruza con fragmentos 2–5.
+- ✅ **Capítulo 6 «Faro»** (`CAPITULOS/06-faro.md`, beats 10–12, 02/09) — 5
+  encargos (`story.ch6.e1`–`e5`: 1 azul, 2 gris, 1 rojo, 1 de cierre) en la
+  luz en su MÁXIMO (Anillo Faro, §6.0). Sala-dato sobre la Lista (M1 + familia
+  conteo de Havel), escalada al nodo maestro, la **3.ª sombra del Auditor**
+  (feed del ensayo callado, palanca de EL TRATO expuesta por el propio
+  formulario — arco §9 cerrado sin traición), confrontación con Vela
+  (`story.ch6.vela`, cuerpo por primera vez, formato según karma) y los
+  finales (§3.4) como DECISIONES de karma en E4/E5, nunca como menú.
+  **Fragmento 6 «hoja de cierre» `[LISTA]`** GARANTIZADO al completar la
+  cadena final (🧭5): estado 6/6.
+- ✅ **Narrativa completa materializada** (02/09): capítulos 0–6 + fragmentos
+  1–6, todo `[LISTA]`. El bloqueante de historia (worldbuilding del censo)
+  queda resuelto; ya no hay espina narrativa pendiente en `backlog/historia/`.
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
   Materializarlo en `FRAGMENTOS.md` cuando se escriba la cadena.

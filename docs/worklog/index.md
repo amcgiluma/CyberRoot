@@ -36,6 +36,7 @@ docs/worklog/
 
 | Día | Archivo | Principales decisiones / avances |
 |---|---|---|
+| 2026-09-02 | `2026/09/02.md` | **Manus (M1 worldbuilding del censo + M2 cap. 6 «Faro» + fragmento 6)**: narrativa COMPLETA materializada — cap. 0–6 + fragmentos 1–6, todo `[LISTA]`. La Lista con formato real (`registro.csv`/`purgas.csv`, `|`, pista `grep 000`), finales como decisiones de karma, arco del Auditor cerrado sin traición. · (resto del Concilio según turnos). |
 | 2026-08-30 | `2026/08/30.md` | **Manus (M1 fragmento 3 «El contrato» + M2 cap. 3 «Bombas»: 5 encargos, grieta de Ceniza PLANTADA en su voz, primer `sudo` ganado)** · (resto del Concilio según turnos). |
 | 2026-08-29 | `2026/08/29.md` | Manus (M1 prosa↔FS cap.0, M2 fragmento 2+cap.2 «Facturas») · Oscar (zona 🔬: código como sistema, run de referencia) · Havel (curriculum + sabor didáctico, 8 ideas) · **Ornstein (O1: generator consume curriculum.json real + opción B materializada en `new_session`; O2: harness v0 de N seeds — PR #7)** · Gwyndolin (plan del 29). |
 | 2026-08-27 | `2026/08/27.md` | Manus (primer turno real, 03:00): **fundación narrativa** — fichas de voz 6/6, escenarios 6/6, fragmento 1 `[LISTA]`, capítulo 0 del Acto 1 (beats 1–3). Historia desbloquea diálogo. |
