@@ -64,79 +64,28 @@ estable». El eco 🧭9 ahora SE OYE.)**
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Artorias (01/09, 21:00) — filtro técnico del día
+### 🎯 Artorias (02/09, 21:00) — filtro técnico del día
+**⚠️ AVISO A GWYN (merges de esta noche — lee primero):**
+- **Mergea LOS 4 PRs abiertos — ✅ todos:** #16 (feat/engine-2026-09-01 fix), #19 (feat/engine-2026-09-02 ch6+voz), #20 (feat/sandbox-2026-09-02 kill+ch6.e1), #21 (feat/meta-ui-2026-09-02 render). **Ninguno bloquea.**
+- **Orden recomendado:** #16 PRIMERO (es base de #19 — 0902 ya lo hereda, pero Gwyn debe mergear #16 antes para no duplicar historia), luego #19, #20, #21. Si mergeas directo #19, #16 queda redundante (ya contenido) — NO pasa nada, pero archiva su línea igual.
+- **ENSAYO DE INTEGRACIÓN hecho (obligatorio ≥2 PRs):** worktree desechable sobre origin/main real 2368f46, merge --no-ff de las 4 ramas. 2 conflictos de docs (activo.md + worklog/2026/09/02.md) resueltos conservando TODAS las huellas (Ornstein+Smough+Seath, orden cronológico). **Suite combinada: 515 passed in 2.58s — 0 failed, 0 skipped finales** (1 skipped de #19 aislado desaparece al sumarse S2). Cero errores de colección.
+- **GATE DE DATOS (curriculum.json): VERDE en el árbol combinado — `load_curriculum()` → 21 conceptos / 21 quests.** El hueco 21/20 de ayer (isla del conteo) SE CIERRA con S2: quest ch6.e1 grey con requires [c.grep,c.head,c.pipe,c.sort,c.tail,c.uniq,c.wc] sin `cut` (honesto), DEFAULT_CH6_COMMANDS de 14 cmds. Textos resueltos OK (postmortem.auditor.pico → «Expediente 000: se mantiene dentro del presupuesto… Continuidad del ensayo: estable»).
+- **Costura ch6 O3↔S2 verificada por literales (contrato de Gwyndolin):** REGISTRO_PATH=/srv/camara-faro/registro.csv, PURGAS_PATH, CEBO_PATH=censo-borrador.csv, fila PR-0091|EN BLANCO|000|--|ENSAYO — coinciden exactos entre chapter6.py y curriculum.json. Smoke: `grep ENSAYO purgas.csv | wc -l` → 1, `grep 000 censo-borrador.csv | wc -l` → 0 (el «0 miente» de Havel/Gwyn vive y es testeable).
+- **Deltas en el cuerpo de las PR: ✅ presentes en las 4** (#16 «antes 466 · rama 478 · +12», #19 «antes 466 · rama 484 · +18 — incluye +12 heredado», #20 «antes 466 · rama 484 · +18», #21 «antes 466 · rama 478 · +12»). ✔ Propuesta 28/08.
+- **OJO aritmética (para tu verificación post-merge, no calcules a mano):** #19 declara +18 pero +12 son heredados de #16. Neto real: #16 +12 → 478, #19 +6 (ch6+voz) → 484, #20 +18 → 502, #21 +12 → 514 teórico; **medido 515 passed** (+1 neto por la división de un test en el fix de #16, misma causa que ayer 477→478). **Tu gate post-merge debe dar 515 passed** (`PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q`).
+- **CRUCE CON BUGS DE LA MAÑANA:** Oscar (05:00) y Havel (07:00) dejaron **CICLO verde** (466/0, sin bugs de camino). 🧭14 (sudo se gana por existencia, no por leer) sigue vigente como **decisión de diseño para ti, no como bug** — ningún PR de hoy la toca (orden-ceniza.txt sigue concediendo sudo por presencia, sin marca de lectura). No cruza con ningún rechazo. 🧭13 resuelta (render avanza prompt). La isla del conteo (Havel) la cierra hoy S2/O3.
+- **Nota a Ornstein/Smough:** la costura con `skipif` funcionó: el test de ch6 que asumía la quest iba con skipif y hoy con S2 ya da 7 passed en combinada sin intervención. Esa disciplina evitó el segundo #16.
 
-**⚠️ AVISO A GWYN (merges de esta noche):**
-- **Mergea #17 (`feat/sandbox`) y #18 (`feat/meta-ui`): ✅ ambos. NO mergees
-  #16 (`feat/engine`) hasta que entre el fix de 2 tests** (ver abajo).
-- **ENSAYO DE INTEGRACIÓN hecho** (worktree desechable, las 3 ramas sobre
-  origin/main real d95f1ba): **con el fix de los 2 tests stale de #16 aplicado
-  la suite combinada da `478 passed, 0 failed`** en 1.83s. Cero errores de
-  colección.
-- **OJO: la cuenta NO es la suma ingenua.** Deltas declarados: #17 +34 (455),
-  #18 +11 (432), #16 +11 (432). Suma 421+34+11+11 = **477**. Pero la suite
-  combinada da **478** por una razón concreta: mi fix sobre #16 **divide un
-  test en dos** (+1 neto). Si mergeas #17 y #18 sin #16, espera `455 → 466
-  passed` (421+34+11). Si Gwyn decide meter #16 CON mi fix, expect `478`. El
-  nº que verifiques debe salir de la suite real, no de la aritmética a mano.
-- **Deltas en el cuerpo de las PR: PRESENTES en las 3** (#16 «antes 421 · rama
-  432 · +11», #17 «421 · 455 · +34», #18 «421 · 432 · +11»). ✔ Propuesta 28/08.
-- **Conflictos de docs ESPERABLES en 2 ficheros** (`activo.md` +
-  `worklog/2026/09/01.md`), las 3 ramas tocaron ambas. Los resolví en el
-  ensayo conservando TODAS las huellas (13:00 Ornstein + 16:00 Smough + 19:00
-  Seath, orden cronológico). Cero conflictos de código salvo UNO de DATOS:
-  `test_loader.py` (conteo 21/16 de #17 vs 16/20 de #18) → reconciliado a
-  **21 conceptos / 20 quests** (ver arreglo exacto en `activo.md`).
-- **GATE DE DATOS (curriculum.json): VERDE en el árbol combinado** —
-  `load_curriculum()` carga **21 conceptos / 20 quests**; `c.sudo` con prereq
-  ps/env presente y su quest (story.ch3.e4/e5) detectada por el generator;
-  familia conteo c.head/c.tail/c.sort/c.uniq a cap. 6. `textos.json` carga y
-  el resolvedor resuelve (2 bloques postmortem + ch1). No revienta generator
-  mañana.
-- **CRUCE CON BUGS DE LA MAÑANA**: Oscar/Havel dejaron CICLO verde (421/0, sin
-  bugs de camino). 🧭12 (claves postmortem sin texto) la cierra HOY el PR #18
-  (T1). 🧭13 (golden relativa del cap. 2 pide `cd` previo) sigue abierta,
-  **sin causa en ningún PR de hoy** — es fricción de orientación del cap. 2,
-  vive en `abierto.md` como P3 y espera render/tutorial. Nada del día cuelga de
-  un `[BUG]` de la mañana.
-- **Nota a Seath (menor):** recordé que tu `test_loader.py` rompía la suma
-  con Smough (16 vs 20 quests); mi resolución en el ensayo fue 21/20. Cuando
-  Ornstein meta el fix de #16, revisa que tus tests de conteo conviven con la
-  familia nueva sin cifras duras que se queden cortas.
+**⭐ Notas de gusto (técnico) — qué me ha gustado / qué no, para Gwyndolin:**
+- **Lo que más me ha gustado: el día que la Lista dejó de ser papel.** El contrato ch6 por literales (sin imports entre módulos) es el acoplamiento más sano que hemos tenido: dos PRs distintos (Ornstein pone la piel, Smough pone la quest) hablan el mismo idioma porque `CENSO-LISTA.md` los dicta. En la combinada, `generate(42,6)` escupe registro/purgas/PR-0091 exactos y `load_curriculum()` los reclama — la primera vez que el cap. 6 es JUGABLE entero (listar→abrir→contar), no solo testeable por piezas. Y el cebo pipe-0 no es chiste: `grep 000 censo-borrador.csv | wc -l` = 0 con exit 0 es la primera mentira pedagógica que el juego puede enseñar sin popup.
+- **El fix de #16 como ejemplo de proceso.** Ornstein realineó con origin/main (15 commits), aplicó la receta literal y re-pusheó con comentario delta. 478 aislado verificado. No inventó nada, no tocó lo que no le tocaba. Esa es la reparación que hace que el merge ordenado de hoy no rompa.
+- **Kill v0: física mínima con evento.** `kill -9 522` mata (desaparece de ps aux), `kill -HUP 521` deja `--reloaded` + `HUP_521=1` en env — dos efectos observables distintos, golden GNU exacto (`kill: (522) - No such process`), ruido 2 y `sandbox.signal` al bus para karma futuro. Sin bifurcación moral aún, como mandaba el plan — deja la puerta abierta a la roja/azul de Havel sin acoplar karma hoy. Gate 127 intacto en cap 0/2 (kill no existe ahí).
+- **La voz del Auditor por fin audible sin render.** `postmortem.py` resuelve `auditor_text` vía `data.textos.resolve` con fallback honesto (nunca crash). `build_postmortem(chapter=2, …)` ya devuelve «Expediente 000: se mantiene dentro del presupuesto. Pico… Continuidad del ensayo: estable». Es la dopamina barata que Gwyn pedía y que el REPL puede imprimir hoy.
+- **Render v0: evidencia, no mock.** El PNG 320×180 es salida REAL del sandbox (generate 42 + `ls`), no texto hardcodeado. Prompt `cero@oficina-vecinal-muelle-norte:/$` con cwd real — avanza 🧭13 gratis y la demo es determinista (sha c84450443e83). Capa delgada de verdad (solo `pyxel.pset` en scene_room), 12 tests (8 terminal puro + 3 smoke en subproceso para no hard-exitear pytest). Core intacto.
+- **Qué no me ha gustado / deuda fina:** el stack de PRs #16→#19 es honesto pero confuso para el merge (dos PRs comparten commits). Futuro: Ornstein podría haber cerrado #16 con force-push y reutilizado la misma rama para O3/O4, en vez de apilar 0902 sobre 0901 manteniendo ambas abiertas. No es bug, pero Gwyn debe recordar cerrar #16 como mergeada al mergear #19 o archivarla sin duplicar historia.
+- **Qué priorizar mañana (gusto, no veredicto):** con la Lista jugable y kill vivo, el siguiente verbo natural es **defensa del Hub (cap. 5)** o la **acusación verificable del Auditor** (el auth.log como prueba contra Vela, idea en recámara de Gwyn). El deploy [P1] ya tiene qué enseñar (render v0) — si Gwyn quiere, es desbloqueo real.
 
-**⭐ Notas de gusto (técnico):**
-- **El circuito `sudo` O1↔S1 es el smoke más redondo del día.** En el trabajo
-  combinado generé la sala-credencial del cap. 3 con el generator real (sin
-  currículo aumentado en memoria — esa fase gloriosa de #16 quedó obsoleta el
-  mismo día) y la inyecté en el sandbox: `sudo cat` ejecuta, factura base+premium
-  = 4 de ruido y deja la firma `tick 0 operator : sudo cat …` en `auth.log`. El
-  contrato «el poder deja factura» de Gwyn ES CIERTO EN CÓDIGO, no solo en
-  DESIGN. Los literales de credencial (`/srv/subestacion-alto-norte/…/orden-ceniza.txt`)
-  y auth.log (`/var/log/auth.log`) coinciden EXACTOS entre generator y sandbox.
-- **S2 familia conteo**: `head`/`tail`/`sort`/`uniq` GNU-honestos con la
-  familia «lectura frugal» — la barrera técnica del cap. 6 llega con la
-  semántica correcta y perfil de ruido propio. `tee`/`less` bien fuera (cola P3).
-- **T1 textos**: la voz formulario del Auditor (`postmortem.auditor.cruce|pico`)
-  aterriza en `data/` cerrando el eco 🧭12 con el tono §2.4 («Expediente 000»,
-  remate «continuidad del ensayo: estable») — dato sobre emoción. La cobertura
-  (toda clave del post-mortem + todo title/beat de ch1/ch5) es exactamente el
-  test que evita textos huérfanos.
-- **T2 cap. 5**: prereqs SOLO con conceptos vivos de main, sin inventar
-  `c.sudo` (estaba en la rama de Smough). Esa disciplina de «no crear el
-  concepto fantasma» es la que hace que el gate de datos pase sin fricción.
-- **El límite honesto de Ornstein que me gustó**: O1 declara su alcance
-  («SOLO la sala-credencial; la generación completa del cap. 3 es tarea
-  aparte»). Esa honestidad de alcance evitó un PR gigante e hizo el ensayo
-  barato. Pero OJO, es lo que deja el residuo de los 2 tests stale: el paso
-  entre «currículo aumentado en memoria» y «currículo real con c.sudo» no se
-  re-sincronizó en los tests. Lección de proceso, no de código.
-
-**🚨 Línea de aviso:** mergea **#17 → #18** hoy sin miedo (ensayo 455 → 466
-passed con ambos; gate de datos 21/20 verificado). **NO mergees #16** hasta que
-Ornstein meta el fix de los 2 tests stale (arreglo exacto en `activo.md`);
-con el fix la combinada de las 3 da **478 passed**. Recuerda archivar los
-`[HECHO]` de Manus de esta madrugada (M1/M2). Ejecutores mañana: **Ornstein
-primero** arregla #16 (2 tests), luego lo demás.
+**🚨 Línea de aviso (para Gwyn, en una frase):** mergea **#16 → #19 → #20 → #21** hoy sin miedo — ensayo **515 passed / 21/21 / voz resuelta / cebo pipe-0 verificado** — NO hay PR que no mergear; verifica post-merge que `pytest src/ -q` da **515 passed** (no 514); archiva M1/M2 de Manus + las 7 líneas 02/09.
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
 

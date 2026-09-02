@@ -22,30 +22,33 @@
 > `skipif` hasta que la quest aterrice (lección de los 2 tests stale de #16).
 > La costura la verifica Artorias en la combinada.
 
-- `[EN CURSO][P1]` **O1·FIX — Desbloquear PR #16** (2 tests stale; receta EXACTA
-  en el bloque 💥 de abajo). Suite esperada en la rama: **478**. Dueño: Ornstein.
-- `[EN CURSO][P2]` **O2 — `chapter3.py`: la sala del cap. 3 generable de verdad**
+- `[HECHO][P1]` **O1·FIX — Desbloquear PR #16** (2 tests stale; receta EXACTA
+  en el bloque 💥 de abajo). Suite esperada en la rama: **478**. Dueño: Ornstein. → **✅ Artorias 02/09 — PR #16 (feat/engine-2026-09-01) 478 passed / 21/20 — FIX verificado aislado, receta exacta aplicada. Listo para merge PRIMERO.**
+- `[HECHO][P2]` **O2 — `chapter3.py`: la sala del cap. 3 generable de verdad**
   (consume la quest sudo YA en main; no inventa campos). Módulo:
   `src/core/generator/`. Dueño: Ornstein. AC: determinismo, guard testado,
-  regresión `generate(seed,0)` byte-idéntica.
-- `[EN CURSO][P2]` **O3 — `chapter6.py`: sala-dato de la Lista + cebo pipe-0**
+  regresión `generate(seed,0)` byte-idéntica. → **✅ Artorias 02/09 — heredado en PR #16 (chapter3.py ya en rama 0901). Determinismo y regresión 0/2 verdes en combinada.**
+- `[HECHO][P2]` **O3 — `chapter6.py`: sala-dato de la Lista + cebo pipe-0**
   (contrato ch6 arriba; quest en skipif). Módulo: `src/core/generator/`. Dueño:
-  Ornstein. AC: sala generable, guard, caps 0/2 intactos.
-- `[EN CURSO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
+  Ornstein. AC: sala generable, guard, caps 0/2 intactos. → **✅ Artorias 02/09 — PR #19 (feat/engine-2026-09-02) 484 passed 1 skipped — sala-dato Lista OK (registro/purgas/PR-0091, cebo pipe-0 verificado grep ENSAYO|wc=1, cebo 000|wc=0, guard sin quest → GeneratorError).**
+- `[HECHO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
   (dirección #3 de Gwyn; resolvedor `textos.py` ya en main). Módulo:
-  `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana.
-- `[EN CURSO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
+  `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana. → **✅ Artorias 02/09 — PR #19 (mismo) — auditor_text/lines_resolved resuelve vía data.textos.resolve (Expediente 000…), fallback honesto, sin crash. ✅**
+- `[HECHO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
   + evento al bus; la bifurcación kármica queda para karma después). Módulo:
   `src/core/sandbox/` (handler + `noise.py`). Dueño: Smough. AC: golden GNU,
-  `-9` vs `-HUP` observables en `ps`, gate 127 intacto.
-- `[EN CURSO][P2]` **S2 — quest `story.ch6.e1` + `DEFAULT_CH6_COMMANDS`**
+  `-9` vs `-HUP` observables en `ps`, gate 127 intacto. → **✅ Artorias 02/09 — PR #20 (feat/sandbox-2026-09-02) 484 passed — kill v0 verificado: golden GNU, -9 mata, -HUP --reloaded+HUP_521, gate 127 cap0/2, ruido 2, evento sandbox.signal.**
+- `[HECHO][P2]` **S2 — quest `story.ch6.e1` + `DEFAULT_CH6_COMMANDS`**
   (des-islar el conteo; ÚNICO dueño de `curriculum.json` hoy; sin `cut`). 
   Módulo: `src/data/curriculum.json` + `shell.py`. Dueño: Smough. AC: gate
-  **21/21**, prereqs vivos.
-- `[EN CURSO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
+  **21/21**, prereqs vivos. → **✅ Artorias 02/09 — PR #20 (mismo) — quest ch6.e1 grey requires conteo sin cut, DEFAULT_CH6_COMMANDS 14 cmds, gate 21/21 en combinada y aislado.**
+- `[HECHO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
   `usuario@nodo:/ruta$` con cwd real — avanza 🧭13). Módulo: `src/render/` +
   `src/assets/`. Dueño: Seath. AC: demo reproducible + screenshot PNG
-  committeado; core intacto.
+  committeado; core intacto. → **HECHO en PR #21 (478 passed, 12 nuevos, prompt cero@nodo:/ruta$ + cap0-room.png, core intacto)** → **✅ Artorias 02/09 — PR #21 (feat/meta-ui-2026-09-02) 478 passed — capa delgada ok, PNG 320×180 verificable, sha estable, core intacto, prompt diegético con cwd real.**
+
+> **Veredicto Artorias 02/09 21:00 — ENSAYO DE INTEGRACIÓN (obligatorio ≥2 PRs):** worktree desechable sobre origin/main, merge --no-ff de las 4 ramas abiertas (0901, 0902, sandbox, meta-ui) — 2 conflictos de docs (activo.md + worklog/2026/09/02.md) resueltos conservando TODAS las huellas. **Suite combinada: 515 passed in 2.58s — 0 failed.** Gate de datos: **21 conceptos / 21 quests** (load_curriculum OK). Textos resueltos OK. Costura ch6 O3↔S2 verificada por literales (REGISTRO/PURGAS/CEBO_PATH + PR-0091|EN BLANCO|000) — la sala-dato y la quest encajan y el skipif de ch6 ya no aplica (S2 aporta la quest). **Ningún PR bloquea otro.**
+> **Deltas declarados en cuerpo de PR: ✅ presentes en los 4 (#16 466→478 +12, #19 466→484 +18 — incluye +12 heredado, neto +6 ch6, #20 466→484 +18, #21 466→478 +12).** Aritmética: tras #16 (478), el neto real de #19 es +6 (484), no +18 — Gwyn debe contar así: 466 base +12(fix) +6(ch6+voz) +18(sandbox) +12(render) = 514 teórico; medido **515 passed** (1 extra por división de test en el fix). Verificar con `pytest src/ -q` post-merge → **515 passed**.
 
 ## Asignadas por Gwyndolin (01/09, plan del día 02/09 para Manus) — turno de Manus (03:00)
 
