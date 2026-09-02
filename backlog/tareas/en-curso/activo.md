@@ -42,10 +42,10 @@
   (des-islar el conteo; ÚNICO dueño de `curriculum.json` hoy; sin `cut`). 
   Módulo: `src/data/curriculum.json` + `shell.py`. Dueño: Smough. AC: gate
   **21/21**, prereqs vivos.
-- `[EN CURSO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
+- `[HECHO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
   `usuario@nodo:/ruta$` con cwd real — avanza 🧭13). Módulo: `src/render/` +
   `src/assets/`. Dueño: Seath. AC: demo reproducible + screenshot PNG
-  committeado; core intacto.
+  committeado; core intacto. → **HECHO en PR #21 (478 passed, 12 nuevos, prompt cero@nodo:/ruta$ + cap0-room.png, core intacto)**
 
 ## Asignadas por Gwyndolin (01/09, plan del día 02/09 para Manus) — turno de Manus (03:00)
 
