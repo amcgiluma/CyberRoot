@@ -19,6 +19,7 @@ from typing import Any
 
 from core.sandbox.commands.base import CommandResult, build_registry
 from core.sandbox.commands.conteo import SPECS as CONTEO_SPECS
+from core.sandbox.commands.senal import SPECS as SENAL_SPECS
 from core.sandbox.commands.escalada import (
     AUTH_LOG_PATH,
     SUDO_NAME,
@@ -48,14 +49,26 @@ DEFAULT_CH2_COMMANDS: tuple[str, ...] = ("cat", "cd", "cp", "grep", "ls", "wc")
 #: existe cuando el currículo lo presenta — regresión explícita en tests).
 #: S1 (01/09): `sudo` entra en el cap. 3 — es donde se GANA la credencial
 #: narrativa (DESIGN §6.1). NO existe en cap. 0/2 (exit 127, como `ps`/`env`).
+#: S1 (02/09): `kill` entra en el cap. 3 — operar sobre el par ceniza/censo
+#: (ps 521/522). Sin `kill` no hay bisturí para la persiana del Faro.
 DEFAULT_CH3_COMMANDS: tuple[str, ...] = (
-    "cat", "cd", "cp", "env", "grep", "ls", "ps", "sudo", "wc",
+    "cat", "cd", "cp", "env", "grep", "kill", "ls", "ps", "sudo", "wc",
 )
 
-#: Todas las specs implementadas (registro completo del módulo v0 → S1; conteo
-#: añadido en S2 01/09). `sudo` NO es una spec: es un wrapper del shell.
+#: Comandos del set del cap. 6 (S2, 02/09): desbloquea la familia conteo
+#: (head/tail/sort/uniq) sobre la base del cap. 3. El cap. 6 «Faro» lee la
+#: Lista de Lumen con grep/wc/pipe + conteo; necesita TODO lo anterior
+#: (ps/env/sudo/kill para la persiana) más la lectura frugal. Cap. 0/2/3
+#: quedan INTACTOS (regresión 127 en tests).
+DEFAULT_CH6_COMMANDS: tuple[str, ...] = (
+    "cat", "cd", "cp", "env", "grep", "head", "kill", "ls", "ps", "sort",
+    "sudo", "tail", "uniq", "wc",
+)
+
+#: Todas las specs implementadas (registro completo del módulo v0 → S2; conteo
+#: añadido en S2 01/09, kill en S1 02/09). `sudo` NO es una spec: es un wrapper del shell.
 SPECS_ALL = (
-    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + CONTEO_SPECS
+    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + CONTEO_SPECS + SENAL_SPECS
 )
 
 #: Caracteres de sintaxis NO soportada todavía (fuera de comillas). `*?<` =
@@ -317,7 +330,7 @@ class Shell:
         sí consumen un tick: el tiempo simulado corre igual.
         """
         self.history.append({"line": line, "result": result.to_dict()})
-        self.total_noise += sum(int(ev.data["amount"]) for ev in result.noise)
+        self.total_noise += sum(int(ev.data.get("amount", 0)) for ev in result.noise)
         self.tick += 1
         return result
 

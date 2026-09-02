@@ -4,7 +4,7 @@
 > encargos como nodos-dato) y responde: ¿qué conceptos tiene desbloqueados
 > este jugador? ¿qué pool de práctica corresponde a este capítulo? No conoce
 > runs ni salas: conocimiento puro (ARCHITECTURE §2.3, DESIGN §6.2/§6.4).
-> **Estado (01/09, Smough — S1+S2):** cap. 0–3 completos + familia conteo cap. 6,
+> **Estado (02/09, Smough — S1+S2):** cap. 0–3 + familia conteo cap. 6 + quest ch6.e1,
 > validador del DAG, esquema y contrato de consumo documentados.
 
 ## Piezas (v0)
@@ -53,7 +53,7 @@ Reglas estructurales que el validador impone (y testea en negativo):
   capítulos ≤ el de la quest.
 - Textos SIEMPRE como claves (`*_key`): la prosa vive en `data/`/historia.
 
-## Contenido v0 (21 conceptos, 16 quests)
+## Contenido v0 (21 conceptos, 21 quests)
 
 - **Cap. 0 (4):** `c.ls` → `c.cd` → `c.cat` → `c.cp` — EXACTAMENTE el
   `DEFAULT_CAP0_COMMANDS` del sandbox (contrato con generator: la piel del
@@ -70,11 +70,9 @@ Reglas estructurales que el validador impone (y testea en negativo):
   S1 01/09, prereqs `ps`+`env`): el `sudo` GANADO con credencial narrativa que
   O1 materializa como fichero del mundo en la sala del cap. 3. Coherentes con
   `DEFAULT_CH3_COMMANDS` del sandbox (que desde 01/09 incluye `sudo`).
-- **Cap. 6 (4, S2 01/09):** familia conteo `c.head` → `c.tail`, `c.sort` →
+- **Cap. 6 (4, S2 02/09):** familia conteo `c.head` → `c.tail`, `c.sort` →
   `c.uniq` (family `texto`, barrera técnica hacia el Faro — las salas-dato de
-  la Lista leen con `head`/`sort`/`uniq`). No referenciado por ninguna quest
-  AÚN (el cap. 6 no tiene quests en datos): el concepto queda enseñado y
-  disponible para cuando Manus las traiga; prereqs solo conceptos vivos.
+  la Lista leen con `head`/`sort`/`uniq`). **+ quest `story.ch6.e1` (S2 02/09, grey, cap. 6 — des-isla el conteo: el alfabeto se juega; requiere `c.grep`/`c.wc`/`c.pipe`/`c.head`/`c.sort`/`c.tail`/`c.uniq`, sin `cut` aún — pista de CENSO-LISTA queda para cuando exista el comando; acople O3↔S2 por literales).**
 - **Quests:** `story.ch0.ventana` (grey, los 4 del cap. 0) + `story.ch1.e1`
   (azul), `e2` (azul), `e3` (gris), `e4` (rojo), `e5` (cierre, gris) +
   `story.ch2.e1`–`e5` (S2, 30/08: E1/E2 azules, E3 gris, E4 rojo, E5 de
@@ -82,7 +80,9 @@ Reglas estructurales que el validador impone (y testea en negativo):
   `story.ch3.e1`–`e5` (S2, 31/08: E1 azul, E2 gris, E3 rojo, E4 rojo, E5 de
   cierre gris — tints según `CAPITULOS/03-bombas.md`; **e4 y e5 añaden
   `c.sudo` desde 01/09**, el primer uso serio de la escalada con la
-  credencial ganada).
+  credencial ganada) +
+  `story.ch6.e1` (S2, 02/09, grey, cap. 6 — el número que sobra: contar la purga `PR-0091` `ENSAYO` sobre `registro.csv`/`purgas.csv` con grep/wc/pipe + head/sort/uniq, cebo pipe-0 `censo-borrador.csv`; contrato ch6 con Ornstein — sin `cut`) +
+  `story.ch5.e1`–`e4` (T2 01/09, cap. 5 — defensa, sin conceptos nuevos).
   La lista comando a comando de los ~60 boons se cierra contra el sandbox
   real en las fases siguientes (decisión abierta §5.1 de ARCHITECTURE).
 
