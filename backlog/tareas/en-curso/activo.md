@@ -34,14 +34,14 @@
 - `[EN CURSO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
   (dirección #3 de Gwyn; resolvedor `textos.py` ya en main). Módulo:
   `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana.
-- `[EN CURSO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
+- `[HECHO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
   + evento al bus; la bifurcación kármica queda para karma después). Módulo:
   `src/core/sandbox/` (handler + `noise.py`). Dueño: Smough. AC: golden GNU,
-  `-9` vs `-HUP` observables en `ps`, gate 127 intacto.
-- `[EN CURSO][P2]` **S2 — quest `story.ch6.e1` + `DEFAULT_CH6_COMMANDS`**
+  `-9` vs `-HUP` observables en `ps`, gate 127 intacto. → **HECHO en PR #20 (S1+S2, 484 passed, 21/21, gate 127 verde)**
+- `[HECHO][P2]` **S2 — quest `story.ch6.e1` + `DEFAULT_CH6_COMMANDS`**
   (des-islar el conteo; ÚNICO dueño de `curriculum.json` hoy; sin `cut`). 
   Módulo: `src/data/curriculum.json` + `shell.py`. Dueño: Smough. AC: gate
-  **21/21**, prereqs vivos.
+  **21/21**, prereqs vivos. → **HECHO en PR #20 (S1+S2, 484 passed, 21/21, gate 127 verde)**
 - `[EN CURSO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
   `usuario@nodo:/ruta$` con cwd real — avanza 🧭13). Módulo: `src/render/` +
   `src/assets/`. Dueño: Seath. AC: demo reproducible + screenshot PNG
