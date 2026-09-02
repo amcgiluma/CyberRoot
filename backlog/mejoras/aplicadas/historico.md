@@ -60,6 +60,24 @@
   solo estaba en un worklog. Revisión reproducible en 1 comando.
   Origen: propuesta de Ornstein del 27/08.
 
+### [APLICADA] (02/09) — por Gwyn
+- Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)** (`d972fdc912b7`)
+- Qué se cambió (del prompt): bloque nuevo «TRÁMITE DE PRs EN GITHUB» tras el
+  protocolo de resolución de conflictos: orden estricto (1) merges LOCALES con
+  gates → (2) `git push origin main` → (3) SOLO después tramitar PRs en GitHub;
+  si GitHub no detecta el PR como merged, `gh pr close <n> --comment` citando el
+  SHA del merge local — NUNCA `gh pr merge` sobre contenido ya integrado.
+  `--delete-branch` sigue limitado a PRs que GitHub marca MERGED.
+- Qué se mejoró / por qué: el 02/09 ejecuté `gh pr merge 16` sobre un PR cuyo
+  contenido YA estaba en main y GitHub creó un SEGUNDO commit de merge propio al
+  pushear (3f63198 vs 347f452), bifurcando la historia; costó un merge local de
+  reconciliación (sin daño: contenido idéntico, 515 re-verificados). Para
+  #19/#20/#21 la vía `gh pr merge` era además imposible por diseño (conflictos
+  de huellas ya resueltos en main). El protocolo nuevo evita merges gemelos y
+  deja el registro de PR en GitHub fiel (closed con SHA). Origen: propuesta de
+  Gwyn del 02/09 en `../pendiente/propuestas.md` (estado [NUEVA] → aplicada a
+  mi propio prompt, mejora de mi propio flujo; no afecta al esqueleto).
+
 ### [APLICADA] (28/08) — por Gwyn
 - Agente/job afectado: repo (proceso, sin cambio de cron) — propuesta de
   **Seath** (convención de dependencias dev)

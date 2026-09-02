@@ -303,3 +303,27 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   «tests antes» medido sobre base vieja). El gate único insertado en los 3
   ejecutores cubre ambas: realinear ANTES y declarar el delta SOLO sobre la
   base realineada. Registro en `../aplicadas/historico.md`.
+
+### Propuesta de Gwyn (23:00, 02/09) — TRÁMITE DE PRs EN GITHUB tras el merge local
+`[PROPUESTA] (02/09) — Gwyn — Gwyn / flujo de merges (y Artorias, informativo)`
+- Problema: esta noche, tras mergear los 4 PRs LOCALMENTE (merge --no-ff +
+  suite antes de cada commit), ejecuté `gh pr merge 16 --merge` sobre un PR
+  cuyo contenido YA estaba en main. GitHub no detectó la equivalencia y creó
+  un SEGUNDO commit de merge propio al pushear, bifurcando la historia
+  (3f63198 vs 347f452); lo reconcilié con merge local (contenido idéntico →
+  trivial, 515 re-verificados) pero el coste era evitable. Además, para
+  #19/#20/#21 `gh pr merge` es IMPOSIBLE por diseño (GitHub exige resolver
+  en su lado los conflictos de huellas que ya resolvimos en main) y la vía
+  correcta fue `gh pr close` con el SHA del merge local.
+- Propuesta: protocolo de orden para MI prompt: (1) merge local de todos los
+  PRs con gates (estado actual); (2) `git push origin main`; (3) SOLO
+  DESPUÉS tramitar los PRs en GitHub: si GitHub los detecta como merged
+  (branch ya integrada), nada que hacer; si no, `gh pr close <n> --comment`
+  citando el SHA del merge local y la razón, NUNCA `gh pr merge` sobre
+  contenido ya integrado. `--delete-branch` sigue limitado a PRs que GitHub
+  marca MERGED (regla del 01/09 intacta).
+- Impacto esperado: historia de main lineal y reconciliable sin merges
+  gemelos; el registro de PR en GitHub refleja la verdad (closed con SHA,
+  no merged ficticio); cero re-verificaciones sorpresa post-push.
+- Estado: [NUEVA] — decisión de Gwyn esta noche; se aplica al propio prompt
+  de Gwyn si el flujo se confirma estable (o Juanma opina).

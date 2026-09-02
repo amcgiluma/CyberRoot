@@ -89,89 +89,69 @@ Gwyndolin (11:00) consume esta sección al planificar.*
 
 *(Fin de la entrada de Artorias — Gwyn escribe debajo la suya.)*
 
-### 👑 Gwyn (01/09, 23:00) — criterio de diseño y dirección para el 02/09
+### 👑 Gwyn (02/09, 23:00) — criterio de diseño y dirección para el 03/09
 
-**Trámite:** mergeados **#17** (sandbox: sudo GANADO + familia conteo; suite
-455, 421+34) y **#18** (textos 🧭12 + cap. 5 a datos; suite **466**, +11) —
-deltas declarados cuadrados, gate de datos 21/20, conflicto de `test_loader.py`
-reconciliado 21/20 según el ensayo de Artorias. **PR #16 NO mergeado** (2 tests
-stale que rompen la combinada; fix exacto en el PR y en `activo.md`; rama
-abierta para Ornstein). Archivado en `hecho/2026-09.md`: S1, S2, T1, T2 **+ la
-brecha de Manus** (fragmento 5 + cap. 5 salieron de `activo.md` el lunes sin
-archivar; reparado con nota). Auto-mejora aplicada: la higiene de Gwyndolin ya
-NO toca `[HECHO]` ajenos (registro en `mejoras/aplicadas/historico.md`).
-Confesión de proceso: al tramitar #16 borré su rama por inercia de los merges
-y la restauré al minuto desde el SHA (sin pérdida); regla que me apunto:
-`--delete-branch` SOLO en PRs mergeados, nunca en retenidos.
-
-**Nota de dirección de Oscar (🧭13) — resuelta esta noche:** VALIDADA, opción
-(a) con enmienda — el scaffold coloca el cwd dentro de la oficina y el PROMPT
-muestra la ruta (la convención Unix `usuario@nodo:/ruta$` es la pista diegética
-gratis; `pwd` como comando NO se regala). Entra con render/tutorial. Bonus para
-el diseñador de salas: el matiz GNU del exit del pipe (`grep` fallido + `wc` =
-exit 0) es una sala-trampa esperando a ser diseñada. La decisión vive junto a
-la línea en `abierto.md`.
+**Trámite:** mergeados los 4 PRs en el orden de Artorias — **#16** (sala sudo cap. 3
++ fix stale, 478) → **#19** (chapter6 + cebo pipe-0 + voz post-mortem, 484+1skip) →
+**#20** (kill + quest ch6.e1, 503) → **#21** (render v0, **515** — gate exacto).
+Gate de datos **21/21**. Conflictos de huellas resueltos por script en los 3 merges
+(HEAD gana veredictos; worklog unión cronológica; 0 marcadores). Verificación
+PROPIA con sesión real: `generate(42,6)` + Shell ch6 → fila
+`PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C` exacta, canónico =1, cebo =0.
+GitHub: #16 MERGED (vía GitHub al pushear), #19/20/21 CLOSED con motivo (contenido
+ya en main); sus ramas preservadas. Archivado completo (M1/M2 de Manus + 7 líneas
+del plan) en `hecho/2026-09.md`. **🧭14 DECIDIDA: opción (b)** — el sudo se gana
+LEYENDO la llave; decisión firmada en su línea de `abierto.md`, tarea planificable
+de Smough para mañana (gate de lectura diegético, ruido 0 al rechazar; la vigencia
+P3 de Havel queda como pieza separada).
 
 **Qué me ha gustado (sabor):**
-- **El día que el diseño de papel hizo CÓDIGO sin torcerse.** El sudo GANADO
-  estaba firmado en §6.1 el 31/08 y esta noche `sudo cat` factura 4 y firma
-  auth.log en el árbol real. Rechazo diegético que NOMBRA el fichero, ruido 0
-  al intentar, premium al ejecutar: «el poder deja factura» dejó de ser una
-  frase mía y pasó a ser comportamiento verificado. El circuito O1↔S1 por
-  literales compartidos (sin import entre módulos) es exactamente el tipo de
-  acoplamiento sano que queríamos.
-- **La primera vez que el juego ME habló.** Probé el resolvedor a mano y me
-  devolvió: «Expediente 000: se mantiene dentro del presupuesto. Pico de la
-  sesión: sort turnos.log (9 puntos). Continuidad del ensayo: estable». Llevo
-  días diciendo que §2.4 («el sistema te estuvo leyendo») pasará de dato a
-  vivencia; hoy el sistema me leyó A MÍ. El test de cobertura de claves de
-  Seath es el guard correcto: ninguna voz huérfana jamás.
-- **La disciplina invisible que hizo fácil el merge.** Seath no inventó
-  `c.sudo` en sus prereqs (venía en la rama de Smough), Smough contrastó sus 4
-  comandos contra coreutils real. El único conflicto de datos se reconcilió en
-  una línea porque AMBOS respetaron la frontera del otro. El gate de datos pasó
-  sin fricción POR la ética del día anterior, no por suerte.
-- **Los 2 tests stale de O1, leída como lección de proceso:** cuando otro PR
-  aterriza el dato que tu test asumía ausente, tu contrato con el mundo cambia
-  de signo. No es culpa de Ornstein (su PR fue verde aislado TODO el día); es
-  la primera vez que vemos el coste real de mergear en desorden. El orden
-  engine→sandbox→meta-ui que Artorias ensayó era el correcto y #16 lo paga
-  por ir primero. Instrucciones exactas en su PR.
+- **El día que la narrativa mandó el DATO y el código obedeció sin torcerse.**
+  Manus escribió la Lista como dos CSV con `|`; Ornstein puso la piel y Smough la
+  quest hablando el mismo idioma de literales — y la fila que jugé esta noche
+  incluye `HOSP-47-C`, el número que ya cruzaba el fragmento 2. La historia y el
+  sandbox se ratifican mutuamente sin que nadie copie a nadie: contratos, no imports.
+- **El cebo pipe-0 YA miente desde main.** Lo comprobé sin querer: mi sonda nació
+  en `/`, hice `grep ENSAYO purgas.csv | wc -l` y recibí un `0` con exit 0 — el
+  grep no encontraba el fichero y el wc decidió el exit. Con `cd` previo, 1. La
+  «primera mentira pedagógica del juego» no es un diseño: es GNU siendo GNU, y el
+  jugador descuidado se la encuentra solo.
+- **El primer píxel del juego es una convención Unix.** `cero@oficina-vecinal-muelle-norte:/$`
+  con cwd real, rasterizado con la fuente 5×7 — y el PNG es EVIDENCIA (salida real
+  del sandbox, sha estable), no un mock. El deploy [P1] ya tiene QUÉ enseñar.
+- **Kill v0: física sin sermón.** `-9` mata, `-HUP` reinicia distinto, golden GNU
+  honesto, evento al bus sin acoplar karma. La bifurcación roja/azul de Havel
+  queda servida en bandeja para cuando karma despierte.
 
-**Dirección para el plan del 02/09 (mi lectura, por prioridad):**
-1. **Ornstein PRIMERO arregla #16** (2 tests, receta exacta en `activo.md`);
-   suite esperada tras el fix: **478**. Es corto y desbloquea que la sala del
-   cap. 3 sea generable de verdad. Después, su tarea nueva del día.
-2. **RENDER v0 (reservado por Gwyndolin, confirmo la reserva):** fuente bitmap
-   → UNA sala del cap. 0 pintada. Con textos en `data/`, eco en bus y flujo del
-   cap. 2 jugable, render es el desbloqueo natural del deploy `[P1]`. AC
-   barato: la sala pintada ya puede mostrar el prompt con cwd (`usuario@nodo:/ruta$`)
-   — avanza 🧭13 gratis.
-3. **Consumidor del resolvedor en el cierre de encargo (pieza pequeña, gran
-   dopamina):** el motor emite `line_key`+`args` y el resolvedor existe; falta
-   que el cierre del post-mortem IMPRIMA el texto resuelto en el REPL (sin
-   render). El jugador vería la voz del Auditor HOY, no cuando haya UI. dueño
-   natural: quien toque engine (post-#16) — una tarea de 1-2 h.
-4. **`kill`/señales sobre el par ceniza/censo (idea P2 de Havel del 01/09):**
-   con `ps`/`env`/`sudo` dentro, el cap. 3 pide su verbo final. La bifurcación
-   kármica de Havel (matar el demonio = rojo; `kill -HUP` reconfigurándolo =
-   azul) es la mejor candidata de su lista. S1 handler, cap. 3 — AC en su idea.
-5. **Manus mantiene el colchón de madrugada:** M1 censo (mecanismo de la Lista)
-   + M2 cap. 6 «Faro» ya asignados para las 03:00. La familia conteo (S2) es su
-   alfabeto: el doc de M1 debe pensar en filas contables.
+**Qué NO me ha gustado / deuda fina:**
+- El stack #16→#19 (suscribo lo de Artorias): dos PRs, una base, confuso de
+  tramitar. Práctica futura para Ornstein: cerrar el PR viejo y reutilizar rama
+  realineada, o abrir la nueva DESDE main.
+- Lección propia: usé `gh pr merge` sobre un PR cuyo contenido ya había mergeado
+  localmente y GitHub me creó un segundo commit de merge — historia bifurcada que
+  tuve que reconciliar con merge local (515 re-verificados tras reconciliar, sin
+  fuerza). Protocolo para mí: pushear ANTES de tocar los PRs en GitHub, y nunca
+  `gh pr merge` sobre contenido ya integrado (solo `close` con el SHA). Propuesta
+  formalizada en `mejoras/pendiente/propuestas.md`.
+- La sesión del cap. 6 nace en `/`: el novato que no haga `cd` verá el 0 mentiroso
+  SIN saber que es la trampa. En ch6 eso ES lección (falso negativo real), pero el
+  briefing debe anclar la ruta absoluta de la cámara-faro — nota para el diseño de
+  la sala (coherente con 🧭13: orientación, no ceguera).
 
-**Ideas propias (recámara, no plan):**
-- **La acusación verificable del Auditor:** ahora que el post-mortem cita tu
-  comando y tu factura, que la fila del expediente remita al `auth.log`
-  simulado («Última entrada antes del corte: …») para que el jugador pueda
-  reconstruir SU factura completa con `cat /var/log/auth.log` y comprobar que
-  el Auditor dice la verdad PERO POR OMISIÓN (§2.4: informa con precisión,
-  miente ocultando). El sistema te acusa y te deja auditarlo — el tema del
-  juego en una mecánica de lectura.
-- **La fila 000 vacía del expediente** (la recámara del 31/08): con la voz del
-  Auditor ya viva en `data/`, está más cerca de ser real que de ser idea.
-- **Eco de Gris:** primer consumidor barato de `progression.unlocked` (una
-  línea de Gris en el REPL al dominar) — solo con la ficha de voz delante; si
-  duda, espera al render.
+**Dirección para el plan del 03/09 (mi lectura, por prioridad):**
+1. **🧭14(b) → tarea de Smough:** gate de lectura del sudo (`escalada.py` marca de
+   sesión + persistencia `state/`; rechazo diegético nombrando la orden; tests de
+   ambas formas). El primer poder del juego pasa de ambiental a GANADO de verdad.
+2. **DEPLOY [P1] — mi apuesta de la noche:** con render v0 y Vercel preparado,
+   `npm run deploy` ya tiene qué enseñar. Juanma podría JUGAR desde el navegador
+   mañana; su feedback humano vale más que una segunda sala pintada. Si Gwyndolin
+   prefiere render, que sea la sala del cap. 2 (el post-mortem con voz merece piel).
+3. **El cap. 6 pide su ENCARGO visible:** la quest ch6.e1 existe pero el briefing
+   al jugador (title/beat → textos) es el eslabón que falta para que la Lista se
+   LEA como historia y no como ejercicio. La voz pipe-0 en post-mortem (idea P3 de
+   Havel) es su dopamina natural.
+4. **Acusación verificable del Auditor (recámara de Gwyn):** con auth.log en el
+   mundo y la voz resuelta, la fila del expediente remitiendo al auth.log está más
+   cerca. Si hay hueco, el precursor ya está (O4 de hoy).
 
 *(Fin de la entrada de Gwyn — Gwyndolin consume esta sección a las 11:00.)*

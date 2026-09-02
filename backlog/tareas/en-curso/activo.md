@@ -12,71 +12,6 @@
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 
-## Asignadas por Gwyndolin (02/09, plan del día) — franjas de HOY
-
-> Origen: plan del 02/09 (Gwyndolin). O1-fix/O2/O3(/O4 opc) → Ornstein ·
-> S1/S2 → Smough (PR único, comparten `shell.py`) · T1 → Seath (render v0).
-> **Contrato ch6 (costura O3↔S2):** quest `story.ch6.e1` (grey, familia conteo,
-> objetivo revelar la purga `PR-0091`) ↔ sala-dato `registro.csv`/`purgas.csv`
-> (formato CENSO-LISTA.md) + cebo pipe-0; los tests del generator van con
-> `skipif` hasta que la quest aterrice (lección de los 2 tests stale de #16).
-> La costura la verifica Artorias en la combinada.
-
-- `[HECHO][P1]` **O1·FIX — Desbloquear PR #16** (2 tests stale; receta EXACTA
-  en el bloque 💥 de abajo). Suite esperada en la rama: **478**. Dueño: Ornstein. → **✅ Artorias 02/09 — PR #16 (feat/engine-2026-09-01) 478 passed / 21/20 — FIX verificado aislado, receta exacta aplicada. Listo para merge PRIMERO.**
-- `[HECHO][P2]` **O2 — `chapter3.py`: la sala del cap. 3 generable de verdad**
-  (consume la quest sudo YA en main; no inventa campos). Módulo:
-  `src/core/generator/`. Dueño: Ornstein. AC: determinismo, guard testado,
-  regresión `generate(seed,0)` byte-idéntica. → **✅ Artorias 02/09 — heredado en PR #16 (chapter3.py ya en rama 0901). Determinismo y regresión 0/2 verdes en combinada.**
-- `[HECHO][P2]` **O3 — `chapter6.py`: sala-dato de la Lista + cebo pipe-0**
-  (contrato ch6 arriba; quest en skipif). Módulo: `src/core/generator/`. Dueño:
-  Ornstein. AC: sala generable, guard, caps 0/2 intactos. → **✅ Artorias 02/09 — PR #19 (feat/engine-2026-09-02) 484 passed 1 skipped — sala-dato Lista OK (registro/purgas/PR-0091, cebo pipe-0 verificado grep ENSAYO|wc=1, cebo 000|wc=0, guard sin quest → GeneratorError).**
-- `[HECHO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
-  (dirección #3 de Gwyn; resolvedor `textos.py` ya en main). Módulo:
-  `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana. → **✅ Artorias 02/09 — PR #19 (mismo) — auditor_text/lines_resolved resuelve vía data.textos.resolve (Expediente 000…), fallback honesto, sin crash. ✅**
-- `[HECHO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
-  + evento al bus; la bifurcación kármica queda para karma después). Módulo:
-  `src/core/sandbox/` (handler + `noise.py`). Dueño: Smough. AC: golden GNU,
-  `-9` vs `-HUP` observables en `ps`, gate 127 intacto. → **✅ Artorias 02/09 — PR #20 (feat/sandbox-2026-09-02) 484 passed — kill v0 verificado: golden GNU, -9 mata, -HUP --reloaded+HUP_521, gate 127 cap0/2, ruido 2, evento sandbox.signal.**
-- `[HECHO][P2]` **S2 — quest `story.ch6.e1` + `DEFAULT_CH6_COMMANDS`**
-  (des-islar el conteo; ÚNICO dueño de `curriculum.json` hoy; sin `cut`). 
-  Módulo: `src/data/curriculum.json` + `shell.py`. Dueño: Smough. AC: gate
-  **21/21**, prereqs vivos. → **✅ Artorias 02/09 — PR #20 (mismo) — quest ch6.e1 grey requires conteo sin cut, DEFAULT_CH6_COMMANDS 14 cmds, gate 21/21 en combinada y aislado.**
-- `[HECHO][P2]` **T1 — RENDER v0: una sala del cap. 0 pintada** (prompt
-  `usuario@nodo:/ruta$` con cwd real — avanza 🧭13). Módulo: `src/render/` +
-  `src/assets/`. Dueño: Seath. AC: demo reproducible + screenshot PNG
-  committeado; core intacto. → **HECHO en PR #21 (478 passed, 12 nuevos, prompt cero@nodo:/ruta$ + cap0-room.png, core intacto)** → **✅ Artorias 02/09 — PR #21 (feat/meta-ui-2026-09-02) 478 passed — capa delgada ok, PNG 320×180 verificable, sha estable, core intacto, prompt diegético con cwd real.**
-
-> **Veredicto Artorias 02/09 21:00 — ENSAYO DE INTEGRACIÓN (obligatorio ≥2 PRs):** worktree desechable sobre origin/main, merge --no-ff de las 4 ramas abiertas (0901, 0902, sandbox, meta-ui) — 2 conflictos de docs (activo.md + worklog/2026/09/02.md) resueltos conservando TODAS las huellas. **Suite combinada: 515 passed in 2.58s — 0 failed.** Gate de datos: **21 conceptos / 21 quests** (load_curriculum OK). Textos resueltos OK. Costura ch6 O3↔S2 verificada por literales (REGISTRO/PURGAS/CEBO_PATH + PR-0091|EN BLANCO|000) — la sala-dato y la quest encajan y el skipif de ch6 ya no aplica (S2 aporta la quest). **Ningún PR bloquea otro.**
-> **Deltas declarados en cuerpo de PR: ✅ presentes en los 4 (#16 466→478 +12, #19 466→484 +18 — incluye +12 heredado, neto +6 ch6, #20 466→484 +18, #21 466→478 +12).** Aritmética: tras #16 (478), el neto real de #19 es +6 (484), no +18 — Gwyn debe contar así: 466 base +12(fix) +6(ch6+voz) +18(sandbox) +12(render) = 514 teórico; medido **515 passed** (1 extra por división de test en el fix). Verificar con `pytest src/ -q` post-merge → **515 passed**.
-
-## Asignadas por Gwyndolin (01/09, plan del día 02/09 para Manus) — turno de Manus (03:00)
-
-> Origen de cada línea: plan del 01/09 (Gwyndolin), sección «Manus (03:00 del
-> 02/09)» — M1 (worldbuilding del censo, puerta del Acto 3) y M2 (cap. 6 +
-> fragmento 6). Este fichero lo releva Gwyndolin a las 11:00 con el plan del
-> día; Manus deja aquí su huella `[HECHO]` (regla HARD §AGENTS-PLAN 2.5).
-
-- `[HECHO]` **M1 — Worldbuilding del censo: qué se puntúa exactamente**
-  (Manus, 02/09 ✅): mecanismo de la Lista (§2.4/§9) materializado en
-  `backlog/historia/CENSO-LISTA.md` — campos de `registro.csv`/`purgas.csv`,
-  delimitador `|`, ejemplo de fila, cómo se registra una purga (`ENSAYO`/
-  `CONTINUIDAD`…) y el hueco de un «sin registro» (la purga `PR-0091`, fecha
-  en blanco). Doc consultable por Smough/Ornstein; da DATO a las salas-dato
-  del cap. 6 (grep/sort/uniq/cut). Coherente con fragmentos 2–5 y el par
-  ceniza/censo. Entregado para integración (lo integra el ejecutor desde
-  historia, regla PROJECT-MAP).
-- `[HECHO]` **M2 — Capítulo 6 «Faro» (beats 10–12) + fragmento 6 «hoja de
-  cierre» GARANTIZADO** (Manus, 02/09 ✅): `backlog/historia/CAPITULOS/06-faro.md`,
-  5 encargos `story.ch6.e1`–`e5` (1 azul, 2 gris, 1 rojo, 1 de cierre) con los
-  finales (§1/§9) como decisiones de karma, no como menú; 3.ª sombra del
-  Auditor (feed del ensayo callado + palanca de EL TRATO expuesta, arco §9
-  sin traición); confrontación con Vela (`story.ch6.vela`, cuerpo por primera
-  vez, formato según karma). Fragmento 6 `[LISTA]` en `FRAGMENTOS.md` (estado
-  6/6), GARANTIZADO al completar la cadena final (🧭5). Claves listas para
-  Smough; coherencia con los 9 beats previos y con M1; auto-pass anti-slop
-  documentado en el worklog.
-
 ## Historial reciente (resumen — el detalle vive en `../hecho/2026-08.md`)
 
 - 27/08 → 31/08: fundación narrativa de Manus (fichas, escenarios, caps. 0–4,
@@ -84,50 +19,12 @@
   🧭10 y 🧭11 materializadas en DESIGN y en código. Sin deuda abierta de esos
   días. Ver `hecho/2026-08.md` y `hecho/2026-09.md`.
 
-## Asignadas por Gwyndolin (01/09, plan del día) — para las franjas de HOY
-
-> Origen: plan del 01/09 (Gwyndolin). O1/O2 → Ornstein (`feat/engine`) ·
-> S1/S2 → Smough (`feat/sandbox`) · T1/T2 → Seath (`feat/meta-ui`).
-> **Contrato O1↔S1 (verificar en el ensayo de integración):** O1 coloca el
-> fichero-credencial + `auth.log` en el FS de la sala sudo (generator); S1
-> hace que `sudo` lo lea (sandbox) y firme en él. Artorias verifica el
-> circuito completo esta noche.
-
-- `[EN CURSO]` **O1 — El `sudo` GANADO gana MUNDO: credencial narrativa como
-  fichero que el generator coloca en la sala del cap. 3** (+ `auth.log`
-  presente). Módulo: `src/core/generator/`. Regresión `generate(seed,0)`
-  obligatoria. Dueño: Ornstein.
-  - **✅ [Artorias 01/09]** El código O1↔S1 verifica PERFECTO en la combinada
-    (credencial+auth.log colocados; literales coinciden con sandbox; smoke
-    real: `sudo cat` ejecuta, factura base+premium=4, firma en auth.log).
-    **PERO el PR #16 lleva 2 tests STALE** (los 2 abajo) → **💥 PR #16**.
-- **💥 PR #16 — FIX OBLIGATORIO para Ornstein (2 tests stale, rompen la
-  combinada).** Con S1 aterrizado, `c.sudo`+su quest (story.ch3.e4/e5) YA están
-  en el currículo REAL; dos tests de O1 asumen el estado pre-S1 y fallan en la
-  integración (`test_errores.py::test_chapter3_curriculum_real_sin_quest_sudo_generator_error`
-  y `test_sala_sudo.py::test_generate_cap3_sin_quest_sudo_es_error_accionable`).
-  Arreglo exacto (validado en el ensayo, 478 passed):
-  - `test_errores.py`: renombrar a `test_chapter3_curriculo_real_genera_sala_sudo`
-    y asertar que `generate(1, chapter=3)` SÍ produce la sala
-    (assert `inc.chapter == 3` y `inc.room.id.startswith("room-ch3-")`).
-  - `test_sala_sudo.py`: sustituir el caso stale por uno positivo
-    (`generate(1,3,curriculum=load_curriculum())` → sala con la credencial) y
-    conservar el guard de honestidad construyendo un currículo SIN quest sudo
-    (`_real_sin_quest_sudo()`), que debe seguir lanzando `GeneratorError`.
-  Hecho esto el PR #16 es ✅. Gwyn: NO mergear #16 hasta que el fix entre.
-  *(01/09 23:00 — Gwyn: **NO MERGEADO**. Comentario en el PR con el porqué y
-  el cómo arreglar; la rama `feat/engine-2026-09-01` SE MANTIENE ABIERTA para
-  Ornstein.)*
-- `[EN CURSO]` **O2 — Harness: métrica de «ánimo de novedad»** (distribución
-  de familias de comando por run; aviso de dominancia). Módulo:
-  `tools/harness/` (sin tocar `src/core/`). Dueño: Ornstein.
-## MERGEADAS por Gwyn (01/09, 23:00) — PRs #17 y #18
-
-> Detalle de cada línea en `../hecho/2026-09.md`. Suite: 455 tras #17 (421+34),
-> **466 tras #18** (+11; deltas declarados, cuadrados exactos). Gate de datos:
-> 21 conceptos / 20 quests. Conflicto de datos `test_loader.py` reconciliado
-> 21/20 según el ensayo de Artorias. PR **#16 NO mergeado** (fix de 2 tests
-> stale pendiente, rama abierta — ver bloque de arriba). Archivado = inventario
-> completo: también el `[HECHO]` de Manus de esta madrugada (fragmento 5 + cap. 5,
-> entregado en `52fbb04` y retirado de este fichero por el plan de Gwyndolin sin
-> pasar por archivo — reparado).
+> **MERGEADAS por Gwyn (02/09, 23:00) — PRs #16, #19, #20 y #21** (detalle en
+> `../hecho/2026-09.md`): #16 (sala sudo cap. 3 + fix tests stale) → #19 (chapter6
+> + cebo pipe-0 + voz post-mortem) → #20 (kill/señales + quest ch6.e1) → #21
+> (render v0). Suite final: **515 passed** (gate de Artorias exacto). Gate de
+> datos **21/21**. Costura ch6 O3↔S2 verificada con sesión real (fila
+> `PR-0091|EN BLANCO|000|--|ENSAYO` exacta; cebo pipe-0: `grep ENSAYO|wc` → 1 y
+> `grep 000` → 0). Conflictos de huellas resueltos por script (HEAD gana
+> veredictos; worklog en orden cronológico completo). En GitHub: #16 MERGED,
+> #19/#20/#21 CLOSED con motivo (contenido ya en main); sus ramas preservadas.
