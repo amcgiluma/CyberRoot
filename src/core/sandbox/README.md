@@ -2,9 +2,9 @@
 
 > **Qué hace:** filesystem virtual + shell con semántica REAL de Linux
 > (ARCHITECTURE §2.2), autónomo y reutilizable, sin I/O ni reloj real.<br>
-> **Estado (01/09, Smough):** comandos del cap. 0 (`ls`, `cd`, `cat`,
+> **Estado (02/09, Smough):** comandos del cap. 0 (`ls`, `cd`, `cat`,
 > `cp`) + cap. 2 (`grep`, `wc`) y tubería `cmd1 | cmd2` + cap. 3 (`ps`, `env`
-> — familia procesos; `sudo` GANADO con credencial narrativa) + familia conteo
+> — familia procesos; `sudo` GANADO + `kill` Señales v0) + familia conteo
 > (`head`/`tail`/`sort`/`uniq`, cap. 6 — lectura frugal).
 
 ## Piezas (v0)
@@ -12,20 +12,22 @@
 | Fichero | Qué hay |
 |---|---|
 | `fs.py` | `FileNode`/`DirNode` (owner, group, mode, mtime SIMULADO), `FileSystem` (resolve/change_dir/read_file/list_dir/copy_file), `FsError` con kinds estructurados, `to_dict`/`from_dict` ida-y-vuelta EXACTO + `snapshot()` |
-| `shell.py` | Sesión serializable: parser `shlex` POSIX, registro de specs, cwd/tick/historial simulados, `DEFAULT_CAP0_COMMANDS = ("cat","cd","cp","ls")` y `DEFAULT_CH2_COMMANDS` (+`grep`,`wc`; S1 30/08), tubería `cmd1 | cmd2` (stdout→stdin), rechazo didáctico de sintaxis futura (encadenado/redirección/globs) |
+| `shell.py` | Sesión serializable: parser `shlex` POSIX, registro de specs, cwd/tick/historial simulados, `DEFAULT_CAP0_COMMANDS` / `DEFAULT_CH2_COMMANDS` (+grep,wc) / `DEFAULT_CH3_COMMANDS` (+ps,env,sudo,kill S1 02/09) / `DEFAULT_CH6_COMMANDS` (+head,tail,sort,uniq S2), tubería `cmd1 | cmd2` (stdout→stdin), rechazo didáctico de sintaxis futura |
 | `commands/base.py` | `CommandResult` (stdout/stderr byte a byte, exit, noise, new_cwd), `CommandSpec` (concepts → pools del generador §6.4.2), `CommandRegistry` |
 | `commands/navigation.py` | `ls` (columna única, orden codepoint), `cd` (builtin: valida→normaliza, errores antes de tocar cwd) |
 | `commands/files.py` | `cat` (bytes exactos, exit 1 si cualquier error), `cp` (sobrescribe, copia-DENTRO de dirs, `same_file`) |
 | `commands/texto.py` | `grep` (patrón, fichero o stdin de tubería) y `wc` (`-l`/`-c`; **S1, 30/08** — cap. 2) |
 | `commands/procesos.py` | `ps` (`ps aux` con columna USER) y `env` (solo-lectura, orden por clave; **S1, 31/08** — cap. 3) |
+| `commands/senal.py` | `kill` (**S1, 02/09**): `kill [-9|-HUP] <pid>…` sobre `fs.processes` (par ceniza-521/censo-522). `-9`/`TERM` mata (elimina), `-HUP` reinicia (`--reloaded`, `HUP_<pid>=1`, visible en `ps`/`env`). Emite `sandbox.signal` + ruido 2. Golden GNU y gate 127 en cap. 0/2. |
 | `commands/escalada.py` | `sudo` GANADO (**S1, 01/09**): wrapper de orquestación del shell que arbitra la CREDENCIAL narrativa (fichero del mundo, contrato O1↔S1); sin credencial → rechazo diegético accionable (ruido 0, exit 1); con credencial → eleva + ruido premium + firma en `/var/log/auth.log`. Constantes del contrato (`SUDO_CREDENTIAL_PATH`, `AUTH_LOG_PATH`, `SUDO_AUTHZ_MARKER`, `SUDO_PREMIUM_NOISE`). |
 | `commands/conteo.py` | Familia conteo (**S2, 01/09**): `head`/`tail` (`-n N`, default 10), `sort` (`-u`), `uniq` (`-c`, cuenta ancho 7). «Lectura frugal»: leen menos que un `cat` entero. Semántica GNU real contrastada. Cap. 6 (barrera hacia el Faro). |
-| `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1, ps:1, env:1, sudo:3, head:1, tail:1, sort:2, uniq:1` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
+| `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1, ps:1, env:1, sudo:3, head:1, tail:1, sort:2, uniq:1, kill:2` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
 | `__main__.py` | **REPL (S2, 29/08):** `PYTHONPATH=src python -m core.sandbox` abre una sesión real del cap. 0 con prompt diegético (`operador@oficina-vecinal:~$`, DESIGN §6.1); `run_repl` reutilizable y testeable programáticamente |
 | `PLAN.md` | Decisiones de diseño e hitos del turno 27/08 |
 | `PLAN-2026-08-30.md` | Plan de implementación S1+S2 del turno 30/08 (pipes+grep/wc, currículo cap. 2) |
 | `PLAN-2026-08-31.md` | Plan de implementación S1+S2 del turno 31/08 (ps/env, currículo cap. 3) |
 | `PLAN-2026-09-01.md` | Plan de implementación S1+S2 del turno 01/09 (sudo GANADO + familia conteo, currículo + contrato O1↔S1) |
+| `PLAN-2026-09-02.md` | Plan de implementación S1+S2 del turno 02/09 (kill/señales v0 + quest ch6.e1 + DEFAULT_CH6_COMMANDS, contrato O3↔S2) |
 
 ## Decisiones que un revisor debe conocer
 
@@ -77,6 +79,8 @@
     un FICHERO del mundo (contrato O1↔S1), NO una contraseña; si las rutas
     `SUDO_CREDENTIAL_PATH`/`AUTH_LOG_PATH` cambian, cambian A LA VEZ en la
     rama de Ornstein (`feat/engine`, chapter3.py) y en la mía.
+12. **`kill` v0 (S1, 02/09):** `kill [-9|-HUP] <pid>` sobre `fs.processes` (par 521/522). Default SIGTERM (15) mata; `-9` (KILL) mata; `-HUP` (1) reinicia: mantiene PID, `cmd += " --reloaded"` (stat S→R) y `env["HUP_<pid>"]="1"`. Señales vía `-s NAME` también. Múltiples pids en una línea (GNU: procesa todos, exit 1 si alguno falló). Evento `sandbox.signal` por cada pid exitoso (`{pid, signal, signal_num, amount:0}`) para karma/escenas. Golden: `kill: (PID) - No such process` exit 1; `kill: invalid signal` exit 1; sin args → not enough arguments exit 1; cap. 0/2 → exit 127 (no existe hasta cap. 3/6).
+
 11. **Familia conteo (S2, 01/09):** `uniq -c` usa ancho 7 derecha-alineado
     (GNU real); `uniq` NO ordena (solo adyacentes); `sort` ordena por byte
     (LC_ALL=C, determinismo §5). Errores GNU honestos: `head`/`tail`/`uniq`
@@ -102,6 +106,7 @@
 - **Golden de `grep`/`wc`** (`test_texto.py`, S1 30/08): casos de borde
   aislados (sin match, fichero inexistente con el mensaje que cita la prosa
   del post-mortem, stdin, `wc` con/sin flags) verificados contra GNU real.
+- **Golden de `kill`** (`test_kill.py` + `test_session_kill.py`, S1 02/09): `kill` sin args / pid inexistente / señal inválida (golden GNU), `-9` vs `-HUP` observables en `ps`/`env` (mata vs reinicia), múltiples pids, evento `sandbox.signal`, ruido 2, gate 127 en cap. 0/2, roundtrip conserva mutación.
 - **Golden de `ps`/`env`** (`test_procesos.py` + `test_session_ch3.py`, S1
   31/08): cabeceras GNU (`ps` → `    PID TTY          TIME CMD`; `ps aux` →
   cabecera completa con USER) verificadas contra coreutils real; `env` ordenado

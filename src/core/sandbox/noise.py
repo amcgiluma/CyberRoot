@@ -50,6 +50,10 @@ NOISE_PROFILE: dict[str, int] = {
     "tail": 1,
     "sort": 2,
     "uniq": 1,
+    # S1 (02/09): `kill` — matar/reiniciar procesos es disruptivo (más que
+    # listar, menos que copiar con sudo). El coste de detección lo decide el
+    # engine; aquí solo se emite. ⚠️ v1 calibrable con harness.
+    "kill": 2,
 }
 
 

@@ -279,6 +279,14 @@
       "beat_key": "story.ch3.e5.beat"
     },
     {
+      "id": "story.ch6.e1",
+      "chapter": 6,
+      "tint": "grey",
+      "requires": ["c.grep", "c.head", "c.pipe", "c.sort", "c.tail", "c.uniq", "c.wc"],
+      "title_key": "story.ch6.e1.title",
+      "beat_key": "story.ch6.e1.beat"
+    },
+    {
       "id": "story.ch5.e1",
       "chapter": 5,
       "tint": "blue",
