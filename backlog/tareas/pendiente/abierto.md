@@ -118,6 +118,23 @@ La novedad FUNCIONA y las ideas de abajo salen de jugarla — decidir Gwyn/Gwynd
 
 *Nota de novedad al revisar (para Artorias/Gwyn, no decisión): la NUEVA GUIÓN de los errores GNU (`cp dir` → «omitting directory», `cat dir/` → «Is a directory») NO estorba — ambos nombran el flag que falta (`-r`/el tipo de fichero), así que son método, no castigo. Verificado contra coreutils. El prompt del REPL muestra `~` cuando cwd es `/` (estilo diégesis): a un novato acostumbrado a rutas absolutas no le confunde (el dossier usa `/srv/...`), lo dejo como decisión de sabor, no bug.*
 
+## 🔍 Hallazgos de Oscar (02/09 — zona 🔬: el `sudo` GANADO del cap. 3 + la primera VOZ)
+
+*Zona 🔬 de Gwyn ejecutada COMPLETA desde estado limpio: circuito sudo
+(rechazo → leer la llave → sudo eleva/firma/factura premium → append auth.log →
+roundtrip), la primera VOZ del Auditor resuelta a texto formulario
+(«Expediente 000: … Continuidad del ensayo: estable»), post-mortem del cierre del
+cap. 2 resuelto (no `line_key` crudo) y gate 127 del cap. 0/2 intacto. Smoke del
+conjunto **466 passed / 0 xfailed**. Un hallazgo de dirección de gate (no rotura)
+— CICLO verde. Detalle en `docs/ESTADO-JUGADOR.md` y notas 🧭14.*
+
+- `[PENDIENTE][P2]` (02/09, 🧭14) **El `sudo` se gana por EXISTENCIA de la llave, no por LEERLA — decisión de gate para Gwyn** — Oscar: medido ejecutando, en la sala sudo (credencial presente en el mundo) el `sudo cat …` ejecutado SIN haberla leído eleva, factura premium (ruido 4) y firma auth.log. El gate del sandbox (`shell.py` L216, `check_credential(fs, cwd)`) comprueba que el FICHERO existe + marcador, pero NO rastrea que el jugador lo haya leído → el beat de «ganarse» la llave (§6.1: leer la orden con `cat`) no está enforzado; la premisa de la zona «sudo sin leer → rechazo» solo se reproduce en FS sin credencial. No es bug (466/0), es fidelidad pedagógica: el primer «poder» real del novato. **Decisión pendiente de Gwyn (informo, no decido):** (a) aceptar v0 (la llave es ambiental; leerla es sabor), o (b) exigir leerla (marcar credencial como obtenida en la sesión antes de `sudo`). Mi lectura: (b) protege mejor «aprender por necesidad» en el cap. 3. Módulo: `src/core/sandbox/commands/escalada.py` + `state/` (marca de sesión). Sin prisa de camino (el circuito funciona); es una decisión de diseño que Gwyn integra cuando rinda. *(Nota: cuando Ornstein fusione el PR #16, re-jugar la sala del cap. 3 sobre el generator real.)*
+
+- **🧭12 RESUELTA (02/09, verificada HOY):** las claves `postmortem.auditor.*`
+  ya viven en `data/` (T1) y `resolve()` produce la voz formulario del Auditor con
+  los args reales del post-mortem. Archivarla de aquí cuando Gwyndolin haga
+  higiene.
+
 ## 🔍 Hallazgos de Oscar (31/08 — run de referencia con post-mortem + veterano)
 
 *Run de referencia desde SAVE LIMPIO con el post-mortem NUEVO (zona 🔬 de Gwyn):

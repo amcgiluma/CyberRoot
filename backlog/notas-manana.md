@@ -9,43 +9,54 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 01/09 05:00 — zona 🔬 ejecutada: el PRIMER CRUCE de capítulo en
-juego real (cap. 0 → cap. 2) desde SAVE LIMPIO, logro recalibrado 🧭11
-verificado con números propios, eco 🧭9 verificado (payload + idempotencia
-entre-runs), smoke del conjunto 421/0. Saldo: 🧭11 RESUELTA anoche
-(recalibrado a umbral 5 + pulcritud); 🧭9 con tubo (evento al bus) e idempotente;
-🧭12 sigue vigente (texto del Auditor en `data/`). La nota nueva de hoy es de UX
-fina en el primer cruce real entre capítulos, abajo.)*
+*(SOBRESCRITA 02/09 05:00 — zona 🔬 ejecutada: el `sudo` GANADO del cap. 3 +
+la primera VOZ del Auditor, ambos desde estado limpio. Smoke 466/0. Saldo:
+🧭12 RESUELTA esta noche (T1 puso las claves en `data/` con resolvedor,
+verificada resolviendo); 🧭13 RESUELTA (decisión de Gwyn anoche); 🧭9 con tubo e
+idempotente. La nota nueva de hoy es una decisión de gate del primer «poder»
+real del juego, abajo.)*
 
-**13. 🟡 LA GOLDEN DEL CAP. 2 ES REBELDE: pide un `cd` previo que el scaffold no
-sugiere.** Al `abrir story.ch2.e1`, la sesión nace con `cwd=/` y la golden usa
-RUTA RELATIVA (`grep 11:04 centralita/turnos/turno.log | wc -l`). Si el novato la
-ejecuta tal cual desde `/`, el `grep` falla (`No such file or directory`) y el
-pipeline devuelve `0\n` con **exit 0** (el exit lo decide el `wc`, no el `grep`,
-semántica GNU real). Hay que `cd /srv/oficina-vecinal-muelle-norte` antes (la
-canónica CH2 lo hace). **No es bug — el sandbox reproduce GNU con honestidad —
-pero es la primera fricción del viaje entre capítulos**: el cap. 0 siempre usó
-rutas absolutas (`ls /srv/oficina-vecinal-muelle-norte`), y de golpe el cap. 2
-exige relativas desde un cwd que el jugador no sabe cuál es. Si el juego quiere
-«aprender por necesidad», aquí la necesidad es de ORIENTACIÓN, no de concepto.
-**Propuesta de dirección (sin decidir):** (a) que el scaffold de la sala e1 ya
-sugiera/cologue el cwd dentro de la oficina (o exponga `pwd`), o (b) aceptar la
-fricción y dejarla como lección de `cd`/relativas, pero entonces la sala debe dar
-una pista diegética («estás en la raíz del nodo; la centralita vive en la
-oficina»). Importa cuando haya render/tutorial. Dato tuyo, decide tú.
+**14. 🟡 EL SUDO SE GANA POR EXISTENCIA DE LA LLAVE, NO POR «LEERLA»: decisión de
+gate del primer poder del juego.** Medido hoy ejecutando (sala sudo del cap. 3,
+FS de `_fs_sala_sudo()`): con la credencial presente en el mundo (`/srv/…/orden-ceniza.txt`),
+ejecutar `sudo cat …` **sin haberla leído antes** eleva, factura premium y firma
+en auth.log igualmente (exit 0, ruido 4). El gate del sandbox es
+`check_credential(fs, cwd)` (`shell.py` L216): comprueba que el FICHERO existe y
+contiene el marcador `AUTORIZACION: CENIZA`, pero **no rastrea que el jugador lo
+haya leído** (`cat` no marca la credencial como obtenida en la sesión). Así, el
+beat que §6.1 describe —«se GANA: la credencial robada u objeto de estado… se
+lee con cat»— no está ENFORZADO: la premisa de la zona «sudo SIN leer la
+credencial → rechazo» solo se reproduce en un FS SIN credencial (el
+`test_sin_leer_llave`), no en la sala con la llave presente. Leído como novato:
+si el generator coloca la credencial en el mundo y expone `sudo` en el cap. 3,
+el momento de GANARSE la llave (leer la orden, aprender su alcance) se vuelve
+cosmético. **Problema de fidelidad pedagógica, no de robustez** (la suite está
+en 466/0 y el circuito verificado funciona; el rechazo-nombra-qué-falta sigue
+vivo para el caso «no hay llave»). DECISIÓN TUYA (informo, no decido): **(a)
+aceptar v0** — «la llave vive en el mundo; leerla es sabor diegético, la
+autorización ES la presencia del fichero»—, o **(b) exigir el GANAR** —marcar en
+la sesión que la credencial fue leída antes de permitir `sudo` (el `cat` de la
+orden como requisito implícito)—. Mi lectura como guardián de la experiencia: el
+punto (b) protege mejor el beat de «aprender por necesidad» del cap. 3 (el
+primer contacto real del novato con el poder: primero entiendes QUÉ autorizas,
+luego lo usas), y el coste es pequeño (una marca de sesión + el `cat` pasa a ser
+el gesto que desbloquea). Pero el (a) es legítimo y barato si prefieres que
+sudo sea una llave ambiental. Dato + tienes todo el circuito verificado.
 
-**12. (vigente) PUBLICAR LAS CLAVES `postmortem.auditor.*` EN `data/` CUANDO
-EXISTA EL PAQUETE DE TEXTOS.** El flujo del cap. 2 ya devuelve la línea del
-Auditor como `line_key` + `args` (cruce del presupuesto o pico; comando y amount
-concretos, voz formulario seco §2.4), pero las claves NO existen aún en `data/`.
-Es la pieza §2.4 («el sistema te estuvo leyendo») que pasará de dato a vivencia
-cuando haya quien resuelva la prosa. Prioridad de packaging cuando arranque
-`data/`/render.
+**13. (RESUELTA anoche — Gwyn la validó con decisión al mergear: cwd del scaffold
+de e1 dentro de la oficina + prompt con ruta al meter render/tutorial; `pwd` no
+se regala. Entra con render. Registrada en `abierto.md`.)**
 
-> **Filtro Oscar:** el cruce cap. 0→cap. 2 se recorre ENTERO desde save limpio y
-> aguanta (listar → abrir → golden → cerrar con post-mortem → logro verificado →
-> eco idempotente); los hallazgos de hoy son una pista de UX (🧭13) y packaging
-> (🧭12), ninguno rompe el camino. CICLO: verde.
+**12. (RESUELTA esta noche — T1: claves `postmortem.auditor.cruce|pico` en
+`data/` con resolvedor `textos.py`; VERIFICADA HOY resolviendo con los args
+reales del post-mortem: la forma sale «Expediente 000: … Continuidad del ensayo:
+estable». El eco 🧭9 ahora SE OYE.)**
+
+> **Filtro Oscar:** la zona 🔬 (sudo GANADO + primera VOZ) se recorre ENTERA desde
+> estado limpio y aguanta (rechazo → leer llave → sudo eleva/firma/factura → voz
+> formulario ✓ → gate 127 ✓ → post-mortem a texto ✓); el hallazgo de hoy es una
+> decisión de gate (#14) y seguimiento de packaging/entrypoint, ninguno rompe el
+> camino. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 
