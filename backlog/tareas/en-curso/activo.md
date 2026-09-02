@@ -22,18 +22,18 @@
 > `skipif` hasta que la quest aterrice (lección de los 2 tests stale de #16).
 > La costura la verifica Artorias en la combinada.
 
-- `[EN CURSO][P1]` **O1·FIX — Desbloquear PR #16** (2 tests stale; receta EXACTA
-  en el bloque 💥 de abajo). Suite esperada en la rama: **478**. Dueño: Ornstein.
-- `[EN CURSO][P2]` **O2 — `chapter3.py`: la sala del cap. 3 generable de verdad**
+- `[HECHO][P1]` **O1·FIX — Desbloquear PR #16** (2 tests stale; receta EXACTA
+  en el bloque 💥 de abajo). Suite esperada en la rama: **478**. Dueño: Ornstein. → **HECHO en PR #16 (reabierto, 478 passed)** — fix 02/09 commit d55619e.
+- `[HECHO][P2]` **O2 — `chapter3.py`: la sala del cap. 3 generable de verdad**
   (consume la quest sudo YA en main; no inventa campos). Módulo:
   `src/core/generator/`. Dueño: Ornstein. AC: determinismo, guard testado,
-  regresión `generate(seed,0)` byte-idéntica.
-- `[EN CURSO][P2]` **O3 — `chapter6.py`: sala-dato de la Lista + cebo pipe-0**
+  regresión `generate(seed,0)` byte-idéntica. → **HECHO (heredado en PR #16, verificado en PR #19 — 484 passed)**
+- `[HECHO][P2]` **O3 — `chapter6.py`: sala-dato de la Lista + cebo pipe-0**
   (contrato ch6 arriba; quest en skipif). Módulo: `src/core/generator/`. Dueño:
-  Ornstein. AC: sala generable, guard, caps 0/2 intactos.
-- `[EN CURSO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
+  Ornstein. AC: sala generable, guard, caps 0/2 intactos. → **HECHO en PR #19 (chapter6.py + test_chapter6 6+1 skipif)**
+- `[HECHO][P3]` **O4 — OPCIONAL: el post-mortem imprime la VOZ resuelta**
   (dirección #3 de Gwyn; resolvedor `textos.py` ya en main). Módulo:
-  `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana.
+  `src/core/engine/`. Dueño: Ornstein. Si la franja no rinde, primera de mañana. → **HECHO en PR #19 (postmortem.py auditor_text/lines_resolved)**
 - `[EN CURSO][P2]` **S1 — `kill`/señales v0 sobre el par ceniza/censo** (física
   + evento al bus; la bifurcación kármica queda para karma después). Módulo:
   `src/core/sandbox/` (handler + `noise.py`). Dueño: Smough. AC: golden GNU,
