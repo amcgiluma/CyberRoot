@@ -29,8 +29,20 @@ from core.generator.chapter3 import (
 from core.generator.errors import GeneratorError
 from core.sandbox.fs import FsError, FileNode
 
-#: Currículo real (las queries e1–e5 del cap. 3 NO exigen c.sudo).
+#: Currículo real (YA exige c.sudo en story.ch3.e4/e5 tras S1 — PR #17).
 _REAL = load_curriculum()
+
+
+def _real_sin_quest_sudo() -> Curriculum:
+    """Currículo sin quest que exija `c.sudo` — guarda de honestidad.
+
+    Construye un currículo filtrando las quests del cap. 3 que requieren
+    `c.sudo` (story.ch3.e4/e5) para que la generación del cap. 3 vuelva a
+    ser un `GeneratorError` accionable (receso pre-S1).
+    """
+    real = load_curriculum()
+    filtradas = tuple(q for q in real.quests if "c.sudo" not in q.requires)
+    return Curriculum(version=real.version, concepts=real.concepts, quests=filtradas)
 
 
 def _curriculo_sudo() -> Curriculum:
@@ -113,11 +125,23 @@ def test_regresion_cap0_sin_credencial_ni_auth_log() -> None:
         _resolver(cap0, AUTH_LOG_PATH)
 
 
+def test_generate_cap3_con_curriculo_real_genera_sala_sudo() -> None:
+    """Con el currículo REAL (ya con quest sudo — S1/PR #17), pedir el cap. 3
+    SÍ produce la sala-credencial (fix #16)."""
+    inc = generate(1, 3, curriculum=load_curriculum())
+    assert inc.chapter == 3
+    assert inc.room.id.startswith("room-ch3-")
+    # La credencial está presente en el mundo.
+    cred = _resolver(inc, SUDO_CREDENTIAL_PATH)
+    assert isinstance(cred, FileNode)
+    assert cred.content == SUDO_CREDENTIAL_CONTENT
+
+
 def test_generate_cap3_sin_quest_sudo_es_error_accionable() -> None:
-    """Con el currículo REAL (ninguna quest exige c.sudo, S1 aún no la añadió),
-    pedir el cap. 3 es un `GeneratorError` claro, no una sala de mentira."""
+    """Guarda de honestidad: sin quest que exija `c.sudo`, el cap. 3 es
+    `GeneratorError` accionable, no una sala de mentira."""
     with pytest.raises(GeneratorError, match="c.sudo"):
-        generate(1, 3, curriculum=_REAL)
+        generate(1, 3, curriculum=_real_sin_quest_sudo())
 
 
 def test_generate_cap3_con_quest_no_sudo_es_error_accionable() -> None:

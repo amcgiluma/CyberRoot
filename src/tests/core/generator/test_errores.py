@@ -24,13 +24,12 @@ def test_chapter_distinto_de_cero_value_error() -> None:
         generate(1, chapter=4)
 
 
-def test_chapter3_curriculum_real_sin_quest_sudo_generator_error() -> None:
-    """El cap. 3 está soportado, pero con el currículo REAL (ninguna quest
-    exige `c.sudo` — lo añade Smough/S1 a las 16:00) la generación es un
-    `GeneratorError` accionable, nunca una sala de mentira."""
-    with pytest.raises(GeneratorError) as e:
-        generate(1, chapter=3)
-    assert "c.sudo" in str(e.value)
+def test_chapter3_curriculo_real_genera_sala_sudo() -> None:
+    """Con S1 aterrizado, `c.sudo`+su quest YA están en el currículo REAL;
+    `generate(1, chapter=3)` SÍ produce la sala (fix stale #16)."""
+    inc = generate(1, chapter=3)
+    assert inc.chapter == 3
+    assert inc.room.id.startswith("room-ch3-")
 
 
 def test_seed_bool_type_error() -> None:
