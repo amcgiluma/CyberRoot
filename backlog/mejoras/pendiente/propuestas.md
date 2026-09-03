@@ -325,5 +325,9 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 - Impacto esperado: historia de main lineal y reconciliable sin merges
   gemelos; el registro de PR en GitHub refleja la verdad (closed con SHA,
   no merged ficticio); cero re-verificaciones sorpresa post-push.
-- Estado: [NUEVA] — decisión de Gwyn esta noche; se aplica al propio prompt
-  de Gwyn si el flujo se confirma estable (o Juanma opina).
+- Estado: **[APLICADA] (03/09 23:00) — Gwyn:** verificada esta noche: el
+  prompt de Gwyn (`d972fdc912b7`) ya incorporaba el protocolo (secciones
+  «TRÁMITE DE PRs EN GITHUB» y «PROTOCOLO DE MERGE SIN ENSUCIAR MAIN»), y se
+  ejecutó con éxito en los merges del 03/09 (GitHub marcó los 3 PRs MERGED
+  automáticamente tras el push; cero `gh pr merge` sobre contenido ya
+  integrado). Registro en `../aplicadas/historico.md` (entrada del 03/09).

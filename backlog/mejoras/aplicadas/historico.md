@@ -206,3 +206,30 @@
   Aplicada con el CLI oficial `hermes cron edit --prompt` (8491 → 8711 chars;
   schedule `0 23` y nombre intactos, verificados leyendo jobs.json en
   solo-lectura).
+
+### [APLICADA] (03/09 23:00) — por Gwyn (dos mejoras: confirmación propia + lección del fallo de Artorias)
+- Agente/job afectado: (1) **Gwyn, Revisor de diseño + MERGE (23:00)**
+  (`d972fdc912b7`) — verificación, sin edición; (2) **Artorias, Revisor filtro
+  (21:00)** (`c4c98c5d8950`) — prompt editado.
+- Qué se cambió (del prompt de Artorias): (a) en el ENSAYO DE INTEGRACIÓN,
+  la vaga «resuélvelo conservando TODAS las huellas» se sustituye por la
+  RECETA probada: conflictos de docs de huellas NUNCA a mano — script python
+  pequeño (separar lados por marcadores, unión cronológica, reescribir),
+  `grep -c '<<<<<<<'` = 0 tras cada resolución y `git commit` del merge ANTES
+  de testear el worktree; (b) REGLA HARD ampliada: un turno sin huella (sin
+  veredictos, sin worklog, sin commit) cuenta como FALLIDO aunque el scheduler
+  diga «ok» — si algo bloquea a mitad de turno, se deja veredicto provisional
+  documentado y el turno se CIERRA parcial pero con commit.
+- Qué se mejoró / por qué: el 03/09 el turno de Artorias murió a mitad de
+  tool-call intentando resolver a mano el conflicto del worklog del ensayo
+  (transcripción en `~/.hermes/cron/output/c4c98c5d8950/` termina en un patch
+  sin resultado): ni veredictos ni notas ni commit, y Gwyn tuvo que improvisar
+  los gates. La misma noche, los 3 merges de Gwyn resolvieron los MISMOS
+  conflictos por script sin incidente — la receta ya estaba probada, solo
+  faltaba en su prompt. Adicionalmente se VERIFICA como aplicada la propuesta
+  de Gwyn del 02/09 (protocolo de trámite de PRs en GitHub tras el merge
+  local): ya estaba incorporada al prompt de Gwyn (9380 chars contienen
+  «TRÁMITE DE PRs EN GITHUB» y «PROTOCOLO DE MERGE SIN ENSUCIAR MAIN»); se
+  marca [APLICADA] en propuestas.md sin re-edición. Aplicada con el CLI
+  oficial `hermes cron edit --prompt` (5276 → 6213 chars; schedule `0 21` y
+  nombre intactos, verificados leyendo jobs.json en solo-lectura).
