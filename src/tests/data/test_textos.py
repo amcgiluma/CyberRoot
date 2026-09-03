@@ -169,3 +169,15 @@ def test_fichero_real_resuelve_sin_args_para_claves_simples() -> None:
     t = load_textos()
     assert resolve("story.ch1.e1.title", textos=t) == "El turno de la señora Carmen"
     assert "escuela pública 3" in resolve("story.ch1.e1.beat", textos=t)
+
+
+def test_briefing_ch6_e1_con_rutas_absolutas() -> None:
+    """T2 (03/09, Seath, 🧭15): `story.ch6.e1` resuelve a prosa con voz de
+    encargo y rutas absolutas `/srv/camara-faro/…` — el jugador no tropieza
+    con el 0-mentiroso POR RUTA. Sin placeholders (resuelve sin args)."""
+    t = load_textos()
+    assert resolve("story.ch6.e1.title", textos=t) == "El número que sobra"
+    beat = resolve("story.ch6.e1.beat", textos=t)
+    assert "/srv/camara-faro/" in beat
+    assert "/srv/camara-faro/censo-borrador.csv" in beat
+    assert "PR-0091" in beat and "ENSAYO" in beat

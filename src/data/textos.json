@@ -29,6 +29,9 @@
     "story.ch5.e3.beat": "Un proceso ajeno corre escondido en el rack de informes, obra de quien pasó cuando el repeater calló. Leer qué corre y de quién con `ps` y decidir qué hacer con el termómetro que mide la casa.",
 
     "story.ch5.e4.title": "El que se queda",
-    "story.ch5.e4.beat": "El asalto llega a la puerta del dique. Cerrar el perímetro con lo aprendido de defensa (`chmod` sobre accesos, leer los logs de entrada) en un solo recorrido apretado por el ruido, y decidir qué entra en la sombra antes de que entren ellos."
+    "story.ch5.e4.beat": "El asalto llega a la puerta del dique. Cerrar el perímetro con lo aprendido de defensa (`chmod` sobre accesos, leer los logs de entrada) en un solo recorrido apretado por el ruido, y decidir qué entra en la sombra antes de que entren ellos.",
+
+    "story.ch6.e1.title": "El número que sobra",
+    "story.ch6.e1.beat": "Ceniza te deja en el límite del Umbral alto con el encargo sin rodeos: la cámara del Faro guarda la Lista — el censo con sus purgas — y hay que leerla en alto sin abrir la puerta. Está en `/srv/camara-faro/`: `purgas.csv` se cuenta con la familia conteo (`grep` por motivo, `sort`/`uniq` para ordenar) y entre las filas hay una que no cierra, la purga `PR-0091`, motivo `ENSAYO`, fecha en blanco, sujeto `000`. Ojo con los borradores: `/srv/camara-faro/censo-borrador.csv` no es la Lista — si cuentas ahí, el cero te miente. Cuenta donde pesa, vuelve con la cifra limpia, y decide qué se demuestra y qué se quema."
   }
 }
