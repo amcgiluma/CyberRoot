@@ -17,7 +17,7 @@
 | 21:00 | **Artorias** (revisor filtro) | muse-spark | Revisa técnicamente (tests/lint/juego), marca 💥/✅, y DEJA NOTAS DE GUSTO + "qué no mergear" para mañana. | `backlog/tareas/en-curso/activo.md` + `notas-manana.md` (🎯) |
 | 23:00 | **Gwyn** (revisor diseño+merge) | glm | Validación de diseño, MERGE final, DEJA SUS NOTAS DE GUSTO/ideas, y reporta a Juanma. | `backlog/tareas/en-curso/activo.md` → archiva en `hecho/<mes>` · SOBRESCRIBE `zona-testeo.md` · Telegram |
 
-> 🧠 **Modelo (decisión de Juanma, 02/09):** `muse-spark` = `opencode-go/muse-spark-1.2-contributor`
+> 🧠 **Modelo (decisión de Juanma, 03/09):** `muse-spark` = `opencode-go/muse-spark-1.3-contributor`
 > (la mayoría); `glm` = `opencode-go/glm-5.3-flash` (Gwyn y Gwyndolin, calidad en
 > decisiones de alcance). Antes: `deepseek-v4-flash` (hasta 02/09) → `glm-5.3-flash` para todos.
 

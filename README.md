@@ -18,14 +18,14 @@ Cada uno firma su trabajo con su nombre.
 
 | Avatar | Agente | Hora | Rol | Modelo |
 |--------|--------|------|-----|--------|
-| 🖤 | **Manus, Padre del Abismo** | 03:00 | Historiador — escribe la historia del día | muse-spark-1.2-contributor |
-| ⭐ | **Oscar de Astora** | 05:00 | Guardián de la experiencia — juega como jugador (run desde cero + veterano), vigila el `ESTADO-JUGADOR.md` y propone dirección a Gwyn | muse-spark-1.2-contributor |
-| ☀️ | **Havel la Roca** | 07:00 | Vidente-creativo — juega e idea | muse-spark-1.2-contributor |
+| 🖤 | **Manus, Padre del Abismo** | 03:00 | Historiador — escribe la historia del día | muse-spark-1.3-contributor |
+| ⭐ | **Oscar de Astora** | 05:00 | Guardián de la experiencia — juega como jugador (run desde cero + veterano), vigila el `ESTADO-JUGADOR.md` y propone dirección a Gwyn | muse-spark-1.3-contributor |
+| ☀️ | **Havel la Roca** | 07:00 | Vidente-creativo — juega e idea | muse-spark-1.3-contributor |
 | 🌙 | **Gwyndolin, Dark Sun** | 11:00 | Planificador — organiza el día | glm-5.3-flash |
-| ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | muse-spark-1.2-contributor |
-| 🔨 | **Smough** | 16:00 | Ejecutor 2 — implementa su módulo | muse-spark-1.2-contributor |
-| 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | muse-spark-1.2-contributor |
-| 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | muse-spark-1.2-contributor |
+| ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | muse-spark-1.3-contributor |
+| 🔨 | **Smough** | 16:00 | Ejecutor 2 — implementa su módulo | muse-spark-1.3-contributor |
+| 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | muse-spark-1.3-contributor |
+| 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | muse-spark-1.3-contributor |
 | 👑 | **Gwyn, Señor de la Ceniza** | 23:00 | Revisor de diseño + **MERGE final** | glm-5.3-flash |
 
 > 🔥 **Mapa visual interactivo del Concilio**: retratos, flujo del día y mapa del
@@ -33,13 +33,14 @@ Cada uno firma su trabajo con su nombre.
 > **[amcgiluma.github.io/CyberRoot/mapa](https://amcgiluma.github.io/CyberRoot/mapa/)**
 > (fuente: [`docs/mapa/`](docs/mapa/))
 
-> 🧠 **Modelo del Concilio (decisión de Juanma, 02/09):** el Concilio corre sobre
-> **dos modelos** de `opencode-go`. La mayoría de agentes usan **`muse-spark-1.2-contributor`**;
+> 🧠 **Modelo del Concilio (decisión de Juanma, 03/09):** el Concilio corre sobre
+> **dos modelos** de `opencode-go`. La mayoría de agentes usan **`muse-spark-1.3-contributor`**;
 > **Gwyn** y **Gwyndolin** (planificador y revisor de diseño + MERGE final) se quedan
 > en **`glm-5.3-flash`** para mantener calidad en las decisiones de alcance.
-> Anteriores: `deepseek-v4-flash` para el resto (hasta el 02/09), `glm-5.3-flash` para todos (hasta el 29/08),
+> Anteriores: `muse-spark-1.2-contributor` (02/09, un día — precio de chiste, rendimiento salvaje),
+> `deepseek-v4-flash` para el resto (hasta el 02/09), `glm-5.3-flash` para todos (hasta el 29/08),
 > `deepseek-v4-pro`, `gpt-5.6-luna` (inestable) y `ox-alpha-free` (promoción caducada).
-> El Vigilante usa `muse-spark-1.2-contributor`; el Daily Briefing sigue en `deepseek-v4-flash`.
+> El Vigilante usa `muse-spark-1.3-contributor`; el Daily Briefing sigue en `deepseek-v4-flash`.
 
 > 🚀 **¿Vienes nuevo o retomas el proyecto?** Lee
 > **[`docs/ONBOARDING.md`](docs/ONBOARDING.md)** — en 3 minutos te pongo al día de
@@ -145,7 +146,7 @@ La Fase 0 es la construcción del plano antes de escribir código del juego:
 | Día 4 | Arquitectura de módulos + coordinador de cierre + **gate de Juanma** |
 
 La Fase 0 usó el modelo **`opencode-go/ox-alpha-free`** (potente y gratis ~1 semana,
-ya caducado). En **Fase 1 el Concilio corre sobre dos modelos: `muse-spark-1.2-contributor`
+ya caducado). En **Fase 1 el Concilio corre sobre dos modelos: `muse-spark-1.3-contributor`
 (la mayoría) y `glm-5.3-flash` (Gwyn y Gwyndolin)**, decisión de Juanma del 02/09
 (ver nota de la tabla de agentes).
 
