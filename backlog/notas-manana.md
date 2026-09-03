@@ -9,54 +9,15 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 02/09 05:00 — zona 🔬 ejecutada: el `sudo` GANADO del cap. 3 +
-la primera VOZ del Auditor, ambos desde estado limpio. Smoke 466/0. Saldo:
-🧭12 RESUELTA esta noche (T1 puso las claves en `data/` con resolvedor,
-verificada resolviendo); 🧭13 RESUELTA (decisión de Gwyn anoche); 🧭9 con tubo e
-idempotente. La nota nueva de hoy es una decisión de gate del primer «poder»
-real del juego, abajo.)*
+*(SOBRESCRITA 03/09 05:00 — zona 🔬 ejecutada: el cap. 6 «Faro» JUGABLE de verdad (quest `story.ch6.e1` + sala-dato Lista) y el cap. 3 real sobre el generator. Smoke 515/0, gate 21/21. Saldo: 🧭14b DECIDIDA por Gwyn (baseline medida hoy aún ambiental — Smough la cierra hoy), 🧭12/🧭13 RESUELTAS, dos notas nuevas de orientación y alcance v0, abajo.)*
 
-**14. 🟡 EL SUDO SE GANA POR EXISTENCIA DE LA LLAVE, NO POR «LEERLA»: decisión de
-gate del primer poder del juego.** Medido hoy ejecutando (sala sudo del cap. 3,
-FS de `_fs_sala_sudo()`): con la credencial presente en el mundo (`/srv/…/orden-ceniza.txt`),
-ejecutar `sudo cat …` **sin haberla leído antes** eleva, factura premium y firma
-en auth.log igualmente (exit 0, ruido 4). El gate del sandbox es
-`check_credential(fs, cwd)` (`shell.py` L216): comprueba que el FICHERO existe y
-contiene el marcador `AUTORIZACION: CENIZA`, pero **no rastrea que el jugador lo
-haya leído** (`cat` no marca la credencial como obtenida en la sesión). Así, el
-beat que §6.1 describe —«se GANA: la credencial robada u objeto de estado… se
-lee con cat»— no está ENFORZADO: la premisa de la zona «sudo SIN leer la
-credencial → rechazo» solo se reproduce en un FS SIN credencial (el
-`test_sin_leer_llave`), no en la sala con la llave presente. Leído como novato:
-si el generator coloca la credencial en el mundo y expone `sudo` en el cap. 3,
-el momento de GANARSE la llave (leer la orden, aprender su alcance) se vuelve
-cosmético. **Problema de fidelidad pedagógica, no de robustez** (la suite está
-en 466/0 y el circuito verificado funciona; el rechazo-nombra-qué-falta sigue
-vivo para el caso «no hay llave»). DECISIÓN TUYA (informo, no decido): **(a)
-aceptar v0** — «la llave vive en el mundo; leerla es sabor diegético, la
-autorización ES la presencia del fichero»—, o **(b) exigir el GANAR** —marcar en
-la sesión que la credencial fue leída antes de permitir `sudo` (el `cat` de la
-orden como requisito implícito)—. Mi lectura como guardián de la experiencia: el
-punto (b) protege mejor el beat de «aprender por necesidad» del cap. 3 (el
-primer contacto real del novato con el poder: primero entiendes QUÉ autorizas,
-luego lo usas), y el coste es pequeño (una marca de sesión + el `cat` pasa a ser
-el gesto que desbloquea). Pero el (a) es legítimo y barato si prefieres que
-sudo sea una llave ambiental. Dato + tienes todo el circuito verificado.
+**14. (DECIDIDA por Gwyn 02/09 23:00 — opción (b): el sudo se GANA LEYENDO la llave. Baseline medida hoy 03/09:** `generate(42,3)` y `generate(99,3)` con `Shell(DEFAULT_CH3_COMMANDS)` desde `/` — `sudo cat …` sin leer y tras `cat /srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt` elevan ambos (ruido `cat:1 + sudo:3`, firma `tick 1 operator : sudo cat …` appendeada en `/var/log/auth.log`). La prosa de Manus ya está alineada (E4/E5 de `03-bombas.md` pulidos hoy). Smough la implementa hoy a las 16:00 — no duplico tarea, solo mido la línea base. Cuando entre, el rechazo sin lectura debe nombrar la orden y ser ruido 0, como firmó Gwyn.)
 
-**13. (RESUELTA anoche — Gwyn la validó con decisión al mergear: cwd del scaffold
-de e1 dentro de la oficina + prompt con ruta al meter render/tutorial; `pwd` no
-se regala. Entra con render. Registrada en `abierto.md`.)**
+**15. 🟡 SPAWN EN `/` + RUTA RELATIVA = 0 MENTIROSO CON STDERR PERO EXIT 0 (orientación del Faro).** Medido hoy en `generate(42,6)` + `Shell(DEFAULT_CH6_COMMANDS, cwd='/')`: `grep ENSAYO purgas.csv | wc -l` (relativa sin `cd`) → **exit 0, stdout `0`, stderr `grep: purgas.csv: No such file`** — el `wc` decide el exit y el grep grita solo en stderr. Con ruta absoluta (`grep ENSAYO /srv/camara-faro/purgas.csv | wc -l`) o con `cd /srv/camara-faro` previo → **1** correcto. El cebo `grep 000 censo-borrador.csv | wc -l` es 0 honesto con ruta absoluta; con relativa sin cd también 0 pero por razón equivocada. Leído como novato: si el briefing o la prosa del cap. 6 sugiere la ruta relativa sin anclar el `cd`, el jugador verá el 0 mentiroso y creerá que la Lista está limpia — la trampa pipe-0 se confunde con trampa de ruta. No es bug (la ruta absoluta funciona y el stderr avisa), es **orientación**: el briefing de `story.ch6.e1` y la sala deberían anclar la **ruta absoluta `/srv/camara-faro/`** o sugerir el `cd` previo, como Gwyn ya apuntó anoche. Decisión tuya: (a) briefing con rutas absolutas, o (b) prompt/scaffold que already esté en `/srv/camara-faro`. Mi lectura: (a) hoy — es la convención diegética más barata y coherente con 🧭13 (el prompt con cwd real ya enseña dónde estás).
 
-**12. (RESUELTA esta noche — T1: claves `postmortem.auditor.cruce|pico` en
-`data/` con resolvedor `textos.py`; VERIFICADA HOY resolviendo con los args
-reales del post-mortem: la forma sale «Expediente 000: … Continuidad del ensayo:
-estable». El eco 🧭9 ahora SE OYE.)**
+**16. 🟡 EL CAP. 3 DEL GENERATOR NACE SIN PROCESOS: `ps aux` VACÍO, `kill` SIN BLANCO (alcance v0).** Medido hoy: `generate(42,3).room.fs.processes == ()` y `env == {}`; `ps aux` imprime solo cabecera, `kill -9 522` → `kill: (522) - No such process` (exit 1). El par ceniza-521/censo-522 solo vive en el FS handmade de `test_session_kill.py` (`_fs_subestacion()`), no en `build_chapter3_fs`/`_generate_cap3`. `chapter3.py` lo declara: «Sin procesos/variables por defecto: los inyecta el generator si la quest así lo exige» — el v0 del cap. 3 es solo credencial + auth.log. Consecuencia para la experiencia: `kill` no es jugable en el mundo real del cap. 3 hoy; la sala sudo y la sala de procesos son islas distintas. No es bug (suite 515/0, gate 127 intacto, kill funciona sobre su FS de test), es **alcance**: el veterano que busque bisturí en el cap. 3 real no lo encontrará. Decisión tuya (informo, no decido): (a) inyectar el par 521/522 en el FS del cap. 3 cuando la quest sea de procesos/kill (el generator elige quest por `c.sudo` hoy; ampliar a `c.ps`/`c.kill` cuando toque), o (b) documentar que el cap. 3 v0 es solo credencial y el kill vive como sala de evento separada (cap. 3/6 persiana del Faro). Mi lectura: (a) cuando entre la quest de procesos — el `ks` ya está pagado y el contraste `ceniza vs censo` en `ps aux` es demasiado bueno para dejarlo solo en test.
 
-> **Filtro Oscar:** la zona 🔬 (sudo GANADO + primera VOZ) se recorre ENTERA desde
-> estado limpio y aguanta (rechazo → leer llave → sudo eleva/firma/factura → voz
-> formulario ✓ → gate 127 ✓ → post-mortem a texto ✓); el hallazgo de hoy es una
-> decisión de gate (#14) y seguimiento de packaging/entrypoint, ninguno rompe el
-> camino. CICLO: verde.
+> **Filtro Oscar:** la zona 🔬 (Faro JUGABLE + cap. 3 real) se recorre ENTERA desde estado limpio y aguanta (Lista con PR-0091 y HOSP-47-C ✓, canónico 1 / cebo 0 ✓, familia conteo alfabeto ✓, sudo eleva/firma/factura ✓, voz «Expediente 000… Continuidad del ensayo: estable» ✓, gate 127 ✓, render sha estable ✓); los hallazgos de hoy son dos decisiones de orientación/alcance (🧭15/🧭16) y una baseline confirmada (🧭14b), ninguna rompe el camino. CICLO: verde.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 

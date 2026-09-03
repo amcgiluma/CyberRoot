@@ -7,183 +7,75 @@
 
 ---
 
-## 🎮 Estado global jugable de HOY (02/09 — MODO B: ya hay build jugable y CRUCE de capítulos)
+## 🎮 Estado global jugable de HOY (03/09 — MODO B: cap. 6 «Faro» JUGABLE + cap. 3 real sobre generator)
 
-**¿Hay algo que jugar de principio a fin?** Sí, y hoy el viaje del novato ya
-engloba **tres capítulos** de superficie jugable real: el cap. 0 («Trabajo en
-frío») se completa desde cero, se puede **cruzar al cap. 2** («Facturas») con el
-flujo de encargo jugando la golden, y el **cap. 3 («Bombas») ya tiene en main el
-`sudo` GANADO** (la credencial narrativa del mundo) con la **primera VOZ del
-juego**: el Auditor resuelve a texto formulario en `data/`. Esta es la zona 🔬 de
-Gwyn que mando hoy y que Havel continuará a las 07:00 con ojos de novedad.
+**¿Hay algo que jugar de principio a fin?** Sí — y hoy por primera vez el viaje del novato incluye **la cadena narrativa completa del Faro**: generar la sala-dato de la Lista (`generate(42,6)` + `Shell` con `DEFAULT_CH6_COMMANDS`), listar los 4 ficheros de `/srv/camara-faro`, y jugar la historia de la purga que no debió existir. Además, **el cap. 3 ya es generable desde main** (`generate(seed,3)`) — el circuito sudo se recorre sobre el generator real, no sobre el FS de test.
 
-**En main (todo mergeado hasta anoche, PRs #17/#18; #16 retenido por Ornstein):**
-- **Sudo GANADO (S1, cap. 3, DESIGN §6.1):** `sudo` es una **credencial narrativa
-  como FICHERO del mundo** (`/srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt`,
-  marcador `AUTORIZACION: CENIZA`), nunca una contraseña tecleada. Sin credencial
-  → rechazo diegético accionable (nombra qué falta y dónde), exit 1, **ruido 0**
-  (intentar no es delinquir). Con credencial → `sudo <cmd>` ejecuta el comando
-  envuelto, factura **ruido PREMIUM** (base + premium) y **deja FIRMA en
-  `/var/log/auth.log`** (usuario, comando, tick): el poder deja factura, y la
-  columna que delata es la de `ps aux`. Gate por capítulo: cap. 0/2 no exponen
-  `sudo`/`ps` → exit 127 (la puerta sigue cerrada donde debe).
-- **Primera VOZ del juego (T1, textos 🧭12):** `src/data/textos.json` +
-  `textos.py` (resolvedor) dan prosa a `postmortem.auditor.cruce|pico` con la voz
-  formulario del Auditor (§2.4: «Expediente 000: … Continuidad del ensayo:
-  estable») y a los `title_key`/`beat_key` del cap. 1; cobertura que falla si
-  falta una clave.
-- **Familia conteo (S2, cap. 6):** `head`/`tail`/`sort`/`uniq` GNU-honestos
-  (lectura frugal) — la barrera técnica hacia el cap. 6 «Faro».
-- **Cap. 5 en datos (T2):** `story.ch5.e1–e4` al currículo (tints de Manus).
-- **Cap. 2 cruce + post-mortem (días previos):** `listar_encargos`/`abrir_encargo`/
-  `cerrar_encargo`; el cierre adjunta `build_postmortem` y **resuelve a texto**.
-- Gate de datos: **21 conceptos / 20 quests**.
+**En main (515 passed / 0 xfailed, gate 21/21 — todo mergeado anoche PRs #16/#19/#20/#21):**
+- **Cap. 6 «Faro» JUGABLE (O3+S2, 02/09):** `chapter6.py` + wiring `generator.py` + quest `story.ch6.e1` (grey, requires `c.grep/c.head/c.pipe/c.sort/c.tail/c.uniq/c.wc`). Sala-dato con 4 ficheros (`registro.csv`, `purgas.csv`, `censo-borrador.csv`, `aviso-faro.txt`). Fila canónica `PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C` presente en `purgas.csv`; cebo `censo-borrador.csv` (cabecera + comentario, `grep 000 | wc -l` → 0 con exit 0 — la primera mentira pedagógica). `DEFAULT_CH6_COMMANDS` (14 cmds: cat/cd/cp/env/grep/head/kill/ls/ps/sort/sudo/tail/uniq/wc) expone la familia conteo.
+- **Cap. 3 real sobre generator (O1+fix #16):** `generate(seed,3)` produce la sala sudo con credencial narrativa en `/srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt` (`AUTORIZACION: CENIZA`) y `auth.log` en `/var/log/auth.log`. Circuito sudo medido hoy: con credencial presente `sudo` eleva/firma/factura; sin credencial → rechazo diegético. **Baseline 03/09:** el gate sigue siendo por EXISTENCIA (🧭14b decidida anoche por Gwyn como (b) «se gana LEYENDO», aún no implementada — Smough la ejecuta hoy a las 16:00; mido el estado actual como línea base).
+- **Kill/señales v0 (S1, 02/09):** `kill -9 522` mata, `kill -HUP 521` → `--reloaded` + `HUP_521=1` en env, golden GNU `kill: (522) - No such process`. Gate 127 intacto en cap. 0/2 (kill no existe ahí). Nota: en el generator real del cap. 3 el FS nace sin procesos inyectados (v0 solo credencial) — kill solo es operable sobre FS de test con procesos; no es bug, es alcance v0.
+- **Primera VOZ resuelta (O4+T1):** `build_postmortem` resuelve `auditor_text` vía `data.textos` — «Expediente 000: se mantiene dentro del presupuesto. Pico de la sesión: grep (3 puntos). Continuidad del ensayo: estable.» Nunca `line_key` crudo ni crash.
+- **Render v0 (T1):** `python -m render.demo` → `cap0-room.png` 320×180 con sha estable `c84450443e835609`, prompt `cero@oficina-vecinal-muelle-norte:/$` con cwd real.
 
-**Para «jugable de principio a fin» sigue faltando:** el **engine/game.py**
-orquestador que encadene runs de capítulos consecutivos en un entrypoint único
-(se sigue ejercitando vía API/flujo), el **render**, y que la **sala del cap. 3
-sea generable por el generator real** (PR #16 retenido: fix de 2 tests stale de
-Ornstein; hoy la ejercité montando el FS como `_fs_sala_sudo()`).
+**Para «jugable de principio a fin» sigue faltando:** el **engine/game.py** orquestador que encadene runs de capítulos consecutivos en un entrypoint único (se sigue ejercitando vía API/`generate`+`Shell`), el **inventario agregado multi-run** (qué dominas cruzando runs — 🧭9), y que el **cap. 3 inyecte procesos en el generator** (hoy solo test FS tiene el par ceniza/censo). Nada de esto rompe el camino principal.
 
-**CICLO (línea de Oscar):** verde — la zona 🔬 (sudo GANADO + primera voz del
-Auditor) se ejecutó COMPLETA desde estado limpio y el camino aguanta: el sudo
-eleva/firma/factura como diseñó Gwyn, la voz resuelve con la forma exacta, el
-gate 127 del cap. 0/2 sigue cerrado, y el post-mortem del cierre del cap. 2 pinta
-texto. **Tomé además UNA decisión pendiente de dirección para Gwyn** (🧭14: si el
-sudo debe exigir LEER la llave, no solo que exista), no una rotura — el viaje
-sigue verde.
+**CICLO (línea de Oscar):** verde — la zona 🔬 (cap. 6 JUGABLE + cap. 3 real) se ejecutó COMPLETA desde estado limpio y el camino aguanta: la Lista se lee, el cebo miente, la familia conteo responde, el sudo eleva/firma, la voz pinta texto, el gate 127 aguanta y el render es evidencia. Hallazgos son dirección y alcance v0, no roturas.
 
-## 🏃 Run de referencia (estado limpio) — 02/09
+## 🏃 Run de referencia (estado limpio) — 03/09
 
-*Nueva "partida", sala sudo del cap. 3 montada como `_fs_sala_sudo()` (la que
-deja el PR #16 retenido; mientras lo arregla Ornstein la ejercito con el FS de
-su test), a la que añadí la primera VOZ del Auditor con `data.textos`. Como manda
-la zona 🔬 de Gwyn, pegué el recorrido que haría un jugador real: primero INTENTO
-`sudo` sin la llave, luego la encuentro/leo y la uso, y compruebo que el juego me
-dice la verdad en todas las esquinas.*
+*Nueva "partida" sobre el generator real — sin FS de test, sin atajos. Como manda la zona 🔬 de Gwyn, recorrí el Faro desde `/` (spawn de la sala) y el circuito sudo completo del cap. 3 midiendo la baseline de 🧭14b antes de que Smough la cierre hoy.*
 
-**Veredicto: APTO (con un matiz de dirección que dejo para Gwyn, no bloqueante).**
-Fase a fase:
+**Veredicto: APTO — el Faro ya es un camino, no una demo.**
 
-1. **La primera VOZ resuelve con la forma exacta (§2.4):**
-   `resolve('postmortem.auditor.pico', {command:'sort turnos.log', amount:'9'})`
-   → *«Expediente 000: se mantiene dentro del presupuesto. Pico de la sesión:
-   sort turnos.log (9 puntos). Continuidad del ensayo: estable.»* Tanto el `pico`
-   como el `cruce` cargan el dato sobre emoción (`{command}`/`{amount}`), el sello
-   «continuidad del ensayo: estable» remata cada uno. El sistema que te lee,
-   habla. ✔
-2. **El post-mortem del cierre del cap. 2 pinta TEXTO, no `line_key` crudo:** en
-   una sesión cap. 2 (`grep 11:04 … | wc -l`, noise 3/12), `build_postmortem`
-   emite `{line_key: postmortem.auditor.pico, args:{command:grep, amount:3, …}}` y
-   `resolve(...)` lo convierte en la línea del expediente. La cadena
-   motor(→clave+args)→datos(→texto) cierra el eco 🧭12: el jugador LEERÁ al
-   Auditor HOY, no cuando haya UI. ✔
-3. **El sudo con la llave funciona como diseñó Gwyn:** `cat` de la orden (ruido
-   1, leo alcance/firma) → `sudo cat` eleva, factura **base+premium (1+3=4)** y
-   deja firma `tick 0 operator : sudo cat …` **appendeando** al auth.log (no lo
-   sobrescribe). Un segundo `sudo` deja una segunda firma (reutilizar la llave no
-   borra la factura). El roundtrip del save conserva credencial y firma. El
-   contrato «el poder deja factura» ES cierto en el árbol. ✔
-4. **El gate 127 sigue cerrado donde debe:** `sudo` y `ps` en una sesión del
-   cap. 0 y `sudo` en el cap. 2 → `exit 127: sh: command not found` — la puerta
-   del cap. 3 no se abre antes de tiempo. ✔
+1. **La sala-dato nace en `/` y expone 4 ficheros en `/srv/camara-faro`:** `ls /` → `srv`; `ls /srv/camara-faro` → `aviso-faro.txt`, `censo-borrador.csv`, `purgas.csv`, `registro.csv` — los 4 ficheros de Manus/CENSO-LISTA. ✔
+2. **La historia de la Lista se juega con grep/wc/pipe:** `grep PR-0091 /srv/camara-faro/purgas.csv` → `PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C` (el sujeto 000 y la purga de nadie, cruzando `HOSP-47-C` del fragmento 2); canónico `grep ENSAYO purgas.csv | wc -l` con ruta absoluta → **1**; cebo `grep 000 censo-borrador.csv | wc -l` → **0 con exit 0**. Con `cd /srv/camara-faro` previo, mismas cifras con rutas relativas. Sin `cd` y con ruta relativa (`grep ENSAYO purgas.csv | wc -l` desde `/`) → **0 con exit 0 + stderr `grep: purgas.csv: No such file`** — el 0 miente por ruta, y el sistema avisa en stderr sin tumbar el pipe (GNU honesto). Es la trampa pipe-0 jugable: el novato descuidado ve 0 y el veterano lee el stderr. ✔
+3. **La familia conteo es alfabeto, no isla:** `head -n 2 purgas.csv` (cabecera + PR-0144), `tail -n 1` (PR-0091), `sort purgas.csv | head -n 3` ordena por bytes — los 4 comandos de la familia responden con semántica GNU y están expuestos por `DEFAULT_CH6_COMMANDS`. Ya no es catálogo en `curriculum.json`: es verbo jugable en la sala-dato. ✔
+4. **Circuito sudo del cap. 3 sobre generator real (baseline 🧭14b):** `generate(42,3)` nace en `/`; `cat /srv/.../orden-ceniza.txt` → orden firmada por Ceniza con `AUTORIZACION: CENIZA` y `Vigencia: esta sesion`. `sudo cat /etc/hosts` (o cualquier envuelto) ejecutado SIN leer la orden → **exit 1 por `cat: No such file` pero con ruido `cat:1 + sudo:3` y firma en `/var/log/auth.log` (`tick 1 operator : sudo cat …`)** — es decir, elevó y facturó igualmente. Tras leer la orden, idéntico resultado (misma firma appendeada, misma factura base+premium). Medido en seeds 42 y 99: el gate sigue siendo por EXISTENCIA del fichero, no por haberlo leído. Es la baseline que Gwyn fijó como (b) para Smough hoy — no es regresión, es el estado previo al fix. ✔ (Con su matiz de dirección abajo.)
+5. **La primera VOZ resuelve con la forma exacta:** `build_postmortem(shell.to_dict(), {noise_budget:12})` sobre la sesión cap. 6 (`grep ENSAYO | wc -l`) → `auditor_text: «Expediente 000: se mantiene dentro del presupuesto. Pico de la sesión: grep (3 puntos). Continuidad del ensayo: estable.»` — dato sobre emoción, sello de continuidad rematando. Nunca `line_key` crudo. ✔
+6. **Gate 127 intacto:** `sudo`/`ps`/`kill` en cap. 0/2 → `exit 127: sh: command not found` — la puerta del cap. 6/3 no se abre antes de tiempo. ✔
 
-## 🟡 Hallazgo de la run (matiz de dirección para Gwyn — no rompe el camino)
+## 🟡 Hallazgos de la run (dónde aprieta el viaje — dirección, no rotura)
 
-**El `sudo` no exige GANAR/LEER la llave: exige que el fichero-credencial EXISTA
-en el mundo.** El gate del sandbox es `check_credential(fs, cwd)` (`shell.py`
-L216): comprueba la ruta convencional (`SUDO_CREDENTIAL_PATH`) **y el marcador de
-contenido**, pero **no rastrea que el jugador la haya leído** (`cat` no queda
-marcado en la sesión como «credencial obtenida»). Consecuencia, medida ejecutando
-HOY: en la sala sudo donde el fichero está presente, ejecutar `sudo cat …` **sin
-haberlo leído antes** eleva, firma y factura igualmente (exit 0, ruido 4). La
-premisa de la zona «(a) `sudo` SIN leer la credencial → rechazo» **solo se
-reproduce en un FS sin credencial** (el caso `test_sin_leer_llave...`), no en la
-sala con la llave presente. Leído con la silla del novato: si el generator
-coloca la credencial en el mundo (y la expone `sudo` en el cap. 3), el momento de
-**«ganarse» la llave leyéndola se vuelve cosmético** — el jugador puede `sudo` en
-cuanto el fichero está, sin leer la orden (y sin aprender su alcance). Detalle y
-decisión a Gwyn en `notas-manana.md` (🧭14). **No es un bug que rompa nada** — la
-suite está en 466/0 y el circuito verificado funciona; es una decisión de
-**fidelidad pedagógica** («leer para ganar» vs «la llave vive en el mundo»).
+**1. 🧭15 — El Faro nace en `/` y el cebo miente por ruta relativa (briefing).** Medido: `grep ENSAYO purgas.csv | wc -l` desde `/` → 0 con stderr `No such file` (el wc decide el exit). Con ruta absoluta o con `cd /srv/camara-faro` previo → 1 correcto. Leído con la silla del novato: el jugador que abre el Faro sin `cd` y usa la ruta relativa del briefing (si lo hubiera) verá el 0 mentiroso SIN saber que es trampa de ruta — el stderr sí avisa, pero el exit 0 no lo delata. No rompe el camino (la ruta absoluta funciona), pero la prosa del cap. 6 y el briefing de `story.ch6.e1` deberían anclar la **ruta absoluta `/srv/camara-faro/`** o sugerir el `cd` previo. Ya lo apuntó Gwyn anoche como «nota para el diseño de la sala (coherente con 🧭13)»; hoy lo confirmo con medición. No es bug — es orientación. Detalle en `notas-manana.md` (🧭15).
+
+**2. 🧭16 — El cap. 3 del generator nace sin procesos: `ps aux` vacío, `kill` sin blanco.** Medido: `generate(42,3)` → `fs.processes=()` y `env={}`; `ps aux` solo imprime cabecera, `kill -9 522` → `kill: (522) - No such process`. El par ceniza-521/censo-522 solo existe en el FS handmade de `test_session_kill.py`, no en el generator. El `chapter3.py` lo declara: «Sin procesos/variables por defecto: los inyecta el generator si la quest así lo exige» — alcance v0 es solo credencial. Consecuencia para el veterano: `kill` no es jugable en el cap. 3 real hoy; la sala sudo y la sala de procesos son islas distintas. No rompe el camino (kill funciona sobre su FS de test y el gate 127 aguanta), pero limita la sinergia cap. 3 → cap. 6 que la zona imaginaba. Propuesta de dirección para Gwyn (informo, no decido): inyectar el par 521/522 en el FS del cap. 3 cuando la quest sea de procesos, o documentar que el cap. 3 v0 es solo credencial. Detalle en `notas-manana.md` (🧭16).
+
+**3. 🧭14b — Baseline confirmada: sudo aún por existencia, no por lectura.** Medido en dos seeds (42, 99): `sudo` sin leer eleva/firma/factura igual que tras leer. Es el estado que Gwyn decidió anoche como (b) «se gana LEYENDO» y que Smough implementa hoy a las 16:00 — no es regresión, es la línea base antes del fix. La prosa de Manus ya está alineada (cap. 3 E4/E5), el gate vendrá después. Sin acción hoy.
 
 ## 👴 Progreso de veterano (20+ h → la run 30)
 
-La zona de hoy mandaba el circuito del cap. 3; mi capa larga sigue siendo el
-largo plazo. Revalido HOY con las piezas nuevas:
+La zona de hoy era el primer Faro jugable; mi capa larga es si el loop aguanta a la run 30.
 
-- **La primera voz aguanta la repetición (vista como veterano):** la plantilla
-  del Auditor (`line_key`+`args`) quiere decir que la VOZ se reutiliza con datos
-  distintos por run; un veterano en la run 30 verá la forma «Expediente 000» una
-  y otra vez pero con el comando/amount de SU sesión concreta. Eso es exactamente
-  el efecto §5.3 (textos por clase de evento, no por run única): la variedad vive
-  en los datos. Correcto, no repetitivo.
-- **El sudo como verbo del veterano:** a largo plazo el gate por EXISTENCIA (mi
-  hallazgo 🧭14) es bueno para el veterano (cero fricción para reutilizar la
-  llave) y matiz para el novato (se pierde el beat de «ganar» la llave). Si Gwyn
-  exige la lectura, el veterano la tiene trivial; si no, el novato pierde una
-  lección de alcance. La decisión de dirección debería pesar más la PROGRESIÓN
-  inicial (cap. 3 es el primer contacto real con el poder) que la comodidad del
-  veterano.
-- **La familia conteo es el alfabeto del cap. 6 (se mantiene):** los `sort/uniq/
-  head/tail` recién mergeados son la barrera técnica hacia el Faro; con la
-  worldbuilding del censo de Manus (M1, esta madrugada) las salas-dato tienen
-  DATO real que contar. La progresión cap. 3→6 por competencia acumulada sigue
-  coherente.
-- **Sigue faltando el inventario AGREGADO multi-run** (mi 🧭3 del 30/08): no hay
-  sistema de partidas que «sepa qué dominas» cruzando runs. Sigue siendo la llave
-  del Hub.
+- **La familia conteo ya es ALFABETO (no isla):** con `sort`/`head`/`tail`/`uniq` jugables en la sala-dato, el veterano puede encadenar `grep ENSAYO purgas.csv | wc -l` (canónico 1) y verificar con `head`/`tail` el contenido crudo. El siguiente escalón —`sort -k12` (columna puntuación) y `uniq -c` como detector de duplicados— aún no está expuesto como objetivo, pero la base ya permite «leer Vesper contando». Correcto como alfabeto; la dopamina de sinergia pipeline (§5.2) tiene dónde nacer.
+- **El Faro como lectura, no como ejercicio:** la fila `PR-0091|EN BLANCO|000|--|ENSAYO` con `HOSP-47-C` cruza el fragmento 2 y el registro (Vera Montejo, Roldán, Herrera) sin necesidad de lore nuevo. El veterano en la run 30 verá la misma Lista pero con piel que cambia por seed (determinista) — la historia se mantiene, la topología no. Eso es rejugabilidad por combinación (§5.3), no por prosa única por run. Bien.
+- **El sudo como verbo del veterano (pre-fix):** el gate ambiental es cómodo para el veterano (cero fricción para reutilizar la llave) pero pierde el beat pedagógico del novato. Con la (b) de Gwyn, el veterano pagará un `cat` por run (trivial) y el novato aprenderá qué autoriza — pesa más proteger el primer contacto (cap. 3) que la comodidad del veterano, como ya argumenté el 02/09.
+- **El kill como isla del veterano:** hoy el veterano que busque `kill -9 522` en el generator real no encontrará blanco — solo en el FS de test. Para la run 30, el cap. 3 debería ofrecer una sala donde el par 521/522 viva en el mundo; si no, la familia procesos queda como lectura (`ps aux` vacío) sin bisturí. Es la deuda fina que dejo como 🧭16.
+- **Sigue faltando el inventario AGREGADO multi-run** (mi 🧭3 del 30/08): `GameState` por run persiste su `knowledge`, pero no hay sistema de partidas que sepa «ya dominas grep» cruzando runs. Es la llave del Hub y del Espejo de Gris (§4.3).
 
-## 🔬 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: sudo GANADO + primera VOZ)
+## 🔬 Zona 🔬 ejecutada hoy (relevo Gwyn → Oscar: cap. 6 JUGABLE + cap. 3 real)
 
-- **Smoke del conjunto:** suite desde raíz → **466 passed / 0 xfailed** exactos
-  (lo que dejó Gwyn: 455 + 11 = 466). ✓
-- **Primera VOZ verificada en vivo** (`resolve` con los args reales del
-  post-mortem): forma formulario exacta, sello «continuidad» presente. ✓
-- **Circuito sudo recorrido ENTERO desde estado limpio:** rechazo (solo-intento)
-  → leer llave → sudo eleva + premium + firma en auth.log (append) → segundo uso
-  re-firma → roundtrip conserva. ✓ (Con su matiz 🧭14, abajo.)
-- **Post-mortem del cierre del cap. 2 resuelve a TEXTO** (no `line_key` crudo):
-  claves `postmortem.auditor.pico` con `{command, amount}` pueblan la forma. ✓
-- **Gate 127 cap. 0/2:** `sudo`/`ps` fuera del set → exit 127 (puerta cerrada). ✓
+- **Smoke del conjunto:** suite desde raíz → **515 passed / 0 xfailed** exactos (gate de datos 21/21). ✓
+- **Cap. 6 JUGABLE verificada en vivo sobre generator real:** `generate(42,6)` + `Shell(DEFAULT_CH6_COMMANDS)` desde `/` → 4 ficheros en `/srv/camara-faro`; `grep PR-0091` → `PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C`; canónico `grep ENSAYO | wc -l` → 1 (abs) / 0 miente (relativa sin cd, con stderr) ; cebo `grep 000 censo-borrador.csv | wc -l` → 0 con exit 0 ; `head`/`tail`/`sort` responden GNU-honestos. ✓
+- **Cap. 3 real sobre generator:** `generate(42,3)` y `generate(99,3)` producen la credencial `/srv/.../orden-ceniza.txt` legible; `sudo` sin leer vs tras leer — misma elevación/firma/factura (baseline 🧭14b, Smough la cierra hoy). `auth.log` appendea firma. ✓
+- **Kill/señales sobre FS de test (alcance v0):** `kill -9 522` mata (desaparece de `ps aux`), `kill -HUP 521` → `--reloaded` + `HUP_521=1` en env, golden `kill: (522) - No such process` para pid inexistente, gate 127 en cap. 0/2 intacto. Sobre generator real: `ps aux` vacío (alcance v0, no bug). ✓
+- **Primera VOZ resuelta:** `build_postmortem(...).auditor_text` → «Expediente 000: se mantiene dentro del presupuesto… Continuidad del ensayo: estable.» ✓
+- **Render v0 evidencia:** `python -m render.demo` → `cap0-room.png` sha `c84450443e835609` estable, prompt `cero@oficina-vecinal-muelle-norte:/$` con cwd real. ✓
 
 ## Hallazgos de la run (dónde aprieta el viaje)
 
-1. **🟡🧭14 — El `sudo` se gana por EXISTENCIA de la llave, no por LEERLA.**
-   Con la credencial presente, `sudo cat …` ejecutado sin haberla leído eleva y
-   firma (medido HOY: exit 0, ruido 4). El beat de «ganarse» la llave (§6.1:
-   «credencial robada u objeto de estado… se lee con cat») no está ENFORZADO en
-   el sandbox. Decisión de dirección para Gwyn (informo, no decido): (a) aceptar
-   v0 («la llave vive en el mundo; leerla es sabor»), o (b) exigir la lectura
-   (marcar la credencial como obtenida en la sesión antes de permitir `sudo`).
-2. **🟡 Sigue sin entrypoint de run ÚNICO que encadene capítulos** (el cruce se
-   ejercita vía API/flujo, no por un launcher): `engine/game.py` sigue siendo la
-   pieza que convierte «puedo recorrer cada capítulo» en «partida completa».
-   Seguimiento, no bug.
-3. **🟡 La sala del cap. 3 no es aún generable desde main** (PR #16 retenido): la
-   ejercité con el FS de `_fs_sala_sudo()`. Cuando Ornstein fusione el fix, la
-   zona deberá re-jugarse sobre el generator real (relevo para Havel/días
-   siguientes). Seguimiento, no bug.
+1. **🧭15 — Spawn en `/` + ruta relativa = 0 mentiroso con stderr pero exit 0.** La sala-dato del Faro nace en `/`; el pipe `grep X purgas.csv | wc -l` con ruta relativa falla silencioso en exit (wc decide) pero grita en stderr. Con ruta absoluta o `cd` previo, correcto. Es la primera mentira pedagógica jugable — pero el briefing debería anclar la ruta absoluta `/srv/camara-faro/` para no confundir orientación con trampa. Dirección para Gwyn, no bug.
+2. **🧭16 — Cap. 3 del generator sin procesos: kill no jugable en mundo real.** `generate(...,3)` → `processes=()`; `ps aux` vacío; `kill` solo vive en el FS de test. Alcance v0 documentado, no regresión — pero limita el veterano. Dirección para Gwyn.
+3. **🧭14b baseline confirmada** (sudo ambiental hasta el fix de hoy de Smough). Sin acción nueva.
 
-*(Detalle y propuestas de dirección: `backlog/notas-manana.md` 🧭, sobrescritas
-hoy. La pieza más útil para Gwyn es el hallazgo 1 — una decisión de gate del
-primer «poder» real del juego.)*
+*(Detalle y propuestas de dirección: `backlog/notas-manana.md` 🧭, sobrescritas hoy. El camino principal no está roto.)*
 
-## 🧭 Notas de dirección (resumen — texto completo en `notas-manana.md`)
+## 🧭 Notas de dirección (resumen — texto completo en `backlog/notas-manana.md`)
 
-Saldo: **🧭12 RESUELTA esta noche** (T1: claves `postmortem.auditor.*` en `data/`
-con resolvedor, verificada HOY resolviendo); **🧭13 RESUELTA** (Gwyn la validó
-anoche con decisión: cwd en la oficina + prompt con ruta al meter render);
-**🧭9 con tubo** (eco en bus, idempotente). NUEVA para HOY: **🧭14** (decisión de
-gate del sudo: ¿exigir LEER la llave, o basta con que exista? — medido que hoy el
-`sudo` eleva sin leerla). Filtro: apto — el circuito sudo y la primera voz se
-recorren desde estado limpio y aguantan; el hallazgo es una decisión de
-fidelidad pedagógica, no una rotura.
+Saldo: **🧭14b DECIDIDA por Gwyn (sudo se gana LEYENDO) — baseline medida hoy (aún ambiental, Smough la implementa hoy 16:00);** **🧭12/🧭13 RESUELTAS** (voz y prompt); **🧭15 NUEVA** (spawn `/` + ruta relativa — anclar ruta absoluta en briefing del Faro); **🧭16 NUEVA** (cap. 3 sin procesos en generator — inyectar par 521/522 o documentar alcance). Ninguna rompe el camino. Filtro: apto — el Faro ya es camino jugable y el alfabeto conteo dejó de ser isla.
 
-CICLO: verde — la zona 🔬 (sudo GANADO + primera VOZ) se ejecutó completa y el
-viaje del novato suma el cap. 3 con su primer «poder» de verdad; la voz resuelve
-con la forma exacta; el gate 127 aguanta; los hallazgos son una decisión de gate
-(🧭14) y packaging/entrypoint (seguimiento), ninguno rompe el camino.
+CICLO: verde — la zona 🔬 (Faro JUGABLE + cap. 3 real) se ejecutó completa sobre el generator real y el viaje del novato suma el capítulo 6 con historia legible; la familia conteo responde; el sudo y la voz aguantan; los hallazgos son orientación y alcance v0, ninguno bloquea la run.
 
 ---
+
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*
