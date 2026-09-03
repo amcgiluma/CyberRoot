@@ -19,7 +19,11 @@ la rama de Ornstein A LA VEZ; Artorias verifica la coincidencia en el gate.
 Forma operativa (v1):
 - sin credencial        → rechazo diegético accionable que NOMBRA qué falta y
                           dónde vive; exit 1, ruido 0 (intentar no es delinquir).
-- con credencial        → ejecuta el comando envuelto, factura ruido PREMIUM
+- credencial SIN LEER    → rechazo diegético que NOMBRA la orden y manda
+                          leerla (`cat <ruta>`); exit 1, ruido 0, SIN firma
+                          en `auth.log` (S1, 03/09: el sudo se GANA LEYENDO).
+- credencial LEÍDA (`cat` en la sesión, marca en el estado serializable) →
+                          ejecuta el comando envuelto, factura ruido PREMIUM
                           (extra sobre el precio base del comando) y deja FIRMA
                           en `auth.log` (usuario, comando, tick): el poder deja
                           factura — la lección llega por la columna USER de `ps`.
@@ -73,6 +77,23 @@ SUDO_NO_CRED_MSG = (
     "sudo: elevation denied: an authorization order is required.\n"
     f"Find it and read it (it names your scope): 'cat {SUDO_CREDENTIAL_PATH}'"
 )
+
+
+#: Mensaje diegético del rechazo con credencial SIN LEER (S1, 03/09, 🧭14b).
+#: NOMBRA la orden por su ruta y manda leerla: la llave se gana, no se
+#: adivina por el sitio. Voz de Linux real en inglés (§2.6.8); exit 1,
+#: ruido 0, sin firma en `auth.log`.
+SUDO_UNREAD_MSG = (
+    "sudo: elevation denied: you have not read Ceniza's order.\n"
+    f"Read it first (it names your scope): 'cat {SUDO_CREDENTIAL_PATH}'"
+)
+
+#: Tipo del evento que el shell publica en su bus cuando el jugador LEE la
+#: credencial con `cat` (S1, 03/09). Prefijo canónico `event.` (contrato de
+#: `common.events.EventTypes`, catálogo abierto §5.2): cuando el engine lo
+#: consuma, la constante promociona allí; el sandbox NO toca `common/`
+#: (es de Ornstein) y publica por este literal compartido.
+SUDO_READ_EVENT_TYPE = "event.credential.read"
 
 
 def signature_line(user: str, cmd: str, argv: tuple[str, ...], tick: int) -> str:

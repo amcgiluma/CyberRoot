@@ -159,3 +159,24 @@ def test_sudo_de_nuevo_mismo_comando_vuelve_a_firmar() -> None:
     shell.execute(f"sudo cat {SUDO_CREDENTIAL_PATH}")
     auth = shell.fs.read_file(AUTH_LOG_PATH)
     assert auth.count("sudo cat") == 2
+
+
+def test_gate_lectura_flujo_rechazo_lectura_elevacion() -> None:
+    """S1 (03/09, 🧭14b) — el sudo se GANA LEYENDO: con la orden PRESENTE
+    pero sin leer, `sudo` rechaza NOMBRANDO la orden (ruido 0, sin firma);
+    tras el `cat`, el MISMO `sudo` eleva y firma."""
+    shell = _shell()
+    no = shell.execute("sudo ls")
+    assert no.exit_code == 1
+    assert SUDO_CREDENTIAL_PATH in no.stderr  # NOMBRA la orden
+    assert shell.total_noise == 0
+    assert "sudo" not in shell.fs.read_file(AUTH_LOG_PATH)
+
+    ok = shell.execute(f"cat {SUDO_CREDENTIAL_PATH}")
+    assert ok.exit_code == 0
+    assert SUDO_CREDENTIAL_PATH in shell.read_marks
+
+    yes = shell.execute("sudo ls")
+    assert yes.exit_code == 0
+    assert shell.total_noise == 1 + (1 + 3)  # cat(1) + ls(1) + premium(3)
+    assert "operator : sudo ls" in shell.fs.read_file(AUTH_LOG_PATH)

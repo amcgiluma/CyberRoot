@@ -278,6 +278,15 @@ class FileSystem:
 
     # ---- resolución / consultas ----------------------------------------
 
+    def abspath(self, path: str, cwd: str = "/") -> str:
+        """Ruta canónica de `path` (abs. o relativo a `cwd`), SIN tocar el FS.
+
+        S1 (03/09): el shell la usa para detectar la LECTURA de la credencial
+        narrativa (`cat` con ruta relativa o absoluta resuelve igual). Pura de
+        cadena: no valida existencia (eso lo hace `resolve`/`read_file`).
+        """
+        return self._join(cwd, path)
+
     def resolve(self, path: str, cwd: str = "/") -> Node:
         """Devuelve el nodo destino, absoluto o relativo a `cwd`.
 

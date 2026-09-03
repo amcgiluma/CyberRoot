@@ -22,15 +22,20 @@ from core.sandbox.commands.conteo import SPECS as CONTEO_SPECS
 from core.sandbox.commands.senal import SPECS as SENAL_SPECS
 from core.sandbox.commands.escalada import (
     AUTH_LOG_PATH,
+    SUDO_AUTHZ_MARKER,
+    SUDO_CREDENTIAL_PATH,
     SUDO_NAME,
     SUDO_NO_CRED_MSG,
+    SUDO_READ_EVENT_TYPE,
+    SUDO_UNREAD_MSG,
     check_credential,
     signature_line,
 )
-from core.sandbox.commands.files import SPECS as FILE_SPECS
+from core.sandbox.commands.files import CAT_NAME, SPECS as FILE_SPECS
 from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
 from core.sandbox.commands.procesos import SPECS as PROCESOS_SPECS
 from core.sandbox.commands.texto import SPECS as TEXT_SPECS
+from core.common.events import Event, EventBus
 from core.sandbox.fs import FileSystem
 from core.sandbox.noise import NoiseMeter
 
@@ -163,6 +168,7 @@ class Shell:
         cwd: str = "/",
         tick: int = 0,
         commands: tuple[str, ...] = DEFAULT_CAP0_COMMANDS,
+        bus: EventBus | None = None,
     ) -> None:
         self.fs = fs
         self.user = user
@@ -171,6 +177,14 @@ class Shell:
         self.tick = tick
         self.total_noise = 0
         self.history: list[dict[str, Any]] = []
+        #: Credenciales narrativas LEÍDAS en la sesión (rutas canónicas). S1
+        #: (03/09, 🧭14b): el `sudo` se GANA LEYENDO la orden con `cat` — la
+        #: marca la pone `_note_credential_read` y viaja en `to_dict`.
+        self.read_marks: set[str] = set()
+        #: Bus de sesión (runtime, NO serializado): publica
+        #: `event.credential.read` al ganar cada marca. El llamador puede
+        #: inyectar el suyo (tests, engine futuro); por defecto uno propio.
+        self.bus = bus if bus is not None else EventBus()
         wanted = set(commands)
         self.available_commands = wanted.copy()
         self.registry = build_registry(
@@ -178,6 +192,33 @@ class Shell:
         )
 
     # ---- ejecución -------------------------------------------------------
+
+    def _note_credential_read(
+        self, cmd: str, argv: tuple[str, ...], stdout: str
+    ) -> None:
+        """Marca la credencial narrativa como LEÍDA si este `cat` la leyó.
+
+        S1 (03/09, 🧭14b): el `sudo` se GANA LEYENDO. Regla: comando `cat`
+        cuyo stdout trae el marcador Y uno de sus operandos resuelve a
+        `SUDO_CREDENTIAL_PATH` (relativa o absoluta — `abspath` canoniza).
+        Solo la TRANSICIÓN publica `event.credential.read` en el bus
+        (releer no re-emite). No exige exit 0: `cat falta orden` (exit 1)
+        también entrega el texto al jugador — leer es leer.
+        """
+        if cmd != CAT_NAME or SUDO_AUTHZ_MARKER not in stdout:
+            return
+        for arg in argv:
+            if self.fs.abspath(arg, self.cwd) == SUDO_CREDENTIAL_PATH:
+                if SUDO_CREDENTIAL_PATH not in self.read_marks:
+                    self.read_marks.add(SUDO_CREDENTIAL_PATH)
+                    self.bus.publish(
+                        Event(
+                            type=SUDO_READ_EVENT_TYPE,
+                            data={"path": SUDO_CREDENTIAL_PATH},
+                            tick=self.tick,
+                        )
+                    )
+                return
 
     def _exec_argv(
         self, argv: tuple[str, ...], stdin: str = ""
@@ -205,6 +246,9 @@ class Shell:
         result = spec.run(self.fs, self.cwd, argv[1:], self.tick, stdin)
         if result.new_cwd is not None:
             self.cwd = result.new_cwd
+        # S1 (03/09): `cat` de la orden GANA la marca (vale en tuberías:
+        # cada lado pasa por aquí).
+        self._note_credential_read(argv[0], argv[1:], result.stdout)
         return result
 
     def _exec_sudo(
@@ -212,11 +256,15 @@ class Shell:
     ) -> CommandResult:
         """`sudo <cmd> [args...]` — elevación con credencial narrativa (cap. 3).
 
-        Forma firma DESIGN §6.1 (S1, 01/09):
-          - sin credencial  → rechazo diegético accionable, exit 1, ruido 0.
-          - con credencial  → ejecuta el comando envuelto (registry), factura
-            ruido PREMIUM (extra sobre el base del comando) y deja firma en
-            `AUTH_LOG_PATH` (usuario, comando, tick) via `fs.append_file`.
+        Forma firma DESIGN §6.1 (S1, 01/09; gate de LECTURA S1, 03/09 🧭14b):
+          - sin credencial en el mundo → rechazo diegético accionable, exit 1,
+            ruido 0.
+          - credencial SIN LEER (`cat` previo en la sesión) → rechazo
+            diegético que NOMBRA la orden, exit 1, ruido 0, SIN firma.
+          - credencial LEÍDA → ejecuta el comando envuelto (registry),
+            factura ruido PREMIUM (extra sobre el base del comando) y deja
+            firma en `AUTH_LOG_PATH` (usuario, comando, tick) via
+            `fs.append_file`.
         Si el comando envuelto no existe → `sh: command not found: cmd`
         (exit 127), igual que el shell sin sudo. La credencial vive en el FS de
         la sala (contrato O1↔S1); NO es una contraseña tecleada.
@@ -225,9 +273,12 @@ class Shell:
             return CommandResult(
                 stderr="sudo: no command given\n", exit_code=1
             )
-        # Sin credencial: intentar no es delinquir — rechazo sin ruido.
+        # Sin credencial en el mundo: intentar no es delinquir.
         if not check_credential(self.fs, self.cwd):
             return CommandResult(stderr=SUDO_NO_CRED_MSG + "\n", exit_code=1)
+        # Con credencial pero SIN LEER: la llave se gana, no se adivina.
+        if SUDO_CREDENTIAL_PATH not in self.read_marks:
+            return CommandResult(stderr=SUDO_UNREAD_MSG + "\n", exit_code=1)
 
         wrapped = argv[1:]
         spec = self.registry.get(wrapped[0])
@@ -238,6 +289,9 @@ class Shell:
         result = spec.run(self.fs, self.cwd, wrapped[1:], self.tick, stdin)
         if result.new_cwd is not None:
             self.cwd = result.new_cwd
+        # Leer es leer también bajo sudo (no cambia el gate: sin marca previa
+        # ni se llega aquí).
+        self._note_credential_read(wrapped[0], wrapped[1:], result.stdout)
 
         # Ruido PREMIUM: el wrapper emite el extra (base + premium = factura)
         # y deja firma en el auth.log — el poder deja factura (§6.1).
@@ -337,7 +391,7 @@ class Shell:
     # ---- serialización (ARCHITECTURE §1.5) -------------------------------
 
     def to_dict(self) -> dict[str, Any]:
-        """Sesión completa a dict plano (fs, cwd, tick, historial)."""
+        """Sesión completa a dict plano (fs, cwd, tick, historial, marcas)."""
         return {
             "fs": self.fs.to_dict(),
             "user": self.user,
@@ -348,11 +402,19 @@ class Shell:
             "history": [
                 {"line": h["line"], "result": h["result"]} for h in self.history
             ],
+            # S1 (03/09): credenciales LEÍDAS (rutas canónicas, ordenadas
+            # por codepoint para bytes reproducibles).
+            "read_marks": sorted(self.read_marks),
         }
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "Shell":
-        """Reconstruye la sesión; copia independiente del original."""
+        """Reconstruye la sesión; copia independiente del original.
+
+        `read_marks` es opcional (saves v1 previos a S1-03/09 cargan con
+        el set vacío: sesión sin lecturas). El bus NO viaja (runtime):
+        la restaurada trae uno propio y vacío.
+        """
         shell = cls(
             FileSystem.from_dict(d["fs"]),
             user=str(d["user"]),
@@ -362,4 +424,5 @@ class Shell:
         )
         shell.total_noise = int(d["total_noise"])
         shell.history = [dict(h) for h in d["history"]]
+        shell.read_marks = set(str(p) for p in (d.get("read_marks") or []))
         return shell
