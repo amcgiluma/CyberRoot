@@ -487,13 +487,23 @@ def _generate_cap2(
     return incursion
 
 
+def _requiere_procesos(requires: tuple[str, ...] | list[str]) -> bool:
+    """La quest pide el demonio si exige `c.ps` o `c.kill` (O1, plan 03/09).
+
+    `c.kill` no existe aún como concepto del currículo (las quests de
+    procesos piden `c.ps`/`c.env`); se acepta por literalidad del plan para
+    no reabrir la selección cuando llegue.
+    """
+    return "c.ps" in requires or "c.kill" in requires
+
+
 def _generate_cap3(
     seed: SeedLike,
     variant: str,
     curriculum: Curriculum,
     contract_id: str | None,
 ) -> Incursion:
-    """Ruta de la sala sudo del cap. 3 «Bombas» (O1, 01/09).
+    """Ruta de la sala sudo del cap. 3 «Bombas» (O1, 01/09 + 03/09).
 
     Materializa la forma FIRMADA de Gwyn (DESIGN §6.1): la credencial
     narrativa de `sudo` es un FICHERO del mundo que coloca el scaffold
@@ -501,11 +511,12 @@ def _generate_cap3(
     S1 firmará cada `sudo`. La canónica de HOY la LEE (`cat`); la ejecución
     real del `sudo` es de S1 y la cubre el ensayo de integración.
 
-    ALCANCE v0: genera SOLO la sala-credencial (la quest del cap. 3 que exige
-    `c.sudo`). La generación completa del cap. 3 para las quests de procesos
-    (`c.ps`/`c.env`) es una tarea aparte y se apoya en que el sandbox exponga
-    el resto; pedir una quest de procesos hoy es un `GeneratorError` claro, no
-    una sala de mentira.
+    O1 (03/09, 🧭16 opción a): ADEMÁS inyecta el demonio LAZY — el par de
+    procesos `ceniza:521 --ventana` / `censo:522 --vigilar-censo` (réplica
+    del golden de `test_session_kill.py`) — SOLO cuando la quest de la sala
+    requiere `c.ps`/`c.kill`. La quest sudo por defecto (`story.ch3.e4`)
+    también requiere `c.ps`, así que su sala gana el demonio SIN que la
+    credencial ni el `auth.log` cambien un byte (el circuito de S1 intacto).
     """
     chapter = 3
     concept_pool = _concept_pool(curriculum, chapter)
@@ -513,9 +524,6 @@ def _generate_cap3(
     rng = Rng(seed)
     id_rng = rng.fork("room-id")
     fs_rng = rng.fork("fs")
-
-    fs = build_chapter3_fs(fs_rng)
-    room_id = f"room-ch3-{id_rng.below(2**32):08x}-{variant}"
 
     ch_quests = curriculum.quests_for_chapter(chapter)
     if not ch_quests:
@@ -530,18 +538,24 @@ def _generate_cap3(
                 f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}"
             )
     else:
+        # La quest sudo sigue siendo la puerta por defecto (e4); si el
+        # currículo aún no trae sudo, la primera quest de procesos vale.
         sudo_quests = [q for q in ch_quests if "c.sudo" in q.requires]
-        if not sudo_quests:
-            raise GeneratorError(
-                f"capítulo {chapter}: ninguna quest del pool exige `c.sudo` — la "
-                f"generación completa del cap. 3 (procesos) es una tarea aparte; "
-                f"hoy solo se genera la sala-credencial (quest que exige c.sudo)"
-            )
-        quest = sudo_quests[0]
-    if "c.sudo" not in quest.requires:
+        if sudo_quests:
+            quest = sudo_quests[0]
+        else:
+            ps_quests = [q for q in ch_quests if _requiere_procesos(q.requires)]
+            if not ps_quests:
+                raise GeneratorError(
+                    f"capítulo {chapter}: ninguna quest del pool exige `c.sudo` "
+                    f"ni `c.ps`/`c.kill` — sin encargo generable para el cap. 3"
+                )
+            quest = ps_quests[0]
+    if "c.sudo" not in quest.requires and not _requiere_procesos(quest.requires):
         raise GeneratorError(
-            f"quest {quest.id!r} del cap. {chapter} no exige `c.sudo`: la "
-            f"generación v0 del cap. 3 cubre SOLO la sala-credencial sudo"
+            f"quest {quest.id!r} del cap. {chapter} no exige `c.sudo` ni "
+            f"`c.ps`/`c.kill`: el cap. 3 v0 cubre la sala-credencial sudo y "
+            f"las salas de procesos, nada más"
         )
     # Invariante §6.4.1: `c.sudo` debe estar enseñado en un capítulo ≤ 3.
     missing = set(quest.requires) - _taught_up_to(curriculum, chapter)
@@ -550,6 +564,12 @@ def _generate_cap3(
             f"quest {quest.id!r} requiere conceptos que ningún capítulo ≤ {chapter} "
             f"enseña: {sorted(missing)} (viola §6.4.1)"
         )
+
+    # O1 (03/09): el demonio entra LAZY — solo si la quest lo pide (`c.ps` /
+    # `c.kill`). La credencial + auth.log se colocan SIEMPRE (circuito S1).
+    with_processes = _requiere_procesos(quest.requires)
+    fs = build_chapter3_fs(fs_rng, with_processes=with_processes)
+    room_id = f"room-ch3-{id_rng.below(2**32):08x}-{variant}"
 
     objective = Objective(
         id=f"serie-{quest.id}",

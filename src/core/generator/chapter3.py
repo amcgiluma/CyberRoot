@@ -38,7 +38,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from core.sandbox.fs import DirNode, FileNode, FileSystem
+from core.sandbox.fs import DirNode, FileNode, FileSystem, Proceso
 
 # ---------------------------------------------------------------------------
 # CONTRATO O1↔S1: rutas de la credencial y del auth.log (ver cabecera)
@@ -88,17 +88,58 @@ AUTH_LOG_CONTENT = (
     "11:03 operator : session closed\n"
 )
 
+# ---------------------------------------------------------------------------
+# EL DEMONIO (O1, 03/09 — 🧭16 opción a): el par ceniza:521/censo:522
+# ---------------------------------------------------------------------------
 
-def build_chapter3_fs(fs_rng: Any) -> FileSystem:
+#: Procesos del cap. 3, réplica EXACTA del FS handmade de
+#: `test_session_kill.py` (el golden de la física `kill`): el demonio de la
+#: ventana (`ceniza:521 --ventana`) y el servicio del censo que comparte
+#: imagen pero no propietario (`censo:522 --vigilar-censo`), más el init.
+#: PIEL estática (cero RNG): el generator los inyecta LAZY — solo cuando la
+#: quest de la sala requiere `c.ps`/`c.kill` — y el sandbox los renderiza.
+CHAPTER3_PROCESSES: tuple[Proceso, ...] = (
+    Proceso(
+        pid=1, user="root", cmd="/usr/lib/systemd/systemd --system",
+        tty="?", cpu="0.0", mem="0.1", vsz="22288", rss="10888",
+        stat="Ss", start="Aug25", time="0:38",
+    ),
+    Proceso(
+        pid=521, user="ceniza", cmd="/usr/sbin/demonio-11:04 --ventana",
+        tty="?", cpu="0.1", mem="0.2", vsz="12784", rss="2104",
+        stat="S", start="11:04", time="11:34:02",
+    ),
+    Proceso(
+        pid=522, user="censo", cmd="/usr/sbin/demonio-11:04 --vigilar-censo",
+        tty="?", cpu="0.0", mem="0.3", vsz="13100", rss="2440",
+        stat="S", start="11:04", time="11:33:58",
+    ),
+)
+
+#: Entorno de la sesión del cap. 3 (misma réplica del golden): lo que `env`
+#: muestra antes de que `kill -HUP` deje su marca (`HUP_<pid>=1`).
+CHAPTER3_ENVIRONMENT: dict[str, str] = {
+    "LANG": "C.UTF-8",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin",
+    "SHELL": "/bin/sh",
+    "USER": "operator",
+}
+
+
+def build_chapter3_fs(fs_rng: Any, *, with_processes: bool = False) -> FileSystem:
     """Monta el árbol de la sala sudo del cap. 3 «Bombas».
 
     El FS de la sala contiene SIEMPRE:
       - la credencial narrativa en `SUDO_CREDENTIAL_PATH` (objeto del mundo);
       - el `auth.log` presente en `AUTH_LOG_PATH` (donde S1 firmará cada sudo).
 
+    Con `with_processes=True` inyecta ADEMÁS el demonio (`CHAPTER3_PROCESSES`
+    + `CHAPTER3_ENVIRONMENT`): el `ps aux` vacío deja de ser lectura vacía y
+    pasa a ser lectura con diana. El generator lo pide LAZY — solo cuando la
+    quest de la sala requiere `c.ps`/`c.kill` (O1, plan 03/09).
+
     La sala concreta se elige de `curriculum.json` (cap. 3) en el generator;
-    esta hoja solo aporta la piel. Sin procesos/variables de entorno por
-    defecto: los inyecta el generator si la quest así lo exige.
+    esta hoja solo aporta la piel.
     """
     _ = fs_rng
     return FileSystem(
@@ -108,6 +149,8 @@ def build_chapter3_fs(fs_rng: Any) -> FileSystem:
                 DIR_SEG: _dir_for_cap3(DIR_SEG) for DIR_SEG in _cap3_dirs()
             },
         ),
+        processes=CHAPTER3_PROCESSES if with_processes else (),
+        environment=dict(CHAPTER3_ENVIRONMENT) if with_processes else None,
     )
 
 

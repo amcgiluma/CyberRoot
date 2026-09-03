@@ -34,14 +34,20 @@ _REAL = load_curriculum()
 
 
 def _real_sin_quest_sudo() -> Curriculum:
-    """Currículo sin quest que exija `c.sudo` — guarda de honestidad.
+    """Currículo sin quest GENERABLE del cap. 3 — guarda de honestidad.
 
-    Construye un currículo filtrando las quests del cap. 3 que requieren
-    `c.sudo` (story.ch3.e4/e5) para que la generación del cap. 3 vuelva a
-    ser un `GeneratorError` accionable (receso pre-S1).
+    Filtra las quests del cap. 3 que requieren `c.sudo` (story.ch3.e4/e5)
+    Y las de procesos (`c.ps`/`c.kill`: e1/e2/e3) para que la generación
+    del cap. 3 vuelva a ser un `GeneratorError` accionable.
+
+    OJO (O1, 03/09): filtrar SOLO `c.sudo` ya NO basta — las quests de
+    procesos e1/e2/e3 generan sala con demonio (🧭16, opción a).
     """
     real = load_curriculum()
-    filtradas = tuple(q for q in real.quests if "c.sudo" not in q.requires)
+    generables = ("c.sudo", "c.ps", "c.kill")
+    filtradas = tuple(
+        q for q in real.quests if not any(c in q.requires for c in generables)
+    )
     return Curriculum(version=real.version, concepts=real.concepts, quests=filtradas)
 
 
@@ -138,15 +144,25 @@ def test_generate_cap3_con_curriculo_real_genera_sala_sudo() -> None:
 
 
 def test_generate_cap3_sin_quest_sudo_es_error_accionable() -> None:
-    """Guarda de honestidad: sin quest que exija `c.sudo`, el cap. 3 es
-    `GeneratorError` accionable, no una sala de mentira."""
-    with pytest.raises(GeneratorError, match="c.sudo"):
+    """Guarda de honestidad: sin quest GENERABLE del cap. 3 (ni `c.sudo`
+    ni `c.ps`/`c.kill`), el cap. 3 es `GeneratorError` accionable, no una
+    sala de mentira. (O1, 03/09: filtrar solo `c.sudo` ya no basta.)"""
+    with pytest.raises(GeneratorError, match="sin quests"):
         generate(1, 3, curriculum=_real_sin_quest_sudo())
 
 
-def test_generate_cap3_con_quest_no_sudo_es_error_accionable() -> None:
-    """Si se pide una quest de procesos del cap. 3 (no sudo), falla claro: la
-    generación completa del cap. 3 es una tarea aparte (fuera de O1)."""
+def test_generate_cap3_con_quest_procesos_genera_sala_con_demonio() -> None:
+    """O1 (03/09, 🧭16 opción a): pedir una quest de procesos del cap. 3
+    (no sudo) YA genera sala — con el demonio dentro y la credencial en el
+    mundo. El `GeneratorError` de antes era el contrato pre-O1."""
     cur = _curriculo_sudo()
-    with pytest.raises(GeneratorError, match="c.sudo"):
-        generate(1, 3, curriculum=cur, contract_id="story.ch3.e1")
+    inc = generate(1, 3, curriculum=cur, contract_id="story.ch3.e1")
+    assert inc.contract.objective_key == "story.ch3.e1"
+    assert [(p.pid, p.user) for p in inc.room.fs.processes] == [
+        (1, "root"),
+        (521, "ceniza"),
+        (522, "censo"),
+    ]
+    cred = _resolver(inc, SUDO_CREDENTIAL_PATH)
+    assert isinstance(cred, FileNode)
+    assert cred.content == SUDO_CREDENTIAL_CONTENT

@@ -136,14 +136,17 @@ La coordinación es por CONVENCIÓN, verificada por Artorias en el gate:
 Si cambian, cambian A LA VEZ en `feat/engine` (este módulo) y en
 `feat/sandbox` (S1).
 
-### Alcance v0
+### Alcance v0 (actualizado O1, 03/09 — 🧭16 opción a)
 
-Solo la sala-credencial: una quest del cap. 3 que exija `c.sudo`. La
-generación completa del cap. 3 (quests de procesos `c.ps`/`c.env`) es una
-tarea aparte; pedirla hoy es un `GeneratorError` claro. `c.sudo` y su quest
+La sala-credencial (quest que exige `c.sudo`, por defecto `story.ch3.e4`)
+MÁS las salas de procesos: cuando la quest requiere `c.ps`/`c.kill`, el
+scaffold inyecta LAZY el demonio (`CHAPTER3_PROCESSES` + `CHAPTER3_ENVIRONMENT`
+en `chapter3.py`: réplica exacta del FS handmade de `test_session_kill.py` —
+`ceniza:521 --ventana` / `censo:522 --vigilar-censo`). La credencial +
+`auth.log` se colocan SIEMPRE (circuito S1 intacto). `c.sudo` y su quest
 llegan a `curriculum.json` con S1 (16:00); el generator lo detecta por
-`requires ⊇ {c.sudo}` sin cambios. Test: `test_sala_sudo.py` (currículo
-aumentado en memoria).
+`requires ⊇ {c.sudo}` sin cambios. Tests: `test_sala_sudo.py` (contrato
+actualizado) + `test_chapter3_demonio.py` (6 tests O1).
 
 ## v0.5 — Sala-dato del cap. 6 «Faro» + cebo pipe-0 (O3, 02/09)
 
