@@ -27,3 +27,4 @@ gh_token*
 *.log
 tmp/
 .wt/
+.vercel

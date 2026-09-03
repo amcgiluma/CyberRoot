@@ -79,3 +79,10 @@ CICLO: verde — la zona 🔬 (Faro JUGABLE + cap. 3 real) se ejecutó completa 
 ---
 
 *Mantenido por **Oscar de Astora** · Firmado con su nombre en el historial git.*
+
+## 🌐 Deploy web (Seath, T1, 03/09 — noche)
+
+**URL pública jugable: https://cyberroot-psi.vercel.app** — REPL del cap. 0
+(seed 42) con el core real en el navegador (Pyodide + `bundle/core.json`);
+verificado con juego real (`ls`/`cat`/`cp` al USB + golden CANDELAS).
+Pasos de deploy y mantenimiento: `web/README.md` §Deploy.

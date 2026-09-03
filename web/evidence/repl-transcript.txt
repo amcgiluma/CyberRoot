@@ -1,0 +1,12 @@
+=== READY: true ===
+STATUS: Listo — REPL del core real en el navegador.
+STATE: {"md-host":"oficina-vecinal-muelle-norte","md-quest":"story.ch0.ventana","md-pool":"c.cat, c.cd, c.cp, c.ls","md-cwd":"/","md-steps":"$ ls /srv/oficina-vecinal-muelle-norte  ·  $ cat /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt  ·  $ cp /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt /usb/  ·  $ cd /srv  ·  $ ls"}
+--- TERMINAL OUTPUT ---
+cero@oficina-vecinal-muelle-norte:/$ lssrv
+usb
+cero@oficina-vecinal-muelle-norte:/$ cat /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txtCANDELAS  ·  proveedor nº 47  ·  facturación externa  ·  114 facturas/mes
+cero@oficina-vecinal-muelle-norte:/$ cp /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt /usb/cero@oficina-vecinal-muelle-norte:/$ ls /usbnombre_de_proveedor.txt
+cero@oficina-vecinal-muelle-norte:/$ cd /srvcero@oficina-vecinal-muelle-norte:/$ lsoficina-vecinal-muelle-norte
+cero@oficina-vecinal-muelle-norte:/$ hack visualiza_red_adminsh: command not found: hack
+--- CONSOLE/ERROR (filtrado) ---
+--- SHOT saved: /tmp/cyberroot-repl.png ---

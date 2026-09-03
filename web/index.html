@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberRoot · T1-deploy — cap. 0 en el navegador (Pyodide)</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Pyodide desde CDN (Python + stdlib + zipimport en el navegador). -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>CyberRoot — REPL del cap. 0 en el navegador</h1>
+      <p class="sub">
+        Seed <code>42</code> · cap. 0 «La firma» · core Python <strong>real</strong>
+        (<code>src/core/</code>, stdlib puro y headless) ejecutándose vía
+        <strong>Pyodide</strong>. Repro-demo <code>src/render/golden/cap0-room.png</code>
+        al pie (sha <code>c84450443e835609</code>).
+      </p>
+    </header>
+
+    <p id="status" class="status">Iniciando…</p>
+
+    <section id="state-panel" class="panel" style="display:none">
+      <h2>Incursión generada</h2>
+      <dl>
+        <dt>Host</dt><dd id="md-host">–</dd>
+        <dt>Encargo</dt><dd id="md-quest">–</dd>
+        <dt>Pool de conceptos</dt><dd id="md-pool">–</dd>
+        <dt>cwd inicial</dt><dd id="md-cwd">–</dd>
+        <dt>Secuencia canónica</dt><dd id="md-steps">–</dd>
+      </dl>
+      <p class="hint">
+        Pista: <code>cat /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt</code>
+        y copia el dossier a <code>/usb/</code> con <code>cp …</code>.
+      </p>
+    </section>
+
+    <section class="terminal-wrap">
+      <div class="terminal" id="screen">
+        <div id="out" class="stacks"></div>
+        <div class="input-row">
+          <span id="prompt" class="prompt">…$ </span>
+          <input id="cmd" class="cmdline" autocomplete="off" autocapitalize="off"
+                 spellcheck="false" disabled placeholder="cargando Pyodide…" />
+        </div>
+      </div>
+      <p class="hint">Enter ejecuta. Comandos disponibles: <code>ls</code>, <code>cd</code>, <code>cat</code>, <code>cp</code>.</p>
+    </section>
+
+    <section class="panel golden">
+      <h2>Evidencia jugable — render v0 (seed 42, PNG golden)</h2>
+      <figure>
+        <img src="assets/golden/cap0-room.png" alt="Render golden cap. 0 seed 42 (320×180)"
+             loading="lazy" />
+        <figcaption>
+          <code>cap0-room.png</code> 320×180 — sha <code>c84450443e835609</code>
+          (repro-demo <code>PYTHONPATH=src .venv/bin/python -m render.demo --seed 42</code>)
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="assets/golden/cap0-room.zoom3x.png" alt="Zoom 3x del render golden cap. 0"
+             loading="lazy" />
+        <figcaption><code>cap0-room.zoom3x.png</code> (zoom 3×)</figcaption>
+      </figure>
+    </section>
+
+    <footer>
+      <p>
+        T1-deploy HITO B · <code>web/</code> estática lista para Vercel ·
+        sin deploy (local: <code>python3 -m http.server 8000 --directory web</code>).
+        Core instalado desde <code>bundle/core.json</code>, regenerable con
+        <code>.venv/bin/python web/build_bundle.py</code>.
+      </p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
