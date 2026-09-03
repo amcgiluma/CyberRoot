@@ -126,6 +126,7 @@ formato. Piezas listas para integrar se marcan `[LISTA]` en INDICE.md.
 - ✅ **Narrativa completa materializada** (02/09): capítulos 0–6 + fragmentos
   1–6, todo `[LISTA]`. El bloqueante de historia (worldbuilding del censo)
   queda resuelto; ya no hay espina narrativa pendiente en `backlog/historia/`.
+- ✅ **Mantenimiento 03/09 — coherencia del gate sudo LECTURA (🧭14b)** (`CAPITULOS/03-bombas.md` pulido): E4/E5 hacen explícito que la llave se gana LEYENDO `orden-ceniza.txt` con `cat` antes de `sudo` (Gwyn 02/09 optó por exigir lectura; prosa alineada para el gate que implementa Smough hoy). Verificado contra `SUDO_CREDENTIAL_PATH` real (`/srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt`). Sin fichas nuevas. Narrativa sigue `[LISTA]`; cap. 6 jugable verificado anoche (515/21-21, cebo pipe-0, fila PR-0091).
 - DECISIÓN Gwyn (27/08, 🧭5): el ÚLTIMO fragmento de la cadena está
   GARANTIZADO al completar la cadena final del cap. 6 (ver DESIGN §6.1).
   Materializarlo en `FRAGMENTOS.md` cuando se escriba la cadena.

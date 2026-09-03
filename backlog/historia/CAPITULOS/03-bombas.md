@@ -132,8 +132,9 @@ antes de que Lumen mire dos veces la subestación que les da sombra.
   usuario), leer las variables de entorno del que no debería estar
   (`env`), y si hace falta elevar — primera vez aquí — usar `sudo` con
   la credencial que el capítulo te ha ido ganando, no con la que te
-  prestaron. El primer sudo serio del juego: la llave se gana, no se
-  mendiga.
+  prestaron. La llave se gana leyéndola: `cat` a la orden de Ceniza
+  (`/srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt`) y solo
+  entonces `sudo` autoriza. El primer sudo serio del juego.
 - Beat: la factura sale de un proceso arrancado con permisos de
   administración que no pertenece a ningún servicio registrado. Está
   pagando una línea de datos externa desde antes de los Apagones, y las
@@ -157,7 +158,8 @@ distinto de PID. En su configuración de arranque está la lista de ventanas
 que ha abierto, y la primera fecha coincide con el día de tu firma.
 
 - Técnico: la secuencia completa del capítulo en un solo proceso: `ps`
-  para encontrarlo, `env` para leer de dónde sale su credencial, `sudo`
+  para encontrarlo, `env` para leer de dónde sale su credencial — la orden
+  de Ceniza, que ya tuviste que leer para que `sudo` sirva —, `sudo`
   para mirar su configuración real si hace falta, y la señal (`kill`)
   correcta según lo que llegues a decidir.
 - Beat: el demonio no abrió la ventana: la vuelve a abrir cada vez que

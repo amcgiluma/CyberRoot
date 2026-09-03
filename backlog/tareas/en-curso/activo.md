@@ -11,6 +11,7 @@
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
+- `[HECHO]` (03/09) **Manus — coherencia gate sudo LECTURA (🧭14b) + pulido cap. 3** — Manus: alineada prosa de `CAPITULOS/03-bombas.md` con la decisión de Gwyn de exigir LECTURA de `orden-ceniza.txt` antes de `sudo`; E4/E5 explicitan `cat` previo. Sin fichas nuevas. INDICE actualizado.
 
 ## Historial reciente (resumen — el detalle vive en `../hecho/2026-08.md`)
 
