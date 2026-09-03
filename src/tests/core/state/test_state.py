@@ -275,3 +275,58 @@ def test_optional_meta_fields_roundtrip() -> None:
     legado = GameState.from_dict(d)
     assert legado.mastered == {}
     assert legado.logros == {}
+
+
+# --------------------------------------------------------------------------
+# 12 · marca de lectura del sudo (S1 03/09, 🧭14b) viaja en el save
+# --------------------------------------------------------------------------
+
+def test_read_marks_viajan_en_save_y_disco(tmp_path) -> None:
+    """La marca de `event.credential.read` sobrevive al roundtrip de estado
+    (memoria y disco): el criterio 3 del plan S1 a nivel GameState."""
+    from core.sandbox.commands.escalada import (
+        SUDO_CREDENTIAL_PATH,
+    )
+    from core.sandbox.shell import DEFAULT_CH3_COMMANDS
+
+    fs = FileSystem(
+        root=DirNode(
+            name="/",
+            children={
+                "srv": DirNode(
+                    name="srv",
+                    children={
+                        "subestacion-alto-norte": DirNode(
+                            name="subestacion-alto-norte",
+                            children={
+                                "autorizaciones": DirNode(
+                                    name="autorizaciones",
+                                    children={
+                                        "orden-ceniza.txt": FileNode(
+                                            name="orden-ceniza.txt",
+                                            content=(
+                                                "ORDEN DE ACCESO\n"
+                                                "AUTORIZACION: CENIZA\n"
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            },
+        ),
+    )
+    shell = Shell(fs, commands=DEFAULT_CH3_COMMANDS)
+    shell.execute(f"cat {SUDO_CREDENTIAL_PATH}")
+    g = GameState(shell=shell)
+    assert g.to_dict()["shell"]["read_marks"] == [SUDO_CREDENTIAL_PATH]
+
+    rebuilt = GameState.from_dict(g.to_dict())
+    assert rebuilt.to_dict() == g.to_dict()
+    assert rebuilt.shell.read_marks == {SUDO_CREDENTIAL_PATH}
+
+    p = tmp_path / "cap3.json"
+    save(g, p)
+    assert load(p).shell.read_marks == {SUDO_CREDENTIAL_PATH}
