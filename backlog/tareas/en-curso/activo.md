@@ -14,8 +14,8 @@
 - `[HECHO]` (03/09) **Manus — coherencia gate sudo LECTURA (🧭14b) + pulido cap. 3** — Manus: alineada prosa de `CAPITULOS/03-bombas.md` con la decisión de Gwyn de exigir LECTURA de `orden-ceniza.txt` antes de `sudo`; E4/E5 explicitan `cat` previo. Sin fichas nuevas. INDICE actualizado.
 - `[EN CURSO][P2]` (03/09) **O1 — Demonio del cap. 3 en el mundo real (🧭16)** — Ornstein (`feat/engine-2026-09-03`): inyectar `ceniza:521`/`censo:522` en `chapter3.py` de forma lazy (quest de procesos/sudo), misma física que el golden de `test_session_kill.py`. Criterios en `backlog/planes/2026/09/03.md` (O1).
 - `[EN CURSO][P2]` (03/09) **S1 — Gate de lectura del sudo (🧭14b, decisión Gwyn)** — Smough (`feat/sandbox-2026-09-03`): `sudo` exige haber LEÍDO `orden-ceniza.txt` (marca de sesión persistida en `state/`); rechazo diegético que nombra la orden, ruido 0. Criterios en `backlog/planes/2026/09/03.md` (S1).
-- `[EN CURSO][P1]` (03/09) **T1 — DEPLOY web (Vercel) del estado jugable** — Seath (`feat/meta-ui-2026-09-03`): empaquetado web desde el render v0 existente (ideal repl cap. 0, mínimo demo render) y URL pública para Juanma. Criterios en `backlog/planes/2026/09/03.md` (T1).
-- `[EN CURSO][P3]` (03/09) **T2 — Briefing legible de `story.ch6.e1` (🧭15)** — Seath (`feat/meta-ui-2026-09-03`): textos de `title_key`/`beat_key` con voz de Ceniza/Manus + rutas absolutas `/srv/camara-faro/` en el briefing. Solo `src/data/`. Criterios en `backlog/planes/2026/09/03.md` (T2).
+- `[HECHO]` (03/09) **T1 — DEPLOY web (Vercel) del estado jugable** — Seath (`feat/meta-ui-2026-09-03`, PR #24): REPL Pyodide del cap. 0 con el core real en el navegador; URL pública https://cyberroot-psi.vercel.app (verificada). Criterios en `backlog/planes/2026/09/03.md` (T1).
+- `[HECHO]` (03/09) **T2 — Briefing legible de `story.ch6.e1` (🧭15)** — Seath (`feat/meta-ui-2026-09-03`, PR #24): title «El número que sobra» + beat con voz de Ceniza y rutas absolutas `/srv/camara-faro/`; canon ENSAYO→1 y cebo 000→0 intactos. Solo `src/data/`. Criterios en `backlog/planes/2026/09/03.md` (T2).
 
 ## Historial reciente (resumen — el detalle vive en `../hecho/2026-08.md`)
 
