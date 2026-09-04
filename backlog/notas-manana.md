@@ -55,3 +55,30 @@ Gwyndolin (11:00) consume esta sección al planificar.*
 **Para Gwyndolin:** plan de mañana liviano o con red simulada del cap. 4 — hoy entraron el verbo `cut` y la acusación verificable, la base de la Lista está completa; E2/E3 del Faro (`sort -k12`, `uniq -c` con `cut`, `diff`/`tee` como custodia) ya tienen suelo, y el feedback humano de Juanma (dirección #1 de Gwyn) sigue siendo el recurso escaso.
 
 *(Fin de la entrada de Artorias — Gwyn consume esta sección a las 23:00.)*
+
+### 🎯 Gwyn, Señor de la Ceniza (04/09, 23:00) — dirección de diseño para Gwyndolin
+
+**Integración de las notas de dirección de Oscar (03/09, 🧭15/🧭16 — ambos informan, hoy decido):**
+
+- **🧭15 (ruta relativa → 0 mentiroso en el Faro): VALIDADA y ya en tierra.** La opción (a) que elegí (briefing con rutas absolutas) la materializó Seath el 03/09 en el beat de Ceniza («cuenta donde pesa… el borrador miente») y hoy el cebo sigue honesto (canónico 1 / cebo 0 verificado en mi gate). Sin deuda.
+- **🧭16 (cap. 3 del generator sin procesos): RESUELTA como opción (a).** O1 de Ornstein (03/09) inyecta el par lazy y hoy `?chapter=3&seed=42` en el navegador muestra ceniza/censo y mata el 522. La «isla» sudo y la «isla» bisturí son un circuito. Sin deuda.
+
+**Qué me ha gustado (diseño, no técnica):**
+
+1. **El Auditor ya tiene memoria de lector.** La tríada lectura/ciega/sin-sudo es la voz formulario §2.4 exacta: dato, nunca sermón. Y el matiz fino que sobrevive a la implementación: el RECHAZO del gate y la ACUSACIÓN ciega dicen la misma verdad («no leíste») para propósitos opuestos — el primero enseña dónde está la orden, el segundo la firma en el expediente. La dirección #3 de mi cierre de ayer (acusación verificable) aterrizó en un solo día.
+2. **`cut` cierra la familia conteo con honestidad GNU.** La Lista pasa de lore a tabla cortable; la pista real de M1 (`cut -d'|' -f4,12 | uniq -c`) existe y la ejecuté tal cual en el mundo (distrito/UMBRAL-BAJO, exit 0). Ruido 1 frugal mantiene «leer < cruzar». Con `head/tail/sort/uniq/cut`, el alfabeto de conteo está COMPLETO antes de las salas E2/E3 que lo exigen — la progresión respira en el orden correcto.
+3. **La puerta pública ahora enseña la lección COMPLETA.** `?chapter=3&seed=42` = leer → ganar sudo → ver el par → matar el demonio; el bucle de muerte con la voz del Auditor en el navegador cumple «morir es el método de estudio» sin tocar el engine; y la semilla en la URL convierte cada bug reporte de Juanma en una reproducción exacta. La puerta ya no es demostración: es el juego.
+
+**Qué no me ha gustado / deuda fina:**
+
+1. **Dos turnos muertos hoy, no uno.** Manus (03:00) y Oscar (05:00) murieron a mitad de tool-call (transcripciones que acaban en function-call sin resultado) — ambos aún en muse-spark-1.3. La migración de ejecutores+Artorias a 1.2 de hoy resolvió el patrón donde se aplicó; la mitad narrativa sigue expuesta. Lo elevo a Juanma en mi reporte (migrar Manus/Oscar también — el esqueleto no se toca sin su aprobación). Coste de hoy: sin historia nueva y SIN dirección de experiencia; el día lo sostuvieron Havel/Gwyndolin/Artorias.
+2. **El bundle como deuda de un commit** (eco de Artorias): hoy ya es paso canónico de mi prompt (aplicado; ver histórico). El job CI `bundle-fresh` queda P3 de recámara.
+3. **La variante ciega nunca dispara en el juego real v0** (el gate rechaza el sudo sin leer ANTES de que exista elevación): es capa defensiva para mundos futuros sin credencial. Correcta así — nota para Gwyndolin: si un capítulo futuro retira la credencial del mundo, la ciega se estrena; NO borrar por «no disparar».
+
+**Dirección para mañana:**
+
+1. **La red del cap. 4 es la pieza grande de recámara** (forma firmada §6.1: hosts como FS). Si mañana se fracciona, la pieza 1 es `ssh` básico (cambio de FS activo) y el host-key de Havel (P2 de hoy) pide sitio como PRIMERA decisión de confianza del juego. Alternativa liviana: E2 del Faro (`sort -k12`, ordenar la Lista por puntuación — el suelo ya existe con `cut`).
+2. **El feedback humano de Juanma sigue siendo el recurso escaso** (dirección #1 del 03/09, sin señal todavía): la URL soporta cap. 3 y muerte con reinicio. Si Juanma juega HOY (`?chapter=3&seed=42`), su feedback manda sobre la recámara de mañana.
+3. **Regla «rechazos que nombran» → aceptada como ley para DESIGN §2.6.9** (idea P2 de Havel de hoy): el «no» del juego siempre enseña el siguiente «dónde». El patrón ya vive de facto en el gate del sudo y en el 127; la regla es para que NINGÚN rechazo futuro lo rompa. Gwyndolin la encarga como doc (sandbox/formato + una línea en DESIGN) cuando toque tocar rechazos — no urgente, no tarea de hoy.
+
+*(Fin de la entrada de Gwyn — Gwyndolin consume esta sección a las 11:00.)*

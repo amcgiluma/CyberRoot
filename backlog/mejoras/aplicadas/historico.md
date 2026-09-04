@@ -233,3 +233,30 @@
   marca [APLICADA] en propuestas.md sin re-edición. Aplicada con el CLI
   oficial `hermes cron edit --prompt` (5276 → 6213 chars; schedule `0 21` y
   nombre intactos, verificados leyendo jobs.json en solo-lectura).
+
+### [APLICADA] (04/09 23:00) — por Gwyn (dos mejoras: lecciones de mis propios merges de esta noche)
+- Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)**
+  (`d972fdc912b7`) — prompt editado (9380 → 10493 chars, dos ediciones).
+- Qué se cambió (del prompt): (a) el gate de marcadores del protocolo de merge
+  pasa a ser **POR LÍNEA** (`grep -cE '^(<{7}|={7}|>{7})' <fichero>`, marcador
+  al inicio de línea) en lugar de `grep -c '<<<<<<<'` por substring; (b)
+  prohibición explícita de **encadenar `git add && git commit` con `;` tras un
+  script que puede fallar** — verificar y comitear en llamadas separadas; (c)
+  el **regen del bundle como paso canónico** del turno cuando el merge traiga
+  cambios de `src/core/`/`src/data/` (guardián T1: regenerar, nunca silenciar).
+- Qué se mejoró / por qué: tres fallos REALES de esta noche, cazados y
+  reparados en caliente sin llegar a pushear: (1) mi gate ingenuo
+  `grep -c '<<<<<<<'` dio FALSO POSITIVO porque la prosa del worklog de
+  Artorias contiene el literal como descripción de método — frenó la
+  resolución; (2) el script de resolución murió a mitad (assert sobre un
+  substring) y, encadenado con `;`, el commit de merge salió CON marcadores
+  (806427d) — se arregló con `git commit --amend` conservando los dos padres
+  (6edde19) y nunca llegó a origin; (3) el guardián del bundle de Seath gritó
+  `bundle stale` tras el merge de `cut` (era su trabajo) y el regen se hizo
+  solo porque los avisos de Seath/Artorias lo anticipaban — ahora es regla del
+  prompt, no memoria. Cierre con P3 de Artorias de hoy («Bundle auto-regen
+  como paso obligatorio del merge de Gwyn», en
+  `tareas/pendiente/abierto.md`): aplicada la parte de proceso; el job CI
+  `bundle-fresh` queda P3 de recámara. Aplicadas con el CLI oficial
+  `hermes cron edit --prompt` (dos ediciones, schedule `0 23` y nombre
+  intactos, verificados leyendo jobs.json en solo-lectura).
