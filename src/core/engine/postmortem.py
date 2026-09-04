@@ -15,11 +15,14 @@ Qué produce `build_postmortem(shell_dict, state)`:
      de `history`. Voz: formulario seco (§2.4 / ficha de PERSONAJES) — dato
      sobre emoción, «Expediente 000», cifras exactas. No hubo cruce → el
      Auditor cita el comando con más ruido de la run como el «pico».
+  4. (O1 04/09) Segunda fuente de verdad `read_marks`: si la sesión contiene
+     un `sudo`, cita si la orden se leyó antes de elevar (lectura vs ciega).
 
 Contrato:
 - `shell_dict`: dict plano de una `Shell` (su `to_dict`). Campo obligatorio
   `history` (lista de `{"line", "result": {exit_code, noise: [...]}}`); los
-  eventos de noise llevan `data.command` y `data.amount`.
+  eventos de noise llevan `data.command` y `data.amount`. Desde S1 (03/09)
+  `read_marks` viaja como lista ordenada de rutas leídas.
 - `state`: dict plano del estado de run con `noise_budget` (int) — la misma
   unidad que `total_noise`, 🧭10. Si falta, se usa 12 ⚠️ v1 (la constante de
   `Room.noise_budget`; el orquestador del engine la pasará siempre).
@@ -27,6 +30,9 @@ Contrato:
   del Auditor viaja como CLAVE + args, no como cadena hardcodeada en core
   (convención §3: el render resuelve los textos contra `data/`). Para el
   test headless, `args` trae el comando y amount CONCRETOS ya resueltos.
+  Si hubo `sudo`, añade `auditor_lectura` + `auditor_lectura_text` y
+  extiende `lines_resolved` con la segunda línea (sin `sudo` → informe
+  byte-idéntico al de hoy).
 
 Función PURA: sin I/O, sin RNG, sin estado global (ARCHITECTURE §1.5). Solo
 stdlib.
@@ -44,6 +50,10 @@ DEFAULT_NOISE_BUDGET = 12
 #: Rectángulo del título "línea del Auditor" — clave a resolver contra data/.
 LINE_KEY_CRUCE = "postmortem.auditor.cruce"
 LINE_KEY_PICO = "postmortem.auditor.pico"
+#: O1 04/09 (Ornstein) — segunda fuente de verdad: read_marks.
+#: Si la sesión contiene un `sudo`, el informe cita si se leyó la orden.
+LINE_KEY_LECTURA = "postmortem.auditor.lectura"
+LINE_KEY_CIEGA = "postmortem.auditor.ciega"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -130,6 +140,28 @@ def _amount(entry: dict[str, Any] | None) -> int:
     )
 
 
+def _has_sudo(shell_dict: dict[str, Any]) -> bool:
+    """True si el historial contiene al menos un `sudo`.
+
+    Detecta por línea (shlex) y por evento de ruido (command == 'sudo')
+    para cubrir tanto el wrapper exitoso (premium) como el intento
+    rechazado (sin ruido). Sin imports de sandbox (contrato v0).
+    """
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        try:
+            argv = shlex.split(line)
+        except ValueError:
+            argv = []
+        if argv and argv[0] == "sudo":
+            return True
+        result = entry.get("result") or {}
+        for ev in result.get("noise", []) or []:
+            if (ev.get("data") or {}).get("command") == "sudo":
+                return True
+    return False
+
+
 def build_postmortem(
     shell_dict: dict[str, Any], state: dict[str, Any] | None
 ) -> dict[str, Any]:
@@ -137,7 +169,8 @@ def build_postmortem(
 
     Args:
         shell_dict: `Shell.to_dict()` — debe llevar `history` (y `total_noise`,
-            aunque la factura la recomputa para no confiar en un acumulador).
+            aunque la factura la recomputa para no confiar en un acumulador)
+            y opcional `read_marks` (lista ordenada de rutas leídas, S1 03/09).
         state: dict plano del estado de run; usa `state["noise_budget"]` si
             existe (misma unidad que total_noise, 🧭10), si no 12 ⚠️ v1.
 
@@ -155,6 +188,11 @@ def build_postmortem(
             `core.data.textos.resolve` (O4, 02/09) — la voz «Expediente 000…»
             audible sin render. Fallback honesto: clave cruda si no resuelve,
             nunca crash.
+          - (O1 04/09) Si `history` contiene `sudo`:
+            `auditor_lectura` + `auditor_lectura_text` con clave
+            `postmortem.auditor.lectura` (read_marks no vacío, args {path})
+            o `postmortem.auditor.ciega` (vacío). `lines_resolved` gana
+            segunda entrada. Sin `sudo` → informe byte-idéntico al de hoy.
     """
     total_noise = int(shell_dict.get("total_noise", 0))
     noise_budget = int(state.get("noise_budget", DEFAULT_NOISE_BUDGET)) if state else DEFAULT_NOISE_BUDGET
@@ -171,7 +209,15 @@ def build_postmortem(
         command = _comando(pico) if pico else "(?)"
         amount = _amount(pico)
 
-    return {
+    auditor_text = _resolve_auditor_text(line_key, {
+        "command": command,
+        "amount": amount,
+        "total_noise": total_noise,
+        "noise_budget": noise_budget,
+    })
+    lines_resolved = [auditor_text]
+
+    base: dict[str, Any] = {
         "factura": factura,
         "total_noise": total_noise,
         "noise_budget": noise_budget,
@@ -185,19 +231,32 @@ def build_postmortem(
                 "noise_budget": noise_budget,
             },
         },
-        "auditor_text": _resolve_auditor_text(line_key, {
-                "command": command,
-                "amount": amount,
-                "total_noise": total_noise,
-                "noise_budget": noise_budget,
-            }),
-        "lines_resolved": [_resolve_auditor_text(line_key, {
-                "command": command,
-                "amount": amount,
-                "total_noise": total_noise,
-                "noise_budget": noise_budget,
-            })],
+        "auditor_text": auditor_text,
+        "lines_resolved": lines_resolved,
     }
+
+    # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
+    if _has_sudo(shell_dict):
+        read_marks = shell_dict.get("read_marks") or []
+        # Normaliza a lista de str ordenada por codepoint (ya viene sorted del Shell)
+        marks = [str(p) for p in read_marks if str(p).strip()]
+        if marks:
+            lectura_key = LINE_KEY_LECTURA
+            # Cita la primera ruta leída (determinista por codepoint)
+            lectura_args: dict[str, Any] = {"path": sorted(marks)[0]}
+        else:
+            lectura_key = LINE_KEY_CIEGA
+            lectura_args = {}
+        lectura_text = _resolve_auditor_text(lectura_key, lectura_args)
+        base["auditor_lectura"] = {
+            "line_key": lectura_key,
+            "args": lectura_args,
+        }
+        base["auditor_lectura_text"] = lectura_text
+        # Segunda línea resuelta (la acusación verificable)
+        base["lines_resolved"] = [auditor_text, lectura_text]
+
+    return base
 
 
 def _resolve_auditor_text(line_key: str, args: dict[str, Any]) -> str:
@@ -220,4 +279,6 @@ __all__ = [
     "DEFAULT_NOISE_BUDGET",
     "LINE_KEY_CRUCE",
     "LINE_KEY_PICO",
+    "LINE_KEY_LECTURA",
+    "LINE_KEY_CIEGA",
 ]
