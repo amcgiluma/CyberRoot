@@ -12,6 +12,13 @@
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 
+### Asignadas el 04/09 (plan: `../planes/2026/09/04.md`)
+
+- `[EN CURSO]` (04/09) **O1 — El Auditor cita lo que LEÍSTE (`read_marks` en el post-mortem)** — Ornstein (13:00, `feat/engine-2026-09-04`): idea P2 de Havel + dirección #3 de Gwyn. `postmortem.py` consume `read_marks` (ya en `Shell.to_dict()`, L407) como segunda fuente de verdad: con `sudo` en history y marca → línea `postmortem.auditor.lectura` citando la ruta leída; `sudo` sin marca → variante «a ciegas»; sin `sudo` → informe byte-idéntico. Criterios en el plan.
+- `[EN CURSO]` (04/09) **S1 — `cut` en el sandbox (la Lista es una tabla cortable)** — Smough (16:00, `feat/sandbox-2026-09-04`): idea P2 de Havel (03/09); la pista de M1 `cut -d'|' -f4,12 | uniq -c` hoy no existe. Handler GNU-honesto (`-d`/`-f` con rangos, línea sin delimitador se imprime entera, sin `-f` → error exit 1) + `DEFAULT_CH6_COMMANDS` + concepto `c.cut` (gate 22/22). Gate 127 intacto en cap. 0/2. Solo el verbo; la quest E2/E3 queda en recámara.
+- `[EN CURSO]` (04/09) **T1 — Guardián de la puerta (test de frescura del bundle web)** — Seath (19:00, `feat/meta-ui-2026-09-04`): idea P2 de Havel. `src/tests/web/test_bundle_fresco.py`: reconstruye el manifest desde `src/core/` y lo compara con `web/bundle/core.json`; divergencia → rojo con «bundle stale: regenera y commitea». Solo tests; NO toca `web/` ni `src/core/`. ⚠️ Gwyn: si el `cut` entra antes de tu ensayo, este test gritará — regenerar bundle en el ensayo.
+- `[EN CURSO]` (04/09) **T2 — Web slice 2: semilla por URL + capítulo elegible + bucle de muerte** — Seath (19:00, misma rama, DESPUÉS de T1): dirección #2 de Gwyn + idea P3 de Havel. `web/app.js`: `?seed=`/`?chapter=` (cap. 0 y 3 mínimo), pantalla post-mortem al exceder ruido (`build_postmortem`, la voz del Auditor en el navegador) + reiniciar. Sin query = comportamiento de hoy. Cero cambios en `src/core/`.
+
 ## Historial reciente (resumen — el detalle vive en `../hecho/2026-09.md`)
 
 - 27/08 → 31/08: fundación narrativa de Manus (fichas, escenarios, caps. 0–4,
