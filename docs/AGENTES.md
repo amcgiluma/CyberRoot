@@ -7,17 +7,17 @@
 ## El Concilio (9 agentes, horario Madrid)
 | Hora | Agente | Modelo | Función | Dónde entrega |
 |---|---|---|---|---|
-| 03:00 | **Manus** (historiador) | muse-spark | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
-| 05:00 | **Oscar de Astora** (guardián de la experiencia) | muse-spark | JUEGA como jugador de verdad: run de referencia desde save limpio + perspectiva de veterano (20+h). Comprueba la EXPERIENCIA global del juego y que el camino sea apto. Mantiene vivo `docs/ESTADO-JUGADOR.md` y deja NOTAS DE DIRECCIÓN a Gwyn (no decide, informa). | `docs/ESTADO-JUGADOR.md` |
-| 07:00 | **Havel** (vidente-creativo) | muse-spark | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/tareas/pendiente/abierto.md` |
+| 03:00 | **Manus** (historiador) | muse-spark-1.3 | Escribe la HISTORIA del día desde el plot. Prosa humanizada. | `backlog/historia/<fecha>.md` |
+| 05:00 | **Oscar de Astora** (guardián de la experiencia) | muse-spark-1.3 | JUEGA como jugador de verdad: run de referencia desde save limpio + perspectiva de veterano (20+h). Comprueba la EXPERIENCIA global del juego y que el camino sea apto. Mantiene vivo `docs/ESTADO-JUGADOR.md` y deja NOTAS DE DIRECCIÓN a Gwyn (no decide, informa). | `docs/ESTADO-JUGADOR.md` |
+| 07:00 | **Havel** (vidente-creativo) | muse-spark-1.3 | JUEGA el juego + GENERA ideas nuevas (capítulos/mecánicas/comandos) + anota bugs. NO lleva la crítica de diseño (eso es de Artorias/Gwyn). | `backlog/tareas/pendiente/abierto.md` |
 | 11:00 | **Gwyndolin** (planificador) | glm | Convierte las tareas abiertas (`backlog/tareas/pendiente/abierto.md`) e ideas en `backlog/planes/YYYY/MM/DD.md` (HOY). Reparte trabajo. | `backlog/planes/YYYY/MM/DD.md` |
-| 13:00 | **Ornstein** (ejecutor 1) | muse-spark | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |
-| 16:00 | **Smough** (ejecutor 2) | muse-spark | Implementa SU módulo. | `src/<modulo>` |
-| 19:00 | **Seath** (ejecutor 3) | muse-spark | Implementa SU módulo. | `src/<modulo>` |
-| 21:00 | **Artorias** (revisor filtro) | muse-spark | Revisa técnicamente (tests/lint/juego), marca 💥/✅, y DEJA NOTAS DE GUSTO + "qué no mergear" para mañana. | `backlog/tareas/en-curso/activo.md` + `notas-manana.md` (🎯) |
+| 13:00 | **Ornstein** (ejecutor 1) | muse-spark-1.2 | Implementa SU módulo. Construye/mantiene el **harness de playtest**. | `src/<modulo>` |
+| 16:00 | **Smough** (ejecutor 2) | muse-spark-1.2 | Implementa SU módulo. | `src/<modulo>` |
+| 19:00 | **Seath** (ejecutor 3) | muse-spark-1.2 | Implementa SU módulo. | `src/<modulo>` |
+| 21:00 | **Artorias** (revisor filtro) | muse-spark-1.2 | Revisa técnicamente (tests/lint/juego), marca 💥/✅, y DEJA NOTAS DE GUSTO + "qué no mergear" para mañana. | `backlog/tareas/en-curso/activo.md` + `notas-manana.md` (🎯) |
 | 23:00 | **Gwyn** (revisor diseño+merge) | glm | Validación de diseño, MERGE final, DEJA SUS NOTAS DE GUSTO/ideas, y reporta a Juanma. | `backlog/tareas/en-curso/activo.md` → archiva en `hecho/<mes>` · SOBRESCRIBE `zona-testeo.md` · Telegram |
 
-> 🧠 **Modelo (decisión de Juanma, 03/09):** `muse-spark` = `opencode-go/muse-spark-1.3-contributor`
+> 🧠 **Modelo (decisión de Juanma, 04/09):** `muse-spark-1.3` = `opencode-go/muse-spark-1.3-contributor` (Manus/Oscar/Havel/Vigilante); `muse-spark-1.2` = `opencode-go/muse-spark-1.2-contributor` (Ornstein/Smough/Seath/Artorias — 1.3 peta en prompts largos, verificado 04/09)
 > (la mayoría); `glm` = `opencode-go/glm-5.3-flash` (Gwyn y Gwyndolin, calidad en
 > decisiones de alcance). Antes: `deepseek-v4-flash` (hasta 02/09) → `glm-5.3-flash` para todos.
 

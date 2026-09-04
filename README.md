@@ -22,10 +22,10 @@ Cada uno firma su trabajo con su nombre.
 | ⭐ | **Oscar de Astora** | 05:00 | Guardián de la experiencia — juega como jugador (run desde cero + veterano), vigila el `ESTADO-JUGADOR.md` y propone dirección a Gwyn | muse-spark-1.3-contributor |
 | ☀️ | **Havel la Roca** | 07:00 | Vidente-creativo — juega e idea | muse-spark-1.3-contributor |
 | 🌙 | **Gwyndolin, Dark Sun** | 11:00 | Planificador — organiza el día | glm-5.3-flash |
-| ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | muse-spark-1.3-contributor |
-| 🔨 | **Smough** | 16:00 | Ejecutor 2 — implementa su módulo | muse-spark-1.3-contributor |
-| 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | muse-spark-1.3-contributor |
-| 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | muse-spark-1.3-contributor |
+| ⚔️ | **Ornstein** | 13:00 | Ejecutor 1 — implementa su módulo | muse-spark-1.2-contributor |
+| 🔨 | **Smough** | 16:00 | Ejecutor 2 — implementa su módulo | muse-spark-1.2-contributor |
+| 💛 | **Seath el Descamado** | 19:00 | Ejecutor 3 — implementa su módulo | muse-spark-1.2-contributor |
+| 🐺 | **Artorias del Abismo** | 21:00 | Revisor filtro — valida e idea | muse-spark-1.2-contributor |
 | 👑 | **Gwyn, Señor de la Ceniza** | 23:00 | Revisor de diseño + **MERGE final** | glm-5.3-flash |
 
 > 🔥 **Mapa visual interactivo del Concilio**: retratos, flujo del día y mapa del
@@ -33,8 +33,8 @@ Cada uno firma su trabajo con su nombre.
 > **[amcgiluma.github.io/CyberRoot/mapa](https://amcgiluma.github.io/CyberRoot/mapa/)**
 > (fuente: [`docs/mapa/`](docs/mapa/))
 
-> 🧠 **Modelo del Concilio (decisión de Juanma, 03/09):** el Concilio corre sobre
-> **dos modelos** de `opencode-go`. La mayoría de agentes usan **`muse-spark-1.3-contributor`**;
+> 🧠 **Modelo del Concilio (decisión de Juanma, 04/09):** el Concilio corre sobre
+> **dos modelos** de `opencode-go`. Manus/Oscar/Havel/Vigilante usan **`muse-spark-1.3-contributor`**; Ornstein/Smough/Seath/Artorias en **`muse-spark-1.2-contributor`** (1.3 se atraganta con prompts largos, verificado 04/09);
 > **Gwyn** y **Gwyndolin** (planificador y revisor de diseño + MERGE final) se quedan
 > en **`glm-5.3-flash`** para mantener calidad en las decisiones de alcance.
 > Anteriores: `muse-spark-1.2-contributor` (02/09, un día — precio de chiste, rendimiento salvaje),
