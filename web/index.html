@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CyberRoot · T1-deploy — cap. 0 en el navegador (Pyodide)</title>
+  <title>CyberRoot · T2-web slice 2 — cap. 0 y 3 jugables (seed por URL)</title>
   <link rel="stylesheet" href="style.css" />
   <!-- Pyodide desde CDN (Python + stdlib + zipimport en el navegador). -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
@@ -11,16 +11,22 @@
 <body>
   <main>
     <header>
-      <h1>CyberRoot — REPL del cap. 0 en el navegador</h1>
+      <h1>CyberRoot — REPL del core real en el navegador</h1>
       <p class="sub">
-        Seed <code>42</code> · cap. 0 «La firma» · core Python <strong>real</strong>
-        (<code>src/core/</code>, stdlib puro y headless) ejecutándose vía
+        <span id="header-chapter">cap. 0</span> · seed <code id="header-seed">42</code> · core Python <strong>real</strong>
+        (<code>src/core/</code>, stdlib puro y headless) vía
         <strong>Pyodide</strong>. Repro-demo <code>src/render/golden/cap0-room.png</code>
         al pie (sha <code>c84450443e835609</code>).
+      </p>
+      <p class="hint">
+        URL jugable: <code>?seed=42&amp;chapter=0</code> o <code>?seed=42&amp;chapter=3</code>
+        (cap. 3: lee la orden con <code>cat</code> → <code>sudo</code> → <code>ps aux</code> / <code>kill</code>).
+        Sin query = cap. 0 seed 42 (no-regresión).
       </p>
     </header>
 
     <p id="status" class="status">Iniciando…</p>
+    <p id="noise-status" class="hint" style="margin:4px 0 0"></p>
 
     <section id="state-panel" class="panel" style="display:none">
       <h2>Incursión generada</h2>
@@ -30,10 +36,17 @@
         <dt>Pool de conceptos</dt><dd id="md-pool">–</dd>
         <dt>cwd inicial</dt><dd id="md-cwd">–</dd>
         <dt>Secuencia canónica</dt><dd id="md-steps">–</dd>
+        <dt>Seed</dt><dd id="md-seed">–</dd>
+        <dt>Capítulo</dt><dd id="md-chapter">–</dd>
+        <dt>Presupuesto ruido</dt><dd id="md-budget">–</dd>
       </dl>
-      <p class="hint">
-        Pista: <code>cat /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt</code>
+      <p class="hint" id="hint-cap0">
+        Pista cap. 0: <code>cat /srv/oficina-vecinal-muelle-norte/nombre_de_proveedor.txt</code>
         y copia el dossier a <code>/usb/</code> con <code>cp …</code>.
+      </p>
+      <p class="hint" id="hint-cap3" style="display:none">
+        Pista cap. 3: <code>cat /srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt</code>
+        → <code>sudo cat /etc/hosts</code> (gate de lectura) → <code>ps aux</code> (ceniza 521 / censo 522) → <code>kill -9 522</code>.
       </p>
     </section>
 
@@ -46,7 +59,21 @@
                  spellcheck="false" disabled placeholder="cargando Pyodide…" />
         </div>
       </div>
-      <p class="hint">Enter ejecuta. Comandos disponibles: <code>ls</code>, <code>cd</code>, <code>cat</code>, <code>cp</code>.</p>
+      <p class="hint">Enter ejecuta. Cap. 0: <code>ls</code>, <code>cd</code>, <code>cat</code>, <code>cp</code>. Cap. 3 añade <code>ps</code>, <code>env</code>, <code>sudo</code>, <code>kill</code>, <code>grep</code>, <code>wc</code>.</p>
+    </section>
+
+    <section id="postmortem" class="postmortem" style="display:none">
+      <div class="postmortem-card">
+        <h2>Expulsión — informe del Auditor</h2>
+        <p id="pm-text" class="pm-text">—</p>
+        <p id="pm-factura" class="hint">—</p>
+        <p id="pm-meta" class="hint">—</p>
+        <div class="pm-actions">
+          <button id="pm-restart-same" class="btn">Reiniciar (misma seed)</button>
+          <button id="pm-restart-new" class="btn btn-alt">Nueva semilla</button>
+        </div>
+        <p class="hint">«Morir es el método de estudio» — el Auditor archiva cada expulsión como dato del ensayo. URL actual: <code id="pm-url"></code></p>
+      </div>
     </section>
 
     <section class="panel golden">
@@ -68,13 +95,31 @@
 
     <footer>
       <p>
-        T1-deploy HITO B · <code>web/</code> estática lista para Vercel ·
+        T2-web slice 2 · <code>web/</code> estática lista para Vercel ·
         sin deploy (local: <code>python3 -m http.server 8000 --directory web</code>).
         Core instalado desde <code>bundle/core.json</code>, regenerable con
-        <code>.venv/bin/python web/build_bundle.py</code>.
+        <code>.venv/bin/python tools/web/build_bundle.py</code>.
       </p>
     </footer>
   </main>
   <script src="app.js"></script>
+  <script>
+    // Header dinámico: refleja la URL activa en cuanto carga el DOM
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const s = p.get('seed') || '42';
+      const c = p.get('chapter') || '0';
+      const hs = document.getElementById('header-seed');
+      const hc = document.getElementById('header-chapter');
+      const pmUrl = document.getElementById('pm-url');
+      if (hs) hs.textContent = s;
+      if (hc) hc.textContent = 'cap. ' + c;
+      if (pmUrl) pmUrl.textContent = window.location.href;
+      // Pista según capítulo
+      const hint0 = document.getElementById('hint-cap0');
+      const hint3 = document.getElementById('hint-cap3');
+      if (c === '3') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='block'; }
+    } catch(e) {}
+  </script>
 </body>
 </html>

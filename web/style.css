@@ -83,4 +83,41 @@ figure { margin: 10px 0; }
 figure img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; image-rendering: pixelated; }
 figcaption { color: var(--muted); font-size: .82rem; font-family: var(--mono); margin-top: 6px; }
 
+/* T2 — post-mortem overlay (bucle de muerte) */
+.postmortem {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,10,14,.78);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.postmortem-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  max-width: 620px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+}
+.postmortem-card h2 { margin: 0 0 10px; font-size: 1.1rem; color: var(--red); }
+.pm-text { font-family: var(--mono); color: var(--fg); font-size: .95rem; white-space: pre-wrap; margin: 8px 0 12px; }
+.pm-actions { display: flex; gap: 10px; margin: 14px 0 8px; }
+.btn {
+  background: var(--accent);
+  color: #0a0c0f;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: var(--sans);
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn-alt { background: var(--panel2); color: var(--fg); border: 1px solid var(--border); }
+
 footer { color: var(--muted); font-size: .82rem; border-top: 1px solid var(--border); margin-top: 26px; padding-top: 12px; }
