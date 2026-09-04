@@ -54,6 +54,9 @@ NOISE_PROFILE: dict[str, int] = {
     # listar, menos que copiar con sudo). El coste de detección lo decide el
     # engine; aquí solo se emite. ⚠️ v1 calibrable con harness.
     "kill": 2,
+    # S1 (04/09): `cut` — lectura frugal, igual que head/uniq (familia texto).
+    # Separa columnas sin leer entero para quien lo necesite. ⚠️ v1 calibrable.
+    "cut": 1,
 }
 
 

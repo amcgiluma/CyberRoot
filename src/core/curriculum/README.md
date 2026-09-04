@@ -4,7 +4,7 @@
 > encargos como nodos-dato) y responde: ¿qué conceptos tiene desbloqueados
 > este jugador? ¿qué pool de práctica corresponde a este capítulo? No conoce
 > runs ni salas: conocimiento puro (ARCHITECTURE §2.3, DESIGN §6.2/§6.4).
-> **Estado (02/09, Smough — S1+S2):** cap. 0–3 + familia conteo cap. 6 + quest ch6.e1,
+> **Estado (04/09, Smough — S1 cut):** cap. 0–3 + familia conteo cap. 6 + `cut` + quest ch6.e1,
 > validador del DAG, esquema y contrato de consumo documentados.
 
 ## Piezas (v0)
@@ -53,7 +53,7 @@ Reglas estructurales que el validador impone (y testea en negativo):
   capítulos ≤ el de la quest.
 - Textos SIEMPRE como claves (`*_key`): la prosa vive en `data/`/historia.
 
-## Contenido v0 (21 conceptos, 21 quests)
+## Contenido v0 (22 conceptos, 21 quests)
 
 - **Cap. 0 (4):** `c.ls` → `c.cd` → `c.cat` → `c.cp` — EXACTAMENTE el
   `DEFAULT_CAP0_COMMANDS` del sandbox (contrato con generator: la piel del
@@ -70,9 +70,9 @@ Reglas estructurales que el validador impone (y testea en negativo):
   S1 01/09, prereqs `ps`+`env`): el `sudo` GANADO con credencial narrativa que
   O1 materializa como fichero del mundo en la sala del cap. 3. Coherentes con
   `DEFAULT_CH3_COMMANDS` del sandbox (que desde 01/09 incluye `sudo`).
-- **Cap. 6 (4, S2 02/09):** familia conteo `c.head` → `c.tail`, `c.sort` →
-  `c.uniq` (family `texto`, barrera técnica hacia el Faro — las salas-dato de
-  la Lista leen con `head`/`sort`/`uniq`). **+ quest `story.ch6.e1` (S2 02/09, grey, cap. 6 — des-isla el conteo: el alfabeto se juega; requiere `c.grep`/`c.wc`/`c.pipe`/`c.head`/`c.sort`/`c.tail`/`c.uniq`, sin `cut` aún — pista de CENSO-LISTA queda para cuando exista el comando; acople O3↔S2 por literales).**
+- **Cap. 6 (5, S1 04/09):** familia conteo `c.head` → `c.tail`, `c.sort` →
+  `c.uniq` → **`c.cut`** (family `texto`, barrera técnica hacia el Faro — las salas-dato de
+  la Lista leen con `head`/`sort`/`uniq`/`cut`; `c.cut` prereq `c.uniq`, cierra la familia). **+ quest `story.ch6.e1` (S2 02/09, grey, cap. 6 — des-isla el conteo: el alfabeto se juega; requiere `c.grep`/`c.wc`/`c.pipe`/`c.head`/`c.sort`/`c.tail`/`c.uniq`, sin `cut` aún — pista de CENSO-LISTA queda para cuando exista el comando; acople O3↔S2 por literales).**
 - **Quests:** `story.ch0.ventana` (grey, los 4 del cap. 0) + `story.ch1.e1`
   (azul), `e2` (azul), `e3` (gris), `e4` (rojo), `e5` (cierre, gris) +
   `story.ch2.e1`–`e5` (S2, 30/08: E1/E2 azules, E3 gris, E4 rojo, E5 de
