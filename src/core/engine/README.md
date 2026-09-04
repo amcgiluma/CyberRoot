@@ -119,3 +119,26 @@ ADR-0001 (`data` no trae deps de core). `_resolve_auditor_text` es honesto:
 si `data.textos` falla o devuelve vacío, devuelve la CLAVE cruda en lugar de
 crash o de un hueco `{...}` — nunca rompe el cierre de la run. El REPL puede
 imprimir la voz del Auditor HOY, sin esperar al render.
+
+---
+
+## v0.4 (O1, 04/09) — el Auditor cita lo que LEÍSTE (`read_marks`)
+
+Idea P2 de Havel + dirección #3 de Gwyn: el post-mortem consume `read_marks`
+(ya en `Shell.to_dict()` desde S1, 03/09) como segunda fuente de verdad tras
+el historial. Regla v0 sin imports de sandbox:
+
+- `history` contiene `sudo` y `read_marks` no vacío → segunda línea
+  `postmortem.auditor.lectura` con `args {path}` citando la ruta leída
+  (forma formulario §2.4 — dato, nunca moralina).
+- `history` contiene `sudo` y `read_marks` vacío → variante
+  `postmortem.auditor.ciega` («elevó sin leer ninguna orden»).
+- Sin `sudo` → sin segunda línea, informe byte-idéntico (cap. 0/2 intactos).
+
+`build_postmortem` añade `auditor_lectura` + `auditor_lectura_text` y
+extiende `lines_resolved` a 2 entradas cuando toca. Determinista por
+codepoint y roundtrip intacto. Tests en `test_postmortem_lectura.py` (7).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine -o addopts= -q
+```

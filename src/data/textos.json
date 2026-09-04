@@ -3,6 +3,8 @@
   "texts": {
     "postmortem.auditor.cruce": "Expediente 000: superación del presupuesto de ruido. Última entrada antes del corte: {command} ({amount} puntos). Continuidad del ensayo: estable.",
     "postmortem.auditor.pico": "Expediente 000: se mantiene dentro del presupuesto. Pico de la sesión: {command} ({amount} puntos). Continuidad del ensayo: estable.",
+    "postmortem.auditor.lectura": "Expediente 000: lectura verificada — {path} consta como leída antes de la elevación. Continuidad del ensayo: estable.",
+    "postmortem.auditor.ciega": "Expediente 000: elevación sin lectura previa — ninguna orden consta como leída. Continuidad del ensayo: estable.",
 
     "story.ch1.e1.title": "El turno de la señora Carmen",
     "story.ch1.e1.beat": "El nodo del Muelle Oeste guarda los partes de la escuela pública 3. Alguien con permisos de administración los consulta de noche. Se leen las columnas de `ls -l` para saber quién puede tocar qué antes de tocar nada.",
