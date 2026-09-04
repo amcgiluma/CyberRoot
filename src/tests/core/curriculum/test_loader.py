@@ -77,19 +77,17 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
 
 
 def test_load_curriculum_21_conceptos_20_quests() -> None:
-    """El catálogo real: 21 conceptos y 21 encargos (conteo 02/09 — S2 ch6.e1).
+    """El catálogo real: 22 conceptos y 21 encargos (conteo 04/09 — S1 cut).
 
-    Conteo del 02/09 reconciliado (S2 Smough + O3 Ornstein): conceptos
-    16 (31/08: caps. 0–3, familia procesos) + c.sudo (escalada, cap. 3) + la
-    familia conteo c.head/c.tail/c.sort/c.uniq (texto, cap. 6, barrera hacia
-    el Faro). Quests 16 (31/08: caps. 0–3) + 4 `story.ch5.e1`–`e4` (T2, cap. 5
-    «Subestación», defensa/auditoría, sin conceptos nuevos) + 1 `story.ch6.e1`
-    (S2 02/09, sala-dato Lista, grey, familia conteo + grep/wc/pipe, sin cut).
+    Conteo del 04/09 reconciliado (S1 Smough cut): conceptos 21 (02/09) + c.cut
+    (texto, cap. 6, prereq c.uniq — la Lista es tabla cortable). Quests 21
+    (02/09: caps. 0–3 + ch5.e1–e4 + ch6.e1, sin cut aún en requires — la quest
+    queda en recámara, solo el verbo y el concepto entran hoy).
     El generator de O3 EXIGE al menos una quest del cap. 3 con `c.sudo`
     (story.ch3.e4 y e5) y O3/S2 comparten literales por el contrato ch6.
     """
     cur = load_curriculum()
-    assert len(cur.concepts) == 21
+    assert len(cur.concepts) == 22
     assert len(cur.quests) == 21
 
 
