@@ -32,7 +32,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]          # raíz del repo
 CORE_SRC = REPO / "src" / "core"
-DATA_SRC = REPO / "src" / "data" / "curriculum.json"
+DATA_DIR = REPO / "src" / "data"
+DATA_SRC = DATA_DIR / "curriculum.json"
+TEXTOS_SRC = DATA_DIR / "textos.json"
 GOLDEN_SRC = REPO / "src" / "render" / "golden"
 
 WEB = REPO / "web"
@@ -56,9 +58,19 @@ def collect() -> dict[str, str]:
         virtual = f"{VIRT_CORE}/{rel.as_posix()}"
         out[virtual] = py.read_text(encoding="utf-8")
 
+    # data/ es hermano de core/ bajo /lib (sys.path = /lib) → data.textos y data/curriculum
+    for py in sorted(DATA_DIR.rglob("*.py")):
+        if "__pycache__" in py.parts:
+            continue
+        rel = py.relative_to(DATA_DIR.parent)     # data/textos.py → data/textos.py
+        virtual = f"{VIRT_LIB}/{rel.as_posix()}"
+        out[virtual] = py.read_text(encoding="utf-8")
+
     if not DATA_SRC.exists():
         raise SystemExit(f"falta {DATA_SRC}: no se puede empaquetar el core")
     out[f"{VIRT_DATA}/curriculum.json"] = DATA_SRC.read_text(encoding="utf-8")
+    if TEXTOS_SRC.exists():
+        out[f"{VIRT_DATA}/textos.json"] = TEXTOS_SRC.read_text(encoding="utf-8")
 
     return out
 
