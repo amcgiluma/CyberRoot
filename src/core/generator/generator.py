@@ -50,8 +50,11 @@ from core.generator.chapter3 import (
     build_chapter3_fs,
 )
 from core.generator.chapter6 import (
+    CANON_STEPS_RAW_CH6_E2,
+    CANON_STEPS_RAW_CH6_E3,
     CEBO_PATH,
     CH6_GREP_WC_EXPECTED,
+    NOTA_CORTE_PATH,
     PURGAS_FILE,
     PURGAS_PATH,
     REGISTRO_PATH,
@@ -64,6 +67,7 @@ from core.generator.model import (
     CANON_STEPS_CH3_SUDO,
     CANON_STEPS_CH6,
     CanonSolution,
+    CanonStep,
     Contract,
     Incursion,
     Objective,
@@ -91,7 +95,7 @@ def _session_commands(chapter: int) -> tuple[str, ...]:
         # Familia conteo (head/tail/sort/uniq) + grep/wc + base. Sin tocar
         # shell.py (dueño Smough/S2); se lista explícita para evitar colisión
         # de rama — coherente con DEFAULT_CH6_COMMANDS que S2 añadirá mañana.
-        return ("cat", "cd", "cp", "grep", "head", "ls", "sort", "tail", "uniq", "wc")
+        return ("cat", "cd", "cp", "cut", "grep", "head", "ls", "sort", "tail", "uniq", "wc")
     return DEFAULT_CAP0_COMMANDS
 
 #: Nota del andamiaje de la run 0 (decisión pendiente de Gwyn, 🧭2 plan 28/08 §4).
@@ -248,11 +252,9 @@ def validate_incursion(incursion: Incursion) -> None:
                     stderr=f"{path} existe pero es un directorio",
                 )
     elif room.chapter == 6:
-        # AC de O3 (02/09): la sala-dato contiene la Lista al formato EXACTO
-        # de CENSO-LISTA.md y el cebo pipe-0. El canon (`grep 000 | wc -l`)
-        # ya prueba la golden (1); aquí se verifica que AMBOS ficheros de la
-        # Lista existen y el cebo devuelve 0 al contar 000.
-        for path in (REGISTRO_PATH, PURGAS_PATH, CEBO_PATH):
+        # AC de O3 (02/09) + E2/E3 (05/09, Seath): la sala-dato contiene
+        # la Lista al formato EXACTO + cebo pipe-0 + .nota-corte (E2).
+        for path in (REGISTRO_PATH, PURGAS_PATH, CEBO_PATH, NOTA_CORTE_PATH):
             node = shell.fs.resolve(path, "/")
             if isinstance(node, DirNode):
                 raise UnsolvableRoomError.from_step(
@@ -262,27 +264,87 @@ def validate_incursion(incursion: Incursion) -> None:
                     exit_code=1,
                     stderr=f"{path} existe pero es un directorio",
                 )
-        # Golden del cap. 6: `grep ENSAYO purgas.csv | wc -l` → CH6 esperado (1).
-        last = shell.history[-1]["result"]
-        raw = str(last.get("stdout", ""))
-        if raw.strip() != CH6_GREP_WC_EXPECTED:
-            raise UnsolvableRoomError.from_step(
-                step_index=len(room.canon.steps) - 1,
-                argv=("grep", "ENSAYO", PURGAS_PATH, "|", "wc", "-l"),
-                expect_exit=0,
-                exit_code=0,
-                stderr=f"golden cap. 6 devolvió {raw.strip()!r}, esperaba {CH6_GREP_WC_EXPECTED!r}",
-            )
-        # Cebo pipe-0: debe dar 0 (el «0 miente» es distinguible del 1 real).
-        cebo_res = shell.execute(f"grep ENSAYO {CEBO_PATH} | wc -l")
-        if cebo_res.stdout.strip() != "0":
-            raise UnsolvableRoomError.from_step(
-                step_index=len(room.canon.steps),
-                argv=("grep", "000", CEBO_PATH, "|", "wc", "-l"),
-                expect_exit=0,
-                exit_code=0,
-                stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
-            )
+        # Validación por quest (E1/E2/E3 comparten FS, goldens distintas)
+        quest_id = room.objective.story_key if hasattr(room.objective, "story_key") else ""
+        if quest_id == "story.ch6.e2":
+            # E2: cut|sort|uniq -c debe producir salida con distritos
+            last = shell.history[-1]["result"]
+            raw = str(last.get("stdout", ""))
+            if last.get("exit_code", 1) != 0 or not raw.strip():
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("cut", "-d|", "-f4", PURGAS_PATH, "|", "sort", "|", "uniq", "-c"),
+                    expect_exit=0,
+                    exit_code=int(last.get("exit_code", 1)),
+                    stderr=f"golden E2 vacía/exit {last.get('exit_code')}: {last.get('stderr','')!r}",
+                )
+            # Debe mencionar al menos un distrito conocido (UMBRAL-BAJO/MUEL-01/--)
+            if not any(x in raw for x in ("UMBRAL-BAJO", "MUEL-01", "--")):
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("cut", "-d|", "-f4", PURGAS_PATH, "|", "sort", "|", "uniq", "-c"),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"golden E2 sin distritos conocidos: {raw.strip()!r}",
+                )
+            cebo_res = shell.execute(f"grep ENSAYO {CEBO_PATH} | wc -l")
+            if cebo_res.stdout.strip() != "0":
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps),
+                    argv=("grep", "000", CEBO_PATH, "|", "wc", "-l"),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
+                )
+        elif quest_id == "story.ch6.e3":
+            # E3: sort -k12 | head -n 3 — valida solo si sort soporta -k/-t
+            last = shell.history[-1]["result"]
+            raw = str(last.get("stdout", ""))
+            stderr = str(last.get("stderr", ""))
+            has_sort_err = "invalid option" in stderr or "Try 'sort" in stderr
+            if last.get("exit_code", 0) != 0 or has_sort_err:
+                if has_sort_err:
+                    # Falta -k/-t en esta rama sola — valida solo FS y deja pasar
+                    pass
+                else:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("sort", "-t|", "-k12", "-n", PURGAS_PATH, "|", "head", "-n", "3"),
+                        expect_exit=0,
+                        exit_code=int(last.get("exit_code", 1)),
+                        stderr=f"golden E3 exit {last.get('exit_code')}: {stderr!r}",
+                    )
+            else:
+                lines = [l for l in raw.splitlines() if l.strip()]
+                if len(lines) != 3:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("sort", "-t|", "-k12", "-n", PURGAS_PATH, "|", "head", "-n", "3"),
+                        expect_exit=0,
+                        exit_code=0,
+                        stderr=f"golden E3 esperaba 3 líneas, devolvió {len(lines)}: {raw.strip()!r}",
+                    )
+        else:
+            # E1 (default) — golden grep ENSAYO
+            last = shell.history[-1]["result"]
+            raw = str(last.get("stdout", ""))
+            if raw.strip() != CH6_GREP_WC_EXPECTED:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("grep", "ENSAYO", PURGAS_PATH, "|", "wc", "-l"),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"golden cap. 6 devolvió {raw.strip()!r}, esperaba {CH6_GREP_WC_EXPECTED!r}",
+                )
+            cebo_res = shell.execute(f"grep ENSAYO {CEBO_PATH} | wc -l")
+            if cebo_res.stdout.strip() != "0":
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps),
+                    argv=("grep", "000", CEBO_PATH, "|", "wc", "-l"),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
+                )
 
 
 def generate(
@@ -652,16 +714,11 @@ def _generate_cap6(
                 f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}"
             )
     else:
-        # v0 solo E1 (grey, familia conteo); busca la que encaja el contrato
-        # ch6 (requires incluye familia conteo + grep/wc ya vivos). Si no hay
-        # E1 todavía (S2 aún no aterrizó), lanza guard honesto — test con
-        # skipif hasta que S2 ponga la quest.
+        # Default: E1 si existe, si no la primera jugable (E1/E2/E3 del plan 05/09)
         candidatos = [q for q in ch_quests if q.id == "story.ch6.e1"]
         if candidatos:
             quest = candidatos[0]
         else:
-            # Fallback honesto: si no está E1, busca cualquiera que no exija
-            # cut (no jugable) — coherente con AC de S2 (sin cut).
             quest = ch_quests[0]
 
     # Invariante §6.4.1 sobre el pool ACUMULADO (≤ capítulo).
@@ -686,7 +743,15 @@ def _generate_cap6(
         karma_hint=_TINT_ES.get(quest.tint, "gris"),
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
-    canon = CanonSolution(steps=CANON_STEPS_CH6)
+    # Canon por quest: E2/E3 tienen goldens propios (cut|sort|uniq -c y sort -k12|head).
+    if quest.id == "story.ch6.e2":
+        from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2
+        canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2))
+    elif quest.id == "story.ch6.e3":
+        from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E3
+        canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E3))
+    else:
+        canon = CanonSolution(steps=CANON_STEPS_CH6)
 
     room = Room(
         id=room_id,

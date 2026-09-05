@@ -25,6 +25,10 @@
     "story.ch5.e4.beat": "El asalto llega a la puerta del dique. Cerrar el perímetro con lo aprendido de defensa (`chmod` sobre accesos, leer los logs de entrada) en un solo recorrido apretado por el ruido, y decidir qué entra en la sombra antes de que entren ellos.",
     "story.ch6.e1.title": "El número que sobra",
     "story.ch6.e1.beat": "Ceniza te deja en el límite del Umbral alto con el encargo sin rodeos: la cámara del Faro guarda la Lista — el censo con sus purgas — y hay que leerla en alto sin abrir la puerta. Está en `/srv/camara-faro/`: `purgas.csv` se cuenta con la familia conteo (`grep` por motivo, `sort`/`uniq` para ordenar) y entre las filas hay una que no cierra, la purga `PR-0091`, motivo `ENSAYO`, fecha en blanco, sujeto `000`. Ojo con los borradores: `/srv/camara-faro/censo-borrador.csv` no es la Lista — si cuentas ahí, el cero te miente. Cuenta donde pesa, vuelve con la cifra limpia, y decide qué se demuestra y qué se quema.",
-    "postmortem.auditor.corte": "Expediente 000: corte registrado — columna {column} ({pattern}). Continuidad del ensayo: estable."
+    "postmortem.auditor.corte": "Expediente 000: corte registrado — columna {column} ({pattern}). Continuidad del ensayo: estable.",
+    "story.ch6.e2.title": "El corte de la Lista",
+    "story.ch6.e2.beat": "Ceniza te pasa la segunda hoja del Faro sin rodeos: la Lista es tabla, no texto filtrado. Si quieres saber qué distritos aparecen y cuántos vecinos tiene cada uno, corta la columna. Usa cut -d'|' -f4 sobre /srv/camara-faro/purgas.csv, ordénalo y agrupa con uniq -c — cut | sort | uniq -c — sin el corte la pregunta no se responde. La .nota-corte del operador muerto en /srv/camara-faro/.nota-corte recuerda el gesto: cut -d'|' -f4. Rutas absolutas, como en el Faro.",
+    "story.ch6.e3.title": "Los más cerca del cero",
+    "story.ch6.e3.beat": "La puntuación vive en la columna 12 de la Lista. Para saber quién está más cerca del 0, ordena /srv/camara-faro/purgas.csv por esa columna con sort -t'|' -k12 -n y asoma los tres primeros con head -n 3 — ahí ves los más cerca del cero. Sin -k la pregunta no se puede responder. Rutas absolutas."
   }
 }

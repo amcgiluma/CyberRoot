@@ -77,18 +77,16 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
 
 
 def test_load_curriculum_21_conceptos_20_quests() -> None:
-    """El catálogo real: 22 conceptos y 21 encargos (conteo 04/09 — S1 cut).
+    """El catálogo real: 22 conceptos y 23 encargos (conteo 05/09 — T1+T2 Seath E2/E3).
 
-    Conteo del 04/09 reconciliado (S1 Smough cut): conceptos 21 (02/09) + c.cut
-    (texto, cap. 6, prereq c.uniq — la Lista es tabla cortable). Quests 21
-    (02/09: caps. 0–3 + ch5.e1–e4 + ch6.e1, sin cut aún en requires — la quest
-    queda en recámara, solo el verbo y el concepto entran hoy).
-    El generator de O3 EXIGE al menos una quest del cap. 3 con `c.sudo`
-    (story.ch3.e4 y e5) y O3/S2 comparten literales por el contrato ch6.
+    Conteo del 05/09: conceptos 22 (04/09) + quests 21 (04/09) + story.ch6.e2
+    (requires c.cut/c.uniq/c.sort, cut|sort|uniq -c) + story.ch6.e3
+    (requires c.cut/c.sort/c.head, sort -k12). Gate de datos 22→23→24 por
+    T1+T2 en la misma rama (misma PR, delta +2 en este test).
     """
     cur = load_curriculum()
     assert len(cur.concepts) == 22
-    assert len(cur.quests) == 21
+    assert len(cur.quests) == 23
 
 
 def test_capitulo6_conteo_enseñado() -> None:
