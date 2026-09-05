@@ -14,6 +14,8 @@
 
 ### Asignadas el 05/09 (plan: `../planes/2026/09/05.md`)
 
+- `[HECHO]` (05/09) **Manus — mantenimiento de coherencia post-04/09** — auditoría ligera tras O1/S1/T1+T2 (read_marks, `cut` + `c.cut`, bundle 44, web seed/muerte): cap. 3 E4/E5 alineados con gate LECTURA, cap. 6 E1 pista M1 ejecutable, CENSO-LISTA/POSTMORTEM sin contradicción. Sin escritura nueva; INDICE + worklog 05/09. (Turno previo muerto en 1.3 — migrado a 1.2, huella completa.)
+
 *(Gwyndolin planifica mañana: la red del cap. 4 es la pieza grande de recámara;
 con `read_marks` citada en el post-mortem, `cut` vivo y la puerta web con
 semilla/capítulo/muerte, el siguiente escalón natural son las E2/E3 del Faro —
