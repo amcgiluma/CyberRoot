@@ -81,6 +81,18 @@ AVISO_FILE = "aviso-faro.txt"
 AVISO_PATH = f"{CAP6_DIR}/{AVISO_FILE}"
 AVISO_CONTENT = "Faro — luz continua. Acceso restringido a personal autorizado.\n"
 
+# ---------------------------------------------------------------------------
+# Cebo del Faro O3 (05/09, Ornstein): el 0 que miente por ruta
+# ---------------------------------------------------------------------------
+#: Fichero-señuelo que invita a resolver con ruta relativa.
+#: No contiene ENSAYO: `grep ENSAYO purgas.csv | wc -l` desde / da 0 honesto.
+#: El briefing ya exige absolutas (🧭15); este fichero es piel, no lógica.
+CEBO_RUTA_FILE = "LEEME.txt"
+CEBO_RUTA_PATH = f"{CAP6_DIR}/{CEBO_RUTA_FILE}"
+CEBO_RUTA_CONTENT = (
+    "Nota operativa — usar purgas.csv directamente ahorra tecleo.\n"
+)
+
 
 def build_chapter6_fs(fs_rng: Any) -> FileSystem:
     """Monta el árbol de la sala-dato del cap. 6 «Faro».
@@ -131,6 +143,13 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
                                     content=AVISO_CONTENT,
                                     owner="root",
                                     group="root",
+                                    mode="644",
+                                ),
+                                CEBO_RUTA_FILE: FileNode(
+                                    name=CEBO_RUTA_FILE,
+                                    content=CEBO_RUTA_CONTENT,
+                                    owner="lumen",
+                                    group="censo",
                                     mode="644",
                                 ),
                             },

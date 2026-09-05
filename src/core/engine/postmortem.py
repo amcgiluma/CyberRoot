@@ -54,6 +54,8 @@ LINE_KEY_PICO = "postmortem.auditor.pico"
 #: Si la sesión contiene un `sudo`, el informe cita si se leyó la orden.
 LINE_KEY_LECTURA = "postmortem.auditor.lectura"
 LINE_KEY_CIEGA = "postmortem.auditor.ciega"
+#: O1 05/09 (Ornstein) — el Auditor cita TU columna: si el history contiene `cut` con flags, añade línea de corte.
+LINE_KEY_CORTE = "postmortem.auditor.corte"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -138,6 +140,90 @@ def _amount(entry: dict[str, Any] | None) -> int:
     return sum(
         int(ev.get("data", {}).get("amount", 0)) for ev in result.get("noise", []) or []
     )
+
+
+def _extract_cut_args(line: str) -> dict[str, str] | None:
+    """Extrae args de un `cut` con flags desde la línea cruda.
+
+    Busca flags que indiquen corte por columna: -d, -f, --delimiter, --fields.
+    Retorna {column, pattern} para la plantilla corte, o None si no hay flag de corte.
+    Determinista, sin imports de sandbox (solo shlex sobre la línea).
+    """
+    try:
+        argv = shlex.split(line)
+    except ValueError:
+        return None
+    if not argv or argv[0] != "cut":
+        return None
+    # Detecta presencia de flag de corte (criterio del plan: cut -d / cut -f)
+    has_cut_flag = False
+    column = ""
+    pattern = ""
+    i = 1
+    while i < len(argv):
+        a = argv[i]
+        if a == "-d" and i + 1 < len(argv):
+            has_cut_flag = True
+            pattern = argv[i + 1]
+            i += 2
+        elif a.startswith("-d") and len(a) > 2:
+            has_cut_flag = True
+            pattern = a[2:]
+            i += 1
+        elif a == "-f" and i + 1 < len(argv):
+            has_cut_flag = True
+            column = argv[i + 1]
+            i += 2
+        elif a.startswith("-f") and len(a) > 2:
+            has_cut_flag = True
+            column = a[2:]
+            i += 1
+        elif a == "--delimiter" and i + 1 < len(argv):
+            has_cut_flag = True
+            pattern = argv[i + 1]
+            i += 2
+        elif a.startswith("--delimiter="):
+            has_cut_flag = True
+            pattern = a.split("=", 1)[1]
+            i += 1
+        elif a == "--fields" and i + 1 < len(argv):
+            has_cut_flag = True
+            column = argv[i + 1]
+            i += 2
+        elif a.startswith("--fields="):
+            has_cut_flag = True
+            column = a.split("=", 1)[1]
+            i += 1
+        elif a.startswith("-") and ("d" in a or "f" in a):
+            # flags combinados tipo -df o -fd
+            has_cut_flag = True
+            i += 1
+        elif a.startswith("-"):
+            i += 1
+        else:
+            i += 1
+    if not has_cut_flag:
+        return None
+    # Normaliza: column por defecto si solo hubo -d, pattern viceversa
+    if not column:
+        column = pattern or "-"
+    if not pattern:
+        pattern = column
+    return {"column": column, "pattern": pattern}
+
+
+def _find_cut(shell_dict: dict[str, Any]) -> dict[str, str] | None:
+    """Primer `cut` con flags en el history (determinista por orden)."""
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        # Fast path: debe contener cut
+        if "cut" not in line:
+            continue
+        args = _extract_cut_args(line)
+        if args is not None:
+            return args
+        # No fallback por comando autoritativo: solo flags explícitos cuentan
+    return None
 
 
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
@@ -235,6 +321,17 @@ def build_postmortem(
         "lines_resolved": lines_resolved,
     }
 
+    # O1 05/09 — el Auditor cita TU columna si hubo cut con flags
+    cut_args = _find_cut(shell_dict)
+    if cut_args is not None:
+        corte_text = _resolve_auditor_text(LINE_KEY_CORTE, cut_args)
+        base["auditor_corte"] = {
+            "line_key": LINE_KEY_CORTE,
+            "args": cut_args,
+        }
+        base["auditor_corte_text"] = corte_text
+        base["lines_resolved"] = [*base["lines_resolved"], corte_text]
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -253,8 +350,8 @@ def build_postmortem(
             "args": lectura_args,
         }
         base["auditor_lectura_text"] = lectura_text
-        # Segunda línea resuelta (la acusación verificable)
-        base["lines_resolved"] = [auditor_text, lectura_text]
+        # Segunda (o tercera si hubo corte) línea resuelta — preserva corte si existe
+        base["lines_resolved"] = [*base["lines_resolved"], lectura_text]
 
     return base
 
@@ -281,4 +378,5 @@ __all__ = [
     "LINE_KEY_PICO",
     "LINE_KEY_LECTURA",
     "LINE_KEY_CIEGA",
+    "LINE_KEY_CORTE",
 ]
