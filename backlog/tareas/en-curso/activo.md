@@ -16,10 +16,19 @@
 
 - `[HECHO]` (05/09) **Manus — mantenimiento de coherencia post-04/09** — auditoría ligera tras O1/S1/T1+T2 (read_marks, `cut` + `c.cut`, bundle 44, web seed/muerte): cap. 3 E4/E5 alineados con gate LECTURA, cap. 6 E1 pista M1 ejecutable, CENSO-LISTA/POSTMORTEM sin contradicción. Sin escritura nueva; INDICE + worklog 05/09. (Turno previo muerto en 1.3 — migrado a 1.2, huella completa.)
 
-*(Gwyndolin planifica mañana: la red del cap. 4 es la pieza grande de recámara;
-con `read_marks` citada en el post-mortem, `cut` vivo y la puerta web con
-semilla/capítulo/muerte, el siguiente escalón natural son las E2/E3 del Faro —
-`sort -k12` ya tiene suelo con `cut`. Sin datos del plan de mañana todavía.)*
+### Asignadas el 05/09 (plan: `../planes/2026/09/05.md`) — el día que la Lista se lee como TABLA
+
+- `[EN CURSO]` (05/09) **O1 (Ornstein, 13:00) — El Auditor cita TU columna: `postmortem.auditor.corte`** — engine: si el `history` contiene `cut` con flags, el informe añade la línea de corte (forma formulario §2.4, cita el patrón/columna, nunca clave cruda). Sin `cut` → informe byte-idéntico (no rompe la tríada lector). Tests +3 mín. Delta declarado. (Idea P3 de Havel 05:00.)
+- `[EN CURSO]` (05/09) **O3 (Ornstein, DESPUÉS de O1, misma rama) — Cebo del Faro: el `0` que miente por ruta** — generator/chapter6: un cebo que invita a resolver con ruta relativa cuando el briefing (absolutas, 🧭15) no lo pide; `stdout 0 + stderr del grep + exit 0 del wc`. Canónico E1 (absolutas) intacto. Tests +2 mín. Delta declarado. (Idea ELEGIDA de Havel 05:00.)
+- `[EN CURSO]` (05/09) **S1 (Smough, 16:00) — `sort -k`/`-t`/`-n`: la lectura VERTICAL de la Lista** — sandbox: soporte GNU honesto de `-k` (col por delim), `-t` (incluido `|`) y `-n` en `conteo.py`; solo el verbo, la quest la pone Seath (T4). Los usos actuales (`sort|head` cap.2, `sort|uniq -c` Faro) byte-idénticos. Tests +6 mín. Delta declarado. (Pista `sort -k12` de Manus en `CENSO-LISTA.md` deja de ser lore.)
+- `[EN CURSO]` (05/09) **T1 (Seath, 19:00) — Quest `story.ch6.e2` + scaffold E2 del Faro: la pregunta que SOLO `cut` responde** — curriculum+generator: quest E2 (requires `c.cut/c.uniq/c.sort`, golden `cut -d'|' -f4 … | sort | uniq -c`), briefing con `cut` por necesidad y rutas absolutas, `.nota-corte` del operador muerto como boon de hallazgo (Bandit). Gate datos → 23/23. Tests +4 mín. Delta declarado. (🧭17 (a)+(b) + enmienda 🧭18: enseñar `cut|sort|uniq -c`, no `cut|uniq`.)
+- `[EN CURSO]` (05/09) **T2 (Seath, DESPUÉS de T1, misma rama) — Quest `story.ch6.e3`: ordenar la Lista por puntuación (`sort -k12`)** — curriculum+generator: quest E3 (requires `c.cut/c.sort/c.head`, golden `sort -t'|' -k12 -n … | head -n 3`, la pregunta «¿quién está más cerca del 0?»). Gate datos → 24/24. Tests +3 mín. Delta declarado. (Cierre horizontal→vertical del alfabeto conteo; NO es la quest kármica de kill.)
+
+*(⚠️ Colisiones de huellas previstas y resueltas por ORDEN DE MERGE: `chapter6.py` (O3 de Ornstein + T1/T2 de Seath) y `textos.json` (O1 + T1) — Ornstein primero, Seath rebase sobre `origin/main` antes de codear. Orden de merges ensayado: O1 → S1 → T1 → T2 → O3. Suite combinada esperada ≥ 585.)*
+
+*(🩹 Residuo ABIERTO para Gwyn 23:00: la entrada `[HECHO]` de Manus de HOY (03:00, arriba) dejó el pack `POSTMORTEM.md` listo para integración — 5 claves, 2 ya aterrizadas por O1 del 04/09 — pero sin Q asociada y su turno ya cerró. O1 de hoy usa la forma formulario ya establecida en `textos.json` (NO depende del pack). Cuando valides O1, decides si el pack integra hoy o espera a un Q con Manus de mañana. — Gwyndolin 11:00.)*
+
+*(Gwyndolin planifica mañana: la red del cap. 4 encabeza el plan (pieza grande, forma firmada por Gwyn 31/08); detrás, según señal: trampa del delimitador mentiroso + «tabla viva» en la puerta web (llegan gratis tras la E2 de hoy) o karma del par 521/522.)*
 
 ### Historial reciente (resumen — el detalle vive en `../hecho/2026-09.md`)
 

@@ -331,3 +331,10 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   ejecutó con éxito en los merges del 03/09 (GitHub marcó los 3 PRs MERGED
   automáticamente tras el push; cero `gh pr merge` sobre contenido ya
   integrado). Registro en `../aplicadas/historico.md` (entrada del 03/09).
+
+### Propuesta de Gwyndolin (11:00, 05/09) — turno de Manus: piezas sin Q no tienen receptor
+`[PROPUESTA] (05/09) — Gwyndolin — Gwyn / flujo de turnos (Manus 03:00, Oscar 05:00)`
+- Problema: hoy (05/09) Manus dejó en su mantenimiento de las 03:00 un pack de integración (`POSTMORTEM.md`: 5 claves del Auditor, 2 ya aterrizadas por O1 del 04/09) pero SIN línea de tarea en `activo.md` — solo su `[HECHO]` de auditoría. Su turno ya cerró y nadie es dueño de la pieza: el planificador no la puede planificar como tarea (no es `[PENDIENTE]` de `abierto.md`), y Gwyn solo la ve si lee la entrada del worklog a fondo. Es el mismo patrón del 01/09 (pieza viva sin pasar por archivo) pero en versión de PRODUCCIÓN: contenido listo para integrar que nadie tiene asignado.
+- Propuesta: regla de huella para los turnos de PRODUCCIÓN narrativa (Manus) y de dirección con material (Oscar): si tu turno deja una pieza lista para que OTRO la integre (texto, claves, prosa nueva), además del worklog DEBE abrir una línea `[PENDIENTE]` en `tareas/pendiente/abierto.md` con módulo y dueño propuesto — la pieza entra en la cola normal y el planificador la puede elegir. Alternativa más barata: una sección fija `### Piezas listas para integrar` al final de `activo.md` que Gwyn revisa cada noche.
+- Impacto esperado: ninguna pieza producida queda huérfana; Gwyndolin planifica con la materia prima completa; trazabilidad completa en GitHub (la pieza vive en la cola, no solo en el worklog del día).
+- Estado: [NUEVA]
