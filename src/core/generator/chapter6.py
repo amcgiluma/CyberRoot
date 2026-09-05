@@ -7,7 +7,6 @@ constantes + la constructora del FS. NO importa `core.generator.model`
 Materializa el worldbuilding del censo de Manus (`CENSO-LISTA.md`) como
 FICHEROS del mundo que se cruzan con la familia conteo (head/tail/sort/uniq
 + grep/wc/pipe). Formato EXACTO de `CENSO-LISTA.md`:
-
 - delimitador `|`
 - `registro.csv` con cabecera y 3 filas (Vera/E. Roldan/J. Herrera)
 - `purgas.csv` con cabecera y 3 filas, la anomalía `PR-0091` con
@@ -81,15 +80,28 @@ AVISO_FILE = "aviso-faro.txt"
 AVISO_PATH = f"{CAP6_DIR}/{AVISO_FILE}"
 AVISO_CONTENT = "Faro — luz continua. Acceso restringido a personal autorizado.\n"
 
+# ---------------------------------------------------------------------------
+# E2 — .nota-corte del operador muerto (boon hallazgo Bandit)
+# ---------------------------------------------------------------------------
+
+#: Fichero oculto del operador muerto: documenta cut por necesidad.
+NOTA_CORTE_FILE = ".nota-corte"
+NOTA_CORTE_PATH = f"{CAP6_DIR}/{NOTA_CORTE_FILE}"
+NOTA_CORTE_CONTENT = (
+    "# nota del operador — 11-07 foco Faro\n"
+    + "# si quieres saber qué distritos hay y cuántos vecinos por distrito,\n"
+    + "# corta la columna: cut -d'|' -f4 /srv/camara-faro/purgas.csv | sort | uniq -c\n"
+    + "# la Lista es tabla, no texto — sin corte no se responde\n"
+)
 
 def build_chapter6_fs(fs_rng: Any) -> FileSystem:
     """Monta el árbol de la sala-dato del cap. 6 «Faro».
 
     El FS de la sala contiene SIEMPRE:
-
       - la Lista como dos ficheros del mundo (`registro.csv` + `purgas.csv`)
         al formato EXACTO de `CENSO-LISTA.md`;
-      - el cebo pipe-0 (`censo-borrador.csv`) que devuelve 0 al contar.
+      - el cebo pipe-0 (`censo-borrador.csv`) que devuelve 0 al contar;
+      - E2: `.nota-corte` del operador muerto (boon hallazgo, Bandit).
 
     La sala concreta se elige de `curriculum.json` (cap. 6) en el generator;
     esta hoja solo aporta la piel.
@@ -133,6 +145,13 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
                                     group="root",
                                     mode="644",
                                 ),
+                                NOTA_CORTE_FILE: FileNode(
+                                    name=NOTA_CORTE_FILE,
+                                    content=NOTA_CORTE_CONTENT,
+                                    owner="cero",
+                                    group="cero",
+                                    mode="644",
+                                ),
                             },
                         ),
                     },
@@ -140,7 +159,6 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
             },
         ),
     )
-
 
 # ---------------------------------------------------------------------------
 # Secuencia canónica de la sala-dato (argv crudos, sin acoplar a model)
@@ -151,6 +169,19 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
 #: por los `000462`/`000537`, pero el dato que delata la anomalía es ENSAYO.
 CANON_STEPS_RAW_CH6: tuple[tuple[str, ...], ...] = (
     ("grep", "ENSAYO", PURGAS_PATH, "|", "wc", "-l"),
+)
+
+#: E2: qué distritos y cuántos vecinos por distrito — exige cut por necesidad.
+#: `cut -d'|' -f4 purgas.csv | sort | uniq -c` — la forma Bandit enseñada
+#: (enmienda 🧭18: cut|sort|uniq -c, no cut|uniq directo).
+CANON_STEPS_RAW_CH6_E2: tuple[tuple[str, ...], ...] = (
+    ("cut", "-d'|'","-f4", PURGAS_PATH, "|", "sort", "|", "uniq", "-c"),
+)
+
+#: E3: ordenar la Lista por puntuación (col 12) — lectura vertical.
+#: `sort -t'|' -k12 -n purgas.csv | head -n 3` — los 3 más cerca del 0.
+CANON_STEPS_RAW_CH6_E3: tuple[tuple[str, ...], ...] = (
+    ("sort", "-t", "'|'", "-k12", "-n", PURGAS_PATH, "|", "head", "-n", "3"),
 )
 
 #: Resultado esperado de la golden del cap. 6.

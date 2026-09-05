@@ -327,8 +327,8 @@ class Shell:
             return self._record(line, CommandResult(stderr=_SYNTAX_MSG, exit_code=2))
 
         pipeline = _split_pipeline(stripped)
-        if len(pipeline) > 2:
-            # El cap. 2 solo pide UNA tubería; más de un `|` es fuera de alcance.
+        if len(pipeline) > 3:
+            # Cap. 6 E2 pide DOS tuberías (cut|sort|uniq -c); hasta 2 pipes permitidos.
             return self._record(line, CommandResult(stderr=_PIPE_MSG, exit_code=2))
 
         try:
@@ -348,31 +348,43 @@ class Shell:
         if len(pipeline) == 1:
             return self._record(line, self._exec_argv(argv))
 
-        # Tubería: `cmd1 | cmd2`. El primer comando arranca sin stdin.
-        try:
-            argv1 = tuple(shlex.split(pipeline[0], posix=True))
-        except ValueError:
-            return self._record(
-                line,
-                CommandResult(
-                    stderr="sh: syntax error: unexpected end of file", exit_code=2
-                ),
-            )
-        if not argv1:
-            return self._record(
-                line, CommandResult(stderr=_PIPE_MSG, exit_code=2)
-            )
-        left = self._exec_argv(argv1)
-        # stdbuf del pipe: el stdout del izquierdo es el stdin del derecho.
-        result = self._exec_argv(argv, stdin=left.stdout)
-        # Combinar: stdout del último, stderr de ambos (el orden manda),
-        # ruido de AMBOS (la tubería no es gratis — AC S1), exit del último.
+        # Tubería: `cmd1 | cmd2 [| cmd3]` — cap. 6 E2 pide cut|sort|uniq
+        # Encadena stdin: stdout del anterior es stdin del siguiente.
+        argvs: list[tuple[str, ...]] = []
+        for segment in pipeline[:-1]:
+            try:
+                av = tuple(shlex.split(segment, posix=True))
+            except ValueError:
+                return self._record(
+                    line,
+                    CommandResult(
+                        stderr="sh: syntax error: unexpected end of file", exit_code=2
+                    ),
+                )
+            if not av:
+                return self._record(line, CommandResult(stderr=_PIPE_MSG, exit_code=2))
+            argvs.append(av)
+        argvs.append(argv)
+        # Ejecuta encadenado
+        prev_stdout = None
+        results: list = []
+        for idx, av in enumerate(argvs):
+            stdin = prev_stdout if idx > 0 else ""
+            res = self._exec_argv(av, stdin=stdin)
+            results.append(res)
+            prev_stdout = res.stdout
+        # Último resultado manda stdout/exit/new_cwd; stderr y ruido se combinan
+        last = results[-1]
+        combined_stderr = _join_err(*(r.stderr for r in results))
+        combined_noise = []
+        for r in results:
+            combined_noise.extend(r.noise)
         combined = CommandResult(
-            stdout=result.stdout,
-            stderr=_join_err(left.stderr, result.stderr),
-            exit_code=result.exit_code,
-            noise=left.noise + result.noise,
-            new_cwd=result.new_cwd,
+            stdout=last.stdout,
+            stderr=combined_stderr,
+            exit_code=last.exit_code,
+            noise=combined_noise,
+            new_cwd=last.new_cwd,
         )
         return self._record(line, combined)
 

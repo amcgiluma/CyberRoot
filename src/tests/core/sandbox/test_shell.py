@@ -107,8 +107,8 @@ def test_pipe_una_tuberia_ejecuta_stdout_a_stdin() -> None:
 
 
 def test_pipe_multiple_no_soportado_didactico() -> None:
-    """`a | b | c` (más de una tubería) se rechaza con mensaje didáctico."""
-    res = _shell_ch2().execute("cat /etc/passwd | grep root | wc -l")
+    """`a | b | c | d` (más de dos tuberías) se rechaza con mensaje didáctico — E2 (05/09) abre dos tuberías."""
+    res = _shell_ch2().execute("cat /etc/passwd | grep root | wc -l | head -n 1")
     assert res.exit_code == 2
     assert res.stderr == _PIPE_MSG
     assert "grep" not in res.stderr and "cat" not in res.stderr

@@ -404,6 +404,30 @@
       "beat_key": "story.ch6.e1.beat"
     },
     {
+      "id": "story.ch6.e2",
+      "chapter": 6,
+      "tint": "grey",
+      "requires": [
+        "c.cut",
+        "c.uniq",
+        "c.sort"
+      ],
+      "title_key": "story.ch6.e2.title",
+      "beat_key": "story.ch6.e2.beat"
+    },
+    {
+      "id": "story.ch6.e3",
+      "chapter": 6,
+      "tint": "grey",
+      "requires": [
+        "c.cut",
+        "c.sort",
+        "c.head"
+      ],
+      "title_key": "story.ch6.e3.title",
+      "beat_key": "story.ch6.e3.beat"
+    },
+    {
       "id": "story.ch5.e1",
       "chapter": 5,
       "tint": "blue",

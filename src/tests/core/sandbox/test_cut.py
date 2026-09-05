@@ -169,9 +169,10 @@ def test_cut_pipe_a_uniq():
     assert "1 distrito" in r.stdout or "distrito" in r.stdout
 
 def test_cut_pipe_a_sort_a_uniq_no_doble_pipe_soporte():
-    # doble pipe no soportado → debe fallar con mensaje didáctico, no silencioso
+    # doble pipe (cut|sort|uniq -c) SOPORTADO desde E2 (05/09, Seath) — T1 enseña cut|sort|uniq -c
     fs = FileSystem(root=DirNode(name="/", children={"registro.csv": FileNode(name="registro.csv", content=REG)}))
     s = Shell(fs, commands=DEFAULT_CH6_COMMANDS)
     r = s.execute("cut -d'|' -f4 registro.csv | sort | uniq -c")
-    assert r.exit_code == 2
-    assert "multiple pipelines" in r.stderr
+    assert r.exit_code == 0
+    # -f4 = puntuacion: cabecera + 10 + 20 → sort|uniq -c agrupa 3 líneas distintas
+    assert "puntuacion" in r.stdout and "10" in r.stdout and "20" in r.stdout
