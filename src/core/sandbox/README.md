@@ -2,7 +2,7 @@
 
 > **Qué hace:** filesystem virtual + shell con semántica REAL de Linux
 > (ARCHITECTURE §2.2), autónomo y reutilizable, sin I/O ni reloj real.<br>
-> **Estado (04/09, Smough):** comandos del cap. 0 (`ls`, `cd`, `cat`,
+> **Estado (05/09, Smough):** comandos del cap. 0 (`ls`, `cd`, `cat`,
 > `cp`) + cap. 2 (`grep`, `wc`) y tubería `cmd1 | cmd2` + cap. 3 (`ps`, `env`
 > — familia procesos; `sudo` GANADO + `kill` Señales v0) + familia conteo
 > (`head`/`tail`/`sort`/`uniq`/`cut`, cap. 6 — lectura frugal, la Lista es tabla cortable).
@@ -20,7 +20,7 @@
 | `commands/procesos.py` | `ps` (`ps aux` con columna USER) y `env` (solo-lectura, orden por clave; **S1, 31/08** — cap. 3) |
 | `commands/senal.py` | `kill` (**S1, 02/09**): `kill [-9|-HUP] <pid>…` sobre `fs.processes` (par ceniza-521/censo-522). `-9`/`TERM` mata (elimina), `-HUP` reinicia (`--reloaded`, `HUP_<pid>=1`, visible en `ps`/`env`). Emite `sandbox.signal` + ruido 2. Golden GNU y gate 127 en cap. 0/2. |
 | `commands/escalada.py` | `sudo` GANADO (**S1, 01/09** + gate de LECTURA **S1, 03/09** 🧭14b): wrapper de orquestación del shell que arbitra la CREDENCIAL narrativa (fichero del mundo, contrato O1↔S1); sin credencial → rechazo diegético accionable (ruido 0, exit 1); credencial SIN LEER → rechazo que NOMBRA la orden (`SUDO_UNREAD_MSG`, ruido 0, sin firma); credencial LEÍDA (`cat` en la sesión) → eleva + ruido premium + firma en `/var/log/auth.log`. Constantes del contrato (`SUDO_CREDENTIAL_PATH`, `AUTH_LOG_PATH`, `SUDO_AUTHZ_MARKER`, `SUDO_PREMIUM_NOISE`, `SUDO_READ_EVENT_TYPE`). |
-| `commands/conteo.py` | Familia conteo (**S2, 01/09**): `head`/`tail` (`-n N`, default 10), `sort` (`-u`), `uniq` (`-c`, cuenta ancho 7). «Lectura frugal»: leen menos que un `cat` entero. Semántica GNU real contrastada. Cap. 6 (barrera hacia el Faro). |
+| `commands/conteo.py` | Familia conteo (**S1, 05/09**: `sort -k`/`-t`/`-n` lectura VERTICAL — `sort -t'|' -k12 -n` ordena la Lista por puntuación; **S2, 01/09**: `head`/`tail`/`sort`/`uniq`) `head`/`tail` (`-n N` default 10), `sort` (`-u`/`-n`/`-t SEP`/`-k KEYDEF`/`-r`, delim `|` incluido, fallback vacío sin crashear), `uniq` (`-c` ancho 7). «Lectura frugal»: leen menos que un `cat` entero. GNU honesto contrastado (multi-char tab, `-k0`, sin `-k` byte-idéntico). Cap. 6. |
 | `commands/cut.py` | `cut` (**S1, 04/09** — la Lista es tabla cortable): `cut -d DELIM -f LIST [FILE...]` GNU-honesto (`-d` delim single-char, `-f` rangos `N`, `N-M`, `N-`, `-M`, coma-separado, ordenado+deduplicado, línea sin delim imprime entera, sin `-f` → error GNU, stdin/tubería, multi-fichero). Ruido 1. Gate 127 en cap. 0/2/3. |
 | `noise.py` | Perfil ⚠️ v1 `cd:0, ls:1, cat:1, cp:3, grep:2, wc:1, ps:1, env:1, sudo:3, head:1, tail:1, sort:2, uniq:1, kill:2, cut:1` + eventos `common.events.Event` REALES (`type="event.noise"`); el coste de detección lo decide el ENGINE |
 | `__main__.py` | **REPL (S2, 29/08):** `PYTHONPATH=src python -m core.sandbox` abre una sesión real del cap. 0 con prompt diegético (`operador@oficina-vecinal:~$`, DESIGN §6.1); `run_repl` reutilizable y testeable programáticamente |
@@ -30,6 +30,7 @@
 | `PLAN-2026-09-01.md` | Plan de implementación S1+S2 del turno 01/09 (sudo GANADO + familia conteo, currículo + contrato O1↔S1) |
 | `PLAN-2026-09-02.md` | Plan de implementación S1+S2 del turno 02/09 (kill/señales v0 + quest ch6.e1 + DEFAULT_CH6_COMMANDS, contrato O3↔S2) |
 | `PLAN-2026-09-04.md` | Plan de implementación S1 del turno 04/09 (cut S1 — la Lista es tabla cortable, gate 22/22) |
+| `PLAN-2026-09-05.md` | Plan de implementación S1 del turno 05/09 (sort -k/-t/-n — lectura VERTICAL de la Lista, `sort -t'|' -k12 -n`) |
 
 ## Decisiones que un revisor debe conocer
 
