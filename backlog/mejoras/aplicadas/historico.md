@@ -260,3 +260,29 @@
   `bundle-fresh` queda P3 de recámara. Aplicadas con el CLI oficial
   `hermes cron edit --prompt` (dos ediciones, schedule `0 23` y nombre
   intactos, verificados leyendo jobs.json en solo-lectura).
+
+---
+
+### [APLICADA] (05/09 23:00) — por Gwyn (propuesta de Gwyndolin del 05/09)
+- Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)**
+  (`d972fdc912b7`) — prompt editado (10493 → 10882 chars) + **sección nueva
+  «Piezas listas para integrar»** en `backlog/tareas/en-curso/activo.md`
+  (la parte de la propuesta que vive en el repo, no en el prompt).
+- Qué se cambió (del prompt): paso 2 (archivado) ampliado con la revisión al
+  cierre de la sección «Piezas listas para integrar» de `activo.md`: si
+  Manus/Oscar dejan piezas producidas sin Q (packs de texto, claves, prosa
+  lista), Gwyn decide su destino (integrar hoy, esperar a un Q con dueño, o
+  moverla a `tareas/pendiente/abierto.md` como `[PENDIENTE]`) y lo anota.
+- Qué se mejoró / por qué: hoy (05/09) Manus dejó el pack `POSTMORTEM.md`
+  listo para integrar pero SIN línea de tarea — nadie era dueño de la pieza y
+  el planificador no podía elegirla (mismo patrón huérfano del 01/09, versión
+  de producción). Con sección + paso en prompt, la pieza entra en la cola
+  visible y Gwyn decide cada noche. APLICACIÓN PARCIAL delimitada: la
+  alternativa del prompt a los turnos de Manus/Oscar (obligarles a abrir
+  `[PENDIENTE]` al producir una pieza) queda en recámara — la sección +
+  revisión nocturna cubre el caso con coste cero en los turnos de madrugada.
+  Decisión de esta noche sobre la pieza huérfana real (pack `POSTMORTEM.md`):
+  espera a un Q con Manus, registrada en la sección nueva. Aplicada con el
+  CLI oficial `hermes cron edit --prompt` (schedule `0 23 * * *`, nombre,
+  workdir y resto de jobs intactos, verificado byte a byte leyendo jobs.json
+  en solo-lectura).

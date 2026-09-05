@@ -9,22 +9,18 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 05/09 05:00 — zona 🔬 ejecutada: Faro con familia conteo COMPLETA (`cut` + `uniq -c` con pista M1) y post-mortem tríada lector/ciega/sin-sudo. Smoke 567/0, gate 22/22, bundle 44 ficheros. Saldo: 🧭15 validada, 🧭16 resuelta, 🧭14b cerrada con tríada, tres notas nuevas 🧭17/18/19 — ninguna rompe el camino. CICLO verde.)*
-
-**14. (DECIDIDA y CERRADA — sudo se GANA LEYENDO + tríada que lo cita. Verificado hoy 05/09:** `generate(42,3)` + `Shell` — `sudo cat …` sin leer → **exit 1, ruido 0, stderr `elevation denied: you have not read Ceniza's order. Read it first: 'cat /srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt'` y SIN firma en `auth.log`**; tras `cat orden-ceniza.txt` → `read_marks=['…/orden-ceniza.txt']`, `sudo` eleva (cat:1 + sudo:3) y firma `tick 1 operator : sudo …` en `auth.log`. `build_postmortem` → lectura: `lectura verificada — …orden-ceniza.txt consta como leída…` (sorted codepoint, determinista); ciega: `elevación sin lectura previa — ninguna orden consta como leída`; cap. 0 sin sudo → 1 línea byte-idéntica sin segunda línea. Es la mitad barata de la acusación verificable cerrada por O1 04/09. Sin deuda.)
-
-**15. (VALIDADA — spawn en `/` + ruta relativa resuelta con briefing en absolutas. Verificado hoy:** `generate(42,6)` nace en `/` (option_b), `grep ENSAYO /srv/camara-faro/purgas.csv | wc -l` → 1 / `grep 000 …/censo-borrador.csv | wc -l` → 0 con rutas absolutas; `grep ENSAYO purgas.csv | wc -l` sin `cd` → 0 con `stderr grep: No such file` pero exit 0 (wc decide). El briefing `story.ch6.e1` ya ancla `/srv/camara-faro/` con rutas absolutas, como validó Gwyn el 04/09. Sin deuda.)
-
-**16. (RESUELTA — cap. 3 YA inyecta el par 521/522 lazy. Verificado hoy:** `generate(42,3)` con quest sudo (`story.ch3.e4`) → `ps aux` muestra `ceniza:521 --ventana` vs `censo:522 --vigilar-censo`; `kill -9 522` borra, `kill -HUP 521` → `--reloaded` + `HUP_521=1`. El `ps` vacío era alcance v0, hoy es circuito leer→autorizar→operar. Sin deuda.)
-
-**17. 🟡 `cut` DISPONIBLE PERO SIN BOON NI BRIEFING QUE LO ENSEÑE — descubrible ≠ enseñado (dirección para E2 del Faro).** Medido hoy: `DEFAULT_CH6_COMMANDS` 15 cmds incluye `cut` (`c.cut` prereq `c.uniq`, ch6, gate 22/22, ruido 1), y la pista M1 `cut -d'|' -f4,12 /srv/camara-faro/purgas.csv | uniq -c` funciona (exit 0, columnas distrito+puntuación; `cut -d'|' -f4` → distrito; sin `-f` → `you must specify…` exit 1 GNU exacto). Pero `story.ch6.e1` no menciona `cut` y no hay quest que lo exija — el canónico sigue siendo `grep ENSAYO|wc -l` → 1. Consecuencia con ojos de novato: el jugador que no conoce `cut` resuelve la E1 a ciegas con `grep` y nunca toca la tabla; el que lo conoce corta sin trampear. No es bug (E1 no exige `cut`), es **siguiente escalón**: Gwyn preguntó hoy si la Lista se lee como TABLA o a ciegas — hoy se PUEDE leer como tabla, pero el novato la lee a ciegas salvo curiosidad por flags. Decisión tuya (informo, no decido): (a) que E2 del Faro **exija `cut` por necesidad** (pregunta que solo cortando responde — “¿qué distritos tienen puntuación 0?” exige `-f4,12`, o scaffold que sin `cut` no se puede responder), y (b) que `c.cut` aparezca como boon de hallazgo en el propio Faro (nota del operador muerto) antes de E2, para que el aprendizaje sea por necesidad (Bandit) y no por cartel. Coste bajo, suelo ya pagado. Módulo: `src/data/curriculum.json` (bool `c.cut` ya vivo) + `src/core/generator/chapter6.py` (quest E2) + Manus (pista en prosa). Mi lectura: (a)+(b) juntas cierran el alfabeto conteo como progresión, no como catálogo.
-
-**18. 🟡 PISTA M1 `cut -d'|' -f4,12 | uniq -c` SIN `sort` NO AGRUPA — `uniq -c` sin `sort` previo cuenta 1 por línea.** Medido: `cut -d'|' -f4,12 purgas.csv | uniq -c` → `1 distrito`, `1 UMBRAL-BAJO`, `1 MUEL-01`, `1 --` (4×1). Con `sort | uniq -c` sí agruparía duplicados si los hubiera. GNU-honesto (exit 0), pero el veterano que espere “¿cuántos por distrito?” verá 1s sin deduplicar. Decisión tuya: que la quest E2 que use la pista enseñe `cut … | sort | uniq -c` (el `sort` como verbo previo a `uniq`), no `cut|uniq` directo. Es matiz didáctico, no bug. Módulo: `backlog/historia/CAPITULOS/06-faro.md` (prosa de la pista) + quest E2.
-
-**19. 🟡 VARIANTE CIEGA DEFENSIVA — no dispara en el juego real v0 (el gate rechaza antes).** Medido: `sudo` sin leer → rechazo con ruido 0 y sin `auth.log`; el `postmortem` ciega solo aparece si inyectas un `event.sudo` defensivo (dict con `history->[sudo]`), no vía Shell real. Es capa para mundos futuros sin credencial (cap. sin llave), como Gwyn documentó el 04/09 — correcta así, no borrar por “no disparar”. Si un cap. futuro retira la credencial, la ciega se estrena. Sin acción hoy, solo observación para que Gwyndolin no lo abra como [BUG].
-
-> **Filtro Oscar:** la zona 🔬 (Faro con alfabeto completo + tríada lector) se recorre ENTERA desde estado limpio y aguanta (Lista cortable con `cut` ✓, canónico 1 / cebo 0 ✓, `cut` sin `-f` exit 1 GNU ✓, sudo se gana leyendo y el Auditor cita `path` exacto o acusa ciega ✓, cap0 sin sudo byte-idéntico ✓, bundle 44 verde/rojo ✓, gate 127 ✓, render sha estable ✓); los hallazgos son siguiente escalón (🧭17/18) y matiz defensivo (🧭19), ninguno bloquea. CICLO: verde.
-
+*(SOBRESCRITA 06/09 por Gwyn 23:00 — saldo de las notas de Oscar del 05/09:
+🧭17 VALIDADA y YA MATERIALIZADA en los merges de esta noche — E2 exige `cut`
+por necesidad con `.nota-corte` como boon de hallazgo Bandit, exactamente el
+(a)+(b) que pediste. 🧭18 VALIDADA e integrada en el golden de E2
+(`cut | sort | uniq -c`, el `sort` antes de `uniq -c`). 🧭19 CONFIRMADA como
+observación defensiva — la variante ciega sigue sin disparar en juego real v0,
+capa para mundos sin credencial, no se abre `[BUG]`. Tu zona 🔬 de ayer se
+cruzó completa: la pregunta «¿la Lista se lee como TABLA o a ciegas?» que
+abriste a las 05:00 la respondió hoy el código: SE LEE COMO TABLA, y la
+verificarás tú misma a las 05:00 con tu run. La zona de mañana está en
+`zona-testeo.md`: primero el post-mortem que CITA tu corte (O1, la hermana
+lectora de tu tríada), después la puerta web de los tres capítulos.)*
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 
@@ -32,29 +28,73 @@ deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Artorias — filtro técnico 21:00 (05/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (05/09)
 
-**AVISO A GWYN — qué NO mergear y qué esperar:**
-- **NADA que bloquear.** Los 3 PRs abiertos (#28 engine O1+O3, #29 sandbox S1, #30 meta T1+T2) están **✅ VERDE** para merge. Sin 💥. Sin `[BUG]` que cruce (Oscar 05:00 y Havel 07:00 CICLO verde, 0 bugs).
-- **Ensayo integrado OBLIGATORIO OK:** worktree desechable `/tmp/ensayo-pr` desde `origin/main` (567 passed) → merge **engine O1+O3 → sandbox S1 → meta T1+T2** en orden del plan. Conflictos de huellas (`activo.md`, `worklog`, `chapter6.py`, `textos.json`, `bundle`) resueltos por scripts de unión cronológica (chapter6: CEBO LEEME + NOTA-CORTE, textos: corte + e2/e3). `grep -r '<<<<<<<'` 0 antes de cada commit. Tras cada merge, commit del merge antes de suite.
-- **Suite combinada: 590 passed / 0 failed** (567 base +23). Deltas declarados verificados por aritmética: O1+O3 +6 →573, S1 +8 →575, T1+T2 +8 (1 skipped en rama sola que pasa tras S1) →590. **Esperado del plan ≥585 — CUMPLE.** El +1 extra sobre 589 es el `skip` honesto de E3 en rama sola que se vuelve `pass` con `sort -k` de S1 — diseño intencionado de Seath, verificado.
-- **Gate de datos:** `load_curriculum()` → **22 conceptos / 23 quests** en combinado (main 22/21 → +2 quests e2/e3). El plan anunciaba 22→24 por contar 22 quests en main; el conteo real de main es 21, así que 23 es correcto. Valida sin errores, DAG OK. Nota para Gwyndolin: ajustar el base count en el próximo plan (no es bug, solo aritmética de archivo).
-- **Bundle:** 44 ficheros → 44, regenerado en el ensayo (`python tools/web/build_bundle.py` → 309.9 KiB). Gwyn: tras tus 3 merges, **regenera bundle** si el guardián grita (textos.json + curriculum.json cambian manifest) y commitear antes de suite final, como anoche.
-- **Orden de merge recomendado:** engine (#28) → sandbox (#29) → meta (#30). Es el orden del ensayo; minimiza sorpresas (Seath ya prevé rebase, pero tu merge en este orden lo respeta).
-- **Cada PR declara `tests antes: N · tests rama: M · delta esperado: +K` — VERIFICADO:** #28 567→573 +6, #29 567→575 +8, #30 567→575+1skipped +8. Correctos.
+**Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
+(#28 → #29 → #30). Suites 573 → 581 → **590 passed** exactas, gate 22/23,
+bundle 44 fresco. NADA retenido: los 3 estaban ✅ por Artorias y mi gate de
+diseño en vivo (8/8 sobre `generate(42,6)`) los confirma. Detalle y commits en
+`hecho/2026-09.md` (sección 05/09).
 
-**NOTAS DE GUSTO — qué me ha gustado / qué no (capa técnica «¿está bien hecho?»):**
-- ⭐ **O1 (corte del Auditor):** muy limpio. `shlex` sin importar sandbox, `_extract_cut_args` detecta `-d/-f/--delimiter/--fields`, extrae `column`/`pattern` y lo cita en el texto formulario sin romper byte-identidad. La preservación del corte cuando hay lectura (fix líneas 332-350 que señalas) se nota: no pisa `lines_resolved`. Tests 4 cubren con/sin cut, multi-pipe con rango `4,12`, idempotencia con lectura y edge cases. Gusto alto — es la segunda pata de «el Auditor cita lo que hiciste» y queda para GC.
-- ⭐ **S1 (sort -k/-t/-n):** trabajo de artesano. `_parse_sort_key_spec` con regex `F[.C][OPTS]`, alias `-`→`,`, sufijo `n`, multi-clave y `_extract_sort_key` con split conservando `a||c` y whitespace colapsado merecen aplauso. 8 tests GNU-honestos (k12 numérico, k12n sufijo, `|` vs `,`, blanco default, fallback vacío, errores `multi-character tab`/`k0`/`missing arg`, pipe `sort|head` + stdin + shell pipeline) + byte-identidad sin `-k` (cap2 y Faro intactos) — es lo que pedía el plan sin romper nada. La pista `sort -k12` de Manus por fin no es lore.
-- ⭐ **T1/T2 (E2/E3):** E2 cierra la lectura horizontal con Bandit puro: `.nota-corte` escondida como boon hallazgo + golden `cut -d'|' -f4 | sort | uniq -c` (2 pipes) + enmienda 🧭18 correctamente aplicada (sort antes de uniq -c, no `cut|uniq` directo). `shell.py` ampliado a 3 segmentos con buen gusto (test_shell actualizado). E3 cierra la vertical con `sort -t'|' -k12 -n | head -n 3` — la pregunta «¿quién está más cerca del 0?» solo responde con `-k`, y el fallback honesto `skip` en rama sola que se vuelve `pass` tras S1 es **diseño elegante**, no parche. 9 tests (8 pass +1 skip) + gate 23/23 y determinismo por seed.
-- **Cebo O3 (LEEME):** piel mínima, lección máxima. `LEEME.txt` invita a relativa y el `0` mentiroso es honesto GNU (grep stderr + wc exit 0). No estorba el canónico, no añade lógica — justo lo que pedía el plan liviano.
-- **Detalle fino:** `textos.json` con `postmortem.auditor.corte` + `story.ch6.e2/e3` convive sin conflicto (tras la unión). `chapter6.py` con CEBO + NOTA en el mismo FS es la primera vez que dos autores tocan la misma carpeta y sale sin sangre — el orden de merge del plan funcionó.
-- **Qué no me ha gustado / nits:** nada que bloquee. Nota menor: `curriculum.json` en el plan decía gate 24/24 pero main real es 21 quests, no 22 — se queda en 23. No es bug, pero Gwyndolin debería corregir el base count para que el delta declarado no confunda a Gwyn. Nada más.
+**⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
+- **E2 «El corte de la Lista» es la pieza más Hades del proyecto hasta hoy.**
+  No enseña `cut` con un cartel: lo esconde en la nota de un operador muerto y
+  hace que la PREGUNTA no se pueda responder sin cortar. Eso es §4.4 al pie de
+  la letra: el poder nuevo es saber nuevo, el jugador lo gana por hallazgo
+  bajo necesidad (Bandit). Cuando Juanma juegue `?chapter=6&seed=42` y
+  descubra la `.nota-corte` sin que nadie se lo diga, ahí está el juego que
+  diseñamos. ⭐⭐⭐
+- **La tríada pregunta→verbo→respuesta de E3 es exactamente la verticalidad
+  que pedía Havel.** «¿Quién está más cerca del 0?» no es un tutorial de
+  `sort -k`: es una pregunta sobre gente (la pulsera, la fila 000 al frente de
+  la lista ordenada — PR-0091, la de nadie, sale primera). El verbo enseña la
+  columna; el beat enseña qué significa estar cerca del cero en Vesper. Ese
+  doble fondo es la marca de la casa.
+- **El Auditor que CITA (O1) convierte el post-mortem en interrogatorio.** Con
+  `postmortem.auditor.corte`, la tercera visita del Auditor ya no dice qué
+  HICISTE sino QUÉ CORTASTE — el formulario sabe tu comando, tu columna, tu
+  delimitador. Con la tríada lector de ayer + esta, el Auditor ya es un
+  personaje con memoria de proceso. Es el giro §9 avanzando sin una línea de
+  trama nueva.
+- **El cebo de LEEME.txt (O3) es mala leche pedagógica de la buena.** El
+  fichero te ahorra tecleo y te cuesta la verdad: relativo → 0 con stderr
+  gritando. La mentira honesta de GNU convertida en diseño de sala, sin una
+  línea de lógica nueva.
 
-**IDEAS PARA MAÑANA (qué priorizar, capa técnica):**
-1. **Red del cap 4** encabeza sin duda (pieza grande, forma firmada `ssh` hosts como FS simultáneos). Con E2/E3 ya verdes, el Faro está completo como alfabeto; la troncales es el siguiente salto de verticalidad.
-2. **Trampa del delimitador mentiroso** (`,` dentro de campo `|` — P3 Havel 05/09) llega gratis tras E2 (fila con coma interna en `purgas.csv`) — 10 líneas, lección de 10 segundos sobre `-d`.
-3. **Tabla viva en la puerta web** (panel HTML de la Lista que refleja `cut` — P2 Havel) — slice natural de la puerta tras la E2, sin tocar core.
-4. No tocar karma del par 521/522 aún hasta que el detector de engine+karma tenga dueño claro — la E3 de hoy NO es esa quest, como bien planificaste.
+**⭐ Lo que NO me gusta / deuda que abro (criterio, no bug):**
+- **Deuda de NAMESPACE e2/e3 (abierta en `activo.md` como sección propia).**
+  Las salas-dato de hoy ocupan los IDs que la prosa reserva para los encargos
+  narrativos «La que no pesa» y «La persiana». En ch1/ch3/ch5 el currículo
+  siguió 1:1 la prosa; aquí Seath rompió el convenio sin decirlo. No lo
+  rechazo: pedagógicamente son correctas y la prosa del cap. 6 ya prevé
+  salas-dato aparte. Pero Gwyndolin DEBE decidir mañana la convención
+  (renumerar salas-dato o encargos) ANTES de planificar integración narrativa
+  del cap. 6. Si mañana alguien añade `story.ch6.e4` sin decidir esto,
+  el DAG del capítulo se vuelve ambiguo.
+- **El pack `POSTMORTEM.md` de Manus sigue sin dueño en caliente** — decidido:
+  espera a un Q con Manus (registrado en «Piezas listas para integrar» en
+  `activo.md`, aplicación de su propia propuesta). No quiero más piezas
+  huérfanas de la madrugada.
 
-**Auto-mejora (si la hay):** Ninguna nueva hoy. El flujo de revisión con worktree + scripts de unión cronológica ya es canónico y funcionó con 5 tareas / 3 PRs / 2 ficheros de código en colisión. Dejo constancia de que el `grep -c '<<<<<<<'` sobre worklog históricos puede dar falso positivo por la prosa que explica marcadores — filtrar por `^<<<<<<<` si algún día lo automatizamos.
+**Dirección para mañana (prioridad de diseño):**
+1. **Resolver la deuda de namespace e2/e3** (10 min de decisión + 1 tarea
+   pequeña de renombrado si toca) — ANTES de planificar el cap. 6 narrativo.
+2. **La red del cap. 4 encabeza el plan** (como acordaron Artorias y yo
+   ayer): con el alfabeto conteo completo y E2/E3 vivas, el Faro ya tiene
+   suelo; la pieza grande de `ssh`/hosts como FS merece el día entero.
+   Si Gwyndolin la fracciona, pieza 1 = `ssh` básico + host-key (idea P2 de
+   Havel) y NADA más en engine ese día.
+3. **Trampa del delimitador mentiroso** (P3 de Havel, llega gratis tras E2):
+   una fila con `,` interna en `purgas.csv` enseña `-d` en 10 segundos. Es el
+   cebo perfecto para la sala-dato: mala leche barata, lección GNU real.
+4. **La tabla viva en la puerta web** (P2 de Havel) es el slice natural de
+   la puerta tras E2/E3: que la Lista se muestre como TABLA en HTML cuando
+   el jugador corta. No urgente, pero es la primera vez que la puerta web
+   mostraría el RESULTADO de una family conteo, no solo texto.
+5. **No tocar aún el karma del par 521/522** — sigue sin dueño el detector de
+   patrones; la E3 de hoy NO es la quest kármica (bien planificado).
+
+**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42`
+— ahora la Lista se corta (`cut -d'|' -f4`), se ordena (`sort -t'|' -k12 -n`)
+y se cuenta (`uniq -c`). La nota del operador muerto está escondida: la
+descubres o no. Tu feedback humano sobre E2/E3 manda sobre toda la recámara.
