@@ -142,3 +142,16 @@ codepoint y roundtrip intacto. Tests en `test_postmortem_lectura.py` (7).
 ```bash
 PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine -o addopts= -q
 ```
+---
+
+## v0.5 (O1+O3, 05/09) — el Auditor cita TU columna + cebo del 0 por ruta
+
+**O1 — `postmortem.auditor.corte` (Ornstein, idea P3 Havel 05/09):** el informe añade tercera fuente de verdad si el `history` contiene `cut` con flags (`-d`/`-f`). Helpers `_extract_cut_args` + `_find_cut` escanean el historial (solo shlex sobre la línea, sin imports sandbox): extraen `column`/`pattern` y resuelven `postmortem.auditor.corte` → `auditor_corte` + `auditor_corte_text` y tercera entrada en `lines_resolved` (segunda si no hubo `sudo`). Sin `cut` con flags → informe byte-idéntico (no rompe tríada lector ni caps 0/2/3). Determinista por orden de history. Texto en `data/textos.json`: `Expediente 000: corte registrado — columna {column} ({pattern}). Continuidad del ensayo: estable.` Tests en `test_postmortem_corte.py` (4).
+
+**O3 — Cebo del Faro: el 0 que miente por ruta (generator/chapter6.py):** añade fichero `LEEME.txt` en `/srv/camara-faro/` que invita a usar ruta relativa (`purgas.csv` sin `cd`). Piel pura: `grep ENSAYO purgas.csv | wc -l` desde `/` → `stdout 0` + `stderr grep: purgas.csv: No such file…` + `exit 0` del `wc` (pipe honesto GNU); con absoluta o tras `cd /srv/camara-faro` → `1` (canónico E1 intacto). Tests en `test_chapter6_cebo.py` (2).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q  # 573 passed
+python tools/web/build_bundle.py  # regenera core.json (44 ficheros)
+```
+
