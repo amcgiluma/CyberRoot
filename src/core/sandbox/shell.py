@@ -4,7 +4,6 @@ parser shlex POSIX + registro de comandos + cwd/tick/historial
 SIMULADOS. El shell NO sabe qué comandos existen: recibe specs registradas;
 v0 expone `DEFAULT_CAP0_COMMANDS = ("cat", "cd", "cp", "ls")` — `cp` entra en
 el set por decisión 🧭1 de Gwyn (27/08): copiar ES el objetivo del tutorial.
-
 Sintaxis NO soportada v0 (pipes, globs, redirección — caps. 1–2): se detecta
 FUERA de comillas (GNU real: `cat "a*b.txt"` es literal y válido) y se
 rechaza con error didáctico + exit 2 (PLAN decisión 3). Sin RNG, sin reloj
@@ -20,6 +19,14 @@ from typing import Any
 from core.sandbox.commands.base import CommandResult, build_registry
 from core.sandbox.commands.conteo import SPECS as CONTEO_SPECS
 from core.sandbox.commands.cut import SPECS as CUT_SPECS
+from core.sandbox.commands.red import (
+    EXIT_NAME,
+    LOGOUT_NAME,
+    SSH_NAME,
+    SPECS as RED_SPECS,
+    fingerprint_for_host,
+    host_key_prompt,
+)
 from core.sandbox.commands.senal import SPECS as SENAL_SPECS
 from core.sandbox.commands.escalada import (
     AUTH_LOG_PATH,
@@ -73,6 +80,8 @@ DEFAULT_CH6_COMMANDS: tuple[str, ...] = (
 
 #: Todas las specs implementadas (registro completo del módulo v0 → S2; conteo
 #: añadido en S2 01/09, kill en S1 02/09). `sudo` NO es una spec: es un wrapper del shell.
+#: `ssh`/`exit`/`logout` NO van aquí: son wrappers del shell (como `sudo`/`cd`), no specs puras.
+#: Van en RED_SPECS para registro manual si se piden, pero no en el pool del generator.
 SPECS_ALL = (
     NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + CONTEO_SPECS + SENAL_SPECS + CUT_SPECS
 )
@@ -147,7 +156,7 @@ def _split_pipeline(line: str) -> list[str]:
 
 
 def _join_err(*stderrs: str) -> str:
-    """Concatena los stderr de los comandos de una tubería (orden, `\n`).
+    """Concatena los stderr de los comandos de una tubería (orden, `\\n`).
 
     GNU escribe cada stderr a su salida; aquí los juntamos en el orden de
     ejecución para que el post-mortem/o el jugador lea ambos diagnósticos.
@@ -170,6 +179,8 @@ class Shell:
         tick: int = 0,
         commands: tuple[str, ...] = DEFAULT_CAP0_COMMANDS,
         bus: EventBus | None = None,
+        hosts: dict[str, FileSystem] | None = None,
+        known_hosts: dict[str, str] | None = None,
     ) -> None:
         self.fs = fs
         self.user = user
@@ -191,6 +202,27 @@ class Shell:
         self.registry = build_registry(
             tuple(spec for spec in SPECS_ALL if spec.name in wanted)
         )
+        # ---- Red simulada cap.4 pieza1 (S1 06/09, hosts como FS simultáneos) ----
+        #: Registro de hosts conocidos (nombre → FS). El generator o el test
+        #: inyecta los FS remotos; el Shell solo los conmuta.
+        self.hosts: dict[str, FileSystem] = dict(hosts) if hosts is not None else {}
+        #: Pila de conexión: cada entrada guarda host/cwd/fs del nivel anterior
+        self.host_stack: list[dict[str, Any]] = []
+        #: Caché de huellas verificadas (known_hosts en sesión, sin disco)
+        self.known_hosts: dict[str, str] = dict(known_hosts) if known_hosts is not None else {}
+        #: Conexión pendiente de host-key (None o {"host","user","fingerprint"})
+        self.pending_ssh: dict[str, str] | None = None
+        #: Decisiones ssh registradas (yes/no por host, tick, fingerprint)
+        self.ssh_decisions: list[dict[str, Any]] = []
+
+    # ---- helpers de red ---------------------------------------------------
+
+    def register_host(self, host: str, fs: FileSystem) -> None:
+        """Registra un host remoto (FS simultáneo, DESIGN §6.1)."""
+        self.hosts[host] = fs
+
+    def _fingerprint(self, host: str) -> str:
+        return fingerprint_for_host(host)
 
     # ---- ejecución -------------------------------------------------------
 
@@ -237,6 +269,11 @@ class Shell:
         sesión no lo expone (cap. 0/2), `SUDO_NAME` no está en el registry y
         cae al `command not found` de abajo (exit 127), igual que `ps`/`env`.
         """
+        # exit/logout son builtins siempre (des-apilan si hay stack)
+        if argv[0] in (EXIT_NAME, LOGOUT_NAME):
+            return self._exec_exit(argv, stdin)
+        if argv[0] == SSH_NAME and SSH_NAME in self.available_commands:
+            return self._exec_ssh(argv, stdin)
         if argv[0] == SUDO_NAME and SUDO_NAME in self.available_commands:
             return self._exec_sudo(argv, stdin)
         spec = self.registry.get(argv[0])
@@ -252,6 +289,84 @@ class Shell:
         self._note_credential_read(argv[0], argv[1:], result.stdout)
         return result
 
+    def _exec_ssh(
+        self, argv: tuple[str, ...], stdin: str = ""
+    ) -> CommandResult:
+        """`ssh [user@]host` — red simulada cap.4 pieza1 (DESIGN §6.1).
+
+        - Sin args → usage error.
+        - Host no registrado → `Could not resolve hostname` (sin conectar).
+        - Host no cacheado → prompt host-key (pending), sin conectar.
+        - Host cacheado → push stack, switch FS/host/cwd, conectar.
+        """
+        if len(argv) < 2:
+            return CommandResult(
+                stderr="usage: ssh [user@]hostname",
+                exit_code=255,
+            )
+        target_spec = argv[1]
+        # Soportar múltiples args? Solo el primero es host; el resto se ignora v0
+        if "@" in target_spec:
+            user, host = target_spec.split("@", 1)
+            if not host:
+                return CommandResult(
+                    stderr=f"ssh: Could not resolve hostname {target_spec}: Name or service not known",
+                    exit_code=255,
+                )
+        else:
+            user = self.user
+            host = target_spec
+        if host not in self.hosts:
+            noise = NoiseMeter().emit(SSH_NAME, tuple(argv[1:]), self.tick)
+            return CommandResult(
+                stderr=f"ssh: Could not resolve hostname {host}: Name or service not known",
+                exit_code=255,
+                noise=(noise,),
+            )
+        fingerprint = self._fingerprint(host)
+        # Si ya está en este host, no hace falta apilar
+        if host == self.host and not self.host_stack:
+            # Ya estás ahí — mensaje honesto
+            noise = NoiseMeter().emit(SSH_NAME, tuple(argv[1:]), self.tick)
+            return CommandResult(
+                stdout=f"Connected to {host}.\n",
+                exit_code=0,
+                noise=(noise,),
+            )
+        if host not in self.known_hosts:
+            # Primera vez → prompt host-key, sin conectar, guarda pending
+            self.pending_ssh = {"host": host, "user": user, "fingerprint": fingerprint}
+            msg = host_key_prompt(host, fingerprint)
+            noise = NoiseMeter().emit(SSH_NAME, tuple(argv[1:]), self.tick)
+            return CommandResult(stdout=msg, exit_code=0, noise=(noise,))
+        # Cacheado → conecta directamente
+        self.host_stack.append({"host": self.host, "cwd": self.cwd, "fs": self.fs})
+        self.host = host
+        self.fs = self.hosts[host]
+        self.cwd = "/"
+        noise = NoiseMeter().emit(SSH_NAME, tuple(argv[1:]), self.tick)
+        return CommandResult(
+            stdout=f"Connected to {host}.\n",
+            exit_code=0,
+            noise=(noise,),
+        )
+
+    def _exec_exit(
+        self, argv: tuple[str, ...], stdin: str = ""
+    ) -> CommandResult:
+        """`exit`/`logout` — des-apila host anterior (stack de conexión)."""
+        cmd = argv[0]
+        noise = NoiseMeter().emit(cmd, tuple(argv[1:]), self.tick)
+        if not self.host_stack:
+            # Sin stack: logout simple (no hay a dónde volver)
+            return CommandResult(stdout="logout\n", exit_code=0, noise=(noise,))
+        prev = self.host_stack.pop()
+        # Restaurar host/cwd/fs anterior
+        self.host = prev["host"]
+        self.fs = prev["fs"]
+        self.cwd = prev["cwd"]
+        return CommandResult(stdout="logout\n", exit_code=0, noise=(noise,))
+
     def _exec_sudo(
         self, argv: tuple[str, ...], stdin: str = ""
     ) -> CommandResult:
@@ -266,6 +381,7 @@ class Shell:
             factura ruido PREMIUM (extra sobre el base del comando) y deja
             firma en `AUTH_LOG_PATH` (usuario, comando, tick) via
             `fs.append_file`.
+
         Si el comando envuelto no existe → `sh: command not found: cmd`
         (exit 127), igual que el shell sin sudo. La credencial vive en el FS de
         la sala (contrato O1↔S1); NO es una contraseña tecleada.
@@ -310,6 +426,61 @@ class Shell:
             new_cwd=result.new_cwd,
         )
 
+    def _handle_pending_ssh(self, line: str) -> CommandResult | None:
+        """Si hay pending host-key, interpreta yes/no/fingerprint como respuesta.
+
+        Devuelve CommandResult si la línea era una respuesta al prompt;
+        None si no hay pending o la línea no es respuesta (deja que execute
+        normal siga).
+        """
+        if self.pending_ssh is None:
+            return None
+        stripped = line.strip()
+        pending = self.pending_ssh
+        host = pending["host"]
+        fingerprint = pending["fingerprint"]
+        if stripped in ("yes", fingerprint):
+            # Aceptar y conectar
+            self.known_hosts[host] = fingerprint
+            self.ssh_decisions.append(
+                {"host": host, "answer": "yes", "fingerprint": fingerprint, "tick": self.tick}
+            )
+            self.host_stack.append({"host": self.host, "cwd": self.cwd, "fs": self.fs})
+            self.host = host
+            self.fs = self.hosts[host]
+            self.cwd = "/"
+            self.pending_ssh = None
+            noise = NoiseMeter().emit(SSH_NAME, (host,), self.tick)
+            msg = (
+                f"Warning: Permanently added '{host}' (ED25519) to the list of known hosts.\n"
+                f"Connected to {host}.\n"
+            )
+            return self._record(line, CommandResult(stdout=msg, exit_code=0, noise=(noise,)))
+        if stripped == "no":
+            self.ssh_decisions.append(
+                {"host": host, "answer": "no", "fingerprint": fingerprint, "tick": self.tick}
+            )
+            self.pending_ssh = None
+            # Sin ruido de sesión establecida (plan)
+            return self._record(line, CommandResult(stdout="Host key verification failed.\n", exit_code=1))
+        # Si pending y la línea no es yes/no/fingerprint → mantener pending pero
+        # informar que debe responder yes/no
+        if stripped in ("y", "n"):
+            # OpenSSH acepta y/n como abreviación, pero nuestro prompt dice yes/no;
+            # lo tratamos como inválido para no romper determinismo
+            pass
+        # No es respuesta al prompt → no consumir, pero si hay pending, cualquier
+        # otro comando mientras pending debería recordarle que responda
+        # Para no bloquear, si el usuario teclea otro comando distinto a yes/no,
+        # lo tratamos como que cancela? El plan dice prompt host-key y yes/no;
+        # para simplificar, si no es yes/no, mantenemos pending y dejamos que el
+        # comando se ejecute normal tras limpiar? Mejor mantener pending y exigir
+        # yes/no: devolvemos recordatorio sin avanzar.
+        # Sin embargo, esto bloquearía `ls` mientras pending. Decisión: si no es
+        # yes/no, no consumir como respuesta → retorna None y deja que execute
+        # normal siga, pero pending sigue vivo (el usuario puede seguir intentando).
+        return None
+
     def execute(self, line: str) -> CommandResult:
         """Ejecuta una línea; muta cwd/tick/historial y devuelve el resultado.
 
@@ -322,6 +493,12 @@ class Shell:
         stripped = line.strip()
         if not stripped:
             return CommandResult()
+
+        # Pending host-key: yes/no tiene prioridad sobre parsing normal
+        if self.pending_ssh is not None and stripped in ("yes", "no", self.pending_ssh["fingerprint"]):
+            handled = self._handle_pending_ssh(line)
+            if handled is not None:
+                return handled
 
         if _has_unsupported_syntax(stripped):
             return self._record(line, CommandResult(stderr=_SYNTAX_MSG, exit_code=2))
@@ -418,6 +595,15 @@ class Shell:
             # S1 (03/09): credenciales LEÍDAS (rutas canónicas, ordenadas
             # por codepoint para bytes reproducibles).
             "read_marks": sorted(self.read_marks),
+            # S1 (06/09): red simulada — hosts simultáneos + known_hosts + decisiones
+            "hosts": {h: fs.to_dict() for h, fs in self.hosts.items()},
+            "host_stack": [
+                {"host": e["host"], "cwd": e["cwd"], "fs": e["fs"].to_dict()}
+                for e in self.host_stack
+            ],
+            "known_hosts": dict(self.known_hosts),
+            "ssh_decisions": list(self.ssh_decisions),
+            "pending_ssh": dict(self.pending_ssh) if self.pending_ssh is not None else None,
         }
 
     @classmethod
@@ -438,4 +624,26 @@ class Shell:
         shell.total_noise = int(d["total_noise"])
         shell.history = [dict(h) for h in d["history"]]
         shell.read_marks = set(str(p) for p in (d.get("read_marks") or []))
+        # Red: hosts
+        raw_hosts = d.get("hosts") or {}
+        shell.hosts = {
+            str(h): FileSystem.from_dict(fs_d)
+            for h, fs_d in raw_hosts.items()
+            if isinstance(fs_d, dict)
+        }
+        raw_stack = d.get("host_stack") or []
+        shell.host_stack = []
+        for e in raw_stack:
+            if isinstance(e, dict) and "host" in e and "fs" in e:
+                shell.host_stack.append(
+                    {
+                        "host": str(e["host"]),
+                        "cwd": str(e["cwd"]),
+                        "fs": FileSystem.from_dict(e["fs"]),
+                    }
+                )
+        shell.known_hosts = {str(k): str(v) for k, v in (d.get("known_hosts") or {}).items()}
+        shell.ssh_decisions = [dict(x) for x in (d.get("ssh_decisions") or [])]
+        pending = d.get("pending_ssh")
+        shell.pending_ssh = dict(pending) if isinstance(pending, dict) else None
         return shell

@@ -35,6 +35,26 @@ def _dir_header(arg: str) -> str:
     return arg.rstrip("/") + ":"
 
 
+def _mode_to_perms(mode: str, is_dir: bool) -> str:
+    """Convierte mode tipo "644"/"755" a string GNU de permisos."""
+    table = {
+        "0": "---", "1": "--x", "2": "-w-", "3": "-wx",
+        "4": "r--", "5": "r-x", "6": "rw-", "7": "rwx",
+    }
+    digits = mode[-3:] if len(mode) >= 3 else mode.rjust(3, "0")
+    perms = "".join(table.get(d, "---") for d in digits)
+    prefix = "d" if is_dir else "-"
+    return prefix + perms
+
+
+def _ls_long_line(name: str, node) -> str:
+    """Línea formato largo v0 para ls -l."""
+    is_dir = isinstance(node, DirNode)
+    perms = _mode_to_perms(node.mode, is_dir)
+    size = 4096 if is_dir else len(node.content) if hasattr(node, "content") else 0
+    return f"{perms} 1 {node.owner} {node.group} {size} {node.mtime} {name}\n"
+
+
 def _run_ls(
     fs: FileSystem,
     cwd: str,
@@ -52,17 +72,71 @@ def _run_ls(
       en blanco.
     - Un operando erróneo anota stderr («cannot access»), marca exit 2 y NO
       corta el procesado del resto.
+    - Flags GNU v0 (S2, 06/09): -a muestra dotfiles, -l formato largo; combinables
+      (-la/-al). Sin -a, los dotfiles (.*) se OCULTAN (GNU real, 🧭20a).
     """
     noise = noise_event(LS_NAME, argv, tick)
+
+    # ---- parseo de flags (GNU: -a, -l, combinables, -- fin de opciones) ----
+    show_all = False
+    long_format = False
+    paths: list[str] = []
+    end_of_options = False
+    for arg in argv:
+        if end_of_options:
+            paths.append(arg)
+            continue
+        if arg == "--":
+            end_of_options = True
+            continue
+        if arg.startswith("-") and len(arg) > 1 and not arg.startswith("--"):
+            is_flag = True
+            for ch in arg[1:]:
+                if ch not in ("a", "l"):
+                    is_flag = False
+                    break
+            if is_flag:
+                if "a" in arg:
+                    show_all = True
+                if "l" in arg:
+                    long_format = True
+                continue
+            else:
+                bad = arg[1]
+                return CommandResult(
+                    stderr=f"ls: invalid option -- '{bad}'\nTry 'ls --help' for more information.",
+                    exit_code=2,
+                    noise=noise,
+                )
+        paths.append(arg)
+
+    effective_argv = tuple(paths)
+
+    def _filtered_children(dir_path: str, cwd_inner: str) -> list[str]:
+        names = fs.list_dir(dir_path, cwd_inner)
+        if not show_all:
+            names = [n for n in names if not n.startswith(".")]
+        return names
+
+    def _format_children(dir_path: str, cwd_inner: str) -> str:
+        names = _filtered_children(dir_path, cwd_inner)
+        if not long_format:
+            return "".join(f"{n}\n" for n in names)
+        lines = []
+        dir_node = fs.get_dir(dir_path, cwd_inner)
+        for n in names:
+            child = dir_node.children[n]
+            lines.append(_ls_long_line(n, child))
+        return "".join(lines)
+
     files_out: list[str] = []
     dir_blocks: list[str] = []
     err_lines: list[str] = []
     had_error = False
 
-    if not argv:
-        # Sin operandos GNU lista `.`: contenido de la cwd, sin cabecera.
-        dir_blocks.append("".join(f"{n}\n" for n in fs.list_dir(cwd)))
-    for arg in argv:
+    if not effective_argv:
+        dir_blocks.append(_format_children(cwd, cwd))
+    for arg in effective_argv:
         try:
             node = fs.resolve(arg, cwd)
         except FsError as e:
@@ -70,25 +144,26 @@ def _run_ls(
             err_lines.append(_ls_kind_message(e.kind, arg))
             continue
         if isinstance(node, DirNode):
-            children = "".join(f"{n}\n" for n in fs.list_dir(arg, cwd))
-            if len(argv) == 1:
-                dir_blocks.append(children)  # un solo operando: sin cabecera
+            children = _format_children(arg, cwd)
+            if len(effective_argv) == 1:
+                dir_blocks.append(children)
             else:
                 dir_blocks.append(f"{_dir_header(arg)}\n{children}")
         else:
-            # GNU imprime el OPERANDO tal cual; con barra final sobre un
-            # fichero es error «Not a directory».
             if arg.endswith("/"):
                 had_error = True
                 err_lines.append(_ls_kind_message("not_a_directory", arg))
                 continue
-            files_out.append(f"{arg}\n")
+            if long_format:
+                lines = _ls_long_line(arg.split("/")[-1], node)
+                files_out.append(lines)
+            else:
+                files_out.append(f"{arg}\n")
 
     groups = []
     if files_out:
         groups.append("".join(files_out))
     groups.extend(dir_blocks)
-    # Los bloques YA terminan en '\n': el separador añade solo el blanco GNU.
     return CommandResult(
         stdout="\n".join(groups),
         stderr="\n".join(err_lines),
@@ -122,21 +197,17 @@ def _run_cd(
     noise = noise_event(CD_NAME, argv, tick)
     n = len(argv)
     if n == 0:
-        # 0 args → home = raíz (decisión v0: cd de vuelta a `~` ≡ `/`).
         return CommandResult(new_cwd="/", noise=noise)
     if n > 1:
         return CommandResult(stderr="cd: too many arguments", exit_code=1, noise=noise)
 
-    # Aquí n == 1 (la typer no puede estrechar un `tuple[str, ...]`).
     target = list(argv)[0]
-    # Validación PRIMERO: los errores salen antes de tocar la cwd.
     try:
         fs.get_dir(target, cwd)
     except FsError as e:
         return CommandResult(
             stderr=_cd_kind_message(e.kind, target), exit_code=1, noise=noise
         )
-    # Normalización de string pura; el destino ya está validado.
     return CommandResult(new_cwd=fs.change_dir(target, cwd), noise=noise)
 
 
