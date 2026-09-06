@@ -9,11 +9,30 @@
 
 ## Activas
 
+> *(06/09, Gwyndolin — plan del día: 6 tareas movidas aquí desde `abierto.md`
+> y de la deuda abajo. El [BUG] `ls -a` entra como S2. Ver
+> `../planes/2026/09/06.md`.)*
+
+- `[EN CURSO][P2]` (06/09) **S1 (Smough) — Red simulada cap. 4, pieza 1: `ssh` básico + host-key + stack de conexión** — sandbox puro, sin `scp`/quests/`curriculum.json` (NADA más de red hoy, dirección #2 de Gwyn). Detalle y criterio en el plan.
+- `[EN CURSO][P2]` (06/09) **S2 (Smough, tras S1) — [BUG] `ls -a`/`ls -la` parseo de flags + 🧭20-a: dotfiles ocultos sin `-a`** — `.nota-corte` vuelve a hallazgo (fricción Bandit E2). Relleno opcional: `sort --help` en mensajes.
+- `[EN CURSO][P2]` (06/09) **O1 (Ornstein) — `auditor_orden`: el Auditor cita tu `sort -k12`** (hermano del corte; P2 Havel 06/09) — `sort` SIN `-k` no dispara NADA.
+- `[EN CURSO][P2]` (06/09) **O2 (Ornstein, tras O1) — Mala leche del Faro: LEEME que tienta (🧭21) + trampa del delimitador (dirección #3)** — cebos de piel en `chapter6.py`, goldens E1/E2/E3 byte-idénticos, bundle regen.
+- `[EN CURSO]` (06/09) **T1 (Seath) — Rename namespace: `story.ch6.e2/e3` → `dato2/dato3`** — EJECUTA la decisión de Gwyndolin (abajo); rename puro, gate de datos intacto en conteo, bundle regen. Permiso de ruta cruzada a `generator/generator.py` (precedente).
+- `[EN CURSO][P2]` (06/09) **T2 (Seath, tras T1) — La tabla viva en la puerta web** (dirección #4 de Gwyn; P2 Havel 05/09) — panel Tabla del Faro en `web/app.js`, refleja el `cut`, sin cambios de core.
+
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 - `[HECHO]` (06/09) **Manus — mantenimiento de coherencia post-05/09 (Faro cerrado)** — auditoría ligera tras O1/S1/T1+T2 (590 passed, 22/23, bundle 44: `cut` + `sort -k` + E2/E3 sala-dato + LEEME + .nota-corte + corte del Auditor). Verificado `generate(42,6)` 6 ficheros + goldens E2/E3 + cebo ruta honesto; `CENSO-LISTA.md`/`06-faro.md`/`POSTMORTEM.md` sin contradicción; deuda namespace e2/e3 confirmada y documentada en `historia/INDICE.md` con recomendación (`dato2`/`dato3`); suite y bundle verdes, sin escritura nueva de capítulos.
 
-### ⚠️ Deuda de NAMESPACE para Gwyndolin (abierta por Gwyn, 05/09 23:00)
+### ⚠️ Deuda de NAMESPACE para Gwyndolin (abierta por Gwyn, 05/09 23:00) — ✅ DECIDIDA por Gwyndolin (06/09, plan del día)
+
+> **DECISIÓN (06/09, Gwyndolin):** E-space 1:1 con la prosa; las salas-dato
+> usan **`story.ch6.datoN`** (opción 1 de Manus): `e2`/`e3` →
+> `dato2`/`dato3`. La `e1` no se toca (la prosa E1 ES la sala de la Lista).
+> La prosa de los encargos narrativos «La que no pesa»/«La persiana» conserva
+> sus IDs sin reescribirse. **Ejecutada HOY como T1 (Seath).** Regla fijada
+> para el proyecto: encargo narrativo = `eK`; sala-dato = `datoN`. Los
+> encargos e2–e5 del cap. 6 quedan planificables mañana (con T1 mergeado).
 
 - Las quests `story.ch6.e2` (sala-dato «El corte de la Lista») y
   `story.ch6.e3` (sala-dato «Los más cerca del cero») entradas hoy en
