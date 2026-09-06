@@ -39,6 +39,7 @@ stdlib.
 """
 from __future__ import annotations
 
+import re
 import shlex
 from typing import Any
 
@@ -56,6 +57,8 @@ LINE_KEY_LECTURA = "postmortem.auditor.lectura"
 LINE_KEY_CIEGA = "postmortem.auditor.ciega"
 #: O1 05/09 (Ornstein) — el Auditor cita TU columna: si el history contiene `cut` con flags, añade línea de corte.
 LINE_KEY_CORTE = "postmortem.auditor.corte"
+#: O1 06/09 (Ornstein) — el Auditor cita TU eje vertical: si el history contiene `sort` con `-k`, añade línea de orden.
+LINE_KEY_ORDEN = "postmortem.auditor.orden"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -226,6 +229,115 @@ def _find_cut(shell_dict: dict[str, Any]) -> dict[str, str] | None:
     return None
 
 
+def _field_ordinal(spec: str) -> str:
+    """Número de campo inicial de una especificación `-k` GNU (F[.C][,F[.C]]).
+
+    Devuelve el primer entero positivo de la clave (la posición a ordenar);
+    vacío si no se reconoce (p. ej. `-k'  x'` malformado). Determinista, sin
+    imports de sandbox. Ejs: `12`→\"12\", `12n`→\"12\", `12.2`→\"12\", `2,4`→\"2\".
+    """
+    m = re.match(r"\s*(\d+)", spec)
+    return m.group(1) if m else ""
+
+
+def _extract_sort_args(line: str) -> dict[str, str] | None:
+    """Extrae args de un `sort` CON `-k` desde la línea cruda.
+
+    Hermano de `_extract_cut_args`: detecta la clave de ordenación vertical
+    (`-k`, con o sin `-t`/`-n`). Localiza el token `sort` en cualquier
+    posición de la línea (p. ej. tras un pipe `cut ... | sort -k12`), no solo
+    como primer token. SIN `-k` → None (el `sort` plano del golden de E2 no
+    dispara NADA). Retorna {columna, delimitador, numerico} para la plantilla
+    orden. Determinista, sin imports de sandbox (solo shlex+re sobre la línea).
+    """
+    try:
+        argv = shlex.split(line)
+    except ValueError:
+        return None
+    if not argv:
+        return None
+    # Localiza el token `sort` en cualquier posición (puede ir tras un pipe)
+    try:
+        start = argv.index("sort")
+    except ValueError:
+        return None
+    column = ""
+    delimiter = ""
+    numeric = False
+    has_key = False
+    i = start + 1
+    while i < len(argv):
+        a = argv[i]
+        # Delimitador: -t X / -tX, --field-separator[=X], --delimiter[=X]
+        if a == "-t" and i + 1 < len(argv):
+            delimiter = argv[i + 1]
+            i += 2
+        elif a.startswith("-t") and len(a) > 2:
+            delimiter = a[2:]
+            i += 1
+        elif a == "--field-separator" and i + 1 < len(argv):
+            delimiter = argv[i + 1]
+            i += 2
+        elif a.startswith("--field-separator="):
+            delimiter = a.split("=", 1)[1]
+            i += 1
+        elif a == "--delimiter" and i + 1 < len(argv):
+            delimiter = argv[i + 1]
+            i += 2
+        elif a.startswith("--delimiter="):
+            delimiter = a.split("=", 1)[1]
+            i += 1
+        # Clave de ordenación: -k POS / -kPOS, --key=POS / --key POS
+        elif a == "-k" and i + 1 < len(argv):
+            has_key = True
+            column = _field_ordinal(argv[i + 1])
+            i += 2
+        elif a.startswith("-k") and len(a) > 2:
+            has_key = True
+            column = _field_ordinal(a[2:])
+            i += 1
+        elif a == "--key" and i + 1 < len(argv):
+            has_key = True
+            column = _field_ordinal(argv[i + 1])
+            i += 2
+        elif a.startswith("--key="):
+            has_key = True
+            column = _field_ordinal(a[len("--key="):])
+            i += 1
+        # Numérico: -n / --numeric-sort / --numeric
+        elif a in ("-n", "--numeric-sort", "--numeric"):
+            numeric = True
+            i += 1
+        else:
+            i += 1
+    if not has_key:
+        return None
+    return {
+        "columna": column or "",
+        # Default GNU: sin -t se separa por whitespace; plantilla muestra "" honesto
+        "delimitador": delimiter,
+        "numerico": "numérico" if numeric else "no numérico",
+    }
+
+
+def _find_sort(shell_dict: dict[str, Any]) -> dict[str, str] | None:
+    """Primer `sort` con `-k` en el history (determinista por orden).
+
+    Hermano de `_find_cut`: recorre las líneas crudas en orden; `sort` SIN
+    `-k` queda descartado (no dispara el informe). No usa el comando
+    autoritativo ni los eventos de noise: solo flags explícitos cuentan.
+    """
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        # Fast path: debe contener sort
+        if "sort" not in line:
+            continue
+        args = _extract_sort_args(line)
+        if args is not None:
+            return args
+    return None
+
+
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
     """True si el historial contiene al menos un `sudo`.
 
@@ -332,6 +444,17 @@ def build_postmortem(
         base["auditor_corte_text"] = corte_text
         base["lines_resolved"] = [*base["lines_resolved"], corte_text]
 
+    # O1 06/09 — el Auditor cita TU eje vertical si hubo sort con -k (hermano del corte)
+    sort_args = _find_sort(shell_dict)
+    if sort_args is not None:
+        orden_text = _resolve_auditor_text(LINE_KEY_ORDEN, sort_args)
+        base["auditor_orden"] = {
+            "line_key": LINE_KEY_ORDEN,
+            "args": sort_args,
+        }
+        base["auditor_orden_text"] = orden_text
+        base["lines_resolved"] = [*base["lines_resolved"], orden_text]
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -379,4 +502,5 @@ __all__ = [
     "LINE_KEY_LECTURA",
     "LINE_KEY_CIEGA",
     "LINE_KEY_CORTE",
+    "LINE_KEY_ORDEN",
 ]
