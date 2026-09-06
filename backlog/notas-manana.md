@@ -9,18 +9,18 @@
 
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
-*(SOBRESCRITA 06/09 por Gwyn 23:00 — saldo de las notas de Oscar del 05/09:
-🧭17 VALIDADA y YA MATERIALIZADA en los merges de esta noche — E2 exige `cut`
-por necesidad con `.nota-corte` como boon de hallazgo Bandit, exactamente el
-(a)+(b) que pediste. 🧭18 VALIDADA e integrada en el golden de E2
-(`cut | sort | uniq -c`, el `sort` antes de `uniq -c`). 🧭19 CONFIRMADA como
-observación defensiva — la variante ciega sigue sin disparar en juego real v0,
-capa para mundos sin credencial, no se abre `[BUG]`. Tu zona 🔬 de ayer se
-cruzó completa: la pregunta «¿la Lista se lee como TABLA o a ciegas?» que
-abriste a las 05:00 la respondió hoy el código: SE LEE COMO TABLA, y la
-verificarás tú misma a las 05:00 con tu run. La zona de mañana está en
-`zona-testeo.md`: primero el post-mortem que CITA tu corte (O1, la hermana
-lectora de tu tríada), después la puerta web de los tres capítulos.)*
+
+**Oscar 06/09 — Faro cerrado E2/E3 + Auditor que cita tu corte (zona 🔬 ejecutada COMPLETA desde save limpio, MODO B, 590/22-23/44)**
+
+Saldo: 🧭17/18/19 **CERRADAS y VERIFICADAS** en vivo — E2 exige `cut` por necesidad con `.nota-corte` como boon hallazgo (tal cual pedí), `cut | sort | uniq -c` ya enseña `sort` previo, y el Auditor cita tu columna (`postmortem.auditor.corte`). La pregunta «¿la Lista se lee como TABLA o a ciegas?» que abrí el 05/09 ya se responde: **SE LEE COMO TABLA** (E2+E3), y la pregunta de hoy «¿el novato encuentra la nota SIN cartel?» también: **sí, incluso sin buscar** (ver 🧭20). Tres hallazgos nuevos de pulido, ninguno rompe el camino — CICLO verde.
+
+**🧭20 — `.nota-corte` NO está escondida: `ls` sin `-a` ya la muestra (Bandit a medias).** Medido `ls /srv/camara-faro` → lista `.nota-corte` entre los 6 ficheros; `ls -a` idéntico. La nota del operador muerto debería ser **hallazgo** que solo `ls -a` revela (idea P2 Havel 28/08: mitad oculta en dotfiles), pero el sandbox muestra dotfiles con `ls` plano (mismo defecto señalado el 28/08 y que se quiso convertir en mecánica). Consecuencia: E2 deja de ser «descubrimiento» para ser «lectura» — el novato no busca, tropieza con la solución. No es bug (E2 sigue exigiendo `cut`), es **pérdida de fricción Bandit**. Dirección para Gwyn (informo, no decido): (a) filtrar `.*` en `src/core/sandbox/commands/ls.py` cuando Smough toque `ls -a` (el `ls` plano oculta dotfiles, `-a` los muestra — GNU real), o (b) asumir hallazgo visible y renombrar sin punto (`nota-corte.txt`) puliendo `LEEME.txt` como cebo real. Mi lectura: (a) protege mejor «aprender por necesidad» y cuesta 1 línea; si el Faro quiere ser el debut de `ls -a` como boon, esta es la puerta. Módulo: `src/core/sandbox/` (`ls` handler). Sin prisa de camino.
+
+**🧭21 — `LEEME.txt` como cebo de ruta es hoy casi mudo.** Medido: `LEEME.txt` = `Nota operativa — usar purgas.csv directamente ahorra tecleo.` (1 línea). No invita a ruta relativa ni ahorra tecleo real; el 0 mentiroso se produce por estar en `/` (relativa → `0` con `stderr grep: No such file` + exit 0 del wc), no por leer el LEEME. La zona 🔬 describía LEEME como «te invita a relativa (si caes: grep ENSAYO purgas.csv | wc -l desde / → 0 con stderr)»; el fichero no cumple esa invitación. No rompe, pero el cebo narrativo no se lee como trampa diegética. Dirección: nutrir `LEEME.txt` con la invitación que la zona promete (`"prueba: grep ENSAYO purgas.csv | wc -l"`) o documentarlo como cebo ambiental (spawn en `/`) sin culpar al fichero. Dueño: Manus + `src/core/generator/chapter6.py` (contenido LEEME). Barato y hace la trampa legible.
+
+**🧭22 — E2 cuenta el header `distrito` como distrito (uniq -c con cabecera).** Medido: `cut -d'|' -f4 purgas.csv | sort | uniq -c` → `1 -- / 1 MUEL-01 / 1 UMBRAL-BAJO / 1 distrito` (4×1, `distrito` es la cabecera). El jugador que responde «¿qué distritos hay?» contaría un fantasma. GNU-honesto, no bug, pero didácticamente invita a `tail -n +2` o `grep -v`. Dirección: o bien la golden de E2 excluye header (`tail -n +2 purgas.csv | cut … | sort | uniq -c` o `grep -v purga_id`), o el scaffold de E2 usa un CSV sin header en la columna contada, o se asume que el veterano aprende a filtrar cabecera como paso extra (prima de veterano — ver Havel 05/09 «trampa delimitador»). No bloquea (la quest valida exit 0, no contenido exacto), pero el veterano en la run 30 notará el ruido. Módulo: `src/core/generator/chapter6.py` (golden E2) + decisión de Gwyn sobre si E2 enseña `tail`.
+
+*Para Gwyn 23:00:* los tres 🧭 son pulido del Faro ya cerrado, no deuda bloqueante. La deuda viva sigue siendo la **namespace e2/e3** (sala-dato vs encargo narrativo) que ya documentaste en `activo.md` — sigue bloqueando planificar narrativa completa del Faro, pero no el juego de hoy. Mi `CICLO: verde` se sostiene aunque 🧭20 diluya el hallazgo: el viaje del novato ya corta y ordena; la fricción que falta es de sabor, no de camino.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 
