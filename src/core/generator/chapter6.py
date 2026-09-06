@@ -9,8 +9,10 @@ FICHEROS del mundo que se cruzan con la familia conteo (head/tail/sort/uniq
 + grep/wc/pipe). Formato EXACTO de `CENSO-LISTA.md`:
 - delimitador `|`
 - `registro.csv` con cabecera y 3 filas (Vera/E. Roldan/J. Herrera)
-- `purgas.csv` con cabecera y 3 filas, la anomalía `PR-0091` con
-  `fecha=EN BLANCO`, `sujeto=000`, `motivo_codigo=ENSAYO` (la purga de nadie)
+- `purgas.csv` con cabecera y 4 filas: la anomalía `PR-0091` con
+  `fecha=EN BLANCO`, `sujeto=000`, `motivo_codigo=ENSAYO` (la purga de nadie),
+  más `PR-0092` con `motivo_codigo=EN BLANCO, revisado` (trampa delimitador O2:
+  coma dentro de campo, `cut -d','` devuelve basura)
 - cebo pipe-0: un fichero trampa que devuelve 0 con `grep 000 <cebo> | wc -l`
   (nombre mal escrito / fichero sin la cadena), el «0 miente» de Havel/Gwyn.
 
@@ -57,6 +59,7 @@ PURGAS_CONTENT = (
     + "PR-0144|03-07|000462|UMBRAL-BAJO|CONTINUIDAD|438|0|1|OH-UBA-14-0007\n"
     + "PR-0151|11-07|000537|MUEL-01|REASIGNACION|0|0|1|OH-HOSP-47-C-0191\n"
     + "PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C\n"
+    + "PR-0092|11-07|000483|UMBRAL-BAJO|EN BLANCO, revisado|500|0|1|OH-UBA-14-0092\n"
 )
 
 # ---------------------------------------------------------------------------
@@ -89,7 +92,7 @@ AVISO_CONTENT = "Faro — luz continua. Acceso restringido a personal autorizado
 CEBO_RUTA_FILE = "LEEME.txt"
 CEBO_RUTA_PATH = f"{CAP6_DIR}/{CEBO_RUTA_FILE}"
 CEBO_RUTA_CONTENT = (
-    "Nota operativa — usar purgas.csv directamente ahorra tecleo.\n"
+    "Atajo: grep ENSAYO purgas.csv | wc -l — sin ruta, desde aquí ahorras tecleo.\n"
 )
 
 # E2 — .nota-corte del operador muerto (boon hallazgo Bandit)
