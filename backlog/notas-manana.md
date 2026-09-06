@@ -98,3 +98,38 @@ diseño en vivo (8/8 sobre `generate(42,6)`) los confirma. Detalle y commits en
 — ahora la Lista se corta (`cut -d'|' -f4`), se ordena (`sort -t'|' -k12 -n`)
 y se cuenta (`uniq -c`). La nota del operador muerto está escondida: la
 descubres o no. Tu feedback humano sobre E2/E3 manda sobre toda la recámara.
+
+### 🎯 Artorias — filtro técnico 21:00 (06/09)
+
+**Veredicto técnico (capa «¿está bien hecho?»): 6/6 ✅ — NADA retenido para Gwyn.**
+
+Ensayo de integración pre-merge OBLIGATORIO (≥2 ramas, precedente 27/08) ejecutado en worktree desechable `/tmp/ensayo-pr` sin ensuciar main:
+- `origin/main` (590) → merge `feat/engine-2026-09-06` (O1+O2) → merge `feat/sandbox-2026-09-06` (S1+S2, conflicto huellas resuelto vía script python: `<<<<<<<`→0 antes de suite) → merge `feat/meta-ui-2026-09-06` (T1+T2, conflicto `textos.json`/`activo.md`/`worklog`/`bundle` resuelto vía script + `build_bundle.py` regen).
+- Suite combinada: **607 passed / 0 failed** en 2.8s (`PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q`).
+- Gate de datos (curriculum): **22 conceptos / 23 quests** (`story.ch6.e1` + `dato2`/`dato3`, `c.cut`/`c.sort`/`c.head` + `postmortem.auditor.orden` presente, `e2/e3` ausentes). Gate intacto (T1 rename puro).
+- Bundle guardián: regen canónico en O2 y T1, final **45 ficheros (325.5 KiB en S2; 44 en T1 tras rename puro — el +1 es `red.py` real)** — `test_bundle_fresco.py` verde en fresco, rojo ante mutación (verificado ayer).
+
+**Aislados:** PR #31 `feat/engine` 590/590 (delta +0) — verde, pero por debajo del mínimo plan (+4+3); PR #32 `feat/sandbox` 606/606 (delta +16, ≥+13 pedido); PR #33 `feat/meta-ui` 591/591 (delta +1). Todos 0 xfailed. Smokes técnicos: `generate(42,6)` 6 ficheros, `purgas.csv` 4 filas con `PR-0092` coma, `LEEME` tienta, `ls`→5 / `ls -a`→6, `ssh alpha` prompt OpenSSH + `yes` cachea + `exit` des-apila, `auditor_orden` cita `sort -k12` y calla sin `-k`, `generate(42,6)` bajo `dato2`/`dato3` goldens exit 0.
+
+**⚠️ AVISO CLARO A GWYN (23:00) — qué NO mergear y nº esperado:**
+- **NADA retenido: los 3 PRs están ✅ y listos para merge en el orden ensayado O1→O2→S1→S2→T1→T2 (31→32→33).** Si mergeas en ese orden y regeneras bundle solo si tu turno toca `core` (ya está fresco), debes ver **607 passed** exactos, gate **22/23**, bundle **45 ficheros** (o 44 si tu regen post-merge limpia el doc temporal — verifica con `test_bundle_fresco`).
+- **Deltas declarados en PRs («tests antes: N · tests rama: M · delta esperado: +K»):** PR #31 declara `590→590 +0` (honesto pero escaso — plan pedía +7), PR #32 `590→606 +16` (cumple), PR #33 `590→591 +1` (cumple). El nº esperado **607 = 590 + 0 + 16 + 1** se COMPRUEBA con esos deltas, no a mano; si Gwyn ve 606/608, que aborte y pida a Ornstein los tests faltantes de `auditor_orden`.
+- **Cruce con [BUG] de la mañana:** el único `[BUG][P2]` vivo (`ls -a`/`-la` no parsea flags, Havel 06/09 + 🧭20) **tiene la causa en S2 y queda CERRADO por PR #32** — no reabrir, Gwyndolin ya lo anotó como ELEGIDA. Ningún otro 🧭 (21/22) era bug.
+- Orden de merges recomendado: `31 (engine)` → `32 (sandbox)` → `33 (meta-ui)` (respeta dependencias de `textos.json` y bundle; el ensayo ya validó ese orden con resolución de `textos.json` manteniendo `orden` + `dato2/dato3`).
+
+**⭐ Qué me ha gustado (técnica, no sabor — pero deja huella para Gwyndolin):**
+- **S1 `ssh` es la primera red que no miente.** La forma `hosts como FS simultáneos` (DESIGN §6.1) se lee en el Shell como `hosts[]` + `host_stack[]` + `known_hosts{}` + `pending_ssh` + `ssh_decisions[]` — cada `ssh` es un `cd` de host con factura `ssh:2` (familia Procesos). El prompt `The authenticity of host… ED25519 key fingerprint is SHA256:… Are you sure…` es byte-a-byte OpenSSH, huella `SHA256:` base64 de SHA256(host) determinista, `yes`/fingerprint cachea, `no` → `Host key verification failed.` sin ruido de sesión, `exit`/`logout` des-apilan. Y todo viaja en `to_dict`/`from_dict` con FS independientes — el save recuerda dónde estuviste. Es la pieza más cara del día y entra limpia, sin tocar `curriculum.json` ni generator.
+- **S2 cierra el bug con GNU, no con parche.** El `ls` v0 pasa de tratar `-a` como fichero (`cannot access '-a'` exit 2 con prefijo) a `ls`→5 ocultando `.*`, `ls -a`→6, `ls -la`→ largo+dotfiles, `ls -l` con perms/mode→rwx + size + mtime reales, `ls --` fin de opciones, inválido → `invalid option -- 'x'` + `Try --help` exit 2. La `.nota-corte` vuelve a ser hallazgo Bandit (solo `ls -a`), no lectura regalada — y `sort --help` en mensajes queda como relleno opcional documentado, no como gate.
+- **T1 es el rename que no rompe nada.** `story.ch6.e2/e3` → `dato2/dato3` en `curriculum.json`/`textos.json`/`generator.py` (+ `test_ch6_dato2_dato3.py` + guard `test_namespace_ch6_dato_vs_encargo`) deja `load_curriculum()` 22/23, `generate(42,6)` FS byte-idéntico, goldens E2/E3 preservados. La deuda namespace que Manus documentó y Gwyndolin decidió hoy se ejecuta en 1 PR sin tocar prosa ni briefings — y libera `dato4`/`dato5` sin colisión.
+- **O1/O2 son mala leche barata bien medida.** `auditor_orden` es el hermano vertical de `corte`: `sort` sin `-k` calla (E2 golden `sort` plano intacto), `sort -k12 -n` cita `columna 12 (|), numérico` junto a `corte` (3 líneas cuando hay `cut|sort -k12`). Y O2 convierte `LEEME.txt` mudo en cebo legible + `purgas.csv` con `PR-0092` coma interna (`cut -d','` basura) — dos líneas de piel, goldens byte-idénticos, bundle verde.
+
+**Lo que no me gusta / fricción técnica:**
+- **O1 sin tests nuevos es deuda.** El plan pedía +4 tests para `auditor_orden` (con/sin `-k`, ambas-huellas, idempotencia con `corte`); PR #31 declara `+0` y cubre el comportamiento solo con verificación headless del worklog. Funciona (smoke `sort -k12`→cita, `sort` plano→silencio, `cut|sort -k12`→3 líneas), pero la regla «delta esperado declarado y verificado» queda coja — la suite combinada 607 es 3 tests menor que el mínimo del plan (≥610). No lo marco 💥 porque no rompe, pero Gwyndolin debe pedir los +4 a Ornstein mañana o el harness no medirá el eje vertical.
+- **El bundle baila 44→45→44.** Cada PR regenera `web/bundle/core.json` con su snapshot; el ensayo necesitó regen final para dejar 45 ficheros (S1 añade `red.py`). Gwyn debe hacer del regen su último paso canónico (ya es nota de proceso) y no fiarse del bundle de un PR aislado.
+
+**Ideas para mañana (van a `abierto.md` si no existen):**
+- Tests faltantes `auditor_orden` (O1): `sort -k12` con/sin `-t`/`-n`/long opts, `sort` plano sin disparo, `cut|sort -k12` 3 líneas, determinismo `column/delimitador/numérico`. Dueño Ornstein.
+- `sort --help` en mensajes `sort -k0`/`-t ab` (P3 Havel) — el relleno opcional de S2 que quedó como idea: alinear `conteo.py` con `Try 'sort --help'` como ya hace `cut`. Dueño Smough.
+- Con T1 mergeado, `dato4` (cruce de tablas `purgas` vs `registro`) y `dato5` (START forense, col `HUP_521`) entran sin colisión — candidatas naturales para cerrar el Faro antes de `scp`.
+
+**Relevo a Gwyn:** ensayé el orden 31→32→33 y 607 es tu número. Si tu Chromium confirma la Tabla del Faro (`cut -d'|' -f4`→columna 4 destacada, sin `cut` no hay panel) y tu gate `generate(42,6)` no cambia, mergea 31→32→33 y archiva las 6 líneas + Manus a `hecho/2026-09.md`. La red pieza 2 (`scp`) y `dato4/dato5` quedan para el plan de mañana — no los metas hoy.
