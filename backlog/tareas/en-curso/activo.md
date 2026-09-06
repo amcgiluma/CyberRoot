@@ -9,57 +9,13 @@
 
 ## Activas
 
-> *(06/09, Gwyndolin — plan del día: 6 tareas movidas aquí desde `abierto.md`
-> y de la deuda abajo. El [BUG] `ls -a` entra como S2. Ver
-> `../planes/2026/09/06.md`.)*
-
-- `[HECHO][P2]` (06/09) **S1 (Smough) — Red simulada cap. 4, pieza 1: `ssh` básico + host-key + stack de conexión** — sandbox puro, sin `scp`/quests/`curriculum.json` (NADA más de red hoy, dirección #2 de Gwyn). Detalle y criterio en el plan. — PR #32 ✅ Artorias: verde aislado (606) y combinado (607). `ssh [user@]host` cambia FS, stack `exit`/`logout` des-apila, host-key OpenSSH exacto `The authenticity… ED25519 … Are you sure…` con huella `SHA256:` determinista, `yes`/fingerprint cachea, `no` no conecta, ruido `ssh:2` Red. Serialización `hosts`/`host_stack`/`known_hosts` roundtrip OK. Gate 127 intacto (ssh no en DEFAULT_CH*). Corrige `[BUG]` ls-a solo vía S2. Smoke ssh→ls remoto→exit OK.
-- `[HECHO][P2]` (06/09) **S2 (Smough, tras S1) — [BUG] `ls -a`/`ls -la` parseo de flags + 🧭20-a: dotfiles ocultos sin `-a`** — `.nota-corte` vuelve a hallazgo (fricción Bandit E2). — PR #32 ✅ Artorias: resuelve el único [BUG] vivo (Havel 06/09 + 🧭20). `ls` parsea `-a`/`-l`/`-la`/`--`, `ls` plano oculta dotfiles, `-a` los muestra, `-la` combina, flag desconocido → `invalid option -- 'x'` + `Try --help` exit 2. `ls -l` v0 con perms/mtime/size reales. Verificado `ls`→5 / `ls -a`→6 con `.nota-corte` exit 0, `cat .nota-corte` intacto. Cierra 🧭20/🧭20-a.
-- `[HECHO][P2]` (06/09) **O1 (Ornstein) — `auditor_orden`: el Auditor cita tu `sort -k12`** (hermano del corte; P2 Havel 06/09) — `sort` SIN `-k` no dispara NADA. — PR #31 ✅ Artorias: postmortem `orden` hermano de `corte`. `sort -t'|' -k12 -n` → `auditor_orden {columna,delimitador,numérico}` + `auditor_orden_text` formulario; `sort` sin `-k` no dispara (E2 golden `sort` plano byte-idéntico); `cut|sort -k12` → ambas líneas (3 líneas). Parsea `-t`/`-k`/`-n`/long opts, `column`/`delimitador`/`numérico` determinista, sin imports sandbox. Smoke `sort -k12`→cita, `sort` plano→silencio OK. Falta: delta +0 sin tests nuevos (plan pedía +4); comportamiento verificado headless pero queda deuda de tests para mañana (no bloquea).
-- `[HECHO][P2]` (06/09) **O2 (Ornstein, tras O1) — Mala leche del Faro: LEEME que tienta (🧭21) + trampa del delimitador (dirección #3)** — cebos de piel en `chapter6.py`, goldens E1/E2/E3 byte-idénticos, bundle regen. — PR #31 ✅ Artorias: `LEEME.txt` pasa a `Atajo: grep ENSAYO purgas.csv | wc -l — sin ruta…` (🧭21) — relativo desde `/` → 0 + stderr `No such file` + exit 0 honesto, absoluta →1. `purgas.csv` 4 filas con `PR-0092|…|EN BLANCO, revisado|…` (coma interna, sin ENSAYO) → `cut -d','` basura (dirección #3). Goldens E1/E2/E3 exit 0, `generate(42,6)` determinista 6 ficheros. Bundle regen verde. Cierra 🧭21.
-- `[HECHO]` (06/09) **T1 (Seath) — Rename namespace: `story.ch6.e2/e3` → `dato2/dato3`** — EJECUTA la decisión de Gwyndolin (abajo); rename puro, gate de datos intacto en conteo, bundle regen. Permiso de ruta cruzada a `generator/generator.py` (precedente). — PR #33 ✅ Artorias: rename puro `curriculum.json`/`textos.json`/`generator.py` + `test_ch6_dato2_dato3.py` + guard `test_namespace_ch6_dato_vs_encargo`. `load_curriculum()` 22/23 con `story.ch6.dato2/dato3`, `e2/e3` ausentes (solo en assert negativo). `generate(42,6)` FS byte-idéntico, goldens E2/E3 preservados bajo dato2/dato3. Gate intacto, FS sin cambios.
-- `[HECHO][P2]` (06/09) **T2 (Seath, tras T1) — La tabla viva en la puerta web** (dirección #4 de Gwyn; P2 Havel 05/09) — panel Tabla del Faro en `web/app.js`, refleja el `cut`, sin cambios de core. — PR #33 ✅ Artorias: `web/app.js` + `web/index.html` — `get_csv` (pyodide bootstrap) + `parseCut`/`renderFaroTabla`/`updateFaroTabla`/`hideFaroTabla`. Solo `chapter6`, sin core. `cut -d'|' -f4` sobre `purgas.csv`/`registro.csv` renderiza tabla con columna destacada; sin `cut` no hay panel; `?seed`/`?chapter` y muerte con `auditor_text` intactos. Smoke headless: parseCut OK, `get_csv` lee FS real (no bundle extra). Hueco web documentado (sin suite web hoy) — verifica Gwyn en Chromium 23:00.
+> *(06/09, Gwyn 23:00 — cierre: los 3 PRs del día mergeados (#31/#32/#33),
+> suite 607, gate 22/23, bundle 45. Las 7 líneas `[HECHO]` del día archivadas
+> en `../hecho/2026-09.md` §06/09. Sin retenciones: NADA queda vivo de hoy
+> salvo los crons y las piezas/recámara de abajo.)*
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
-- `[HECHO]` (06/09) **Manus — mantenimiento de coherencia post-05/09 (Faro cerrado)** — auditoría ligera tras O1/S1/T1+T2 (590 passed, 22/23, bundle 44: `cut` + `sort -k` + E2/E3 sala-dato + LEEME + .nota-corte + corte del Auditor). Verificado `generate(42,6)` 6 ficheros + goldens E2/E3 + cebo ruta honesto; `CENSO-LISTA.md`/`06-faro.md`/`POSTMORTEM.md` sin contradicción; deuda namespace e2/e3 confirmada y documentada en `historia/INDICE.md` con recomendación (`dato2`/`dato3`); suite y bundle verdes, sin escritura nueva de capítulos.
-
-### ⚠️ Deuda de NAMESPACE para Gwyndolin (abierta por Gwyn, 05/09 23:00) — ✅ DECIDIDA por Gwyndolin (06/09, plan del día)
-
-> **DECISIÓN (06/09, Gwyndolin):** E-space 1:1 con la prosa; las salas-dato
-> usan **`story.ch6.datoN`** (opción 1 de Manus): `e2`/`e3` →
-> `dato2`/`dato3`. La `e1` no se toca (la prosa E1 ES la sala de la Lista).
-> La prosa de los encargos narrativos «La que no pesa»/«La persiana» conserva
-> sus IDs sin reescribirse. **Ejecutada HOY como T1 (Seath).** Regla fijada
-> para el proyecto: encargo narrativo = `eK`; sala-dato = `datoN`. Los
-> encargos e2–e5 del cap. 6 quedan planificables mañana (con T1 mergeado).
-
-- Las quests `story.ch6.e2` (sala-dato «El corte de la Lista») y
-  `story.ch6.e3` (sala-dato «Los más cerca del cero») entradas hoy en
-  `curriculum.json` **OCUPAN los IDs que la prosa del cap. 6 reserva para los
-  encargos narrativos E2 «La que no pesa» y E3 «La persiana»**
-  (`CAPITULOS/06-faro.md`; las e4/e5 narrativas quedarían igualmente
-  colisionadas más adelante). Precedente ch1/ch3/ch5: curriculum E-space = 1:1
-  con los encargos de la prosa. Al integrar el cap. 6 completo (los encargos
-  narrativos con su beat de karma), hay que resolver ANTES de tocar
-  `curriculum.json`: renombrar las quests-sala-dato (p. ej.
-  `story.ch6.dato2/dato3` o `story.ch6.e2.sala`) y actualizar sus `requires`,
-  scaffolds, tests y briefings, o renumerar los encargos narrativos en la prosa
-  (requiere tocar `CAPITULOS/06-faro.md` + `textos.json`). Las salas-dato de
-  hoy son correctas pedagógicamente (boon de hallazgo + necesidad Bandit,
-  §4.4) — solo es un choque de números, no de diseño. **NO planificar encargos
-  narrativos del cap. 6 sin decidir esto primero.**
-
-### Piezas listas para integrar (sección nueva — Gwyn 05/09, aplicación de la propuesta de Gwyndolin)
-
-- **Pack `POSTMORTEM.md` de Manus (04/09, entrada `[HECHO]` 05/09 03:00)**: 5
-  claves del Auditor (`prueba`/`sin_lectura`/`senal_muerte`/`senal_recarga`/
-  `ceniza.llave`) listas para `src/data/textos.json`; 2 ya aterrizadas por O1
-  del 04/09 vía forma formulario. DECISIÓN de Gwyn (05/09): **espera a un Q
-  con Manus** — la pieza no es urgente (O1 ya cubrió la voz equivalente) y
-  merece un turno con dueño en caliente, no una integración nocturna. Dueño
-  propuesto: Manus con Ornstein de integrador. Contrato del pack: reglas de
-  montaje en `backlog/historia/POSTMORTEM.md` §Reglas.
 
 ### Historial reciente (resumen — el detalle vive en `../hecho/2026-09.md`)
 
@@ -78,14 +34,49 @@
   `cut` GNU-honesto + `c.cut`) y #27 (T1+T2 — guardián bundle + web slice 2).
   Suite **567 passed / 0 xfailed**, gate datos **22/22**, bundle **44 ficheros**
   tras el grito honesto del guardián.
-- **05/09 (Gwyn, esta noche):** mergeados los PRs #28 (O1 —
-  `postmortem.auditor.corte` + O3 — cebo de ruta `LEEME.txt`), #29 (S1 —
-  `sort -k`/`-t`/`-n` GNU honesto) y #30 (T1+T2 — quests E2/E3 salas-dato del
-  Faro + `.nota-corte`). Suite final del árbol combinado: **590 passed /
-  0 failed** (567 base +6 +8 +8; el +1 sobre 589 es el skip honesto de E3 que
-  pasa tras S1), gate de datos **22 conceptos / 23 quests** (+2 quests e2/e3),
-  bundle **44 ficheros (310.0 KiB)** regenerado como paso canónico. Gate de
-  diseño de Gwyn en vivo: 8/8 PASS sobre `generate(42,6)`. Las 6 líneas
-  `[HECHO]` del día (incluida la de Manus de la madrugada) archivadas en
-  `hecho/2026-09.md`. Deuda de namespace e2/e3 abierta arriba (para
-  Gwyndolin).
+- 05/09: mergeados los PRs #28 (O1 — `postmortem.auditor.corte` + O3 — cebo de
+  ruta `LEEME.txt`), #29 (S1 — `sort -k`/`-t`/`-n` GNU honesto) y #30 (T1+T2 —
+  quests E2/E3 salas-dato del Faro + `.nota-corte`). Suite **590 passed**,
+  gate **22/23**, bundle **44 ficheros**. Deuda de namespace e2/e3 abierta
+  (decidida al día siguiente por Gwyndolin).
+- **06/09 (Gwyn, esta noche):** mergeados los PRs #31 (O1 — `auditor_orden` el
+  Auditor cita tu `sort -k12` + O2 — LEEME que tienta 🧭21 + trampa del
+  delimitador), #32 (S1 — `ssh` básico + host-key OpenSSH + stack de conexión,
+  la red pieza 1 del cap. 4 + S2 — [BUG] `ls -a` cerrado con GNU real,
+  `.nota-corte` vuelve a hallazgo Bandit) y #33 (T1 — rename namespace
+  `story.ch6.e2/e3` → `dato2/dato3` EJECUTANDO la decisión de Gwyndolin + T2 —
+  tabla viva del Faro en la puerta web). Suite final del árbol combinado:
+  **607 passed / 0 failed** (590 +0 +16 +1, deltas declarados verificados),
+  gate de datos **22 conceptos / 23 quests** (`dato2/dato3`, `e2/e3` fuera),
+  bundle **45 ficheros (330.8 KiB)** regenerado como paso canónico (S1 añade
+  `red.py`). Resoluciones de huellas por script con assertions (3 merges,
+  7 regiones; `textos.json` unión `orden` + `dato2/dato3` con JSON validado).
+  Gate de diseño de Gwyn en vivo: 13/13 esencia sobre `generate(42,6)` + FS
+  handmade de `ssh` + post-mortem. **Verificación Chromium real de T2**: panel
+  «Tabla del Faro» aparece solo tras `cut` con la columna `distrito`
+  destacada — consola limpia. Deuda de tests de O1 (`auditor_orden` +4) queda
+  señalada como higiene para mañana.
+
+### ⚠️ Deuda de NAMESPACE — ✅ RESUELTA (T1 mergeado esta noche)
+
+> La decisión de Gwyndolin (06/09, `../planes/2026/09/06.md`) quedó EJECUTADA
+> en PR #33 y mergeada por Gwyn: `e2`/`e3` → `dato2`/`dato3` en
+> `curriculum.json`/`textos.json`/`generator.py`, con guard
+> `test_namespace_ch6_dato_vs_encargo` que impide el retorno del choque.
+> Regla fijada para el proyecto: **encargo narrativo = `eK`; sala-dato =
+> `datoN`**. Los encargos narrativos e2–e5 del cap. 6 están LIBRES para
+> planificar mañana. El detalle histórico vive en `../hecho/2026-09.md` y en
+> el plan del 06/09 — no se borra, se cierra.
+
+### Piezas listas para integrar (sección — Gwyn 05/09, propuesta de Gwyndolin)
+
+- **Pack `POSTMORTEM.md` de Manus (04/09, entrada `[HECHO]` 05/09 03:00)**: 5
+  claves del Auditor (`prueba`/`sin_lectura`/`senal_muerte`/`senal_recarga`/
+  `ceniza.llave`) listas para `src/data/textos.json`; 2 ya aterrizadas por O1
+  del 04/09 vía forma formulario. DECISIÓN de Gwyn (05/09, REVISADA 06/09):
+  **sigue esperando a un Q con Manus** — la pieza no es urgente (los O1
+  `corte`/`orden` ya cubren la voz del interrogatorio en formulario, y la
+  cualidad nueva del pack son claves de SEÑAL, no de formulario) y merece un
+  turno con dueño en caliente. Dueño propuesto: Manus con Ornstein de
+  integrador. Contrato del pack: reglas de montaje en
+  `backlog/historia/POSTMORTEM.md` §Reglas. Sin cambio de destino esta noche.

@@ -28,77 +28,6 @@ Saldo: 🧭17/18/19 **CERRADAS y VERIFICADAS** en vivo — E2 exige `cut` por ne
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Gwyn — cierre de diseño 23:00 (05/09)
-
-**Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
-(#28 → #29 → #30). Suites 573 → 581 → **590 passed** exactas, gate 22/23,
-bundle 44 fresco. NADA retenido: los 3 estaban ✅ por Artorias y mi gate de
-diseño en vivo (8/8 sobre `generate(42,6)`) los confirma. Detalle y commits en
-`hecho/2026-09.md` (sección 05/09).
-
-**⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
-- **E2 «El corte de la Lista» es la pieza más Hades del proyecto hasta hoy.**
-  No enseña `cut` con un cartel: lo esconde en la nota de un operador muerto y
-  hace que la PREGUNTA no se pueda responder sin cortar. Eso es §4.4 al pie de
-  la letra: el poder nuevo es saber nuevo, el jugador lo gana por hallazgo
-  bajo necesidad (Bandit). Cuando Juanma juegue `?chapter=6&seed=42` y
-  descubra la `.nota-corte` sin que nadie se lo diga, ahí está el juego que
-  diseñamos. ⭐⭐⭐
-- **La tríada pregunta→verbo→respuesta de E3 es exactamente la verticalidad
-  que pedía Havel.** «¿Quién está más cerca del 0?» no es un tutorial de
-  `sort -k`: es una pregunta sobre gente (la pulsera, la fila 000 al frente de
-  la lista ordenada — PR-0091, la de nadie, sale primera). El verbo enseña la
-  columna; el beat enseña qué significa estar cerca del cero en Vesper. Ese
-  doble fondo es la marca de la casa.
-- **El Auditor que CITA (O1) convierte el post-mortem en interrogatorio.** Con
-  `postmortem.auditor.corte`, la tercera visita del Auditor ya no dice qué
-  HICISTE sino QUÉ CORTASTE — el formulario sabe tu comando, tu columna, tu
-  delimitador. Con la tríada lector de ayer + esta, el Auditor ya es un
-  personaje con memoria de proceso. Es el giro §9 avanzando sin una línea de
-  trama nueva.
-- **El cebo de LEEME.txt (O3) es mala leche pedagógica de la buena.** El
-  fichero te ahorra tecleo y te cuesta la verdad: relativo → 0 con stderr
-  gritando. La mentira honesta de GNU convertida en diseño de sala, sin una
-  línea de lógica nueva.
-
-**⭐ Lo que NO me gusta / deuda que abro (criterio, no bug):**
-- **Deuda de NAMESPACE e2/e3 (abierta en `activo.md` como sección propia).**
-  Las salas-dato de hoy ocupan los IDs que la prosa reserva para los encargos
-  narrativos «La que no pesa» y «La persiana». En ch1/ch3/ch5 el currículo
-  siguió 1:1 la prosa; aquí Seath rompió el convenio sin decirlo. No lo
-  rechazo: pedagógicamente son correctas y la prosa del cap. 6 ya prevé
-  salas-dato aparte. Pero Gwyndolin DEBE decidir mañana la convención
-  (renumerar salas-dato o encargos) ANTES de planificar integración narrativa
-  del cap. 6. Si mañana alguien añade `story.ch6.e4` sin decidir esto,
-  el DAG del capítulo se vuelve ambiguo.
-- **El pack `POSTMORTEM.md` de Manus sigue sin dueño en caliente** — decidido:
-  espera a un Q con Manus (registrado en «Piezas listas para integrar» en
-  `activo.md`, aplicación de su propia propuesta). No quiero más piezas
-  huérfanas de la madrugada.
-
-**Dirección para mañana (prioridad de diseño):**
-1. **Resolver la deuda de namespace e2/e3** (10 min de decisión + 1 tarea
-   pequeña de renombrado si toca) — ANTES de planificar el cap. 6 narrativo.
-2. **La red del cap. 4 encabeza el plan** (como acordaron Artorias y yo
-   ayer): con el alfabeto conteo completo y E2/E3 vivas, el Faro ya tiene
-   suelo; la pieza grande de `ssh`/hosts como FS merece el día entero.
-   Si Gwyndolin la fracciona, pieza 1 = `ssh` básico + host-key (idea P2 de
-   Havel) y NADA más en engine ese día.
-3. **Trampa del delimitador mentiroso** (P3 de Havel, llega gratis tras E2):
-   una fila con `,` interna en `purgas.csv` enseña `-d` en 10 segundos. Es el
-   cebo perfecto para la sala-dato: mala leche barata, lección GNU real.
-4. **La tabla viva en la puerta web** (P2 de Havel) es el slice natural de
-   la puerta tras E2/E3: que la Lista se muestre como TABLA en HTML cuando
-   el jugador corta. No urgente, pero es la primera vez que la puerta web
-   mostraría el RESULTADO de una family conteo, no solo texto.
-5. **No tocar aún el karma del par 521/522** — sigue sin dueño el detector de
-   patrones; la E3 de hoy NO es la quest kármica (bien planificado).
-
-**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42`
-— ahora la Lista se corta (`cut -d'|' -f4`), se ordena (`sort -t'|' -k12 -n`)
-y se cuenta (`uniq -c`). La nota del operador muerto está escondida: la
-descubres o no. Tu feedback humano sobre E2/E3 manda sobre toda la recámara.
-
 ### 🎯 Artorias — filtro técnico 21:00 (06/09)
 
 **Veredicto técnico (capa «¿está bien hecho?»): 6/6 ✅ — NADA retenido para Gwyn.**
@@ -133,3 +62,34 @@ Ensayo de integración pre-merge OBLIGATORIO (≥2 ramas, precedente 27/08) ejec
 - Con T1 mergeado, `dato4` (cruce de tablas `purgas` vs `registro`) y `dato5` (START forense, col `HUP_521`) entran sin colisión — candidatas naturales para cerrar el Faro antes de `scp`.
 
 **Relevo a Gwyn:** ensayé el orden 31→32→33 y 607 es tu número. Si tu Chromium confirma la Tabla del Faro (`cut -d'|' -f4`→columna 4 destacada, sin `cut` no hay panel) y tu gate `generate(42,6)` no cambia, mergea 31→32→33 y archiva las 6 líneas + Manus a `hecho/2026-09.md`. La red pieza 2 (`scp`) y `dato4/dato5` quedan para el plan de mañana — no los metas hoy.
+
+### 🎯 Gwyn — cierre de diseño 23:00 (06/09)
+
+**Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
+(#31 → #32 → #33). Suites 590 → 606 → **607 passed** exactas (deltas declarados
++0/+16/+1, verificados por aritmética), gate 22/23 con `dato2/dato3`, bundle
+45 fresco. NADA retenido: los 3 estaban ✅ por Artorias y mi gate de diseño en
+vivo (13/13 esencia) los confirma. T2 verificada POR MÍ en Chromium real:
+panel «Tabla del Faro» solo tras `cut`, columna `distrito` destacada, consola
+limpia. Detalle y commits en `hecho/2026-09.md` (sección 06/09).
+
+**⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
+- **El `ls` que vuelve a mentir (S2) es la reparación de diseño más satisfactoria del proyecto.** 🧭20 medía que el hallazgo se regalaba; hoy `ls` plano OCULTA la `.nota-corte` y `-a` la revela — no parcheamos el síntoma (renombrar el fichero) sino que pusimos GNU real y la fricción Bandit volvió sola. La lección de diseño: cuando la simulación es honesta, el diseño pedagógico sale gratis. ⭐⭐⭐
+- **El LEEME que tienta (O2) convierte 🧭21 en trampa diegética completa.** Anoche el cebo era mudo; hoy LEE un atajo que suena a truco de veterano («sin ruta, ahorras tecleo») y te cuesta la verdad si no piensas de dónde lo ejecutas. El jugador que cae y ve el `0` con stderr grito aprende más de ese fallo que de tres carteles. Es la mala leche de la casa.
+- **`auditor_orden` cierra la tríada del interrogatorio.** El Auditor ya sabe qué LEÍSTE (read_marks), qué CORTASTE (corte) y cómo ORDENASTE (orden) — tres huellas de proceso distintas, todas en forma formulario, ninguna clave cruda. Cuando el detector de patrones tenga dueño, este personaje ya tiene memoria para ejercer de juez. El giro §9 avanza solo.
+- **La trampa del delimitador es mala leche barata de la buena.** Una coma dentro de un campo, y `cut -d','` devuelve basura. El delimitador no se adivina, se lee en `head -n1` — lección GNU real en 10 segundos de juego.
+- **T1 el rename que libera.** Con `dato2/dato3` y el guard anti-colisión, los encargos narrativos e2–e5 («La que no pesa», «La persiana», Vela) ya se pueden planificar sin tocar el DAG — la deuda que abrí anoche cerró en 1 PR limpio.
+
+**⭐ Lo que NO me gusta / deuda que dejo:**
+- **O1 entró con delta +0 (sin los +4 tests del plan).** El plan pedía tests para `auditor_orden` (con/sin `-k`, ambas-huellas, idempotencia); Ornstein los verificó headless pero la suite no creció. Lo mergeo porque el comportamiento está verificado dos veces (Artorias y yo) y el eje no rompe nada — pero la REGLA «delta esperado declarado y verificado» queda coja: mañana el plan DEBE llevar los +4 como tarea de higiene de Ornstein o el harness medirá el eje vertical a ciegas. Si Ornstein añade tests nuevos SIN tocar comportamiento, el delta del día se declara aparte.
+- **El bundle bailó 44→45→44→45 durante el día.** Cada PR regeneró su snapshot y el ensayo necesitó el suyo. Esta noche quedó en 45 (estado real: S1 añadió `red.py`). El regen canónico de mi turno ya está en el prompt; el siguiente paso natural es el job CI `bundle-fresh` que propuso Artorias (P3, recámara).
+- **Los hosts de `ssh` no tienen mundo todavía.** La mecánica es perfecta (serializable, host-key honesta, stack) pero no hay forma de DESCUBRIR un host jugando: `ssh alpha` solo existe en tests. Es la pieza 2 de mañana (hosts descubribles leyendo el mundo + `scp` + quests `story.ch4.*`). No es deuda de hoy — pero la red sin mundo es una clave sin cerradura, y el cap. 4 entero espera esto.
+
+**Dirección para mañana (prioridad de diseño):**
+1. **Los encargos narrativos del cap. 6 encabezan el plan** (e2 «La que no pesa», e3 «La persiana», con su beat de karma) — la deuda de namespace está RESUELTA, la prosa está lista, y el Faro pedagógico (`dato2/dato3`) ya tiene suelo. Es lo único que convierte el cap. 6 en CAPÍTULO y no en colección de salas.
+2. **La red pieza 2** (`scp` + hosts descubribles leyendo el mundo + quests `story.ch4.*` con su prereq `cut→scp` de Havel) — la mecánica `ssh` de hoy es la llave; mañana la cerradura. Si Gwyndolin la fracciona: hosts descubribles ANTES que `scp` (sin destino, `scp` no tiene gracia).
+3. **Higiene de tests**: los +4 de `auditor_orden` (Ornstein) y el `sort --help` en mensajes de `conteo.py` (Smough, relleno opcional que quedó sin hacer) — baratos, en la misma rama que toque cada uno.
+4. **🧭22 (header contado como distrito)** queda en recámara CON MOTIVO (decisión de Gwyndolin en el plan de hoy): la lección del header entra cuando se toque el golden de nuevo — candidato natural: `dato4` (cruce de tablas), donde `tail -n +2` es prerequisito honesto.
+5. **No tocar aún el karma del par 521/522** — el detector de patrones sigue sin dueño; la tríada del Auditor ya acumula huellas para cuando lo tenga.
+
+**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42` — ahora `ls` te esconde la nota del operador muerto (solo `-a` la revela), el LEEME te tienta con un atajo que miente, y la puerta web muestra la Lista COMO TABLA cuando cortas. Tu feedback humano manda sobre toda la recámara.

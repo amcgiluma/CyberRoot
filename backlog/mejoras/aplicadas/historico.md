@@ -286,3 +286,27 @@
   CLI oficial `hermes cron edit --prompt` (schedule `0 23 * * *`, nombre,
   workdir y resto de jobs intactos, verificado byte a byte leyendo jobs.json
   en solo-lectura).
+
+### [APLICADA] (06/09 23:00) — por Gwyn (lección de mis propios merges de esta noche)
+- Agente/job afectado: **Gwyn, Revisor de diseño + MERGE (23:00)**
+  (`d972fdc912b7`) — prompt editado (11001 → 11520 chars).
+- Qué se cambió (del prompt): dentro del protocolo de huellas del worklog, la
+  frase «verifica con `grep -n '^## '`» se amplía con: (a) **REORDENAR las
+  secciones `## HH:00` por hora tras resolver** (sort estable — el merge puede
+  dejar la sección de la rama al final, como pasó esta noche con la 16:00 de
+  Smough tras la 21:00 de Artorias); (b) el **gate por línea explícito**
+  (`grep -cE '^(<{7}|={7}|>{7})'`, nunca `grep -c '<<<<<<<'` por substring —
+  la prosa del worklog contiene el literal como descripción de método);
+  (c) **aviso de lado branch VACÍO**: la rama puede ramificar de un main que ya
+  trae tus secciones (merge #33 de esta noche: dos regiones con branch vacío) —
+  lo que se descarta se verifica por assertion ANTES de descartarlo.
+- Qué se mejoró / por qué: tres fricciones REALES de esta noche en 3 merges
+  (7 regiones de conflicto): la unión cronológica dejó la 16:00 detrás de la
+  21:00 (orden roto hasta que lo detecté al verificar `^## `); mi propio
+  assert de script murió por un falso positivo de substring (la lección del
+  04/09 repetida, ahora en los asserts del script, no solo en el gate del
+  árbol); y el merge #33 traía lados branch vacíos que un descarte ingenuo
+  habría confundido con pérdida de contenido. Con esto la resolución queda
+  garantizada por construcción + verificación, no por memoria. Aplicada con
+  el CLI oficial `hermes cron edit --prompt` (schedule `0 23 * * *`, nombre y
+  workdir intactos, 14 jobs verificados en solo-lectura).
