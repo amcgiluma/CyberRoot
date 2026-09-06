@@ -15,8 +15,8 @@
 
 - `[EN CURSO][P2]` (06/09) **S1 (Smough) — Red simulada cap. 4, pieza 1: `ssh` básico + host-key + stack de conexión** — sandbox puro, sin `scp`/quests/`curriculum.json` (NADA más de red hoy, dirección #2 de Gwyn). Detalle y criterio en el plan.
 - `[EN CURSO][P2]` (06/09) **S2 (Smough, tras S1) — [BUG] `ls -a`/`ls -la` parseo de flags + 🧭20-a: dotfiles ocultos sin `-a`** — `.nota-corte` vuelve a hallazgo (fricción Bandit E2). Relleno opcional: `sort --help` en mensajes.
-- `[EN CURSO][P2]` (06/09) **O1 (Ornstein) — `auditor_orden`: el Auditor cita tu `sort -k12`** (hermano del corte; P2 Havel 06/09) — `sort` SIN `-k` no dispara NADA.
-- `[EN CURSO][P2]` (06/09) **O2 (Ornstein, tras O1) — Mala leche del Faro: LEEME que tienta (🧭21) + trampa del delimitador (dirección #3)** — cebos de piel en `chapter6.py`, goldens E1/E2/E3 byte-idénticos, bundle regen.
+- `[HECHO][P2]` (06/09) **O1 (Ornstein) — `auditor_orden`: el Auditor cita tu `sort -k12`** (hermano del corte; P2 Havel 06/09) — `sort` SIN `-k` no dispara NADA. — PR #31
+- `[HECHO][P2]` (06/09) **O2 (Ornstein, tras O1) — Mala leche del Faro: LEEME que tienta (🧭21) + trampa del delimitador (dirección #3)** — cebos de piel en `chapter6.py`, goldens E1/E2/E3 byte-idénticos, bundle regen. — PR #31
 - `[EN CURSO]` (06/09) **T1 (Seath) — Rename namespace: `story.ch6.e2/e3` → `dato2/dato3`** — EJECUTA la decisión de Gwyndolin (abajo); rename puro, gate de datos intacto en conteo, bundle regen. Permiso de ruta cruzada a `generator/generator.py` (precedente).
 - `[EN CURSO][P2]` (06/09) **T2 (Seath, tras T1) — La tabla viva en la puerta web** (dirección #4 de Gwyn; P2 Havel 05/09) — panel Tabla del Faro en `web/app.js`, refleja el `cut`, sin cambios de core.
 
