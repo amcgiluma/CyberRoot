@@ -11,6 +11,7 @@
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
+- `[HECHO]` (06/09) **Manus — mantenimiento de coherencia post-05/09 (Faro cerrado)** — auditoría ligera tras O1/S1/T1+T2 (590 passed, 22/23, bundle 44: `cut` + `sort -k` + E2/E3 sala-dato + LEEME + .nota-corte + corte del Auditor). Verificado `generate(42,6)` 6 ficheros + goldens E2/E3 + cebo ruta honesto; `CENSO-LISTA.md`/`06-faro.md`/`POSTMORTEM.md` sin contradicción; deuda namespace e2/e3 confirmada y documentada en `historia/INDICE.md` con recomendación (`dato2`/`dato3`); suite y bundle verdes, sin escritura nueva de capítulos.
 
 ### ⚠️ Deuda de NAMESPACE para Gwyndolin (abierta por Gwyn, 05/09 23:00)
 
