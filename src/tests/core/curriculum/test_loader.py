@@ -77,10 +77,10 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
 
 
 def test_load_curriculum_21_conceptos_20_quests() -> None:
-    """El catálogo real: 22 conceptos y 23 encargos (conteo 05/09 — T1+T2 Seath E2/E3).
+    """El catálogo real: 22 conceptos y 23 encargos (conteo 05/09 — T1+T2 Seath dato2/dato3).
 
-    Conteo del 05/09: conceptos 22 (04/09) + quests 21 (04/09) + story.ch6.e2
-    (requires c.cut/c.uniq/c.sort, cut|sort|uniq -c) + story.ch6.e3
+    Conteo del 05/09: conceptos 22 (04/09) + quests 21 (04/09) + story.ch6.dato2
+    (requires c.cut/c.uniq/c.sort, cut|sort|uniq -c) + story.ch6.dato3
     (requires c.cut/c.sort/c.head, sort -k12). Gate de datos 22→23→24 por
     T1+T2 en la misma rama (misma PR, delta +2 en este test).
     """

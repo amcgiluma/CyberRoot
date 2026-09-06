@@ -120,6 +120,29 @@ def get_status():
         "seed": _lib.get("seed", 42),
         "chapter": _lib.get("chapter", 0),
     }, ensure_ascii=False)
+
+def get_csv(path):
+    import json as _j
+    shell = _lib.get("shell")
+    if shell is None:
+        return _j.dumps({"ok": False, "error": "no shell"})
+    try:
+        from core.sandbox.fs import DirNode
+        node = None
+        for base in ("/", getattr(shell, "cwd", "/")):
+            try:
+                n = shell.fs.resolve(str(path), base)
+                if n is not None and not isinstance(n, DirNode):
+                    node = n
+                    break
+            except Exception:
+                continue
+        if node is None or isinstance(node, DirNode):
+            return _j.dumps({"ok": False, "error": f"no such file {path}"})
+        content = getattr(node, "content", "")
+        return _j.dumps({"ok": True, "content": content, "path": str(path)})
+    except Exception as e:
+        return _j.dumps({"ok": False, "error": repr(e)})
 `;
 
 // ---------------------------------------------------------------------------
@@ -157,6 +180,105 @@ function setState(state) {
   if (seedEl) seedEl.textContent = String(state.seed);
   if (chapEl) chapEl.textContent = String(state.chapter);
   if (budgetEl) budgetEl.textContent = String(state.noise_budget);
+}
+
+// ---------------------------------------------------------------------------
+// Tabla del Faro — panel vivo que refleja el cut (T2, Seath 06/09, dirección #4)
+// Sin cambios de core: lee el CSV del FS via get_csv y destaca la columna cortada.
+// ---------------------------------------------------------------------------
+function parseCut(line) {
+  // Detecta cut con -d y -f en cualquier orden, delimiter con/without quotes
+  const tokens = line.trim().split(/\s+/);
+  if (!tokens.includes("cut")) return null;
+  let delim = null, field = null, file = null;
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] === "-d" && i + 1 < tokens.length) {
+      let d = tokens[i + 1];
+      d = d.replace(/^['\"]|['\"]$/g, "");
+      delim = d;
+    }
+    if (tokens[i].startsWith("-d") && tokens[i].length > 2) {
+      let d = tokens[i].slice(2);
+      d = d.replace(/^['\"]|['\"]$/g, "");
+      if (d) delim = d;
+    }
+    if (tokens[i] === "-f" && i + 1 < tokens.length) {
+      const n = parseInt(tokens[i + 1], 10);
+      if (!isNaN(n)) field = n;
+    }
+    if (tokens[i].startsWith("-f") && tokens[i].length > 2) {
+      const n = parseInt(tokens[i].slice(2), 10);
+      if (!isNaN(n)) field = n;
+    }
+  }
+  // Fichero: último token que parezca .csv (absoluto o relativo)
+  for (let i = tokens.length - 1; i >= 0; i--) {
+    if (tokens[i].includes(".csv")) {
+      file = tokens[i].replace(/^['\"]|['\"]$/g, "");
+      break;
+    }
+  }
+  if (field === null || !file) return null;
+  if (!delim) delim = "|"; // default del Faro es | si no se especifica
+  if (!file.includes("purgas.csv") && !file.includes("registro.csv")) return null;
+  return { delim, field, file };
+}
+
+function hideFaroTabla() {
+  const el = $id("faro-tabla");
+  if (el) el.style.display = "none";
+}
+
+function renderFaroTabla(cutInfo, csvContent) {
+  const panel = $id("faro-tabla");
+  const metaEl = $id("faro-tabla-meta");
+  const contentEl = $id("faro-tabla-content");
+  if (!panel || !metaEl || !contentEl) return;
+  const lines = csvContent.split("\n").filter(l => l.length > 0);
+  if (lines.length === 0) { hideFaroTabla(); return; }
+  const delim = cutInfo.delim;
+  const colIdx = cutInfo.field - 1;
+  const shortFile = cutInfo.file.split("/").pop();
+  metaEl.textContent = `${shortFile} · columna ${cutInfo.field} (${delim})`;
+  // Construye tabla HTML
+  let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
+  // header
+  const headerCells = lines[0].split(delim);
+  html += "<thead><tr>";
+  for (let i = 0; i < headerCells.length; i++) {
+    const cls = i === colIdx ? ' style="background:rgba(94,200,229,.25);color:var(--accent);font-weight:700;border:1px solid var(--border);padding:4px 6px"' : ' style="border:1px solid var(--border);padding:4px 6px;color:var(--muted)"';
+    html += `<th${cls}>${headerCells[i] || "—"}</th>`;
+  }
+  html += "</tr></thead><tbody>";
+  const maxRows = Math.min(lines.length, 16);
+  for (let r = 1; r < maxRows; r++) {
+    const cells = lines[r].split(delim);
+    html += "<tr>";
+    for (let c = 0; c < cells.length; c++) {
+      const cls = c === colIdx ? ' style="background:rgba(94,200,229,.18);color:var(--fg);font-weight:600;border:1px solid var(--border);padding:3px 6px"' : ' style="border:1px solid var(--border);padding:3px 6px"';
+      const val = cells[c] || "—";
+      html += `<td${cls}>${val.length > 24 ? val.slice(0,24)+"…" : val}</td>`;
+    }
+    html += "</tr>";
+  }
+  if (lines.length > maxRows) html += `<tr><td colspan="${headerCells.length}" style="text-align:center;color:var(--muted);padding:6px">… ${lines.length - maxRows} filas más (usa cat/head en la terminal)</td></tr>`;
+  html += "</tbody></table>";
+  contentEl.innerHTML = html;
+  panel.style.display = "block";
+}
+
+function updateFaroTabla(line) {
+  const info = parseCut(line);
+  if (!info) return; // sin cut → no toca el panel (no lo oculta para no parpadear)
+  if (currentChapter !== 6) return; // solo en el Faro
+  try {
+    const raw = pyodide.globals.get("get_csv")(info.file);
+    const data = JSON.parse(raw);
+    if (!data.ok || !data.content) { hideFaroTabla(); return; }
+    renderFaroTabla(info, data.content);
+  } catch (e) {
+    // no rompe la terminal si falla
+  }
 }
 
 function parseParams() {
@@ -201,6 +323,7 @@ function hidePostmortem() {
 
 async function restartSameSeed() {
   hidePostmortem();
+  hideFaroTabla();
   $id("out").innerHTML = "";
   setStatus(`Reiniciando cap. ${currentChapter} (seed ${currentSeed})…`);
   try {
@@ -323,6 +446,8 @@ async function dispatch() {
   // También actualiza status con ruido si quieres feedback continuo
   const statusEl = $id("noise-status");
   if (statusEl) statusEl.textContent = `ruido ${total}/${budget}`;
+  // Tabla del Faro: refleja el cut sin sustituir la terminal
+  try { updateFaroTabla(line); } catch(e) {}
   if (total > budget) {
     try {
       const pm = JSON.parse(pyodide.globals.get("postmortem")());
