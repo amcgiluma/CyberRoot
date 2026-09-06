@@ -266,7 +266,7 @@ def validate_incursion(incursion: Incursion) -> None:
                 )
         # Validación por quest (E1/E2/E3 comparten FS, goldens distintas)
         quest_id = room.objective.story_key if hasattr(room.objective, "story_key") else ""
-        if quest_id == "story.ch6.e2":
+        if quest_id == "story.ch6.dato2":
             # E2: cut|sort|uniq -c debe producir salida con distritos
             last = shell.history[-1]["result"]
             raw = str(last.get("stdout", ""))
@@ -296,7 +296,7 @@ def validate_incursion(incursion: Incursion) -> None:
                     exit_code=0,
                     stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
                 )
-        elif quest_id == "story.ch6.e3":
+        elif quest_id == "story.ch6.dato3":
             # E3: sort -k12 | head -n 3 — valida solo si sort soporta -k/-t
             last = shell.history[-1]["result"]
             raw = str(last.get("stdout", ""))
@@ -744,10 +744,10 @@ def _generate_cap6(
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
     # Canon por quest: E2/E3 tienen goldens propios (cut|sort|uniq -c y sort -k12|head).
-    if quest.id == "story.ch6.e2":
+    if quest.id == "story.ch6.dato2":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2))
-    elif quest.id == "story.ch6.e3":
+    elif quest.id == "story.ch6.dato3":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E3
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E3))
     else:

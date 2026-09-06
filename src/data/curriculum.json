@@ -404,7 +404,7 @@
       "beat_key": "story.ch6.e1.beat"
     },
     {
-      "id": "story.ch6.e2",
+      "id": "story.ch6.dato2",
       "chapter": 6,
       "tint": "grey",
       "requires": [
@@ -412,11 +412,11 @@
         "c.uniq",
         "c.sort"
       ],
-      "title_key": "story.ch6.e2.title",
-      "beat_key": "story.ch6.e2.beat"
+      "title_key": "story.ch6.dato2.title",
+      "beat_key": "story.ch6.dato2.beat"
     },
     {
-      "id": "story.ch6.e3",
+      "id": "story.ch6.dato3",
       "chapter": 6,
       "tint": "grey",
       "requires": [
@@ -424,8 +424,8 @@
         "c.sort",
         "c.head"
       ],
-      "title_key": "story.ch6.e3.title",
-      "beat_key": "story.ch6.e3.beat"
+      "title_key": "story.ch6.dato3.title",
+      "beat_key": "story.ch6.dato3.beat"
     },
     {
       "id": "story.ch5.e1",

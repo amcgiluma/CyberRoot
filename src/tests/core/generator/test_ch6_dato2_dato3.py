@@ -1,9 +1,9 @@
-"""test_ch6_e2_e3.py — E2 (corte horizontal) + E3 (orden vertical) del Faro (T1/T2, Seath 05/09).
+"""test_ch6_dato2_dato3.py — E2 (corte horizontal) + E3 (orden vertical) del Faro (T1/T2, Seath 05/09).
 
-T1 (🧭17 + enmienda 🧭18): quest story.ch6.e2 exige cut por necesidad
+T1 (🧭17 + enmienda 🧭18): quest story.ch6.dato2 exige cut por necesidad
   requires [c.cut,c.uniq,c.sort], golden cut -d'|' -f4 ... | sort | uniq -c,
   briefing con cut y rutas absolutas, .nota-corte hallazgo.
-T2: quest story.ch6.e3 exige sort -k12 por necesidad
+T2: quest story.ch6.dato3 exige sort -k12 por necesidad
   requires [c.cut,c.sort,c.head], golden sort -t'|' -k12 -n ... | head -n 3.
 
 Gate de datos 22→23 (E2) →24 (E3) en la misma rama; suite delta +7.
@@ -33,24 +33,24 @@ def _resolver(inc, path: str):
 # ---------------------------------------------------------------------------
 # DAG / curriculum
 # ---------------------------------------------------------------------------
-def test_quest_ch6_e2_valida_en_dag_y_gate_23():
+def test_quest_ch6_dato2_valida_en_dag_y_gate_23():
     cur = load_curriculum()
-    q = cur.quest("story.ch6.e2")
-    assert q is not None, "story.ch6.e2 no existe (T1 Seath)"
+    q = cur.quest("story.ch6.dato2")
+    assert q is not None, "story.ch6.dato2 no existe (T1 Seath)"
     assert q.chapter == 6
     assert set(q.requires) == {"c.cut", "c.uniq", "c.sort"}
-    assert q.title_key == "story.ch6.e2.title"
-    assert q.beat_key == "story.ch6.e2.beat"
+    assert q.title_key == "story.ch6.dato2.title"
+    assert q.beat_key == "story.ch6.dato2.beat"
     assert len(cur.quests) == 23
     assert len(cur.concepts) == 22
 
-def test_quest_ch6_e3_valida_en_dag_y_gate_24():
+def test_quest_ch6_dato3_valida_en_dag_y_gate_24():
     cur = load_curriculum()
-    q = cur.quest("story.ch6.e3")
-    assert q is not None, "story.ch6.e3 no existe (T2 Seath)"
+    q = cur.quest("story.ch6.dato3")
+    assert q is not None, "story.ch6.dato3 no existe (T2 Seath)"
     assert q.chapter == 6
     assert set(q.requires) == {"c.cut", "c.sort", "c.head"}
-    assert q.title_key == "story.ch6.e3.title"
+    assert q.title_key == "story.ch6.dato3.title"
     assert len(cur.quests) == 23
     # Prereqs enseñados en <=6
     chap_concepts = {c.id for c in cur.concepts if c.chapter <= 6}
@@ -60,10 +60,10 @@ def test_quest_ch6_e3_valida_en_dag_y_gate_24():
 # ---------------------------------------------------------------------------
 # E2 — FS + .nota-corte + golden cut|sort|uniq -c (🧭18)
 # ---------------------------------------------------------------------------
-def test_e2_sala_expone_ficheros_y_nota_corte():
-    inc = generate(42, 6, contract_id="story.ch6.e2")
+def test_dato2_sala_expone_ficheros_y_nota_corte():
+    inc = generate(42, 6, contract_id="story.ch6.dato2")
     assert inc.chapter == 6
-    assert inc.contract.objective_key == "story.ch6.e2"
+    assert inc.contract.objective_key == "story.ch6.dato2"
     # Lista intacta
     pur = _resolver(inc, PURGAS_PATH)
     assert isinstance(pur, FileNode) and "PR-0091" in pur.content
@@ -79,8 +79,8 @@ def test_e2_sala_expone_ficheros_y_nota_corte():
     assert "cut -d'|'" in nota.content
     assert "purgas.csv" in nota.content
 
-def test_e2_golden_cut_sort_uniq_exit_0():
-    inc = generate(42, 6, contract_id="story.ch6.e2")
+def test_dato2_golden_cut_sort_uniq_exit_0():
+    inc = generate(42, 6, contract_id="story.ch6.dato2")
     shell = new_session(inc)
     # Golden canónico de E2 (cut|sort|uniq -c) — la forma enseñada en el briefing
     r = shell.execute(f"cut -d'|' -f4 {PURGAS_PATH} | sort | uniq -c")
@@ -95,37 +95,37 @@ def test_e2_golden_cut_sort_uniq_exit_0():
     # No exigimos valor exacto, solo que ambos den exit 0 y el primero agrupe
     assert r2.exit_code == 0
 
-def test_e2_briefing_menciona_cut_y_ruta_absoluta():
+def test_dato2_briefing_menciona_cut_y_ruta_absoluta():
     textos = load_textos()
-    beat = resolve("story.ch6.e2.beat", textos=textos)
+    beat = resolve("story.ch6.dato2.beat", textos=textos)
     assert "cut" in beat.lower()
     assert "/srv/camara-faro/" in beat
     assert "/srv/camara-faro/purgas.csv" in beat
     assert "/srv/camara-faro/.nota-corte" in beat
-    title = resolve("story.ch6.e2.title", textos=textos)
+    title = resolve("story.ch6.dato2.title", textos=textos)
     assert title.strip()
 
-def test_e2_determinista_por_seed():
-    a = generate(99, 6, contract_id="story.ch6.e2")
-    b = generate(99, 6, contract_id="story.ch6.e2")
+def test_dato2_determinista_por_seed():
+    a = generate(99, 6, contract_id="story.ch6.dato2")
+    b = generate(99, 6, contract_id="story.ch6.dato2")
     assert a.to_dict() == b.to_dict()
 
 # ---------------------------------------------------------------------------
 # E3 — sort -k12 vertical (lectura VERTICAL de la Lista)
 # ---------------------------------------------------------------------------
-def test_e3_briefing_menciona_k_y_ruta_absoluta():
+def test_dato3_briefing_menciona_k_y_ruta_absoluta():
     textos = load_textos()
-    beat = resolve("story.ch6.e3.beat", textos=textos)
+    beat = resolve("story.ch6.dato3.beat", textos=textos)
     # Exige -k por necesidad
     assert "-k" in beat or "k12" in beat
     assert "/srv/camara-faro/" in beat
     assert "purgas.csv" in beat
-    title = resolve("story.ch6.e3.title", textos=textos)
+    title = resolve("story.ch6.dato3.title", textos=textos)
     assert title.strip()
 
-def test_e3_golden_sort_k12_head_exit_0_si_soporte():
+def test_dato3_golden_sort_k12_head_exit_0_si_soporte():
     """El golden E3: sort -t'|' -k12 -n ... | head -n 3"""
-    inc = generate(42, 6, contract_id="story.ch6.e3")
+    inc = generate(42, 6, contract_id="story.ch6.dato3")
     shell = new_session(inc)
     r = shell.execute(f"sort -t '|' -k12 -n {PURGAS_PATH} | head -n 3")
     # Si sandbox no soporta -k/-t aún (rama meta-ui sola sin S1), el stderr lo delata (head enmascara exit).
@@ -138,13 +138,38 @@ def test_e3_golden_sort_k12_head_exit_0_si_soporte():
     # Tras sort -n, las líneas con -- pueden ir primero numéricamente vacío → 0
     assert any("PR-0091" in l for l in lines) or "000" in lines[0]
 
-def test_e3_sin_k_no_se_puede_responder():
+def test_dato3_sin_k_no_se_puede_responder():
     """Sin -k la pregunta vertical no se puede responder (golden lo exige)."""
     textos = load_textos()
-    beat = resolve("story.ch6.e3.beat", textos=textos)
+    beat = resolve("story.ch6.dato3.beat", textos=textos)
     # El briefing Nombra -k como requisito (lectura vertical)
     assert "k12" in beat or "-k" in beat
     # La quest requiere c.sort y c.head y c.cut (sin sort -k no hay lectura vertical)
     cur = load_curriculum()
-    q = cur.quest("story.ch6.e3")
+    q = cur.quest("story.ch6.dato3")
     assert "c.sort" in q.requires
+
+
+def test_namespace_ch6_dato_vs_encargo():
+    """Regla fijada 06/09: E-space 1:1 con prosa; salas-dato = datoN, nunca eK (salvo e1).
+
+    Verifica que el cap. 6 NO tenga quests e2/e3 colisionando con la prosa
+    (los encargos narrativos «La que no pesa»/«La persiana» reservan e2/e3)
+    y que las salas-dato usan dato2/dato3.
+    """
+    cur = load_curriculum()
+    ids = {q.id for q in cur.quests_for_chapter(6)}
+    # e1 es la sala de la Lista (no hay choque, prosa E1 ES esa sala)
+    assert "story.ch6.e1" in ids
+    # salas-dato nuevas
+    assert "story.ch6.dato2" in ids
+    assert "story.ch6.dato3" in ids
+    # nunca e2/e3 como sala-dato
+    assert "story.ch6.e2" not in ids
+    assert "story.ch6.e3" not in ids
+    # textos siguen la misma regla
+    textos = load_textos()
+    assert "story.ch6.dato2.title" in textos
+    assert "story.ch6.dato3.title" in textos
+    assert "story.ch6.e2.title" not in textos
+    assert "story.ch6.e3.title" not in textos

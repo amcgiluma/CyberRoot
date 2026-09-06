@@ -17,8 +17,8 @@
 - `[EN CURSO][P2]` (06/09) **S2 (Smough, tras S1) — [BUG] `ls -a`/`ls -la` parseo de flags + 🧭20-a: dotfiles ocultos sin `-a`** — `.nota-corte` vuelve a hallazgo (fricción Bandit E2). Relleno opcional: `sort --help` en mensajes.
 - `[EN CURSO][P2]` (06/09) **O1 (Ornstein) — `auditor_orden`: el Auditor cita tu `sort -k12`** (hermano del corte; P2 Havel 06/09) — `sort` SIN `-k` no dispara NADA.
 - `[EN CURSO][P2]` (06/09) **O2 (Ornstein, tras O1) — Mala leche del Faro: LEEME que tienta (🧭21) + trampa del delimitador (dirección #3)** — cebos de piel en `chapter6.py`, goldens E1/E2/E3 byte-idénticos, bundle regen.
-- `[EN CURSO]` (06/09) **T1 (Seath) — Rename namespace: `story.ch6.e2/e3` → `dato2/dato3`** — EJECUTA la decisión de Gwyndolin (abajo); rename puro, gate de datos intacto en conteo, bundle regen. Permiso de ruta cruzada a `generator/generator.py` (precedente).
-- `[EN CURSO][P2]` (06/09) **T2 (Seath, tras T1) — La tabla viva en la puerta web** (dirección #4 de Gwyn; P2 Havel 05/09) — panel Tabla del Faro en `web/app.js`, refleja el `cut`, sin cambios de core.
+- `[HECHO]` (06/09) **T1 (Seath) — Rename namespace: `story.ch6.e2/e3` → `dato2/dato3`** — EJECUTA la decisión de Gwyndolin (abajo); rename puro, gate de datos intacto en conteo, bundle regen. Permiso de ruta cruzada a `generator/generator.py` (precedente).
+- `[HECHO][P2]` (06/09) **T2 (Seath, tras T1) — La tabla viva en la puerta web** (dirección #4 de Gwyn; P2 Havel 05/09) — panel Tabla del Faro en `web/app.js`, refleja el `cut`, sin cambios de core.
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
