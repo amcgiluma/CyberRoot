@@ -44,7 +44,7 @@ from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
 from core.sandbox.commands.procesos import SPECS as PROCESOS_SPECS
 from core.sandbox.commands.texto import SPECS as TEXT_SPECS
 from core.common.events import Event, EventBus
-from core.sandbox.fs import FileSystem
+from core.sandbox.fs import DirNode, FileSystem
 from core.sandbox.noise import NoiseMeter
 
 #: Comandos del set del cap. 0 (tutorial). 🧭1 APROBADA por Gwyn (27/08):
@@ -166,6 +166,46 @@ def _join_err(*stderrs: str) -> str:
     return "\n".join(non_empty)
 
 
+#: Ruta canónica del fichero de hosts del sistema (red simulada cap.4, S1
+#: 07/09). `cat` EXITOSO sobre esta ruta DES-CUBRE hostnames en `self.hosts`.
+HOSTS_PATH = "/etc/hosts"
+
+#: Hostnames que NO son destinos de red (se filtran al descubrir). `ip6-*`
+#: se excluye además por prefijo (ip6-localnet, ip6-mcastprefix, ...).
+_HOSTS_SKIP: frozenset[str] = frozenset(
+    {
+        "localhost",
+        "localhost.localdomain",
+        "broadcasthost",
+        "ip6-localhost",
+        "ip6-loopback",
+    }
+)
+
+
+def _parse_hosts_content(text: str) -> list[str]:
+    """Extrae hostnames no-locales del contenido de un fichero `/etc/hosts`.
+
+    Formato GNU: líneas `IP hostname [alias...]`; se ignoran comentarios
+    (`#`) y vacías. El primer token es la IP, el resto son hostnames. Filtra
+    `localhost`/`localhost.localdomain`/`broadcasthost` y todo `ip6-*`.
+    Devuelve lista ÚNICA y ordenada (determinismo, ARCHITECTURE §1.5).
+    """
+    found: set[str] = set()
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        tokens = line.split()
+        if len(tokens) < 2:
+            continue
+        for name in tokens[1:]:
+            if name in _HOSTS_SKIP or name.startswith("ip6-"):
+                continue
+            found.add(name)
+    return sorted(found)
+
+
 class Shell:
     """Una sesión de terminal virtual sobre un FileSystem (serializable)."""
 
@@ -253,6 +293,28 @@ class Shell:
                     )
                 return
 
+    def _note_hosts_discovery(
+        self, cmd: str, argv: tuple[str, ...], stdout: str, exit_code: int
+    ) -> None:
+        """Descubre hostnames LEÍDOS de `/etc/hosts` (red simulada cap.4, S1 07/09).
+
+        Solo la LECTURA descubre: un `cat` EXITOSO (exit 0) con un operando
+        que resuelve a `HOSTS_PATH` registra cada hostname no-local en
+        `self.hosts` como un FS stub (raíz `/` vacía). No toca `known_hosts`
+        (eso es del ssh). `ls /etc` no pasa por aquí; un `cat` sin fichero
+        falla exit 1 y tampoco descubre. Releer/doble operando no duplica:
+        solo se crea el host si no existía.
+        """
+        if cmd != CAT_NAME or exit_code != 0:
+            return
+        for arg in argv:
+            if self.fs.abspath(arg, self.cwd) != HOSTS_PATH:
+                continue
+            for host in _parse_hosts_content(stdout):
+                if host not in self.hosts:
+                    self.hosts[host] = FileSystem(root=DirNode(name="/", children={}))
+            return
+
     def _exec_argv(
         self, argv: tuple[str, ...], stdin: str = ""
     ) -> CommandResult:
@@ -287,6 +349,8 @@ class Shell:
         # S1 (03/09): `cat` de la orden GANA la marca (vale en tuberías:
         # cada lado pasa por aquí).
         self._note_credential_read(argv[0], argv[1:], result.stdout)
+        # S1 (07/09): `cat /etc/hosts` EXITOSO descubre hostnames (solo lectura).
+        self._note_hosts_discovery(argv[0], argv[1:], result.stdout, result.exit_code)
         return result
 
     def _exec_ssh(
