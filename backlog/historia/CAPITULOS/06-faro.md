@@ -396,17 +396,20 @@ respuesta de la fila 000 queda escrita donde el jugador decida escribirla.*
 
 ### Notas para el integrador
 
-- Claves sugeridas: `story.ch6.apertura`, `story.ch6.e1`–`e5`,
+- Claves sugeridas: `story.ch6.apertura`, `story.ch6.e1` (sala-dato E1 sobre la Lista) +
+  `story.ch6.dato2`/`dato3` (salas-dato del alfabeto conteo: corte `cut -f4` y orden `sort -k12`) +
+  `story.ch6.e2`–`e5` narrativos («La que no pesa», «La persiana», «El armario», «La hoja de cierre» — **E-space 1:1 con la prosa**, liberado tras el rename T1 del 06/09),
   `story.ch6.vela` (la confrontación, que el motor ramifica por karma),
   `story.ch6.auditor` (la 3.ª sombra del Arco del Auditor), `story.ch6.postmortem_ceniza`,
   `story.ch6.vela_azul`, `story.ch6.vela_rojo`, `story.ch6.cierre`.
+  Convención fijada 06/09: **E-space = encargo narrativo; `datoN` = sala-dato técnica** — no volver a usar `eK` para salas-dato.
 - **Los finales NO son menú**: se modelan como decisiones de karma dentro de
   E4/E5 y de la escena de confrontación (§3.4.1). El formato de la
   confrontación (duelo de pruebas / persecución / mesa) lo elige el motor por
   la variable de karma; la prosa aquí es reactiva a las tres.
 - **Worldbuilding del censo**: M1 aterrizó en `backlog/historia/CENSO-LISTA.md`.
-  Las salas-dato de E1/E2 cruzan `registro.csv` y `purgas.csv` (delimitador `|`)
-  con la familia conteo (S2). Smough: verificar que `story.ch6.*` usa solo
+  Las salas-dato de E1/`dato2`/`dato3` cruzan `registro.csv` y `purgas.csv` (delimitador `|`)
+  con la familia conteo (S2). Goldens verificados 07/09: `dato2` = `cut -d'|' -f4 | sort | uniq -c`, `dato3` = `sort -t'|' -k12 -n | head -n 3` (PR-0091 al frente, 4 filas con trampa `,`); E1 sigue `grep ENSAYO|wc -l`. Smough: verificar que `story.ch6.*` usa solo
   conceptos ya en currículo (pipes y `grep`/`sort`/`uniq` de cap. 2 + S2,
   procesos de cap. 3, red de cap. 4, defensa del cap. 5) más la escalada
   opcional (`openssl`/claves, `shred`, SUID/cron como ENSEÑANZA nueva del cap. 6
