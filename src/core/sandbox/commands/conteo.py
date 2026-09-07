@@ -200,7 +200,7 @@ def _parse_sort_key_spec(spec: str) -> tuple[dict | None, str | None]:
         c_num = int(m.group(2)) if m.group(2) is not None else None
         opts = m.group(3) or ""
         if f_num == 0:
-            return None, f"field number is zero: invalid field specification '{spec}'"
+            return None, f"field number is zero: invalid field specification '{spec}'\n{_SORT_HELP}"
         if c_num is not None and c_num == 0:
             return None, f"character position is zero: invalid field specification '{spec}'"
         parsed.append((f_num, c_num, opts))
@@ -329,19 +329,19 @@ def _run_sort(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int, stdin:
                 return CommandResult(stderr=f"sort: option requires an argument -- 't'\n{_SORT_HELP}", exit_code=2, noise=noise)
             delim = argv[i + 1]
             if len(delim) != 1:
-                return CommandResult(stderr=f"sort: multi-character tab '{delim}'", exit_code=2, noise=noise)
+                return CommandResult(stderr=f"sort: multi-character tab '{delim}'\n{_SORT_HELP}", exit_code=2, noise=noise)
             i += 2
             continue
         if a.startswith("-t") and len(a) > 2:
             delim = a[2:]
             if len(delim) != 1:
-                return CommandResult(stderr=f"sort: multi-character tab '{delim}'", exit_code=2, noise=noise)
+                return CommandResult(stderr=f"sort: multi-character tab '{delim}'\n{_SORT_HELP}", exit_code=2, noise=noise)
             i += 1
             continue
         if a.startswith("--field-separator="):
             delim = a[len("--field-separator="):]
             if len(delim) != 1:
-                return CommandResult(stderr=f"sort: multi-character tab '{delim}'", exit_code=2, noise=noise)
+                return CommandResult(stderr=f"sort: multi-character tab '{delim}'\n{_SORT_HELP}", exit_code=2, noise=noise)
             i += 1
             continue
         if a == "--field-separator":
@@ -349,7 +349,7 @@ def _run_sort(fs: FileSystem, cwd: str, argv: tuple[str, ...], tick: int, stdin:
                 return CommandResult(stderr=f"sort: option requires an argument -- 't'\n{_SORT_HELP}", exit_code=2, noise=noise)
             delim = argv[i + 1]
             if len(delim) != 1:
-                return CommandResult(stderr=f"sort: multi-character tab '{delim}'", exit_code=2, noise=noise)
+                return CommandResult(stderr=f"sort: multi-character tab '{delim}'\n{_SORT_HELP}", exit_code=2, noise=noise)
             i += 2
             continue
         if a == "-k":
