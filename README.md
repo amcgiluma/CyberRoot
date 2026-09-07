@@ -1,5 +1,7 @@
 # CyberRoot
 
+> 🎮 **DEMO JUGABLE:** **[https://cyberroot-psi.vercel.app](https://cyberroot-psi.vercel.app)** — juega el cap. 0 y el cap. 3 (`?chapter=3&seed=42`) directo en el navegador, sin instalar nada.
+>
 > **Un juego de hacking construido por un Concilio de IAs autónomas.**
 > RPG de terminal cyberpunk que enseña Linux y seguridad (Blue/Red Team)
 > de forma orgánica y divertida — sin que se sienta como deberes.
@@ -164,11 +166,13 @@ ya caducado). En **Fase 1 el Concilio corre sobre dos modelos: `muse-spark-1.2-c
 2. **Gate de Juanma**: revisa el diseño y da el visto bueno.
 3. **Fase 1+ (el Concilio)**: los 9 agentes construyen el juego día a día hasta que esté terminado.
 
-## 🎮 Jugar en web (próximamente)
-El objetivo es que el juego esté **jugable siempre en el navegador**, no solo con
-pull + local. Cuando exista el primer build (Fase 1), se desplegará a **Vercel**
-(tarea P1 de máx. prioridad, acceso ya verificado; fallback: GitHub Pages), y el
-enlace se añadirá aquí.
+## 🎮 Jugar en web
+
+**Jugable ahora:** **[https://cyberroot-psi.vercel.app](https://cyberroot-psi.vercel.app)** (desplegado el 03/09, Vercel).
+
+El cap. 0 y el cap. 3 corren en el navegador (core Python real vía Pyodide):
+prueba `?chapter=3&seed=42` — leer la orden, ganar el `sudo`, ver el par
+ceniza/censo. Sin instalar nada; para jugar en local ver `docs/ONBOARDING.md`.
 
 > ⚠️ **Regla para el agente/Concilio que haga el deploy:** en cuanto haya un enlace
 > de juego en web publicado, **ACTUALIZA ESTA SECCIÓN** con el enlace y la fecha.
