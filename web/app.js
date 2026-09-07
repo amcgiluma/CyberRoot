@@ -8,7 +8,7 @@
  *
  * T2 añade:
  * - `?seed=` y `?chapter=` en la URL → `generate(seed, chapter)` + comandos del capítulo.
- *   Mínimo cap. 0 (tutorial) y cap. 3 (leer orden → sudo → ps/kill) — la lección completa.
+ *   Capítulos jugables: 0 (tutorial), 2, 3 (orden→sudo→ps/kill) y 6 (Faro con familia conteo) — muerte con `auditor_text` en todos.
  * - Bucle de muerte: `total_noise > noise_budget` → pantalla post-mortem con
  *   `build_postmortem` (voz del Auditor en el navegador) + reiniciar.
  * - Status muestra seed y capítulo activos → cada bug reporta su reproducción en la URL.
