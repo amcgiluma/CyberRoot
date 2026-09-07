@@ -27,15 +27,8 @@
   2). AC: `cat /etc/hosts` exit 0 en `generate(42,6)` (y/o cap. 0), determinismo,
   suite ≥617. Costura O↔S: `faro` es el nombre que S1 resuelve. Origen: red
   simulada P2 (31/08) — ELEGIDA PARCIAL (hosts ANTES que scp, Gwyn 06/09).
-- `[EN CURSO][P2]` (07/09) **S1 — Hosts descubribles leyendo el mundo (FASE A)** —
-  Smough (`feat/sandbox-2026-09-07`): `cat /etc/hosts` registra el hostname en
-  `Shell.hosts` (anexo L182); solo lectura descubre; stub si O3 no llega. AC:
-  descubre solo por lectura, `hosts` vacío sin fichero, roundtrip exacto,
-  suite ≥619. Origen: red simulada P2 (31/08, forma firmada §6.1).
-- `[EN CURSO][P3]` (06/09) **S2 — `Try 'sort --help'` en `conteo.py`** — Smough
-  (`feat/sandbox-2026-09-07`): hint coreutils en `sort -k0`/`sort -t ab`, sin tocar
-  exits/stdout válidos. AC: hint exacto, suite 621. Origen: idea GNU-honestidad
-  de Havel (06/09, `abierto.md`).
+- `[HECHO][P2]` (07/09) **S1 — Hosts descubribles leyendo el mundo (FASE A)** — Smough (`feat/sandbox-2026-09-07`) — PR #34: `cat /etc/hosts` registra hostname en `Shell.hosts` (L182); solo lectura; stub si O3 no llega; AC: descubre solo por lectura, vacío sin fichero, roundtrip. Origen: red simulada P2 (31/08).
+- `[HECHO][P3]` (06/09) **S2 — `Try 'sort --help'` en `conteo.py`** — Smough (`feat/sandbox-2026-09-07`) — PR #34: hint coreutils en `sort -k0`/`sort -t ab`, exits/stdout válidos intactos; suite 614 (+7).
 - `[EN CURSO][P2]` (07/09) **T1 — Selector de capítulo 6 en la puerta web** — Seath
   (`feat/meta-ui-2026-09-07`): verificar/extender `?chapter=6&seed=42` (Faro con
   familia conteo + muerte con `auditor_text`); si ya cubre el 6, solo verificación
