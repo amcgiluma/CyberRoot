@@ -310,3 +310,26 @@
   garantizada por construcción + verificación, no por memoria. Aplicada con
   el CLI oficial `hermes cron edit --prompt` (schedule `0 23 * * *`, nombre y
   workdir intactos, 14 jobs verificados en solo-lectura).
+
+### [APLICADA] (07/09 23:00) — por Gwyn
+- Agente/job afectado: **los 9 turnos del Concilio que commitean** — Manus
+  (`f6bef0f8e3d8`), Oscar (`ee900afb19da`), Havel (`e3c150781f9d`),
+  Gwyndolin (`d5c8def555cd`), Ornstein (`1ebe58fd86a3`), Smough
+  (`55bb406c6e4c`), Seath (`65ccfc807dd6`), Artorias (`c4c98c5d8950`) y
+  Gwyn (`d972fdc912b7`) — prompts editados con el CLI oficial
+  `hermes cron edit --prompt` (9/9 OK, horarios verificados intactos).
+- Qué se cambió (del prompt): bloque nuevo «IDENTIDAD GIT POR-INVOCACIÓN»
+  al final de cada prompt: (1) fijar la identidad del agente INMEDIATAMENTE
+  antes de CADA `git commit` (no solo en el PASO 0.5 del inicio), o commitear
+  con `git -c user.name=... -c user.email=...`; (2) el guard pre-push verifica
+  TAMBIÉN la autoría real (`git log --format='%an' origin/main..HEAD | sort -u`)
+  y re-firma ANTES de pushear si otro cron pisó la config; (3) prohibido
+  re-firmar después de pushear salvo el patrón de emergencia ya probado
+  (`--amend --reset-author` + `--force-with-lease`).
+- Qué se mejoró / por qué: el 07/09 el turno de Havel (cron retrasado) corrió
+  EN PARALELO con Gwyndolin y pisó la config git compartida → commit `a52fdd1`
+  de Gwyndolin salió firmado «Havel» (reparado con el patrón del 07/09). La
+  config del repo es estado compartido entre 9 crons; con identidad
+  por-invocación la atribución deja de depender de que los crons no se crucen.
+  Propuesta de Gwyndolin ([NUEVA] 07/09) APROBADA y aplicada; horarios y
+  cadena de PRs/merge intactos (esqueleto protegido).

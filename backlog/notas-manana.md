@@ -83,33 +83,69 @@ Try 'sort --help' for more information.` a los dos errores de conteo (`-k0` fiel
 
 
 
-### 🎯 Gwyn — cierre de diseño 23:00 (06/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (07/09)
 
-**Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
-(#31 → #32 → #33). Suites 590 → 606 → **607 passed** exactas (deltas declarados
-+0/+16/+1, verificados por aritmética), gate 22/23 con `dato2/dato3`, bundle
-45 fresco. NADA retenido: los 3 estaban ✅ por Artorias y mi gate de diseño en
-vivo (13/13 esencia) los confirma. T2 verificada POR MÍ en Chromium real:
-panel «Tabla del Faro» solo tras `cut`, columna `distrito` destacada, consola
-limpia. Detalle y commits en `hecho/2026-09.md` (sección 06/09).
+**Estado de los merges:** los 2 PRs del día mergeados en el orden ensayado
+(#34 sandbox → #35 meta-ui). Suites 614 → **617 passed** exactas (deltas
++7/+3, verificados por aritmética), gate **22/23** intacto, bundle **45**
+fresco (regen NO necesario, guardián verde dentro de la suite). NADA
+retenido: ambos ✅ de Artorias + mi gate de diseño en vivo los confirmó.
+Detalle y commits en `hecho/2026-09.md` §07/09.
 
 **⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
-- **El `ls` que vuelve a mentir (S2) es la reparación de diseño más satisfactoria del proyecto.** 🧭20 medía que el hallazgo se regalaba; hoy `ls` plano OCULTA la `.nota-corte` y `-a` la revela — no parcheamos el síntoma (renombrar el fichero) sino que pusimos GNU real y la fricción Bandit volvió sola. La lección de diseño: cuando la simulación es honesta, el diseño pedagógico sale gratis. ⭐⭐⭐
-- **El LEEME que tienta (O2) convierte 🧭21 en trampa diegética completa.** Anoche el cebo era mudo; hoy LEE un atajo que suena a truco de veterano («sin ruta, ahorras tecleo») y te cuesta la verdad si no piensas de dónde lo ejecutas. El jugador que cae y ve el `0` con stderr grito aprende más de ese fallo que de tres carteles. Es la mala leche de la casa.
-- **`auditor_orden` cierra la tríada del interrogatorio.** El Auditor ya sabe qué LEÍSTE (read_marks), qué CORTASTE (corte) y cómo ORDENASTE (orden) — tres huellas de proceso distintas, todas en forma formulario, ninguna clave cruda. Cuando el detector de patrones tenga dueño, este personaje ya tiene memoria para ejercer de juez. El giro §9 avanza solo.
-- **La trampa del delimitador es mala leche barata de la buena.** Una coma dentro de un campo, y `cut -d','` devuelve basura. El delimitador no se adivina, se lee en `head -n1` — lección GNU real en 10 segundos de juego.
-- **T1 el rename que libera.** Con `dato2/dato3` y el guard anti-colisión, los encargos narrativos e2–e5 («La que no pesa», «La persiana», Vela) ya se pueden planificar sin tocar el DAG — la deuda que abrí anoche cerró en 1 PR limpio.
+- **La red que solo descubre LEYENDO es la regla de la casa hecha mecánica.**
+  `cat /etc/hosts` exit 0 registra el host; `ls /etc` no; sin fichero, error
+  GNU honesto y hosts vacío. El jugador no «desbloquea» nada: lo SABE porque
+  lo leyó, como en la máquina real. Es la pieza Fase A correcta para que
+  `scp` de mañana tenga destino ganado, no regalado. ⭐⭐⭐
+- **El stub agnóstico al nombre de host** deja la costura O↔S de Gwyndolin
+  resuelta en ambas direcciones: si O3 llega mañana con `faro`, S1 lo resuelve
+  sin tocar nada; si llega con otro nombre, S1 tampoco se rompe. Diseño de
+  contratos que no se disparan entre sí.
+- **T1 es la honestidad como métrica.** +0 en la suite porque el selector ya
+  funcionaba: Seath verificó headless, añadió un hint mínimo que NO ejecuta
+  nada por el jugador, y lo documentó. Yo lo verifiqué en Chromium real:
+  hint cap. 6 SOLO con `?chapter=6` (sin él, cap. 0 y sin hint). Es el
+  precedente que quiero para las tareas de verificación.
+- **T2 blinda el save antes de que la red tenga mundo.** El roundtrip de
+  `hosts`/`known_hosts` ya sobrevive reload — mañana, cuando `scp` escriba en
+  un host remoto, el descubrimiento no se evapora al guardar.
 
 **⭐ Lo que NO me gusta / deuda que dejo:**
-- **O1 entró con delta +0 (sin los +4 tests del plan).** El plan pedía tests para `auditor_orden` (con/sin `-k`, ambas-huellas, idempotencia); Ornstein los verificó headless pero la suite no creció. Lo mergeo porque el comportamiento está verificado dos veces (Artorias y yo) y el eje no rompe nada — pero la REGLA «delta esperado declarado y verificado» queda coja: mañana el plan DEBE llevar los +4 como tarea de higiene de Ornstein o el harness medirá el eje vertical a ciegas. Si Ornstein añade tests nuevos SIN tocar comportamiento, el delta del día se declara aparte.
-- **El bundle bailó 44→45→44→45 durante el día.** Cada PR regeneró su snapshot y el ensayo necesitó el suyo. Esta noche quedó en 45 (estado real: S1 añadió `red.py`). El regen canónico de mi turno ya está en el prompt; el siguiente paso natural es el job CI `bundle-fresh` que propuso Artorias (P3, recámara).
-- **Los hosts de `ssh` no tienen mundo todavía.** La mecánica es perfecta (serializable, host-key honesta, stack) pero no hay forma de DESCUBRIR un host jugando: `ssh alpha` solo existe en tests. Es la pieza 2 de mañana (hosts descubribles leyendo el mundo + `scp` + quests `story.ch4.*`). No es deuda de hoy — pero la red sin mundo es una clave sin cerradura, y el cap. 4 entero espera esto.
+- **O1/O2/O3 sin rama — el plan quedó a medias por entrega, no por técnica.**
+  Prioridad 1 absoluta de mañana: los +4 tests de `auditor_orden` (el harness
+  sigue midiendo el eje vertical a ciegas), e1 «La que no pesa» (con golden
+  `tail -n +2` + briefing «un distrito se repite» — 🧭22/23 viven ahí) y O3
+  `/etc/hosts` con `faro` en el generator (la costura O↔S aún sin mundo real;
+  S1 verificado hoy sobre FS handmade y stub). Si mañana falla la entrega otra
+  vez, habrá que mirar POR QUÉ el ejecutor de las 13:00 no ejecuta (¿prompt,
+  ¿cron, ¿modelo?) — 2 días seguidos sin entrega ya es patrón.
+- **El FF de #34 dentro de #35** obligó a deduplicar en el merge (contenido
+  idéntico, cero daño esta vez porque Seath lo declaró y Artorias lo cruzó).
+  No es error, es ruido de historia; el ensayo 34→35 lo absorbió. Que no
+  se normalice.
 
 **Dirección para mañana (prioridad de diseño):**
-1. **Los encargos narrativos del cap. 6 encabezan el plan** (e2 «La que no pesa», e3 «La persiana», con su beat de karma) — la deuda de namespace está RESUELTA, la prosa está lista, y el Faro pedagógico (`dato2/dato3`) ya tiene suelo. Es lo único que convierte el cap. 6 en CAPÍTULO y no en colección de salas.
-2. **La red pieza 2** (`scp` + hosts descubribles leyendo el mundo + quests `story.ch4.*` con su prereq `cut→scp` de Havel) — la mecánica `ssh` de hoy es la llave; mañana la cerradura. Si Gwyndolin la fracciona: hosts descubribles ANTES que `scp` (sin destino, `scp` no tiene gracia).
-3. **Higiene de tests**: los +4 de `auditor_orden` (Ornstein) y el `sort --help` en mensajes de `conteo.py` (Smough, relleno opcional que quedó sin hacer) — baratos, en la misma rama que toque cada uno.
-4. **🧭22 (header contado como distrito)** queda en recámara CON MOTIVO (decisión de Gwyndolin en el plan de hoy): la lección del header entra cuando se toque el golden de nuevo — candidato natural: `dato4` (cruce de tablas), donde `tail -n +2` es prerequisito honesto.
-5. **No tocar aún el karma del par 521/522** — el detector de patrones sigue sin dueño; la tríada del Auditor ya acumula huellas para cuando lo tenga.
+1. **Reponer O1/O2/O3 EN ORDEN** (higiene → e1 → hosts en el mundo). Con O3
+   verde, `cat /etc/hosts` descubre `faro` jugando y la Fase A queda REAL.
+2. **La red pieza 2** (`scp` + quests `story.ch4.*` con prereq `cut→scp` de
+   Havel) puede entrar tan pronto O3+T1+T2 verdes lo permitan — con el
+   roundtrip de T2, el destino sobrevive al save desde el día uno.
+3. **🧭22/🧭23** (header `distrito` contado + dup `2 UMBRAL-BAJO` sin glosa)
+   quedan EN RECÁMARA con motivo: se resuelven dentro de e1 (su golden/briefing
+   se toca ahí), no como tareas sueltas.
+4. **No tocar** el karma del par 521/522 (detector sin dueño) ni `dato4/dato5`
+   (materia 🪨 de Havel) — la secuencia del plan del 07/09 sigue siendo la
+   correcta, solo atrasó la ejecución de engine.
+5. **Auto-mejora aplicada esta noche:** identidad git POR-INVOCACIÓN en los 9
+  crons (propuesta de Gwyndolin, incidente del 07/09: commit de Gwyndolin
+  firmado «Havel»). Mañana, el guard pre-push de cada agente debe pasar sin
+  sorpresas de `%an` — si algo sale mal firmado, ya hay patrón de re-firma
+  probado documentado en cada prompt.
 
-**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42` — ahora `ls` te esconde la nota del operador muerto (solo `-a` la revela), el LEEME te tienta con un atajo que miente, y la puerta web muestra la Lista COMO TABLA cuando cortas. Tu feedback humano manda sobre toda la recámara.
+**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42`
+— la puerta ahora te dice en una línea qué puede ofrecerte el Faro (hint cap. 6,
+solo cuando pides el capítulo 6): el `ls -a` que esconde la nota del operador
+muerto, el LEEME que tienta y la Lista hecha tabla cuando cortas. La red aún no
+tiene mundo jugable (`/etc/hosts` llega mañana con O3): por eso el hint NO
+menciona `ssh`/hosts — no prometas lo que aún no existe.

@@ -14,15 +14,12 @@
 - `[EN CURSO][P3]` (06/09, higiene) **O1 — Tests `auditor_orden` (+4)** — Ornstein (`feat/engine-2026-09-07`): `src/tests/core/engine/test_auditor_orden.py`, los 4 casos de la línea de Artorias; SOLO tests, `postmortem.py`/`textos.json` intactos. AC: 607→611, delta declarado. Origen: deuda técnica Artorias 06/09 (`abierto.md`). — **💥 Artorias 21:00: NO ENTREGADO — sin rama/PR en remoto (feat/engine-2026-09-07 no existe). 0 commits ahead de main. AC no verificado. Arreglo: Ornstein re-ejecuta O1 mañana en rama limpia solo `src/tests/`; declarar delta 607→611 +4. No bloquea a Gwyn.**
 - `[EN CURSO][P1]` (07/09) **O2 — e1 «La que no pesa» (cap. 6)** — Ornstein (`feat/engine-2026-09-07`): quest `story.ch6.e1` + FICHA vacía + golden con `tail -n +2` (🧭22) + briefing «un distrito se repite» (🧭23) + columna `marcas_purga` + textos `story.ch6.e1.*` + validador. AC: gate 23→24 quests, suite 611→615. Origen: dirección #1 de Gwyn (06/09) + prosa `06-faro.md` §E2 + 🧭22/23 de Oscar. — **💥 Artorias 21:00: NO ENTREGADO — misma rama ausente. Sin `curriculum.json`/`generator`/`textos` tocados. 🧭22/23 quedan PERSISTENTES en recámara para dato4/tail. Arreglo: replantear O2 mañana con FICHA vacía + golden tail honesto.**
 - `[EN CURSO][P2]` (07/09) **O3 — `/etc/hosts` en el mundo (host `faro`)** — Ornstein (`feat/engine-2026-09-07`): generator escribe `/etc/hosts` legible. AC: `cat /etc/hosts` exit 0 en `generate(42,6)`, determinismo, suite ≥617. Costura O↔S: `faro`. Origen: red simulada P2 (31/08). — **💥 Artorias 21:00: NO ENTREGADO — sin rama/PR. `generate(42,6)` en main NO trae `/etc/hosts` (verificado: `grep -rn hosts generator` 0). S1 funciona con stub por eso; no rompe pero deja la costura O↔S sin mundo real. Arreglo: Ornstein implementa O3 mañana (`generator.py` + 127.0.0.1 localhost + faro).**
-- `[HECHO][P2]` (07/09) **S1 — Hosts descubribles leyendo el mundo (FASE A)** — Smough (`feat/sandbox-2026-09-07`) — PR #34: `cat /etc/hosts` registra hostname en `Shell.hosts` (L182); solo lectura; stub si O3 no llega; AC: descubre solo por lectura, vacío sin fichero, roundtrip. Origen: red simulada P2 (31/08). — **✅ Artorias 21:00: LISTO PARA MERGE — PR #34. Aislado 614 passed (+7: 4 discovery +3 sort_help), combinado 617. `cat /etc/hosts` → 1 host (faro/alpha), `ls /etc` no descubre, sin fichero exit 1 GNU, roundtrip `to_dict/from_dict` idéntico, `Try sort --help` intacto. Solo `src/core/sandbox/**` + tests + bundle. Gate 22/23, bundle fresco. Sigue DESIGN §6.1 (hosts como FS simultáneos, ruido compartido, lectura honesta).**
-- `[HECHO][P3]` (06/09) **S2 — `Try 'sort --help'` en `conteo.py`** — Smough (`feat/sandbox-2026-09-07`) — PR #34: hint coreutils en `sort -k0`/`sort -t ab`, exits/stdout válidos intactos; suite 614 (+7). — **✅ Artorias 21:00: LISTO PARA MERGE — incluido en PR #34 (S1+S2). `sort -k0` field number is zero / `sort -t ab` multi-character tab → rematan `\nTry 'sort --help' for more information.` exacto coreutils 9.4, válidos sin cambio. Técnica limpia.**
-- `[HECHO][P2]` (07/09) **T1 — Selector de capítulo 6 en la puerta web** — Seath (`feat/meta-ui-2026-09-07`) — PR #35: `?chapter=6&seed=42` ya cubría el 6 (`parseParams [0,2,3,6]`); verificado headless `generate(42,6)` Faro con familia conteo + `ls`/`ls -a` Bandit + LEEME tienta + muerte `auditor_text` (postmortem); añadido hint cap. 6 en `web/index.html` + doc `web/app.js`. Suite +0 (verificación). — **✅ Artorias 21:00: LISTO PARA MERGE — PR #35. Aislado 617 (T1 +0 verificado +3 T2, incluye S1+S2 FF). `parseParams` [0,2,3,6] correcto, `generate(42,6)` pool conteo, `ls` 5 / `ls -a` 6, LEEME tienta (relativa → 0+stderr, absoluta →1), `cut | sort | uniq -c` dorado, `total_noise > budget` → auditor_text. Solo `web/**` + tests, sin tocar curriculum (gate intacto). Chromium real pendiente de Gwyn (hueco honesto 05/09 documentado).**
-- `[HECHO][P2]` (07/09) **T2 — Roundtrip red en el save** — Seath (`feat/meta-ui-2026-09-07`) — PR #35: 3 tests refuerzo `src/tests/core/state/test_state_red.py` — `cat /etc/hosts` descubre `faro` + `known_hosts` sobreviven `GameState.to_dict/from_dict` idénticos; vacío sin fichero. Sin tocar comportamiento. Suite 617 (+3 T2, +7 S1+S2 en rama). — **✅ Artorias 21:00: LISTO PARA MERGE — incluido en PR #35. 3 tests verdes: hosts descubierto sobrevive reload, known_hosts idéntico, vacío sin fichero. Roundtrip exacto, no muta core. Costura T↔S verificada (depende de S1 cat descubre; FF idéntico a PR #34, Gwyn deduplica).**
 
-> *(07/09, Gwyn 23:00 — cierre: los 3 PRs del día mergeados (#31/#32/#33),
-> suite 607, gate 22/23, bundle 45. Las 7 líneas `[HECHO]` del día archivadas
-> en `../hecho/2026-09.md` §06/09. Sin retenciones: NADA queda vivo de hoy
-> salvo los crons y las piezas/recámara de abajo.)*
+> *(07/09, Gwyn 23:00 — cierre: PRs #34/#35 mergeados en orden sandbox→meta-ui,
+> suite **617 passed**, gate 22/23, bundle 45. Las 4 líneas `[HECHO]` del día
+> archivadas en `../hecho/2026-09.md` §07/09. NADA retenido: las 2 ramas del
+> día borradas tras merge MERGED (la de engine nunca existió). Queda vivo de
+> hoy: O1/O2/O3 💥 (arriba), crons y piezas/recámara de abajo.)*
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
@@ -66,6 +63,19 @@
   «Tabla del Faro» aparece solo tras `cut` con la columna `distrito`
   destacada — consola limpia. Deuda de tests de O1 (`auditor_orden` +4) queda
   señalada como higiene para mañana.
+- **07/09 (Gwyn, esta noche):** mergeados los PRs #34 (S1 hosts descubribles
+  por lectura + S2 `Try 'sort --help'` — Smough) y #35 (T1 selector cap. 6
+  verificado + hint web + T2 roundtrip red en el save — Seath), orden
+  sandbox→meta-ui. Suite final del árbol combinado: **617 passed / 0 failed**
+  (607 +7 +3, deltas declarados verificados por aritmética), gate de datos
+  **22 conceptos / 23 quests** (S1/S2/T1/T2 no tocan curriculum), bundle
+  **45 ficheros** fresco (regen NO necesario, guardián verde). Huellas
+  resueltas por script con assertions (2 merges, 4 regiones; `activo.md`
+  gana HEAD por subset 7/7, `worklog` unión cronológica 03→21). Ensayo
+  previo en worktree desechable (614/617 antes de tocar main). Merge
+  commits `cedb7b1` → `ebabb36`. **Chromium real de T1 verificado por Gwyn**:
+  hint cap. 6 SOLO con `?chapter=6` (ver worklog). **O1/O2/O3 de Ornstein
+  SIN RAMA** — reposición mañana, prioridad 1 de Gwyndolin.
 
 ### ⚠️ Deuda de NAMESPACE — ✅ RESUELTA (T1 mergeado esta noche)
 
@@ -89,4 +99,6 @@
   cualidad nueva del pack son claves de SEÑAL, no de formulario) y merece un
   turno con dueño en caliente. Dueño propuesto: Manus con Ornstein de
   integrador. Contrato del pack: reglas de montaje en
-  `backlog/historia/POSTMORTEM.md` §Reglas. Sin cambio de destino esta noche.
+  `backlog/historia/POSTMORTEM.md` §Reglas. Sin cambio de destino esta noche
+  (07/09: revisado de nuevo — `corte`/`orden` siguen cubriendo la voz del
+  interrogatorio en formulario; la pieza sigue sin urgencia).

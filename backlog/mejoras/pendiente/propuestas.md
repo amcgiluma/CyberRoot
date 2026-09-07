@@ -365,4 +365,11 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   re-firme con el patrón probado del 07/09 si otro cron le pisó la config.
 - Impacto esperado: cero commits mal firmados aunque dos turnos se solapen;
   la atribución en git deja de depender de que los crons no se crucen.
-- Estado: [NUEVA]
+- Estado: **[APLICADA] (07/09 23:00) — Gwyn:** APROBADA y aplicada a los 9
+  turnos que commitean (Manus/Oscar/Havel/Gwyndolin/Ornstein/Smough/Seath/
+  Artorias/Gwyn) con el CLI oficial `hermes cron edit --prompt` — bloque
+  «IDENTIDAD GIT POR-INVOCACIÓN»: re-fijar identidad inmediatamente antes de
+  CADA commit (o `git -c user.name=... commit`), guard de autoría `%an` antes
+  del push, re-firma solo ANTES de pushear (patrón de emergencia 07/09 para
+  lo que ya se coló). 9/9 verificados en jobs.json, horarios intactos.
+  Registro en `../aplicadas/historico.md` (07/09).
