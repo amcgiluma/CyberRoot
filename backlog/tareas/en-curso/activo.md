@@ -9,7 +9,42 @@
 
 ## Activas
 
-> *(06/09, Gwyn 23:00 — cierre: los 3 PRs del día mergeados (#31/#32/#33),
+### Asignaciones 07/09 (Gwyndolin 11:00 — plan `../planes/2026/09/07.md`)
+
+- `[EN CURSO][P3]` (06/09, higiene) **O1 — Tests `auditor_orden` (+4)** — Ornstein
+  (`feat/engine-2026-09-07`): `src/tests/core/engine/test_auditor_orden.py`, los 4
+  casos de la línea de Artorias; SOLO tests, `postmortem.py`/`textos.json` intactos.
+  AC: 607→611, delta declarado. Origen: deuda técnica Artorias 06/09 (`abierto.md`).
+- `[EN CURSO][P1]` (07/09) **O2 — e1 «La que no pesa» (cap. 6)** — Ornstein
+  (`feat/engine-2026-09-07`): quest `story.ch6.e1` + FICHA vacía (Manus la llena
+  mañana) + golden con `tail -n +2` (🧭22) + briefing con «un distrito se repite»
+  (🧭23) + columna `marcas_purga` del beat como diana + textos `story.ch6.e1.*` con
+  placeholders GNU-honestos + validador. AC: gate 23→24 quests, suite 611→615,
+  goldens del Faro intactos. Origen: dirección #1 de Gwyn (06/09) + prosa
+  `06-faro.md` §E2 + 🧭22/23 de Oscar.
+- `[EN CURSO][P2]` (07/09) **O3 — `/etc/hosts` en el mundo (host `faro`)** — Ornstein
+  (`feat/engine-2026-09-07`): generator escribe `/etc/hosts` legible (ancla red pieza
+  2). AC: `cat /etc/hosts` exit 0 en `generate(42,6)` (y/o cap. 0), determinismo,
+  suite ≥617. Costura O↔S: `faro` es el nombre que S1 resuelve. Origen: red
+  simulada P2 (31/08) — ELEGIDA PARCIAL (hosts ANTES que scp, Gwyn 06/09).
+- `[EN CURSO][P2]` (07/09) **S1 — Hosts descubribles leyendo el mundo (FASE A)** —
+  Smough (`feat/sandbox-2026-09-07`): `cat /etc/hosts` registra el hostname en
+  `Shell.hosts` (anexo L182); solo lectura descubre; stub si O3 no llega. AC:
+  descubre solo por lectura, `hosts` vacío sin fichero, roundtrip exacto,
+  suite ≥619. Origen: red simulada P2 (31/08, forma firmada §6.1).
+- `[EN CURSO][P3]` (06/09) **S2 — `Try 'sort --help'` en `conteo.py`** — Smough
+  (`feat/sandbox-2026-09-07`): hint coreutils en `sort -k0`/`sort -t ab`, sin tocar
+  exits/stdout válidos. AC: hint exacto, suite 621. Origen: idea GNU-honestidad
+  de Havel (06/09, `abierto.md`).
+- `[EN CURSO][P2]` (07/09) **T1 — Selector de capítulo 6 en la puerta web** — Seath
+  (`feat/meta-ui-2026-09-07`): verificar/extender `?chapter=6&seed=42` (Faro con
+  familia conteo + muerte con `auditor_text`); si ya cubre el 6, solo verificación
+  Chromium documentada. Origen: dirección #2 de Gwyn (04/09) + hueco honesto 05/09.
+- `[EN CURSO][P2]` (07/09) **T2 — Roundtrip red en el save** — Seath
+  (`feat/meta-ui-2026-09-07`): tests de refuerzo (2-3) del roundtrip
+  `hosts`/`known_hosts` en `state/`+`engine/`; sin tocar comportamiento si ya existe.
+
+> *(07/09, Gwyn 23:00 — cierre: los 3 PRs del día mergeados (#31/#32/#33),
 > suite 607, gate 22/23, bundle 45. Las 7 líneas `[HECHO]` del día archivadas
 > en `../hecho/2026-09.md` §06/09. Sin retenciones: NADA queda vivo de hoy
 > salvo los crons y las piezas/recámara de abajo.)*
