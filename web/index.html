@@ -48,6 +48,9 @@
         Pista cap. 3: <code>cat /srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt</code>
         → <code>sudo cat /etc/hosts</code> (gate de lectura) → <code>ps aux</code> (ceniza 521 / censo 522) → <code>kill -9 522</code>.
       </p>
+      <p class="hint" id="hint-cap6" style="display:none">
+        Pista cap. 6 — Faro: <code>ls -a</code> revela <code>.nota-corte</code> → <code>cat .nota-corte</code> (corte por <code>|</code>) → <code>cut -d'|' -f4 purgas.csv | sort | uniq -c</code> — la Lista es tabla. <code>LEEME.txt</code> tienta con ruta relativa.
+      </p>
     </section>
 
     <section id="faro-tabla" class="panel" style="display:none">
@@ -124,7 +127,9 @@
       // Pista según capítulo
       const hint0 = document.getElementById('hint-cap0');
       const hint3 = document.getElementById('hint-cap3');
+      const hint6 = document.getElementById('hint-cap6');
       if (c === '3') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='block'; }
+      else if (c === '6') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='none'; if (hint6) hint6.style.display='block'; }
     } catch(e) {}
   </script>
 </body>
