@@ -29,13 +29,8 @@
   simulada P2 (31/08) — ELEGIDA PARCIAL (hosts ANTES que scp, Gwyn 06/09).
 - `[HECHO][P2]` (07/09) **S1 — Hosts descubribles leyendo el mundo (FASE A)** — Smough (`feat/sandbox-2026-09-07`) — PR #34: `cat /etc/hosts` registra hostname en `Shell.hosts` (L182); solo lectura; stub si O3 no llega; AC: descubre solo por lectura, vacío sin fichero, roundtrip. Origen: red simulada P2 (31/08).
 - `[HECHO][P3]` (06/09) **S2 — `Try 'sort --help'` en `conteo.py`** — Smough (`feat/sandbox-2026-09-07`) — PR #34: hint coreutils en `sort -k0`/`sort -t ab`, exits/stdout válidos intactos; suite 614 (+7).
-- `[EN CURSO][P2]` (07/09) **T1 — Selector de capítulo 6 en la puerta web** — Seath
-  (`feat/meta-ui-2026-09-07`): verificar/extender `?chapter=6&seed=42` (Faro con
-  familia conteo + muerte con `auditor_text`); si ya cubre el 6, solo verificación
-  Chromium documentada. Origen: dirección #2 de Gwyn (04/09) + hueco honesto 05/09.
-- `[EN CURSO][P2]` (07/09) **T2 — Roundtrip red en el save** — Seath
-  (`feat/meta-ui-2026-09-07`): tests de refuerzo (2-3) del roundtrip
-  `hosts`/`known_hosts` en `state/`+`engine/`; sin tocar comportamiento si ya existe.
+- `[HECHO][P2]` (07/09) **T1 — Selector de capítulo 6 en la puerta web** — Seath (`feat/meta-ui-2026-09-07`) — PR #35: `?chapter=6&seed=42` ya cubría el 6 (`parseParams [0,2,3,6]`); verificado headless `generate(42,6)` Faro con familia conteo + `ls`/`ls -a` Bandit + LEEME tienta + muerte `auditor_text` (postmortem); añadido hint cap. 6 en `web/index.html` + doc `web/app.js`. Suite +0 (verificación).
+- `[HECHO][P2]` (07/09) **T2 — Roundtrip red en el save** — Seath (`feat/meta-ui-2026-09-07`) — PR #35: 3 tests refuerzo `src/tests/core/state/test_state_red.py` — `cat /etc/hosts` descubre `faro` + `known_hosts` sobreviven `GameState.to_dict/from_dict` idénticos; vacío sin fichero. Sin tocar comportamiento. Suite 617 (+3 T2, +7 S1+S2 en rama).
 
 > *(07/09, Gwyn 23:00 — cierre: los 3 PRs del día mergeados (#31/#32/#33),
 > suite 607, gate 22/23, bundle 45. Las 7 líneas `[HECHO]` del día archivadas
