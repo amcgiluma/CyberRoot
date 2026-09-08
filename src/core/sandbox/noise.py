@@ -61,6 +61,7 @@ NOISE_PROFILE: dict[str, int] = {
     # DESIGN §6.1). Entrar a máquina ajena cuesta como observar+autenticar;
     # comparte perfil con familia Procesos (misma cuenta de ruido). ⚠️ v1
     "ssh": 2,
+    "scp": 3,
     "exit": 0,
     "logout": 0,
 }

@@ -15,6 +15,7 @@ from core.sandbox.commands.base import CommandSpec
 from core.sandbox.noise import NOISE_PROFILE
 
 SSH_NAME = "ssh"
+SCP_NAME = "scp"
 EXIT_NAME = "exit"
 LOGOUT_NAME = "logout"
 
@@ -55,6 +56,18 @@ def _run_exit_placeholder(fs, cwd, argv, tick, stdin=""):
 
     return CommandResult(stderr="exit: placeholder", exit_code=0)
 
+def _run_scp_placeholder(fs, cwd, argv, tick, stdin=""):
+    from core.sandbox.commands.base import CommandResult
+
+    return CommandResult(stderr="scp: placeholder", exit_code=1)
+
+
+SCP_SPEC = CommandSpec(
+    name=SCP_NAME,
+    concepts=frozenset({"scp"}),
+    noise=NOISE_PROFILE[SCP_NAME],
+    run=_run_scp_placeholder,
+)
 
 SSH_SPEC = CommandSpec(
     name=SSH_NAME,
@@ -77,4 +90,4 @@ LOGOUT_SPEC = CommandSpec(
     run=_run_exit_placeholder,
 )
 
-SPECS: tuple[CommandSpec, ...] = (SSH_SPEC, EXIT_SPEC, LOGOUT_SPEC)
+SPECS: tuple[CommandSpec, ...] = (SSH_SPEC, SCP_SPEC, EXIT_SPEC, LOGOUT_SPEC)
