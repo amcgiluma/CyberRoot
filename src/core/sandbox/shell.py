@@ -22,6 +22,7 @@ from core.sandbox.commands.cut import SPECS as CUT_SPECS
 from core.sandbox.commands.red import (
     EXIT_NAME,
     LOGOUT_NAME,
+    SCP_NAME,
     SSH_NAME,
     SPECS as RED_SPECS,
     fingerprint_for_host,
@@ -336,6 +337,8 @@ class Shell:
             return self._exec_exit(argv, stdin)
         if argv[0] == SSH_NAME and SSH_NAME in self.available_commands:
             return self._exec_ssh(argv, stdin)
+        if argv[0] == SCP_NAME and SCP_NAME in self.available_commands:
+            return self._exec_scp(argv, stdin)
         if argv[0] == SUDO_NAME and SUDO_NAME in self.available_commands:
             return self._exec_sudo(argv, stdin)
         spec = self.registry.get(argv[0])
@@ -411,6 +414,240 @@ class Shell:
         noise = NoiseMeter().emit(SSH_NAME, tuple(argv[1:]), self.tick)
         return CommandResult(
             stdout=f"Connected to {host}.\n",
+            exit_code=0,
+            noise=(noise,),
+        )
+
+    def _exec_scp(
+        self, argv: tuple[str, ...], stdin: str = ""
+    ) -> CommandResult:
+        """`scp [user@]host:path path` — copia entre FS del stack (Fase B, 08/09).
+
+        - Requiere exactamente 2 operandos; sin host remoto -> error sin ruido 0? Con ruido scp.
+        - Host no descubierto -> rechazo didáctico exit 1 ruido 0 que NOMBRA qué falta y dónde (/etc/hosts).
+        - Ruta remota inexistente -> GNU-honesto No such file, exit 1 ruido scp.
+        - Destino inválido (parent no existe, is_a_directory) -> GNU-honesto exit 1 ruido scp.
+        - Éxito -> fichero real en FS destino con metadatos copiados, exit 0 ruido 3.
+        """
+        from core.sandbox.commands.base import CommandResult
+        from core.sandbox.fs import DirNode, FileNode, FsError
+        from core.sandbox.noise import NoiseMeter
+
+        # argv incluye "scp" como argv[0]
+        raw_args = list(argv[1:])
+        # Opciones no soportadas v0: cualquier -opt -> invalid
+        for a in raw_args:
+            if a.startswith("-") and a != "-":
+                noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+                return CommandResult(
+                    stderr=f"scp: invalid option -- '{a.lstrip('-')}'",
+                    exit_code=1,
+                    noise=(noise,),
+                )
+        if len(raw_args) < 2:
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr="scp: missing file operand",
+                exit_code=1,
+                noise=(noise,),
+            )
+        if len(raw_args) > 2:
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr="scp: too many arguments",
+                exit_code=1,
+                noise=(noise,),
+            )
+        src_spec, dst_spec = raw_args[0], raw_args[1]
+
+        def _parse_target(spec: str) -> tuple[str | None, str]:
+            if ":" in spec:
+                host_part, path = spec.split(":", 1)
+                # host_part puede ser user@host
+                if "@" in host_part:
+                    host = host_part.rsplit("@", 1)[1]
+                else:
+                    host = host_part
+                if host == "":
+                    return None, path  # host vacío -> se tratará como error
+                return host, path
+            return None, spec
+
+        src_host, src_path = _parse_target(src_spec)
+        dst_host, dst_path = _parse_target(dst_spec)
+
+        # Detectar ":" con host vacío (ej: ": /path" o "user@:...")
+        if (":" in src_spec and src_host is None) or (":" in dst_spec and dst_host is None):
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr="scp: invalid hostname",
+                exit_code=1,
+                noise=(noise,),
+            )
+
+        # Debe haber al menos un host remoto
+        if src_host is None and dst_host is None:
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr="scp: no remote host specified",
+                exit_code=1,
+                noise=(noise,),
+            )
+
+        # Hosts no descubiertos -> rechazo didáctico ruido 0 que nombra dónde leer
+        if src_host is not None and src_host not in self.hosts:
+            return CommandResult(
+                stderr=f"scp: host '{src_host}' no descubierto \u2014 l\u00e9elo en /etc/hosts",
+                exit_code=1,
+                noise=(),
+            )
+        if dst_host is not None and dst_host not in self.hosts:
+            return CommandResult(
+                stderr=f"scp: host '{dst_host}' no descubierto \u2014 l\u00e9elo en /etc/hosts",
+                exit_code=1,
+                noise=(),
+            )
+
+        # Resolver FS
+        src_fs = self.hosts[src_host] if src_host is not None else self.fs
+        dst_fs = self.hosts[dst_host] if dst_host is not None else self.fs
+        # cwd para cada FS
+        src_cwd = "/" if src_host is not None else self.cwd
+        dst_cwd = "/" if dst_host is not None else self.cwd
+
+        # Validar src_path no vacío
+        if src_path == "":
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr=f"scp: {src_spec}: No such file or directory",
+                exit_code=1,
+                noise=(noise,),
+            )
+
+        # Leer fuente
+        try:
+            src_node = src_fs.resolve(src_path, src_cwd)
+        except FsError as e:
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            # Mensaje GNU-honesto: scp: <spec>: No such file or Is a directory etc
+            kind_map = {
+                "not_found": "No such file or directory",
+                "not_a_directory": "Not a directory",
+                "is_a_directory": "Is a directory",
+                "permission_denied": "Permission denied",
+            }
+            msg = kind_map.get(e.kind, e.kind)
+            return CommandResult(
+                stderr=f"scp: {src_spec}: {msg}",
+                exit_code=1,
+                noise=(noise,),
+            )
+        if isinstance(src_node, DirNode):
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr=f"scp: {src_spec}: Is a directory",
+                exit_code=1,
+                noise=(noise,),
+            )
+
+        # Determinar destino final: si dst es directorio existente, copiar dentro
+        # dst_path puede ser vacío? (ej: "faro:" -> path vacío) ya validado? dst_path vacío significa error
+        if dst_path == "":
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr=f"scp: {dst_spec}: No such file or directory",
+                exit_code=1,
+                noise=(noise,),
+            )
+
+        # Comprobar si dst es directorio
+        try:
+            dst_node = dst_fs.resolve(dst_path, dst_cwd)
+            is_dir = isinstance(dst_node, DirNode)
+        except FsError:
+            is_dir = False
+
+        if is_dir:
+            base = src_path.rsplit("/", 1)[-1] if "/" in src_path else src_path
+            # dst_path tal cual + "/" + base
+            final_spec = dst_path.rstrip("/") + "/" + base if dst_path != "/" else "/" + base
+            final_path = final_spec
+        else:
+            final_path = dst_path
+
+        # Resolver parent de final_path en dst_fs
+        # final_path puede ser relativo para local; para remoto cwd="/"
+        # abspath normaliza
+        final_abs = dst_fs.abspath(final_path, dst_cwd)
+        # segments
+        segs = [s for s in final_abs.split("/") if s not in ("", ".")]
+        # handle .. already normalized by abspath, but keep as is
+        # Use _normalize via fs? abspath ya normaliza, so segs are clean
+        if not segs:
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            return CommandResult(
+                stderr=f"scp: {dst_spec}: Invalid argument",
+                exit_code=1,
+                noise=(noise,),
+            )
+        file_name = segs[-1]
+        parent_abs = "/" + "/".join(segs[:-1]) if len(segs) > 1 else "/"
+        try:
+            parent_node = dst_fs.get_dir(parent_abs, "/")
+        except FsError as e:
+            noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+            kind_map2 = {
+                "not_found": "No such file or directory",
+                "not_a_directory": "Not a directory",
+                "is_a_directory": "Is a directory",
+            }
+            msg = kind_map2.get(e.kind, e.kind)
+            return CommandResult(
+                stderr=f"scp: {dst_spec}: {msg}",
+                exit_code=1,
+                noise=(noise,),
+            )
+
+        # Comprobar colisiones same_file y is_a_directory
+        if file_name in parent_node.children:
+            existing = parent_node.children[file_name]
+            if isinstance(existing, DirNode):
+                noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+                return CommandResult(
+                    stderr=f"scp: {dst_spec}: Is a directory",
+                    exit_code=1,
+                    noise=(noise,),
+                )
+            # same_file si mismo FS y misma ruta absoluta que origen
+            if dst_fs is src_fs:
+                try:
+                    src_abs = src_fs.abspath(src_path, src_cwd)
+                    if src_abs == final_abs:
+                        noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+                        return CommandResult(
+                            stderr=f"scp: '{src_spec}' and '{dst_spec}' are the same file",
+                            exit_code=1,
+                            noise=(noise,),
+                        )
+                except Exception:
+                    pass
+
+        # Crear / sobrescribir fichero destino con metadatos de origen
+        # src_node es FileNode
+        new_node = FileNode(
+            name=file_name,
+            content=src_node.content,
+            owner=src_node.owner,
+            group=src_node.group,
+            mode=src_node.mode,
+            mtime=src_node.mtime,
+        )
+        parent_node.children[file_name] = new_node
+
+        noise = NoiseMeter().emit(SCP_NAME, tuple(raw_args), self.tick)
+        return CommandResult(
+            stdout="",
+            stderr="",
             exit_code=0,
             noise=(noise,),
         )

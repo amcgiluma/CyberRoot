@@ -18,7 +18,7 @@ def test_perfil_contiene_los_comandos_del_cap0_y_pipes() -> None:
     # cut, S1 04/09 — la Lista es tabla cortable) + red (ssh, S1 06/09).
     assert set(NOISE_PROFILE) == {
         "cd", "ls", "cat", "cp", "grep", "wc", "ps", "env", "sudo",
-        "head", "tail", "sort", "uniq", "kill", "cut", "ssh", "exit", "logout",
+        "head", "tail", "sort", "uniq", "kill", "cut", "ssh", "scp", "exit", "logout",
     }
 
 
