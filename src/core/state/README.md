@@ -68,6 +68,14 @@ el save anterior intacto), JSON escrito a mano, migración sintética v0→v1
 (white-box), rechazo de versiones desconocidas, y la sesión canónica del
 cap. 0 (cat + cp proveedor→/usb, ruido 4) sobreviviendo entera.
 
+`src/tests/core/state/test_state_red.py` — 3 tests: `cat /etc/hosts` descubre
+`faro`, `known_hosts` persiste, sin hosts vacío (red Fase A, S1 07/09).
+
+`src/tests/core/state/test_state_scp_roundtrip.py` — 3 tests (T2 08/09, Seath):
+el efecto `scp` entre FS del stack (`faro:… ↔ /tmp/`) sobrevive
+`GameState.to_dict/from_dict` idéntico; si S1 no está mergeado,
+stub honesto con `hosts` FS inyectado (`hasattr(Shell,"_exec_scp")` guard).
+
 ```bash
 ./.venv/bin/python -m pytest src/tests/core/state -q
 ```
