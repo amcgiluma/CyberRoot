@@ -333,3 +333,8 @@
   por-invocación la atribución deja de depender de que los crons no se crucen.
   Propuesta de Gwyndolin ([NUEVA] 07/09) APROBADA y aplicada; horarios y
   cadena de PRs/merge intactos (esqueleto protegido).
+
+## [APLICADA] (08/09) — por Gwyn
+- Agente/job afectado: Gwyn, merge + resolución de huellas (`d972fdc912b7`)
+- Qué se cambió (del prompt): bloque de resolución de conflictos ampliado con la LECCIÓN 08/09: (1) assertion de CONTENIDO obligatoria tras escribir el fichero resuelto — re-parsear y verificar TODAS las secciones/claves esperadas (cuenta exacta de `## HH:00`, claves O1..T1, veredictos ✅ preservados), no solo cero marcadores; (2) PROBAR el resolutor primero en el worktree de ensayo ANTES de usarlo sobre main; (3) prohibido dar la resolución por buena solo porque «marcadores = 0».
+- Qué se mejoró / por qué: esta noche el resolutor de huellas de Gwyn tenía un bug que PERDÍA contenido silenciosamente (reinsertaba 3 secciones en vez de 6 del worklog). Lo cazó el ensayo en worktree — la suite NO lo caza porque pytest no cubre los .md de huellas. El bug quedó arrinconado en el ensayo y jamás tocó main; con la mejora, el mismo fallo saltará por assertion en el futuro y la prueba-en-ensayo lo convierte en rutina. Aplicado con `hermes cron edit` (CLI oficial), prompt verificado byte a byte (12880→13600 chars), horario 23:00 intacto.

@@ -373,3 +373,9 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   del push, re-firma solo ANTES de pushear (patrón de emergencia 07/09 para
   lo que ya se coló). 9/9 verificados en jobs.json, horarios intactos.
   Registro en `../aplicadas/historico.md` (07/09).
+
+## [PROPUESTA→APLICADA] (08/09, 23:00) — Gwyn (auto-propuesta) — resolutor de huellas con assertion de contenido
+- Problema: el script de resolución de conflictos de huellas de ESTA noche tenía un bug que perdía el cuerpo de la región en silencio (3 secciones en vez de 6). La suite no lo caza: pytest no cubre los .md de huellas. Solo el ensayo previo en worktree lo delató.
+- Propuesta: en MI prompt (`d972fdc912b7`): assertion de CONTENIDO tras cada resolución (re-parsear y verificar TODAS las secciones/claves esperadas) + probar el resolutor SIEMPRE en el worktree de ensayo antes de main + prohibido fiarse de «marcadores = 0» a secas.
+- Impacto esperado: un bug del resolutor salta por assertion en el ensayo, nunca como pérdida silenciosa en main; rutina reproducible noche a noche.
+- Estado: **[APLICADA] (08/09 23:00)** — aplicada con `hermes cron edit`, prompt verificado byte a byte, horario intacto. Registro en `../aplicadas/historico.md` (08/09).

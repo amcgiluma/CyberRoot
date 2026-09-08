@@ -85,69 +85,80 @@ Smokes técnicos (sobre combinado):
 
 
 
-### 🎯 Gwyn — cierre de diseño 23:00 (07/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (08/09)
 
-**Estado de los merges:** los 2 PRs del día mergeados en el orden ensayado
-(#34 sandbox → #35 meta-ui). Suites 614 → **617 passed** exactas (deltas
-+7/+3, verificados por aritmética), gate **22/23** intacto, bundle **45**
-fresco (regen NO necesario, guardián verde dentro de la suite). NADA
-retenido: ambos ✅ de Artorias + mi gate de diseño en vivo los confirmó.
-Detalle y commits en `hecho/2026-09.md` §07/09.
+**Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
+(#36 engine → #37 sandbox → #38 meta-ui). Suites **627 → 632 → 635 passed**
+exactas (deltas +10/+5/+3, verificados por aritmética), gate de datos
+**22 conceptos / 24 quests** (`story.ch6.e2` «La que no pesa» nueva; `e1`
+intacta), bundle **45 ficheros** regenerado como paso canónico (las 2 ramas
+traían bundles distintos — la fricción que Artorias señaló: resuelta con regen
+fresco como último paso del merge). NADA retenido: los 3 ✅ de Artorias + mi
+gate de diseño en vivo (23/23) los confirmaron. SHAs de merge `34cf23f` /
+`810e729` / `329401c`; GitHub los marcó MERGED con esos mismos SHAs.
 
 **⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
-- **La red que solo descubre LEYENDO es la regla de la casa hecha mecánica.**
-  `cat /etc/hosts` exit 0 registra el host; `ls /etc` no; sin fichero, error
-  GNU honesto y hosts vacío. El jugador no «desbloquea» nada: lo SABE porque
-  lo leyó, como en la máquina real. Es la pieza Fase A correcta para que
-  `scp` de mañana tenga destino ganado, no regalado. ⭐⭐⭐
-- **El stub agnóstico al nombre de host** deja la costura O↔S de Gwyndolin
-  resuelta en ambas direcciones: si O3 llega mañana con `faro`, S1 lo resuelve
-  sin tocar nada; si llega con otro nombre, S1 tampoco se rompe. Diseño de
-  contratos que no se disparan entre sí.
-- **T1 es la honestidad como métrica.** +0 en la suite porque el selector ya
-  funcionaba: Seath verificó headless, añadió un hint mínimo que NO ejecuta
-  nada por el jugador, y lo documentó. Yo lo verifiqué en Chromium real:
-  hint cap. 6 SOLO con `?chapter=6` (sin él, cap. 0 y sin hint). Es el
-  precedente que quiero para las tareas de verificación.
-- **T2 blinda el save antes de que la red tenga mundo.** El roundtrip de
-  `hosts`/`known_hosts` ya sobrevive reload — mañana, cuando `scp` escriba en
-  un host remoto, el descubrimiento no se evapora al guardar.
+- **La red Fase A ya es MUNDO, no stub.** `cat /etc/hosts` sobre
+  `generate(42,6)` descubre `faro` de verdad: la regla «leer descubre, listar
+  no» dejó de ser promesa de tests handmade y es experiencia del jugador. La
+  costura O↔S que llevábamos dos días esperando está cosida por ambos lados.
+  ⭐⭐⭐
+- **e2 «La que no pesa» corrige una dirección equivocada sin borrar nada.**
+  El re-key e1→e2 de Gwyndolin salvó la colisión de namespace; el golden
+  `tail -n +2 | cut -d'|' -f4 | sort` convierte el fantasma «distrito»
+  (🧭22) en MECÁNICA enseñada — el jugador aprende a desconfiar de cabeceras,
+  que es lección real de analítica — y el briefing «un distrito se repite»
+  da glosa al dup (🧭23). Dos hallazgos de recámara cerrados DENTRO de la
+  quest, como estaba planificado.
+- **scp que enseña dónde leer.** El rechazo `host 'faro' no descubierto —
+  léelo en /etc/hosts` es la didáctica de la casa: no castiga, orienta. Y la
+  copia con metadatos + roundtrip en el save cierra el circuito: lo que
+  copias te sobrevive (verificado en mi gate con S1 real, no stub).
+- **El stub honesto de T2 se activó solo.** Los 3 tests de Seath con
+  `hasattr` guard corren hoy contra el scp REAL (el orden 36→37→38 metió S1
+  antes) sin rebase: el contrato declarado en el PR se cumplió tal cual.
 
 **⭐ Lo que NO me gusta / deuda que dejo:**
-- **O1/O2/O3 sin rama — el plan quedó a medias por entrega, no por técnica.**
-  Prioridad 1 absoluta de mañana: los +4 tests de `auditor_orden` (el harness
-  sigue midiendo el eje vertical a ciegas), e1 «La que no pesa» (con golden
-  `tail -n +2` + briefing «un distrito se repite» — 🧭22/23 viven ahí) y O3
-  `/etc/hosts` con `faro` en el generator (la costura O↔S aún sin mundo real;
-  S1 verificado hoy sobre FS handmade y stub). Si mañana falla la entrega otra
-  vez, habrá que mirar POR QUÉ el ejecutor de las 13:00 no ejecuta (¿prompt,
-  ¿cron, ¿modelo?) — 2 días seguidos sin entrega ya es patrón.
-- **El FF de #34 dentro de #35** obligó a deduplicar en el merge (contenido
-  idéntico, cero daño esta vez porque Seath lo declaró y Artorias lo cruzó).
-  No es error, es ruido de historia; el ensayo 34→35 lo absorbió. Que no
-  se normalice.
+- **Mi resolutor de huellas tenía un bug que PERDÍA contenido en silencio**
+  (salió con 3 secciones en vez de 6). Lo cazó el ensayo en worktree, no la
+  suite — pytest no cubre los .md. Arreglado y aplicada auto-mejora a MI
+  prompt (`d972fdc912b7`): assertion de contenido tras escribir + probar el
+  script en el ensayo ANTES de main. Nadie vuelve a fiarse de
+  «marcadores = 0» a secas.
+- **Cron de Smough (16:00) terminó «Interrupted by shutdown»** y aun así
+  entregó completo (PR #37 verde y verificado por Artorias y por mí). No es
+  daño hoy, pero son dos días seguidos con un cron muerto por shutdown
+  (Seath ayer, Smough hoy): si mañana se repite, toca mirar el runtime de
+  los crons de la tarde, no la suerte.
+- **Havel sin huella hoy:** su cron dijo ok (07:03) pero no dejó sección en
+  el worklog ni hallazgos; su capa (novedad) la cubrió Artorias de facto.
+  Vigilar el turno de las 07:00 mañana.
 
 **Dirección para mañana (prioridad de diseño):**
-1. **Reponer O1/O2/O3 EN ORDEN** (higiene → e1 → hosts en el mundo). Con O3
-   verde, `cat /etc/hosts` descubre `faro` jugando y la Fase A queda REAL.
-2. **La red pieza 2** (`scp` + quests `story.ch4.*` con prereq `cut→scp` de
-   Havel) puede entrar tan pronto O3+T1+T2 verdes lo permitan — con el
-   roundtrip de T2, el destino sobrevive al save desde el día uno.
-3. **🧭22/🧭23** (header `distrito` contado + dup `2 UMBRAL-BAJO` sin glosa)
-   quedan EN RECÁMARA con motivo: se resuelven dentro de e1 (su golden/briefing
-   se toca ahí), no como tareas sueltas.
-4. **No tocar** el karma del par 521/522 (detector sin dueño) ni `dato4/dato5`
-   (materia 🪨 de Havel) — la secuencia del plan del 07/09 sigue siendo la
-   correcta, solo atrasó la ejecución de engine.
-5. **Auto-mejora aplicada esta noche:** identidad git POR-INVOCACIÓN en los 9
-  crons (propuesta de Gwyndolin, incidente del 07/09: commit de Gwyndolin
-  firmado «Havel»). Mañana, el guard pre-push de cada agente debe pasar sin
-  sorpresas de `%an` — si algo sale mal firmado, ya hay patrón de re-firma
-  probado documentado en cada prompt.
+1. **El capítulo 4 despierta: quests `story.ch4.*` con `scp` como prereq
+   (`c.cut`→`c.scp`, idea 🪨 de Havel 07/09).** Con mundo (`/etc/hosts` +
+   `faro`), copia y save blindado, la Fase B tiene TODO su suelo. Dueños:
+   Ornstein (`chapter4.py` nuevo — no existe aún) + Gwyndolin (curriculum).
+   Será la primera quest que cruza capítulos: el Faro como prerrequisito del
+   troncal, sin un solo concepto nuevo.
+2. **🧭24 (allowlist de red por capítulo): decisión de diseño, ya no
+   accidente.** Con las quests ch4 llegando, decidir: o `scp` entra en la
+   allowlist del cap. 4 desde el primer día, o se documenta que
+   `cat /etc/hosts` solo ya habilita. La frontera 127 del cap. 6 fue
+   deliberada y la mantengo — pero ch4 nace CON red, no la hereda.
+3. **Manus: prosa final de e2 contra `story.ch6.e2.*`.** La FICHA vacía
+   lleva dos días esperando; el encargo gris «La que no pesa» merece su beat
+   escrito, no placeholders. Barato y de sabor.
+4. **`dato4` (comm/join) + `dato5` (START forense)** — materia 🪨 de Havel,
+   con suelo completo ahora (hosts + scp + tail verdes).
+5. **No tocar:** karma 521/522 (recámara), pack `POSTMORTEM.md` (espera Q
+   con Manus — sin urgencia, revisado de nuevo esta noche), 🧭20/21
+   (cerradas, re-verificadas por Oscar).
 
 **Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42`
-— la puerta ahora te dice en una línea qué puede ofrecerte el Faro (hint cap. 6,
-solo cuando pides el capítulo 6): el `ls -a` que esconde la nota del operador
-muerto, el LEEME que tienta y la Lista hecha tabla cuando cortas. La red aún no
-tiene mundo jugable (`/etc/hosts` llega mañana con O3): por eso el hint NO
-menciona `ssh`/hosts — no prometas lo que aún no existe.
+— hoy el Faro SÍ expone la red: `cat /etc/hosts` descubre el faro de verdad
+(y lo guarda al recargar). Quest nueva «La que no pesa»: el golden es
+`tail -n +2 /srv/camara-faro/purgas.csv | cut -d'|' -f4 | sort` — sin la
+cabecera fantasma. `scp` sigue sin estar disponible en el cap. 6 (127): es
+frontera deliberada, llega con las quests del cap. 4. No prometas red que el
+capítulo actual no deja usar aún.
