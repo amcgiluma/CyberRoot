@@ -428,6 +428,19 @@
       "beat_key": "story.ch6.dato3.beat"
     },
     {
+      "id": "story.ch6.e2",
+      "chapter": 6,
+      "tint": "grey",
+      "requires": [
+        "c.tail",
+        "c.cut",
+        "c.sort",
+        "c.uniq"
+      ],
+      "title_key": "story.ch6.e2.title",
+      "beat_key": "story.ch6.e2.beat"
+    },
+    {
       "id": "story.ch5.e1",
       "chapter": 5,
       "tint": "blue",

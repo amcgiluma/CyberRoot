@@ -95,6 +95,9 @@ def _head_tail(
     n = _DEFAULT_N
     files: list[str] = []
     i = 0
+    # tail -n +N support (GNU: +N means from line N)
+    tail_from = False
+    tail_start = 1
     while i < len(argv):
         a = argv[i]
         if a == "-n":
@@ -103,22 +106,51 @@ def _head_tail(
                     stderr=f"{which}: option requires an argument -- 'n'",
                     exit_code=1, noise=noise,
                 )
-            try:
-                n = int(argv[i + 1])
-            except ValueError:
-                return CommandResult(
-                    stderr=f"{which}: invalid number of lines: '{argv[i+1]}'",
-                    exit_code=1, noise=noise,
-                )
+            raw = argv[i + 1]
+            # tail -n +N : from line N (GNU)
+            if which == "tail" and raw.startswith("+"):
+                try:
+                    tail_from = True
+                    tail_start = int(raw[1:])
+                    if tail_start < 1:
+                        tail_start = 1
+                except ValueError:
+                    return CommandResult(
+                        stderr=f"{which}: invalid number of lines: '{raw}'",
+                        exit_code=1, noise=noise,
+                    )
+                n = tail_start  # keep for noise, not used for slicing when tail_from
+            else:
+                try:
+                    n = int(raw)
+                except ValueError:
+                    return CommandResult(
+                        stderr=f"{which}: invalid number of lines: '{raw}'",
+                        exit_code=1, noise=noise,
+                    )
             i += 2
-        elif a.startswith("-n") and len(a) > 2:  # -n5
-            try:
-                n = int(a[2:])
-            except ValueError:
-                return CommandResult(
-                    stderr=f"{which}: invalid number of lines: '{a[2:]}'",
-                    exit_code=1, noise=noise,
-                )
+        elif a.startswith("-n") and len(a) > 2:  # -n5 or -n+2
+            raw = a[2:]
+            if which == "tail" and raw.startswith("+"):
+                try:
+                    tail_from = True
+                    tail_start = int(raw[1:])
+                    if tail_start < 1:
+                        tail_start = 1
+                except ValueError:
+                    return CommandResult(
+                        stderr=f"{which}: invalid number of lines: '{raw}'",
+                        exit_code=1, noise=noise,
+                    )
+                n = tail_start
+            else:
+                try:
+                    n = int(raw)
+                except ValueError:
+                    return CommandResult(
+                        stderr=f"{which}: invalid number of lines: '{raw}'",
+                        exit_code=1, noise=noise,
+                    )
             i += 1
         elif a.startswith("-") and a != "-":
             return CommandResult(
@@ -136,7 +168,11 @@ def _head_tail(
         if which == "head":
             picked = ln[:n]
         else:
-            picked = ln[-n:] if n else []
+            if tail_from:
+                # tail -n +N : from line N (1-indexed)
+                picked = ln[tail_start - 1 :]
+            else:
+                picked = ln[-n:] if n else []
         out_lines.extend(picked)
 
     return CommandResult(

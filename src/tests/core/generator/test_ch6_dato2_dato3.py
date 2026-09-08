@@ -41,7 +41,7 @@ def test_quest_ch6_dato2_valida_en_dag_y_gate_23():
     assert set(q.requires) == {"c.cut", "c.uniq", "c.sort"}
     assert q.title_key == "story.ch6.dato2.title"
     assert q.beat_key == "story.ch6.dato2.beat"
-    assert len(cur.quests) == 23
+    assert len(cur.quests) == 24
     assert len(cur.concepts) == 22
 
 def test_quest_ch6_dato3_valida_en_dag_y_gate_24():
@@ -51,7 +51,7 @@ def test_quest_ch6_dato3_valida_en_dag_y_gate_24():
     assert q.chapter == 6
     assert set(q.requires) == {"c.cut", "c.sort", "c.head"}
     assert q.title_key == "story.ch6.dato3.title"
-    assert len(cur.quests) == 23
+    assert len(cur.quests) == 24
     # Prereqs enseñados en <=6
     chap_concepts = {c.id for c in cur.concepts if c.chapter <= 6}
     for r in q.requires:
@@ -156,6 +156,10 @@ def test_namespace_ch6_dato_vs_encargo():
     Verifica que el cap. 6 NO tenga quests e2/e3 colisionando con la prosa
     (los encargos narrativos «La que no pesa»/«La persiana» reservan e2/e3)
     y que las salas-dato usan dato2/dato3.
+
+    Actualizado 08/09 (Ornstein O2): e2 ya existe como encargo narrativo
+    «La que no pesa», por lo que e2 SÍ está en ids (encargo), pero e3 sigue
+    reservado. Las salas-dato siguen siendo dato2/dato3.
     """
     cur = load_curriculum()
     ids = {q.id for q in cur.quests_for_chapter(6)}
@@ -164,12 +168,12 @@ def test_namespace_ch6_dato_vs_encargo():
     # salas-dato nuevas
     assert "story.ch6.dato2" in ids
     assert "story.ch6.dato3" in ids
-    # nunca e2/e3 como sala-dato
-    assert "story.ch6.e2" not in ids
+    # e2 ya existe como encargo narrativo (08/09), e3 aún reservado
+    assert "story.ch6.e2" in ids
     assert "story.ch6.e3" not in ids
-    # textos siguen la misma regla
+    # textos siguen la misma regla (e2 ahora sí tiene textos)
     textos = load_textos()
     assert "story.ch6.dato2.title" in textos
     assert "story.ch6.dato3.title" in textos
-    assert "story.ch6.e2.title" not in textos
+    assert "story.ch6.e2.title" in textos
     assert "story.ch6.e3.title" not in textos
