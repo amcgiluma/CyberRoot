@@ -75,3 +75,44 @@ cd web && vercel --prod --yes --name cyberroot
 - CDN del core: Pyodide viene de jsDelivr (sin build propio); el core entra por
   `bundle/core.json` (256 KiB, una petición).
 - Suite local intacta: este HITO B no toca ningún `.py` de `src/`.
+
+## Verificación `?seed=`/`?chapter=` (T1 08/09 — Seath, completa T3 07/09)
+
+Implementación en `app.js` desde 06/09 (`_parse_seed` + `parseParams` L10-15/L47,
+`BOOTSTRAP.init(seed,chapter)` + `generate(s,ch)`, capítulos `[0,2,3,6]` con
+fallback 0). El cron 19:00 del 07/09 murió (`Interrupted by shutdown`) antes de
+documentar — T1 08/09 cierra el hueco verificando en **Chromium real**.
+
+### Cómo reproducir
+
+```bash
+python3 -m http.server 8765 --directory web
+# caso 1: Faro cap.6 seed 42
+http://localhost:8765/?chapter=6&seed=42
+# caso 2: seed distinto, determinista (cap.0 fallback)
+http://localhost:8765/?seed=1337
+```
+
+### Resultado Chromium 08/09 (playwright 1.63, headless shell 153)
+
+| URL | `#hint-cap6` | `#header-chapter` / `#header-seed` | `#md-chapter`/`#md-seed` (tras Pyodide) | `#md-pool` | `#status` |
+|---|---|---|---|---|---|
+| `?chapter=6&seed=42` | `display:block` (visible) | `cap. 6` / `42` | `6` / `42` | `c.cut, c.head, c.sort, c.tail, c.uniq` | `Listo — cap. 6 · seed 42 · presupuesto 12 — REPL del core real.` |
+| `?seed=1337` | `display:none` | `cap. 0` / `1337` | `0` / `1337` (fallback) | `c.ls`… (cap.0) | `Listo — cap. 0 · seed 1337…` |
+| `?seed=1337` (reload) | `display:none` | `cap. 0` / `1337` | idéntico | byte-idéntico | determinista |
+
+* Hint solo con `chapter=6` (`c==='6'` en `app.js` L131-132); sin `chapter`
+  o con valor no soportado → fallback `0` (`hint-cap0` block, `hint-cap6` none).
+* `parseParams` acepta `seed` numérica (`_parse_seed` convierte `"1337"`→`1337`,
+  `"42"`→`42`) y `chapter` en `[0,2,3,6]`; fuera de lista → `0`.
+* Determinismo Python verificado: `generate(42,6)` byte-idéntico en recarga
+  (`fs.to_dict` igual), `generate(1337,0)` recarga idéntica; `?seed=1337`
+  regenera determinista y muestra `header-seed` `1337` (la FS de cap.0/6 es
+  estable en esta versión, la semilla viaja en `header-seed`/`md-seed` y en
+  `generate(_parse_seed(seed))`).
+* Verificación ejecutada con `node /tmp/pw-test/verify.js` sobre
+  `python3 -m http.server 8765 --directory web` (Chromium headless, sin
+  pyproject mock). Sin Delta de suite (+0): solo doc.
+
+Evidencia del run: `node` log completo en worklog `docs/worklog/2026/09/08.md`
+(Seath).
