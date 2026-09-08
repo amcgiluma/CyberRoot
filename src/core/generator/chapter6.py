@@ -108,6 +108,14 @@ NOTA_CORTE_CONTENT = (
     + "# la Lista es tabla, no texto — sin corte no se responde\n"
 )
 
+# ---------------------------------------------------------------------------
+# O3 — /etc/hosts en el mundo (host `faro`) — Fase A real (08/09, Ornstein)
+# ---------------------------------------------------------------------------
+#: Directorio y fichero de hosts (red pieza A, DESIGN §6.1).
+HOSTS_FILE = "hosts"
+HOSTS_PATH = "/etc/hosts"
+HOSTS_CONTENT = "127.0.0.1 localhost\n10.6.0.5 faro\n"
+
 def build_chapter6_fs(fs_rng: Any) -> FileSystem:
     """Monta el árbol de la sala-dato del cap. 6 «Faro».
 
@@ -178,6 +186,18 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
                         ),
                     },
                 ),
+                "etc": DirNode(
+                    name="etc",
+                    children={
+                        HOSTS_FILE: FileNode(
+                            name=HOSTS_FILE,
+                            content=HOSTS_CONTENT,
+                            owner="root",
+                            group="root",
+                            mode="644",
+                        ),
+                    },
+                ),
             },
         ),
     )
@@ -204,6 +224,13 @@ CANON_STEPS_RAW_CH6_E2: tuple[tuple[str, ...], ...] = (
 #: `sort -t'|' -k12 -n purgas.csv | head -n 3` — los 3 más cerca del 0.
 CANON_STEPS_RAW_CH6_E3: tuple[tuple[str, ...], ...] = (
     ("sort", "-t", "'|'", "-k12", "-n", PURGAS_PATH, "|", "head", "-n", "3"),
+)
+
+#: E2 — «La que no pesa» (08/09, Ornstein): tail -n +2 + cut|sort
+#: `tail -n +2 purgas.csv | cut -d'|' -f4 | sort | uniq -c` sin header fantasma
+#: Se valida en generator.py rama story.ch6.e2 (2 UMBRAL-BAJO, sin distrito).
+CANON_STEPS_RAW_CH6_E2_TAIL: tuple[tuple[str, ...], ...] = (
+    ("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'", "-f4", "|", "sort"),
 )
 
 #: Resultado esperado de la golden del cap. 6.

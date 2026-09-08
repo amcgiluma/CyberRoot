@@ -51,9 +51,12 @@ from core.generator.chapter3 import (
 )
 from core.generator.chapter6 import (
     CANON_STEPS_RAW_CH6_E2,
+    CANON_STEPS_RAW_CH6_E2_TAIL,
     CANON_STEPS_RAW_CH6_E3,
     CEBO_PATH,
     CH6_GREP_WC_EXPECTED,
+    HOSTS_CONTENT,
+    HOSTS_PATH,
     NOTA_CORTE_PATH,
     PURGAS_FILE,
     PURGAS_PATH,
@@ -252,9 +255,9 @@ def validate_incursion(incursion: Incursion) -> None:
                     stderr=f"{path} existe pero es un directorio",
                 )
     elif room.chapter == 6:
-        # AC de O3 (02/09) + E2/E3 (05/09, Seath): la sala-dato contiene
-        # la Lista al formato EXACTO + cebo pipe-0 + .nota-corte (E2).
-        for path in (REGISTRO_PATH, PURGAS_PATH, CEBO_PATH, NOTA_CORTE_PATH):
+        # AC de O3 (02/09) + E2/E3 (05/09, Seath) + O3 hosts (08/09): la sala-dato contiene
+        # la Lista al formato EXACTO + cebo pipe-0 + .nota-corte + /etc/hosts (faro).
+        for path in (REGISTRO_PATH, PURGAS_PATH, CEBO_PATH, NOTA_CORTE_PATH, HOSTS_PATH):
             node = shell.fs.resolve(path, "/")
             if isinstance(node, DirNode):
                 raise UnsolvableRoomError.from_step(
@@ -296,6 +299,37 @@ def validate_incursion(incursion: Incursion) -> None:
                     exit_code=0,
                     stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
                 )
+        elif quest_id == "story.ch6.e2":
+            # E2 «La que no pesa» (08/09): tail -n +2 | cut -d'|' -f4 | sort  → sin header fantasma, 2 UMBRAL-BAJO
+            last = shell.history[-1]["result"]
+            raw = str(last.get("stdout", ""))
+            if last.get("exit_code", 1) != 0 or not raw.strip():
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'", "-f4", "|", "sort"),
+                    expect_exit=0,
+                    exit_code=int(last.get("exit_code", 1)),
+                    stderr=f"golden e2 vacía/exit {last.get('exit_code')}: {last.get('stderr','')!r}",
+                )
+            # Debe NO contener la cabecera fantasma "distrito" y sí contener duplicado UMBRAL-BAJO
+            if "distrito" in raw:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'", "-f4", "|", "sort"),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"golden e2 contiene header fantasma 'distrito': {raw.strip()!r} — tail -n +2 no aplicado",
+                )
+            if raw.count("UMBRAL-BAJO") != 2:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'", "-f4", "|", "sort"),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"golden e2 esperaba 2 UMBRAL-BAJO (distrito repetido), obtuvo {raw.count('UMBRAL-BAJO')}: {raw.strip()!r}",
+                )
+            # Verifica que el corte con coma rompe (trampa delimitador) y que el cebo sigue 0
+            # Ya validado que hosts existe arriba; no necesita check extra
         elif quest_id == "story.ch6.dato3":
             # E3: sort -k12 | head -n 3 — valida solo si sort soporta -k/-t
             last = shell.history[-1]["result"]
@@ -743,13 +777,16 @@ def _generate_cap6(
         karma_hint=_TINT_ES.get(quest.tint, "gris"),
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
-    # Canon por quest: E2/E3 tienen goldens propios (cut|sort|uniq -c y sort -k12|head).
+    # Canon por quest: dato2/dato3/e2 tienen goldens propios.
     if quest.id == "story.ch6.dato2":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2))
     elif quest.id == "story.ch6.dato3":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E3
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E3))
+    elif quest.id == "story.ch6.e2":
+        from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2_TAIL
+        canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2_TAIL))
     else:
         canon = CanonSolution(steps=CANON_STEPS_CH6)
 
