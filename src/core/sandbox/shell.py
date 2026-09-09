@@ -69,6 +69,15 @@ DEFAULT_CH3_COMMANDS: tuple[str, ...] = (
     "cat", "cd", "cp", "env", "grep", "kill", "ls", "ps", "sudo", "wc",
 )
 
+#: Comandos del set del cap. 4 (O1, 09/09): red del cap. 4 — añade `cut`+`ssh`/`scp`
+#: al set del cap. 3. `cut` es prereq de `scp` (DAG `c.cut→c.scp`, Havel 07/09);
+#: `ssh`/`scp` son la red simulada (DESIGN §6.1). Cap. 0/2/3 quedan INTACTOS
+#: (regresión 127 en tests). Cap. 6 sigue 127 para ssh/scp por frontera deliberada
+#: (ch4 nace CON red, ch6 sin red — 🧭24 resuelta por diseño).
+DEFAULT_CH4_COMMANDS: tuple[str, ...] = (
+    "cat", "cd", "cp", "cut", "env", "grep", "kill", "ls", "ps", "scp", "ssh", "sudo", "wc",
+)
+
 #: Comandos del set del cap. 6 (S2, 02/09): desbloquea la familia conteo
 #: (head/tail/sort/uniq) sobre la base del cap. 3. El cap. 6 «Faro» lee la
 #: Lista de Lumen con grep/wc/pipe + conteo; necesita TODO lo anterior

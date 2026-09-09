@@ -164,6 +164,21 @@ no toca `curriculum.json` (dueño Smough); el test con la quest real
 Artorias en la combinada. Guard: sin quest ch6 → `GeneratorError`
 accionable. Capítulos 0/2 intactos (regresión byte-idéntica).
 
+## v0.6 — Red del cap. 4 «Troncales» + hosts 2-3 + `DEFAULT_CH4_COMMANDS` (O1, 09/09)
+
+`generate(seed, chapter=4, curriculum=…)` construye la **sala de red** del cap. 4:
+`/etc/hosts` con **2-3 hosts por seed** (`faro` 10.6.0.5 + `troncal-01` 10.6.1.10
+[+ `troncal-02` 10.6.1.11 si RNG elige 3], comentarios `#` que el parser ignora)
+y FS remotos deterministas: `faro` reusa la piel del cap. 6 (registro/purgas) y
+`troncal-*` porta `volcado.csv` (`TR-001|faro|troncal-01|1024|OK`).
+`DEFAULT_CH4_COMMANDS` nace CON red (`cat,cut,ssh,scp` sobre base cap.3; cap.6
+sigue 127 para ssh/scp por frontera deliberada — 🧭24 resuelta por diseño).
+Regla de mundo: la red se descubre LEYENDO (`cat /etc/hosts` → `shell.hosts`
+con FS remoto contenido), nunca listando (`ls /etc` no descubre).
+`CANON_STEPS_RAW_CH4 = (cat /etc/hosts, scp troncal-01:…/volcado.csv /tmp/)`
+y `validate` verifica el volcado en `/tmp`. `generate(42,6)` intacto.
+Tests: `test_chapter4.py` (4 tests O1).
+
 Hoja: `chapter6.py` (leaf, sin importar `model.py`); `generator.py` añade
 dispatch 6, `validate` por capítulo y `_session_commands(6)` (familia
 conteo `head/tail/sort/uniq` + `grep/wc`). Tests: `test_chapter6.py`
@@ -179,6 +194,7 @@ src/core/generator/
 ├── chapter0.py    # piel del cap. 0 como DATOS (leaf) + build_chapter0_fs
 ├── chapter2.py    # piel del cap. 2 como DATOS (leaf) + build_chapter2_fs (v0.3)
 ├── chapter3.py    # piel del cap. 3 credencial sudo (leaf) + build_chapter3_fs (v0.4)
+├── chapter4.py    # piel del cap. 4 red troncal (leaf) + build_chapter4_fs (v0.6)
 ├── chapter6.py    # piel del cap. 6 sala-dato Lista + cebo (leaf) + build_chapter6_fs (v0.5)
 ├── generator.py   # generate() / validate_incursion() / new_session()
 └── README.md      # este fichero
