@@ -9,16 +9,19 @@
 
 ## Activas
 
-### Asignaciones 08/09 (Gwyndolin 11:00 — plan `../planes/2026/09/08.md`)
+### Asignaciones 09/09 (Gwyndolin 11:00 — plan `../planes/2026/09/09.md`)
 
+- `[EN CURSO][P2]` (09/09) **O1 — Red del cap. 4 en el generator (`chapter4.py` + hosts + allowlist)** — Ornstein (`feat/engine-2026-09-09`): `build_chapter4_fs(seed)` + `generate(seed,4)` con `/etc/hosts` de 2-3 hosts (`faro` 10.6.0.5 + `troncal-01` 10.6.1.10), FS remotos deterministas, `DEFAULT_CH4_COMMANDS` (previos + `ssh`+`scp`; 🧭24 resuelta: ch4 nace CON red). AC: `generate(42,4)` determinista, `cat /etc/hosts` descubre TODOS los hosts, `ls /etc` NO descubre, scp funciona sobre los FS generados, `generate(42,6)` intacto, suite 635→635+N delta declarado (mín +3). Costura O↔S: nombres EXACTOS `generate(42,4)`/`DEFAULT_CH4_COMMANDS` para Smough. No tocar `curriculum.json`. Origen: dirección #1 de Gwyn (08/09) + 🪨 Havel 09/09 (hosts 2-3).
+- `[EN CURSO][P2]` (09/09) **O2 — Quest `story.ch4.e1` «La llave prestada» + `c.scp`** — Smough (`feat/sandbox-2026-09-09`): `curriculum.json` (`c.scp` prereq `c.cut` + `story.ch4.e1` requires `[c.scp]`) + `textos.json` (`story.ch4.e1.*`, rutas absolutas 🧭15) + golden respetando límite 2 pipes (🧭25, sin 4 eslabones en una línea). AC: gate 24→25 quests / 22→23 conceptos, e1/e2+dato2/dato3 intactos, DAG válido, golden exit 0 contra `generate(42,4)` (o FS handmade con costura declarada), suite 635→635+N delta declarado (mín +2). Costura S↔O + O↔M (FICHA vacía honesta si el beat pide prosa que Manus escribe mañana). Origen: dirección #1 de Gwyn (08/09) + 🪨 Havel 09/09 (quest ch4).
+- `[EN CURSO][P3]` (09/09) **T1 — Verificar circuito ch4 en vivo + dato del límite de pipes** — Seath (`feat/meta-ui-2026-09-09`): verificación del circuito COMPLETO (`generate(42,4)` → `cat /etc/hosts` 2-3 hosts → `scp troncal-01:…` multi-host → roundtrip `GameState` idéntico) + documentar el rechazo EXACTO de la pipeline de 4 eslabones (🧭25) como dato para la decisión de diseño de Gwyn (ampliar a 3 pipes vs enseñar a encadenar — 🪨 Havel 09/09 [P1]). AC: nota de verificación completa, suite +0 honesto o delta declarado, cero toques fuera de `docs/`+`src/tests/core/state/`. Origen: dirección de Gwyn (verificación) + 🪨 Havel 09/09 (pipes [P1] — hoy solo dato, decisión mañana).
 
 ### Asignaciones 07/09 (Gwyndolin 11:00 — plan `../planes/2026/09/07.md`)
 
 > *(08/09, Gwyndolin — reposición: las 3 tareas de abajo se replanifican ARRIBA (Asignaciones 08/09) con la clave corregida (`e2`); veredictos 💥 de Artorias conservados como constancia.)*
 
-- `[EN CURSO][P3]` (06/09, higiene) **O1 — Tests `auditor_orden` (+4)** — Ornstein (`feat/engine-2026-09-07`): `src/tests/core/engine/test_auditor_orden.py`, los 4 casos de la línea de Artorias; SOLO tests, `postmortem.py`/`textos.json` intactos. AC: 607→611, delta declarado. Origen: deuda técnica Artorias 06/09 (`abierto.md`). — **💥 Artorias 21:00: NO ENTREGADO — sin rama/PR en remoto (feat/engine-2026-09-07 no existe). 0 commits ahead de main. AC no verificado. Arreglo: Ornstein re-ejecuta O1 mañana en rama limpia solo `src/tests/`; declarar delta 607→611 +4. No bloquea a Gwyn.**
-- `[EN CURSO][P1]` (07/09) **O2 — e1 «La que no pesa» (cap. 6)** — Ornstein (`feat/engine-2026-09-07`): quest `story.ch6.e1` + FICHA vacía + golden con `tail -n +2` (🧭22) + briefing «un distrito se repite» (🧭23) + columna `marcas_purga` + textos `story.ch6.e1.*` + validador. AC: gate 23→24 quests, suite 611→615. Origen: dirección #1 de Gwyn (06/09) + prosa `06-faro.md` §E2 + 🧭22/23 de Oscar. — **💥 Artorias 21:00: NO ENTREGADO — misma rama ausente. Sin `curriculum.json`/`generator`/`textos` tocados. 🧭22/23 quedan PERSISTENTES en recámara para dato4/tail. Arreglo: replantear O2 mañana con FICHA vacía + golden tail honesto.**
-- `[EN CURSO][P2]` (07/09) **O3 — `/etc/hosts` en el mundo (host `faro`)** — Ornstein (`feat/engine-2026-09-07`): generator escribe `/etc/hosts` legible. AC: `cat /etc/hosts` exit 0 en `generate(42,6)`, determinismo, suite ≥617. Costura O↔S: `faro`. Origen: red simulada P2 (31/08). — **💥 Artorias 21:00: NO ENTREGADO — sin rama/PR. `generate(42,6)` en main NO trae `/etc/hosts` (verificado: `grep -rn hosts generator` 0). S1 funciona con stub por eso; no rompe pero deja la costura O↔S sin mundo real. Arreglo: Ornstein implementa O3 mañana (`generator.py` + 127.0.0.1 localhost + faro).**
+- `[HECHO]` (07/09, REPOSICIÓN 08/09) **O1 — Tests `auditor_orden` (+4)** — Ornstein (`feat/engine-2026-09-07`): `src/tests/core/engine/test_auditor_orden.py`, los 4 casos de la línea de Artorias; SOLO tests, `postmortem.py`/`textos.json` intactos. AC: 607→611, delta declarado. Origen: deuda técnica Artorias 06/09 (`abierto.md`). — **💥 Artorias 21:00: NO ENTREGADO — sin rama/PR en remoto (feat/engine-2026-09-07 no existe). 0 commits ahead de main. AC no verificado. Arreglo: Ornstein re-ejecuta O1 mañana en rama limpia solo `src/tests/`; declarar delta 607→611 +4. No bloquea a Gwyn.** *(09/09, Gwyndolin — higiene: EJECUTADA el 08/09 como O1 del plan 08/09, PR #36 mergeado, archivada en `../hecho/2026-09.md` §08/09; prefijo conciliado, el archivado es del cierre de Gwyn.)*
+- `[HECHO][P1]` (08/09) **O2 — e1→e2 «La que no pesa» (cap. 6)** — Ornstein (`feat/engine-2026-09-07`): quest `story.ch6.e1` + FICHA vacía + golden con `tail -n +2` (🧭22) + briefing «un distrito se repite» (🧭23) + columna `marcas_purga` + textos `story.ch6.e1.*` + validador. AC: gate 23→24 quests, suite 611→615. Origen: dirección #1 de Gwyn (06/09) + prosa `06-faro.md` §E2 + 🧭22/23 de Oscar. — **💥 Artorias 21:00: NO ENTREGADO — misma rama ausente. Sin `curriculum.json`/`generator`/`textos` tocados. 🧭22/23 quedan PERSISTENTES en recámara para dato4/tail. Arreglo: replantear O2 mañana con FICHA vacía + golden tail honesto.** *(09/09, Gwyndolin — higiene: EJECUTADA el 08/09 como O2 con clave `e2`, PR #36 mergeado, archivada en `../hecho/2026-09.md` §08/09; prefijo conciliado, el archivado es del cierre de Gwyn.)*
+- `[HECHO][P2]` (08/09) **O3 — `/etc/hosts` en el mundo (host `faro`)** — Ornstein (`feat/engine-2026-09-07`): generator escribe `/etc/hosts` legible. AC: `cat /etc/hosts` exit 0 en `generate(42,6)`, determinismo, suite ≥617. Costura O↔S: `faro`. Origen: red simulada P2 (31/08). — **💥 Artorias 21:00: NO ENTREGADO — sin rama/PR. `generate(42,6)` en main NO trae `/etc/hosts` (verificado: `grep -rn hosts generator` 0). S1 funciona con stub por eso; no rompe pero deja la costura O↔S sin mundo real. Arreglo: Ornstein implementa O3 mañana (`generator.py` + 127.0.0.1 localhost + faro).** *(09/09, Gwyndolin — higiene: EJECUTADA el 08/09 como O3, PR #36 mergeado, archivada en `../hecho/2026-09.md` §08/09; prefijo conciliado, el archivado es del cierre de Gwyn.)*
 
 > *(07/09, Gwyn 23:00 — cierre: PRs #34/#35 mergeados en orden sandbox→meta-ui,
 > suite **617 passed**, gate 22/23, bundle 45. Las 4 líneas `[HECHO]` del día
@@ -81,6 +84,19 @@
   commits `cedb7b1` → `ebabb36`. **Chromium real de T1 verificado por Gwyn**:
   hint cap. 6 SOLO con `?chapter=6` (ver worklog). **O1/O2/O3 de Ornstein
   SIN RAMA** — reposición mañana, prioridad 1 de Gwyndolin.
+- **08/09 (Gwyn, esta noche):** mergeados los PRs #36/#37/#38 en orden
+  engine→sandbox→meta-ui, suite **635 passed**, gate **22 conceptos / 24
+  quests** (`story.ch6.e2` «La que no pesa» nueva; `e1` intacta), bundle **45
+  ficheros** regenerado (351.1 KiB). Las 6 líneas `[HECHO]` del día archivadas
+  en `../hecho/2026-09.md` §08/09; NADA retenido; las 3 ramas borradas tras
+  merge MERGED (SHAs locales verificados en GitHub). Gate de diseño 23/23 en
+  verde (leer descubre, listar no; golden e2 sin fantasma; scp enseña dónde
+  leer; save aguanta). **La sección «Piezas listas para integrar» queda SIN
+  CAMBIOS de destino**: el pack `POSTMORTEM.md` sigue esperando a un Q con
+  Manus — `corte`/`orden` siguen cubriendo la voz del interrogatorio en
+  formulario y la cualidad del pack (claves de SEÑAL) no es urgente. Vivo de
+  mañana: quests `ch4` (scp como prereq), `dato4/dato5`, karma 521/522 y
+  🧭24 (allowlist `cat+grep` de caps con red).
 
 ### ⚠️ Deuda de NAMESPACE — ✅ RESUELTA (T1 mergeado esta noche)
 
