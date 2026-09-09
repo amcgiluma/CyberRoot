@@ -17,8 +17,8 @@ from data.textos import load_textos, resolve
 
 def test_quest_e2_existe_gate_24_y_e1_intacta():
     cur = load_curriculum()
-    assert len(cur.quests) == 24
-    assert len(cur.concepts) == 22
+    assert len(cur.quests) == 25
+    assert len(cur.concepts) == 23
     e2 = cur.quest("story.ch6.e2")
     assert e2 is not None
     assert e2.chapter == 6

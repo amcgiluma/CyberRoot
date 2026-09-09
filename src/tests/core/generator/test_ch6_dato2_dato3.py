@@ -41,8 +41,8 @@ def test_quest_ch6_dato2_valida_en_dag_y_gate_23():
     assert set(q.requires) == {"c.cut", "c.uniq", "c.sort"}
     assert q.title_key == "story.ch6.dato2.title"
     assert q.beat_key == "story.ch6.dato2.beat"
-    assert len(cur.quests) == 24
-    assert len(cur.concepts) == 22
+    assert len(cur.quests) == 25
+    assert len(cur.concepts) == 23
 
 def test_quest_ch6_dato3_valida_en_dag_y_gate_24():
     cur = load_curriculum()
@@ -51,7 +51,7 @@ def test_quest_ch6_dato3_valida_en_dag_y_gate_24():
     assert q.chapter == 6
     assert set(q.requires) == {"c.cut", "c.sort", "c.head"}
     assert q.title_key == "story.ch6.dato3.title"
-    assert len(cur.quests) == 24
+    assert len(cur.quests) == 25
     # Prereqs enseñados en <=6
     chap_concepts = {c.id for c in cur.concepts if c.chapter <= 6}
     for r in q.requires:
