@@ -18,10 +18,10 @@ def test_chapter_distinto_de_cero_value_error() -> None:
     with pytest.raises(ValueError) as e:
         generate(1, chapter=1)
     assert "curriculum.json" in str(e.value)
-    # Los caps. 0, 2 y 3 están soportados; cualquier otro sigue dando
+    # Los caps. 0, 2, 3, 4 y 6 están soportados; cualquier otro sigue dando
     # ValueError (el resto llega con curriculum.json).
     with pytest.raises(ValueError):
-        generate(1, chapter=4)
+        generate(1, chapter=5)
 
 
 def test_chapter3_curriculo_real_genera_sala_sudo() -> None:

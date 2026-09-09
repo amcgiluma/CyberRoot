@@ -25,7 +25,7 @@ from core.common.rng import Rng
 from core.common.types import SeedLike
 from core.curriculum import Curriculum, load_curriculum
 from core.sandbox.fs import DirNode, FileNode
-from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH3_COMMANDS, Shell
+from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH3_COMMANDS, DEFAULT_CH4_COMMANDS, Shell
 
 # O3 — chapter6 trae FS con registro/purgas + cebo pipe-0; sus comandos son
 # la familia conteo (head/tail/sort/uniq) + grep/wc. Si Smough añade
@@ -94,6 +94,8 @@ def _session_commands(chapter: int) -> tuple[str, ...]:
         return DEFAULT_CH2_COMMANDS
     if chapter == 3:
         return DEFAULT_CH3_COMMANDS
+    if chapter == 4:
+        return DEFAULT_CH4_COMMANDS
     if chapter == 6:
         # Familia conteo (head/tail/sort/uniq) + grep/wc + base. Sin tocar
         # shell.py (dueño Smough/S2); se lista explícita para evitar colisión
@@ -157,14 +159,41 @@ def new_session(incursion: Incursion) -> Shell:
     comportamiento): su cwd viene de `RunScaffold.initial_cwd()`, NO del default
     de la Shell. La usa la validación canónica y el harness; el engine montará
     aquí al jugador.
+
+    O1 09/09: si la sala es del cap. 4, pre-puebla `shell.hosts` con los FS
+    remotos deterministas (faro + troncal-01/02) parseando `/etc/hosts` del FS
+    local. Así `scp` funciona sin depender de que el descubrimiento cree stub
+    vacío — tanto en validate como en el juego.
     """
     room = incursion.room
-    return Shell(
+    shell = Shell(
         room.fs.snapshot(),
         host=room.host,
         commands=_session_commands(room.chapter),
         cwd=incursion.scaffold.initial_cwd(),
     )
+    if room.chapter == 4:
+        # Pre-puebla hosts remotos deterministas para que validate/scp funcionen
+        try:
+            from core.generator.chapter4 import build_ch4_remote_fs, HOSTS_PATH
+            from core.sandbox.shell import _parse_hosts_content
+
+            try:
+                node = shell.fs.resolve(HOSTS_PATH, "/")
+                from core.sandbox.fs import FileNode
+
+                text = node.content if isinstance(node, FileNode) else ""
+            except Exception:
+                text = ""
+            for h in _parse_hosts_content(text):
+                if h not in shell.hosts:
+                    try:
+                        shell.hosts[h] = build_ch4_remote_fs(h)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+    return shell
 
 
 def validate_incursion(incursion: Incursion) -> None:
@@ -379,6 +408,48 @@ def validate_incursion(incursion: Incursion) -> None:
                     exit_code=0,
                     stderr=f"cebo pipe-0 devolvió {cebo_res.stdout.strip()!r}, esperaba '0'",
                 )
+    elif room.chapter == 4:
+        # AC O1 09/09: sala de red cap.4 — /etc/hosts 2-3 hosts + troncal con volcado + scp canon
+        from core.generator.chapter4 import HOSTS_PATH as CH4_HOSTS_PATH, TRONCAL_PATH as CH4_TRONCAL_PATH
+
+        for path in (CH4_HOSTS_PATH,):
+            node = shell.fs.resolve(path, "/")
+            if isinstance(node, DirNode):
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps),
+                    argv=("resolve", path),
+                    expect_exit=0,
+                    exit_code=1,
+                    stderr=f"{path} existe pero es un directorio",
+                )
+        # La canon de ch4 ya ejecutó cat+scp; verifica que el volcado llegó a /tmp
+        try:
+            target = shell.fs.resolve("/tmp/volcado.csv", "/")
+        except Exception as exc:
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("resolve", "/tmp/volcado.csv"),
+                expect_exit=0,
+                exit_code=1,
+                stderr=f"/tmp/volcado.csv no existe tras scp canon: {exc!r}",
+            ) from exc
+        if isinstance(target, DirNode):
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("cat", "/tmp/volcado.csv"),
+                expect_exit=0,
+                exit_code=1,
+                stderr="/tmp/volcado.csv existe pero es un directorio",
+            )
+        if "TR-001" not in target.content:
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("cat", "/tmp/volcado.csv"),
+                expect_exit=0,
+                exit_code=1,
+                stderr=f"/tmp/volcado.csv sin TR-001: {target.content[:120]!r}",
+            )
+
 
 
 def generate(
@@ -410,16 +481,16 @@ def generate(
     """
     if isinstance(seed, bool):
         raise TypeError("seed bool no admitida por el generador (usa 0/1 explícitos)")
-    if chapter not in (0, 2, 3, 6):
+    if chapter not in (0, 2, 3, 4, 6):
         raise ValueError(
-            f"solo los caps. 0 (la firma), 2 (facturas), 3 (Bombas, sala sudo) y 6 (Faro, sala-dato) "
+            f"solo los caps. 0 (la firma), 2 (facturas), 3 (Bombas, sala sudo), 4 (Troncales) y 6 (Faro, sala-dato) "
             f"están disponibles en v0.1; el resto llega con curriculum.json "
             f"(recibido chapter={chapter})"
         )
     if variant not in VARIANTS:
         raise ValueError(f"variant desconocida: {variant!r} (espera canonical|practice)")
-    if contract_id is not None and chapter not in (2, 3, 6):
-        raise ValueError("contract_id solo aplica a los caps. 2, 3 y 6 (el cap. 0 ofrece su única quest)")
+    if contract_id is not None and chapter not in (2, 3, 4, 6):
+        raise ValueError("contract_id solo aplica a los caps. 2, 3, 4 y 6 (el cap. 0 ofrece su única quest)")
 
     if curriculum is None:
         curriculum = load_curriculum()
@@ -430,6 +501,8 @@ def generate(
         return _generate_cap2(seed, variant, curriculum, contract_id)
     if chapter == 3:
         return _generate_cap3(seed, variant, curriculum, contract_id)
+    if chapter == 4:
+        return _generate_cap4(seed, variant, curriculum, contract_id)
     return _generate_cap6(seed, variant, curriculum, contract_id)
 
 
@@ -797,6 +870,110 @@ def _generate_cap6(
         canon=canon,
         objective=objective,
         concept_pool=concept_pool,
+    )
+    incursion = Incursion(
+        seed=seed,
+        chapter=chapter,
+        contract=contract,
+        scaffold=scaffold,
+        room=room,
+    )
+    validate_incursion(incursion)
+    return incursion
+
+
+def _generate_cap4(
+    seed: SeedLike,
+    variant: str,
+    curriculum: Curriculum,
+    contract_id: str | None,
+) -> Incursion:
+    """Ruta de la sala de red del cap. 4 «Troncales» (O1, 09/09).
+
+    Materializa `/etc/hosts` con 2-3 hosts (faro + troncal-01 [+troncal-02])
+    + FS remotos deterministas. La sala es ESCENARIO de red: su quest será
+    `story.ch4.e1` cuando Smough la traiga en `curriculum.json`; mientras tanto
+    usa fallback genérico para no bloquear O1 (costura O↔S con nombres exactos).
+    """
+    chapter = 4
+    concept_pool = _concept_pool(curriculum, chapter)
+    # Si el currículo aún no trae conceptos de ch4, usa el acumulado hasta 4
+    if not concept_pool:
+        try:
+            concept_pool = tuple(sorted(_taught_up_to(curriculum, chapter)))
+        except Exception:
+            concept_pool = ()
+
+    rng = Rng(seed)
+    id_rng = rng.fork("room-id")
+    fs_rng = rng.fork("fs")
+
+    from core.generator.chapter4 import build_chapter4_fs, CANON_STEPS_RAW_CH4
+
+    fs = build_chapter4_fs(fs_rng)
+    room_id = f"room-ch4-{id_rng.below(2**32):08x}-{variant}"
+
+    # Quest: intenta coger la del pool ch4, si no existe fallback genérico
+    ch_quests = curriculum.quests_for_chapter(chapter) if hasattr(curriculum, "quests_for_chapter") else []
+    quest = None
+    if contract_id is not None:
+        quest = curriculum.quest(contract_id) if hasattr(curriculum, "quest") else None
+        if quest is None or quest.chapter != chapter:
+            raise GeneratorError(f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}")
+    else:
+        if ch_quests:
+            # Prefiere story.ch4.e1 si existe
+            e1 = [q for q in ch_quests if q.id == "story.ch4.e1"]
+            quest = e1[0] if e1 else ch_quests[0]
+        else:
+            quest = None
+
+    if quest is not None:
+        missing = set(quest.requires) - _taught_up_to(curriculum, chapter)
+        if missing:
+            raise GeneratorError(
+                f"quest {quest.id!r} requiere conceptos que ningún capítulo ≤ {chapter} "
+                f"enseña: {sorted(missing)} (viola §6.4.1)"
+            )
+        objective = Objective(
+            id=f"serie-{quest.id}",
+            story_key=quest.id,
+            summary_text_key=quest.title_key,
+            file="volcado.csv",
+            src=f"/srv/archivo-troncal/volcado.csv",
+        )
+        contract = Contract(
+            chapter=chapter,
+            objective_key=quest.id,
+            brief_text_key=f"{quest.id}.brief",
+            karma_hint=_TINT_ES.get(quest.tint, "gris"),
+        )
+    else:
+        # Fallback sin quest aún en curriculum (09/09 antes de O2)
+        objective = Objective(
+            id="serie-story.ch4.e1",
+            story_key="story.ch4.e1",
+            summary_text_key="story.ch4.e1.brief",
+            file="volcado.csv",
+            src="/srv/archivo-troncal/volcado.csv",
+        )
+        contract = Contract(
+            chapter=chapter,
+            objective_key="story.ch4.e1",
+            brief_text_key="story.ch4.e1.brief",
+            karma_hint="azul",
+        )
+
+    scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
+    canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH4))
+
+    room = Room(
+        id=room_id,
+        chapter=chapter,
+        fs=fs,
+        canon=canon,
+        objective=objective,
+        concept_pool=concept_pool if concept_pool else ("c.scp",),
     )
     incursion = Incursion(
         seed=seed,
