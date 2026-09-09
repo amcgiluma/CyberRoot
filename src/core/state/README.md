@@ -76,6 +76,12 @@ el efecto `scp` entre FS del stack (`faro:… ↔ /tmp/`) sobrevive
 `GameState.to_dict/from_dict` idéntico; si S1 no está mergeado,
 stub honesto con `hosts` FS inyectado (`hasattr(Shell,"_exec_scp")` guard).
 
+`src/tests/core/state/test_ch4_circuit.py` — 5 tests (T1 09/09, Seath):
+circuito ch4 multi-host (handmade 2 y 3 hosts + generator condicional si `chapter4.py` está)
+y dato EXACTO del límite de 2 pipes (`tail|cut|sort|uniq -c` rechazado exit 2 con
+`multiple pipelines not supported: chain them one at a time`; `tail|cut|sort` permitido).
+Suite 635→639 (+4) / 1 skipped honesto hasta O1 mergeado.
+
 ```bash
 ./.venv/bin/python -m pytest src/tests/core/state -q
 ```
