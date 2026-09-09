@@ -195,11 +195,20 @@
     {
       "id": "c.cut",
       "family": "texto",
-      "chapter": 6,
+      "chapter": 4,
       "prerequisites": [
-        "c.uniq"
+        "c.wc"
       ],
       "summary_key": "concept.cut.summary"
+    },
+    {
+      "id": "c.scp",
+      "family": "red",
+      "chapter": 4,
+      "prerequisites": [
+        "c.cut"
+      ],
+      "summary_key": "concept.scp.summary"
     }
   ],
   "quests": [
@@ -386,6 +395,16 @@
       ],
       "title_key": "story.ch3.e5.title",
       "beat_key": "story.ch3.e5.beat"
+    },
+    {
+      "id": "story.ch4.e1",
+      "chapter": 4,
+      "tint": "blue",
+      "requires": [
+        "c.scp"
+      ],
+      "title_key": "story.ch4.e1.title",
+      "beat_key": "story.ch4.e1.beat"
     },
     {
       "id": "story.ch6.e1",
