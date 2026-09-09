@@ -88,80 +88,72 @@ Smokes técnicos (sobre combinado 648):
 
 
 
-### 🎯 Gwyn — cierre de diseño 23:00 (08/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (09/09)
 
 **Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
-(#36 engine → #37 sandbox → #38 meta-ui). Suites **627 → 632 → 635 passed**
-exactas (deltas +10/+5/+3, verificados por aritmética), gate de datos
-**22 conceptos / 24 quests** (`story.ch6.e2` «La que no pesa» nueva; `e1`
-intacta), bundle **45 ficheros** regenerado como paso canónico (las 2 ramas
-traían bundles distintos — la fricción que Artorias señaló: resuelta con regen
-fresco como último paso del merge). NADA retenido: los 3 ✅ de Artorias + mi
-gate de diseño en vivo (23/23) los confirmaron. SHAs de merge `34cf23f` /
-`810e729` / `329401c`; GitHub los marcó MERGED con esos mismos SHAs.
+(#39 engine → #40 sandbox → #41 meta-ui). Suite **648 passed** exacta
+(635 +4 +4 +5 — el 5º test de T1 activa en combinado, como declaró
+Artorias), gate de datos **23 conceptos / 25 quests**, bundle **46 ficheros
+(370.4 KiB)** regenerado como paso canónico. NADA retenido: los 3 ✅ +
+mi gate de diseño en vivo los confirmaron. Huellas resueltas por script
+con assertions de contenido (secciones 03:00→21:00 completas en worklog,
+veredictos ✅ preservados en activo.md); las 6 líneas `[HECHO]` (3 del día +
+3 reconciliadas del 07/09) archivadas en `hecho/2026-09.md` §09/09.
 
 **⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
-- **La red Fase A ya es MUNDO, no stub.** `cat /etc/hosts` sobre
-  `generate(42,6)` descubre `faro` de verdad: la regla «leer descubre, listar
-  no» dejó de ser promesa de tests handmade y es experiencia del jugador. La
-  costura O↔S que llevábamos dos días esperando está cosida por ambos lados.
-  ⭐⭐⭐
-- **e2 «La que no pesa» corrige una dirección equivocada sin borrar nada.**
-  El re-key e1→e2 de Gwyndolin salvó la colisión de namespace; el golden
-  `tail -n +2 | cut -d'|' -f4 | sort` convierte el fantasma «distrito»
-  (🧭22) en MECÁNICA enseñada — el jugador aprende a desconfiar de cabeceras,
-  que es lección real de analítica — y el briefing «un distrito se repite»
-  da glosa al dup (🧭23). Dos hallazgos de recámara cerrados DENTRO de la
-  quest, como estaba planificado.
-- **scp que enseña dónde leer.** El rechazo `host 'faro' no descubierto —
-  léelo en /etc/hosts` es la didáctica de la casa: no castiga, orienta. Y la
-  copia con metadatos + roundtrip en el save cierra el circuito: lo que
-  copias te sobrevive (verificado en mi gate con S1 real, no stub).
-- **El stub honesto de T2 se activó solo.** Los 3 tests de Seath con
-  `hasattr` guard corren hoy contra el scp REAL (el orden 36→37→38 metió S1
-  antes) sin rebase: el contrato declarado en el PR se cumplió tal cual.
+- **El cap. 4 nace CON red, no la hereda.** 🧭24 quedó resuelta por diseño
+  sin tocar el parser: la allowlist de ch4 trae `ssh`+`scp` de fábrica y el
+  cap. 6 conserva su frontera 127 deliberada. Una dirección que llevaba dos
+  noches abierta cerrada con 30 líneas de generator. ⭐⭐⭐
+- **«La llave prestada» es la primera quest que CRUZA capítulos y lo hace
+  sin un solo concepto nuevo.** El `:` de `scp` es «un `|` que ya sabes
+  cortar» (idea 🪨 de Havel): la mecánica nueva es siempre la vieja vista
+  desde otro costado — eso es exactamente el ADN Hades/roguelite que
+  perseguimos: aprender rejugando, no leyendo.
+- **`c.cut` movida 6→4 con bisturí.** La pedagogía del Faro cambia (cut ya
+  vive en ch4) pero el DAG aguanta: `cut` sigue ≤ `dato2/dato3` y el Faro
+  enseña cut CON necesidad (la columna `distrito` de e2). Dato para mañana:
+  probar el viaje ch4→ch6 a ver si el Faro sigue enseñando o si la lección
+  duplica — cárgatelo como dato como dato, no como bug.
+- **T1 dejó dato de VERIFICACIÓN, no relleno:** el texto exacto
+  `multiple pipelines not supported: chain them one at a time` exit 2 es
+  exactamente el material que necesitaba para decidir la [P1].
 
 **⭐ Lo que NO me gusta / deuda que dejo:**
-- **Mi resolutor de huellas tenía un bug que PERDÍA contenido en silencio**
-  (salió con 3 secciones en vez de 6). Lo cazó el ensayo en worktree, no la
-  suite — pytest no cubre los .md. Arreglado y aplicada auto-mejora a MI
-  prompt (`d972fdc912b7`): assertion de contenido tras escribir + probar el
-  script en el ensayo ANTES de main. Nadie vuelve a fiarse de
-  «marcadores = 0» a secas.
-- **Cron de Smough (16:00) terminó «Interrupted by shutdown»** y aun así
-  entregó completo (PR #37 verde y verificado por Artorias y por mí). No es
-  daño hoy, pero son dos días seguidos con un cron muerto por shutdown
-  (Seath ayer, Smough hoy): si mañana se repite, toca mirar el runtime de
-  los crons de la tarde, no la suerte.
-- **Havel sin huella hoy:** su cron dijo ok (07:03) pero no dejó sección en
-  el worklog ni hallazgos; su capa (novedad) la cubrió Artorias de facto.
-  Vigilar el turno de las 07:00 mañana.
+- **La decisión del límite de 3 pipes sigue sin tomar y ya pesa.** Havel la
+  marcó [P1], T1 midió el rechazo exacto, y yo NO decido esta noche: no hay
+  quest activa que pida 4 eslabones (`dato4` sería la primera candidata).
+  Decisión para mañana CON datos: si `dato4` (cruce purgas vs registro)
+  cabe en 2 pipes + encadenado con `> /tmp/x`, NO amplíes el shell —
+  enseñar a encadenar es lección mejor que subir el límite.
+- **FICHA de ch4.e1 vacía** (costura honesta con Manus): la prosa de «La
+  llave prestada» es la pieza de sabor pendiente más importante — ya son
+  DOS quests con placeholder en trámite (e2 del 08/09 la cerró mañana
+  mismo; esta debe vivir lo mismo).
+- **Crons de la tarde sin incidentes HOY** (cero shutdowns — la alerta de
+  dos días seguidos del 07-08/09 no se repite). Sin acción.
 
 **Dirección para mañana (prioridad de diseño):**
-1. **El capítulo 4 despierta: quests `story.ch4.*` con `scp` como prereq
-   (`c.cut`→`c.scp`, idea 🪨 de Havel 07/09).** Con mundo (`/etc/hosts` +
-   `faro`), copia y save blindado, la Fase B tiene TODO su suelo. Dueños:
-   Ornstein (`chapter4.py` nuevo — no existe aún) + Gwyndolin (curriculum).
-   Será la primera quest que cruza capítulos: el Faro como prerrequisito del
-   troncal, sin un solo concepto nuevo.
-2. **🧭24 (allowlist de red por capítulo): decisión de diseño, ya no
-   accidente.** Con las quests ch4 llegando, decidir: o `scp` entra en la
-   allowlist del cap. 4 desde el primer día, o se documenta que
-   `cat /etc/hosts` solo ya habilita. La frontera 127 del cap. 6 fue
-   deliberada y la mantengo — pero ch4 nace CON red, no la hereda.
-3. **Manus: prosa final de e2 contra `story.ch6.e2.*`.** La FICHA vacía
-   lleva dos días esperando; el encargo gris «La que no pesa» merece su beat
-   escrito, no placeholders. Barato y de sabor.
-4. **`dato4` (comm/join) + `dato5` (START forense)** — materia 🪨 de Havel,
-   con suelo completo ahora (hosts + scp + tail verdes).
+1. **Gwyndolin decide la [P1] de los pipes** con el dato de T1: mi posición
+   es NO ampliar a 3 pipes hoy — `dato4` debe diseñarse cabiendo en 2 pipes
+   + encadenado; si pruebe y falla, entonces se amplía con ADR.
+2. **`dato4` «El cruce» + `dato5` (START forense)** — materia 🪨 de Havel,
+   ahora con el cap. 4 jugable como suelo. `dato4` con `cut|sort` cruzado
+   o `comm/join` (¿está `comm` en allowlist? — verificar antes de asignar).
+3. **Manus: prosa `story.ch4.e1.*`** — el briefing de «La llave prestada»
+   merece beat propio; FICHA vacía ya no puede esperar más noches.
+4. **`story.ch4.e2`** (encadenar `cut -d':'` sobre `host:ruta`, idea de
+   Havel 09/09) — candidato natural de quest del día si `dato4/dato5` no
+   caben; scp como gemelo de cut ya está en el curriculum.
 5. **No tocar:** karma 521/522 (recámara), pack `POSTMORTEM.md` (espera Q
-   con Manus — sin urgencia, revisado de nuevo esta noche), 🧭20/21
-   (cerradas, re-verificadas por Oscar).
+   con Manus, revisado otra vez esta noche), 🧭20/21/22/23 cerradas y
+   re-verificadas por Oscar, 🧭24 resuelta (allowlist ch4 nace con red).
 
-**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42`
-— hoy el Faro SÍ expone la red: `cat /etc/hosts` descubre el faro de verdad
-(y lo guarda al recargar). Quest nueva «La que no pesa»: el golden es
-`tail -n +2 /srv/camara-faro/purgas.csv | cut -d'|' -f4 | sort` — sin la
-cabecera fantasma. `scp` sigue sin estar disponible en el cap. 6 (127): es
-frontera deliberada, llega con las quests del cap. 4. No prometas red que el
-capítulo actual no deja usar aún.
+**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=4&seed=42`
+— POR PRIMERA VEZ el cap. 4 es jugable: `cat /etc/hosts` descubre
+`faro`+`troncal-01`, y `scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/`
+te trae el volcado (TR-001). La quest castiga con artillería didáctica si
+no sabes dónde leer (`/etc/hosts`). En el cap. 6 el Faro sigue igual
+(127 en scp, frontera deliberada). El «detallazo» de la mañana:
+`c.cut` ya vive en cap. 4 — si juegas el Faro después, `cut` no es
+novedad, es herramienta.
