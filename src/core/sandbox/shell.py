@@ -19,6 +19,7 @@ from typing import Any
 from core.sandbox.commands.base import CommandResult, build_registry
 from core.sandbox.commands.conteo import SPECS as CONTEO_SPECS
 from core.sandbox.commands.cut import SPECS as CUT_SPECS
+from core.sandbox.commands.join import SPECS as JOIN_SPECS
 from core.sandbox.commands.red import (
     EXIT_NAME,
     LOGOUT_NAME,
@@ -84,7 +85,7 @@ DEFAULT_CH4_COMMANDS: tuple[str, ...] = (
 #: (ps/env/sudo/kill para la persiana) más la lectura frugal. Cap. 0/2/3
 #: quedan INTACTOS (regresión 127 en tests).
 DEFAULT_CH6_COMMANDS: tuple[str, ...] = (
-    "cat", "cd", "cp", "cut", "env", "grep", "head", "kill", "ls", "ps", "sort",
+    "cat", "cd", "cp", "cut", "env", "grep", "head", "join", "kill", "ls", "ps", "sort",
     "sudo", "tail", "uniq", "wc",
 )
 
@@ -92,6 +93,8 @@ DEFAULT_CH6_COMMANDS: tuple[str, ...] = (
 #: añadido en S2 01/09, kill en S1 02/09). `sudo` NO es una spec: es un wrapper del shell.
 #: `ssh`/`exit`/`logout` NO van aquí: son wrappers del shell (como `sudo`/`cd`), no specs puras.
 #: Van en RED_SPECS para registro manual si se piden, pero no en el pool del generator.
+#: `join` (S3 10/09) NO está en este pool AÚN: es spec pura (JOIN_SPECS, cap. 6 quest dato4)
+#: que el shell registra OPcionalmente por el set del cap. 6; no alimenta el pool del generator.
 SPECS_ALL = (
     NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + CONTEO_SPECS + SENAL_SPECS + CUT_SPECS
 )
@@ -250,7 +253,11 @@ class Shell:
         wanted = set(commands)
         self.available_commands = wanted.copy()
         self.registry = build_registry(
-            tuple(spec for spec in SPECS_ALL if spec.name in wanted)
+            tuple(
+                spec
+                for spec in (SPECS_ALL + JOIN_SPECS)
+                if spec.name in wanted
+            )
         )
         # ---- Red simulada cap.4 pieza1 (S1 06/09, hosts como FS simultáneos) ----
         #: Registro de hosts conocidos (nombre → FS). El generator o el test

@@ -209,6 +209,16 @@
         "c.cut"
       ],
       "summary_key": "concept.scp.summary"
+    },
+    {
+      "id": "c.join",
+      "family": "texto",
+      "chapter": 6,
+      "prerequisites": [
+        "c.cut",
+        "c.sort"
+      ],
+      "summary_key": "concept.join.summary"
     }
   ],
   "quests": [
@@ -506,6 +516,26 @@
       ],
       "title_key": "story.ch5.e4.title",
       "beat_key": "story.ch5.e4.beat"
+    },
+    {
+      "id": "story.ch6.dato4",
+      "chapter": 6,
+      "tint": "grey",
+      "requires": [
+        "c.join"
+      ],
+      "title_key": "story.ch6.dato4.title",
+      "beat_key": "story.ch6.dato4.beat"
+    },
+    {
+      "id": "story.ch6.dato5",
+      "chapter": 6,
+      "tint": "grey",
+      "requires": [
+        "c.ps"
+      ],
+      "title_key": "story.ch6.dato5.title",
+      "beat_key": "story.ch6.dato5.beat"
     }
   ]
 }

@@ -57,6 +57,10 @@ NOISE_PROFILE: dict[str, int] = {
     # S1 (04/09): `cut` — lectura frugal, igual que head/uniq (familia texto).
     # Separa columnas sin leer entero para quien lo necesite. ⚠️ v1 calibrable.
     "cut": 1,
+    # S3 (10/09): `join` — familia tabla (cap. 6, quest dato4). Cruza DOS
+    # ficheros por un campo de unión común: más caro que leer uno solo (monta
+    # índice de FILE2 mientras lee FILE1). ⚠️ v1 calibrable con harness.
+    "join": 2,
     # S1 (06/09): `ssh` — red simulada cap.4 pieza1 (hosts como FS simultáneos,
     # DESIGN §6.1). Entrar a máquina ajena cuesta como observar+autenticar;
     # comparte perfil con familia Procesos (misma cuenta de ruido). ⚠️ v1

@@ -77,14 +77,14 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
 
 
 def test_load_curriculum_21_conceptos_20_quests() -> None:
-    """El catálogo real: 23 conceptos y 25 encargos (conteo 09/09 — T1+T2 dato2/dato3 + O2 e2 + O2 ch4.e1 c.scp).
+    """El catálogo real: 24 conceptos y 27 encargos (conteo 10/09 — S2 dato4/dato5 + c.join).
 
-    Conteo del 09/09: conceptos 22 (08/09) + c.scp (red cap.4 prereq c.cut, Havel 07/09) + quests 24 (08/09) + story.ch4.e1
-    (requires c.scp, scp troncal-01:/srv/archivo-troncal/volcado.csv). Gate 24→25, 22→23. c.cut movido a cap.4 prereq c.wc (DAG válido).
+    Conteo del 10/09: conceptos 23 (09/09) + c.join (texto cap.6 prereqs c.cut+c.sort) + quests 25 (09/09) + story.ch6.dato4
+    (requires c.join, join -v 1) + story.ch6.dato5 (requires c.ps, ps aux | grep 11:04). Gate 25→27, 23→24.
     """
     cur = load_curriculum()
-    assert len(cur.concepts) == 23
-    assert len(cur.quests) == 25
+    assert len(cur.concepts) == 24
+    assert len(cur.quests) == 27
 
 
 def test_capitulo6_conteo_enseñado() -> None:
