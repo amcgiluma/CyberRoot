@@ -22,8 +22,8 @@ from data.textos import load_textos, resolve
 
 def test_gate_23_25_y_prereq_scp_cut_dag_valido():
     cur = load_curriculum()
-    assert len(cur.concepts) == 23, f"conceptos {len(cur.concepts)} !=23"
-    assert len(cur.quests) == 25, f"quests {len(cur.quests)} !=25"
+    assert len(cur.concepts) == 24, f"conceptos {len(cur.concepts)} !=24"
+    assert len(cur.quests) == 27, f"quests {len(cur.quests)} !=27"
     # c.scp
     scp = cur.concept("c.scp")
     assert scp is not None
