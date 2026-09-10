@@ -16,16 +16,20 @@ FICHEROS del mundo que se cruzan con la familia conteo (head/tail/sort/uniq
 - cebo pipe-0: un fichero trampa que devuelve 0 con `grep 000 <cebo> | wc -l`
   (nombre mal escrito / fichero sin la cadena), el «0 miente» de Havel/Gwyn.
 
-Sin random, sin reloj real. `fs_rng` se acepta por firma para el
-determinismo futuro (mismo convenio que los otros capítulos); en v0 se
-ignora.
+O1 10/09 — «La persiana» (dato5): la sala gana PIEL DE PROCESOS determinista
+por seed — 3 procesos que comparten binario (init Aug25 + 2 faro-sync) donde
+solo el START 11:04 delata cuál arrancó la noche de la firma PR-0091.
+Cero sandbox (ps.py ya imprime START).
+
+Sin random, sin reloj real. `fs_rng` se usa vía `fork("ps-faro")` para la
+piel de procesos; fallback estático si no hay RNG (tests handmade).
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from core.sandbox.fs import DirNode, FileNode, FileSystem
+from core.sandbox.fs import DirNode, FileNode, FileSystem, Proceso
 
 # ---------------------------------------------------------------------------
 # Rutas y ficheros de la Lista (contrato O3↔S2 por literales)
@@ -116,6 +120,75 @@ HOSTS_FILE = "hosts"
 HOSTS_PATH = "/etc/hosts"
 HOSTS_CONTENT = "127.0.0.1 localhost\n10.6.0.5 faro\n"
 
+# ---------------------------------------------------------------------------
+# O1 10/09 — Piel de procesos «La persiana» (dato5) — 3 procesos, 1 binario
+# ---------------------------------------------------------------------------
+
+#: Binario compartido por los dos procesos del Faro (la persiana).
+FARO_SYNC_BINARY = "/usr/sbin/faro-sync"
+
+#: START del init (siempre Aug25, como en chapter3).
+FARO_INIT_START = "Aug25"
+
+#: START del culpable (la noche de la firma PR-0091).
+FARO_GUILTY_START = "11:04"
+
+#: STARTs posibles para el señuelo (nunca 11:04).
+_FARO_DECOY_STARTS: tuple[str, ...] = ("08:17", "09:33", "10:11", "06:42", "07:58")
+
+#: Entorno base de la sesión del Faro (visible en `env`).
+CHAPTER6_ENVIRONMENT: dict[str, str] = {
+    "LANG": "C.UTF-8",
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin",
+    "SHELL": "/bin/sh",
+    "USER": "operator",
+}
+
+def _ch6_processes_for_rng(fs_rng: Any) -> tuple[Proceso, ...]:
+    """Genera los 3 procesos del Faro deterministas por seed.
+
+    - pid 1: init, START Aug25
+    - pid A: faro-sync --purga PR-0091, START 11:04 (el culpable)
+    - pid B: faro-sync --purga PR-0092, START distinto de 11:04 (señuelo)
+
+    Ambos faro-sync comparten binario; solo el START delata la noche de
+    PR-0091. PIDs y START del señuelo derivan de `fs_rng.fork("ps-faro")`
+    para determinismo byte-idéntico sin tocar el FS. Fallback estático si
+    fs_rng no tiene fork (tests handmade con None).
+    """
+    init = Proceso(
+        pid=1, user="root", cmd="/sbin/init --system",
+        tty="?", cpu="0.0", mem="0.1", vsz="22288", rss="10888",
+        stat="Ss", start=FARO_INIT_START, time="0:38",
+    )
+    # Determinismo por seed — pids y START señuelo varían, culpable siempre 11:04+PR-0091
+    try:
+        ps_rng = fs_rng.fork("ps-faro")  # type: ignore[union-attr]
+        # PIDs deterministas pero estables por seed: rangos disjuntos para orden fijo
+        pid_guilty = 412 + ps_rng.below(10)  # 412-421
+        pid_decoy = 430 + ps_rng.below(10)   # 430-439 (siempre > guilty)
+        decoy_start = _FARO_DECOY_STARTS[ps_rng.below(len(_FARO_DECOY_STARTS))]
+        # Asegura decoy nunca 11:04 (ya filtrado por lista)
+    except Exception:
+        pid_guilty = 412
+        pid_decoy = 431
+        decoy_start = "08:17"
+
+    guilty = Proceso(
+        pid=pid_guilty, user="faro", cmd=f"{FARO_SYNC_BINARY} --purga PR-0091",
+        tty="?", cpu="0.1", mem="0.2", vsz="12784", rss="2104",
+        stat="S", start=FARO_GUILTY_START, time="11:34:02",
+    )
+    decoy = Proceso(
+        pid=pid_decoy, user="faro", cmd=f"{FARO_SYNC_BINARY} --purga PR-0092",
+        tty="?", cpu="0.0", mem="0.3", vsz="13100", rss="2440",
+        stat="S", start=decoy_start, time="09:11:44",
+    )
+    # Orden por PID para que `ps aux` siempre liste sorted (determinista)
+    procs = tuple(sorted((init, guilty, decoy), key=lambda p: p.pid))
+    return procs
+
+
 def build_chapter6_fs(fs_rng: Any) -> FileSystem:
     """Monta el árbol de la sala-dato del cap. 6 «Faro».
 
@@ -125,11 +198,14 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
       - el cebo pipe-0 (`censo-borrador.csv`) que devuelve 0 al contar;
       - el cebo de ruta (`LEEME.txt`, O3) y la `.nota-corte` (boon E2, Bandit);
       - E2: `.nota-corte` del operador muerto (boon hallazgo, Bandit).
+      - O1 10/09: piel de procesos determinista por seed (3 procesos,
+        1 binario compartido, START 11:04 delata PR-0091) + environment.
 
     La sala concreta se elige de `curriculum.json` (cap. 6) en el generator;
     esta hoja solo aporta la piel.
     """
-    _ = fs_rng
+    processes = _ch6_processes_for_rng(fs_rng)
+    environment = dict(CHAPTER6_ENVIRONMENT)
     return FileSystem(
         root=DirNode(
             name="/",
@@ -200,6 +276,8 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
                 ),
             },
         ),
+        processes=processes,
+        environment=environment,
     )
 
 # ---------------------------------------------------------------------------
@@ -230,7 +308,7 @@ CANON_STEPS_RAW_CH6_E3: tuple[tuple[str, ...], ...] = (
 #: `tail -n +2 purgas.csv | cut -d'|' -f4 | sort | uniq -c` sin header fantasma
 #: Se valida en generator.py rama story.ch6.e2 (2 UMBRAL-BAJO, sin distrito).
 CANON_STEPS_RAW_CH6_E2_TAIL: tuple[tuple[str, ...], ...] = (
-    ("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'", "-f4", "|", "sort"),
+    ("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'","-f4", "|", "sort"),
 )
 
 #: Resultado esperado de la golden del cap. 6.

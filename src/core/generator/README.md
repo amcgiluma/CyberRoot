@@ -215,3 +215,7 @@ de curriculum (`test_consumo_curriculum.py`), costura 🧭8
 
 Harness: `tools/harness/` (mismo dueño) corre N seeds y mide resolubilidad /
 determinismo / distribución de conceptos — ver su README.
+## v0.7 — Piel de procesos del cap. 6 «Faro» — dato5 «La persiana» (O1, 10/09)
+
+`generate(seed, chapter=6)` ahora incluye **piel de procesos determinista por seed**: 3 `Proceso` en `FileSystem.processes` — `init` pid 1 `START Aug25` + `faro-sync --purga PR-0091` `START 11:04` (culpable) + `faro-sync --purga PR-0092` `START` señuelo variable (`08:17/09:33/...`). Mismo binario `/usr/sbin/faro-sync`, solo el `START` delata la noche de `PR-0091`. Determinismo vía `fs_rng.fork("ps-faro")` → pids `412+below(10)` / `430+below(10)` + decoy start variable, byte-idéntico para misma seed. `DEFAULT_CH6_COMMANDS` (del shell) incluye `ps`/`env`/`kill`/`sudo` + familia conteo; `_session_commands(6)` ahora devuelve ese set canónico (antes desfase sin `ps`). Golden de `dato5` (contrato para S2: `requires c.ps`, `ps aux | grep 11:04` 1 pipe) exit 0, línea con `PR-0091` sin `PR-0092`. `dato2/dato3/e2/e1` intactos, gate 127 (`ps` en cap0 →127) y allowlist CH6 sin cambios. `GameState` roundtrip preserva `processes`+`environment`. `chapter6.py` exporta `FARO_SYNC_BINARY`, `FARO_INIT_START/GUILTY_START`, `CHAPTER6_ENVIRONMENT` y helper `_ch6_processes_for_rng`. Tests: `test_ch6_dato5_persiana.py` (5 tests). Bundle regenerado 46 ficheros.
+
