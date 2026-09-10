@@ -97,10 +97,12 @@ def _session_commands(chapter: int) -> tuple[str, ...]:
     if chapter == 4:
         return DEFAULT_CH4_COMMANDS
     if chapter == 6:
-        # Familia conteo (head/tail/sort/uniq) + grep/wc + base. Sin tocar
-        # shell.py (dueño Smough/S2); se lista explícita para evitar colisión
-        # de rama — coherente con DEFAULT_CH6_COMMANDS que S2 añadirá mañana.
-        return ("cat", "cd", "cp", "cut", "grep", "head", "ls", "sort", "tail", "uniq", "wc")
+        # O1 10/09 — «La persiana» necesita ps (START forense) + env/kill/sudo
+        # heredados del cap. 3 y la familia conteo. Usa el set canónico del shell
+        # para no desfasar allowlist (gate 127). Import lazy para evitar ciclo.
+        from core.sandbox.shell import DEFAULT_CH6_COMMANDS as _CH6
+
+        return _CH6
     return DEFAULT_CAP0_COMMANDS
 
 #: Nota del andamiaje de la run 0 (decisión pendiente de Gwyn, 🧭2 plan 28/08 §4).
