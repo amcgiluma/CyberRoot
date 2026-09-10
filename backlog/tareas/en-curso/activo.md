@@ -9,13 +9,18 @@
 
 ## Activas
 
-> *(cierre 09/09, 23:00 — las 6 líneas `[HECHO]` archivadas en `../hecho/2026-09.md` §09/09; detalle del merge allí. NADA retenido.)*
+> *(cierre 10/09, 23:00 — las 3 líneas `[HECHO]` del día archivadas en
+> `../hecho/2026-09.md` §10/09; detalle del merge allí. NADA retenido.
+> PRs #42/#43/#44 mergeados en orden engine→sandbox→meta-ui con el fix de
+> 1 línea de O1 aplicado EN EL MERGE (patrocinado por Artorias): suite
+> **680 passed**, gate **24/27**, bundle **47 ficheros (389.8 KiB)**.
+> Las 3 ramas del día borradas tras confirmar MERGED en GitHub.)*
 
 ### Asignaciones 10/09 (Gwyndolin 11:00 — plan `../planes/2026/09/10.md`)
 
-- `[HECHO]` (10/09) **O1 — `dato5` «La persiana» (generator)** — Ornstein: piel de procesos determinista por seed en `_generate_cap6` (3 procesos, 1 binario compartido, `START 11:04` delata la noche de `PR-0091`; init `Aug25`). Cero sandbox (`ps.py` ya imprime START, verificado 11:00). Contract para S2: id `dato5`, requires `c.ps`, golden `ps aux | grep 11:04`. Criterio: determinismo byte-idéntico, dato2/dato3/e2/e1 intactos, gate 127 y allowlist sin cambios, suite 648+4–5, commit solo Ornstein. → PR #42 (rama `feat/engine-2026-09-10`, tests 648→653 +5) **💥 NO MERGEAR — integración rota en combinado (1 failed/680). Culpa: `src/tests/core/generator/test_ch6_dato5_persiana.py:116` exige `set(DEFAULT_CH6_COMMANDS)=={cat,cd,cp,cut,env,grep,head,kill,ls,ps,sort,sudo,tail,uniq,wc}` exacto; tras merge con S2 (que añade `join` a `DEFAULT_CH6_COMMANDS`) falla con `Extra items: 'join'` (ensayo 679 passed/1 failed). ARREGLO EXACTO (1 línea): cambiar `assert set(DEFAULT_CH6_COMMANDS)=={…}` por `assert {"cat","cd","cp","cut","env","grep","head","kill","ls","ps","sort","sudo","tail","uniq","wc"} <= set(DEFAULT_CH6_COMMANDS)` o `assert set(DEFAULT_CH6_COMMANDS)=={…}|{"join"}` permitiendo `join`. Aislado verde (5/5), combinado exige parche.**
-- `[HECHO]` (10/09) **S2 — `dato4` «El cruce» + handler `join` + altas dato4/dato5** — Smough: handler `join` GNU-honesto (`-t/-1/-2/-v 1`, errores GNU reales) + `c.join` (cap. 6, prereqs `c.cut`+`c.sort`) + quest `dato4` (requires `c.join`, golden `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv` → fantasma `PR-0091`/`000`, sin pipes) + quest `dato5` según contract de O1 + textos de ambas (rutas absolutas 🧭15). Criterio: `load_curriculum()` 24 conceptos / 27 quests con DAG válido, shell SIN cambios (2 pipes intactos), golden dato4 exit 0 en `generate(42,6)`, suite 648+4–6. → PR #43 (rama `feat/sandbox-2026-09-10`, tests 648→668 +20) **✅ LISTA PARA MERGE — handler join GNU-honesto determinista, 20 tests verdes, DAG 24/27 válido,allowlist CH6 16 cmds con `join`, shell 2 pipes intacto, bundle 47 fresco. Aislado 47 passed; en combinado es quien añade `join` correctamente — el fail es de O1, no de este PR.**
-- `[HECHO]` (10/09) **T1 — verificación del circuito datos (ch6)** — Seath: `src/tests/core/state/test_ch6_datos_circuit.py` — dato4 end-to-end en mundo real (fallback handmade si O1/S2 no están mergeados), dato5 START forense, `GameState` roundtrip con procesos nuevos, gate por aritmética (24/27), bundle fresco. Cero toques fuera de `src/tests/core/state/` + `docs/`. → PR #44 (rama `feat/meta-ui-2026-09-10`, tests 648→655 +7) **✅ LISTA PARA MERGE — 7 tests circuito ch6 (join anti-join + ps forense + roundtrip + gate/pipes) verdes, handmade fallback honesto, solo toca `src/tests/core/state/`+`docs/`, gate flexible 23/25→24/27. Aislado 7/7; en combinado suma +7 real (680 total).**
+- *(O1 dato5 «La persiana» → PR #42; S2 dato4 «El cruce» + `join` → PR #43;
+  T1 circuito datos → PR #44 — todas MERGE el 10/09, ver
+  `../hecho/2026-09.md` §10/09.)*
 
 ### Asignaciones 09/09 (Gwyndolin 11:00 — plan `../planes/2026/09/09.md`)
 

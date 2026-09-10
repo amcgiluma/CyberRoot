@@ -86,72 +86,80 @@ Smokes técnicos (sobre combinado 679+1):
 **Relevo a Gwyn:** ensayé **42→43→44 y 680 es tu número (con fix O1)**; hoy sin fix es 679/1 por `test_ch6_dato5_persiana.py:116`. Si tu `generate(42,6)` tras merges da `ps aux|grep 11:04` 1 línea PR-0091 y `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep -v sujeto` contiene `PR-0091|EN BLANCO|000`, y tu `load_curriculum()` da 24/27, aplica el fix de 1 línea a O1 y mergea **42 → 43 → 44** en ese orden (engine→sandbox→meta-ui). Si no quieres parchear, **deja los 3 sin merge y devuelve O1 a Ornstein con el arreglo EXACTO arriba** — S2/T1 quedan ✅ esperando. Bundle regen canónico `python tools/web/build_bundle.py` al cierre (47 ficheros).
 
 
-### 🎯 Gwyn — cierre de diseño 23:00 (09/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (10/09)
 
 **Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
-(#39 engine → #40 sandbox → #41 meta-ui). Suite **648 passed** exacta
-(635 +4 +4 +5 — el 5º test de T1 activa en combinado, como declaró
-Artorias), gate de datos **23 conceptos / 25 quests**, bundle **46 ficheros
-(370.4 KiB)** regenerado como paso canónico. NADA retenido: los 3 ✅ +
-mi gate de diseño en vivo los confirmaron. Huellas resueltas por script
-con assertions de contenido (secciones 03:00→21:00 completas en worklog,
-veredictos ✅ preservados en activo.md); las 6 líneas `[HECHO]` (3 del día +
-3 reconciliadas del 07/09) archivadas en `hecho/2026-09.md` §09/09.
+(#42 engine → #43 sandbox → #44 meta-ui). El 💥 de O1 se resolvió EN EL MERGE
+aplicando el fix de 1 línea de Artorias (allowlist `<=` en vez de `==`),
+patrocinado y documentado. Suite **680 passed** exacta (648 +5 +20 +7, deltas
+declarados verificados), gate de datos **24 conceptos / 27 quests**, bundle
+**47 ficheros (389.8 KiB)** regenerado como paso canónico (curriculum +
+chapter6 + join.py). NADA retenido: no quedó nada por mergear ni rechazar.
+Goldens re-verificados por mí en `generate(42,6)` real tras el merge:
+`join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv` →
+`000|PR-0091|EN BLANCO|…` exit 0; `ps aux | grep 11:04` → 1 línea
+(`faro-sync --purga PR-0091`). Las 3 líneas `[HECHO]` archivadas en
+`hecho/2026-09.md` §10/09; las 3 ramas borradas tras confirmar MERGED.
 
-**⭐ Lo que me ha gustado (capa diseño «¿es buen juego?»):**
-- **El cap. 4 nace CON red, no la hereda.** 🧭24 quedó resuelta por diseño
-  sin tocar el parser: la allowlist de ch4 trae `ssh`+`scp` de fábrica y el
-  cap. 6 conserva su frontera 127 deliberada. Una dirección que llevaba dos
-  noches abierta cerrada con 30 líneas de generator. ⭐⭐⭐
-- **«La llave prestada» es la primera quest que CRUZA capítulos y lo hace
-  sin un solo concepto nuevo.** El `:` de `scp` es «un `|` que ya sabes
-  cortar» (idea 🪨 de Havel): la mecánica nueva es siempre la vieja vista
-  desde otro costado — eso es exactamente el ADN Hades/roguelite que
-  perseguimos: aprender rejugando, no leyendo.
-- **`c.cut` movida 6→4 con bisturí.** La pedagogía del Faro cambia (cut ya
-  vive en ch4) pero el DAG aguanta: `cut` sigue ≤ `dato2/dato3` y el Faro
-  enseña cut CON necesidad (la columna `distrito` de e2). Dato para mañana:
-  probar el viaje ch4→ch6 a ver si el Faro sigue enseñando o si la lección
-  duplica — cárgatelo como dato como dato, no como bug.
-- **T1 dejó dato de VERIFICACIÓN, no relleno:** el texto exacto
-  `multiple pipelines not supported: chain them one at a time` exit 2 es
-  exactamente el material que necesitaba para decidir la [P1].
+**⭐ Lo que me ha gustado (capa diseño):**
+- **El Faro ahora es un crimen con DOS testigos que se contradicen.** La
+  purga nombra a alguien (`PR-0091`) y el registro finge que no existe:
+  `join -v 1` hace que los DOS CSV confiesen solos. Cruzar tablas sin SQL,
+  con un comando GNU de manual, es exactamente el ADN «Linux real como
+  mecánica» que perseguimos. ⭐⭐⭐
+- **`ps aux` cambió de pregunta sin cambiar de sintaxis.** En el cap. 3
+  respondía QUIÉN corre; en dato5 responde CUÁNDO empezó: el mismo comando,
+  un pipe, y el jugador aprende que un timestamp es una huella. Eso es
+  enseñar forense sin decir la palabra forense. ⭐⭐⭐
+- **T1 blindó el circuito con fallback HONESTO (declarado, no fingido)** y la
+  suite combinada de Artorias cazó la única rota del día antes de tocar
+  main. El protocolo (ensayo pre-merge) funciona — hoy salvó main a escala 1.
+- **El ruido del dato4 es pedagógicamente FÉRTIL, no defecto:** el header
+  `sujeto` y el huérfano `PR-0092` (coma-trampa) obligan al jugador a
+  PENSAR la salida antes de fiarse de ella — GNU honesto satiriza el
+  «el comando te dio la respuesta».
 
 **⭐ Lo que NO me gusta / deuda que dejo:**
-- **La decisión del límite de 3 pipes sigue sin tomar y ya pesa.** Havel la
-  marcó [P1], T1 midió el rechazo exacto, y yo NO decido esta noche: no hay
-  quest activa que pida 4 eslabones (`dato4` sería la primera candidata).
-  Decisión para mañana CON datos: si `dato4` (cruce purgas vs registro)
-  cabe en 2 pipes + encadenado con `> /tmp/x`, NO amplíes el shell —
-  enseñar a encadenar es lección mejor que subir el límite.
-- **FICHA de ch4.e1 vacía** (costura honesta con Manus): la prosa de «La
-  llave prestada» es la pieza de sabor pendiente más importante — ya son
-  DOS quests con placeholder en trámite (e2 del 08/09 la cerró mañana
-  mismo; esta debe vivir lo mismo).
-- **Crons de la tarde sin incidentes HOY** (cero shutdowns — la alerta de
-  dos días seguidos del 07-08/09 no se repite). Sin acción.
+- **El briefing de `dato4` aún no nombra el filtrado del header ni el 2º
+  fantasma `PR-0092`.** Artorias lo señaló y suscribo: es la fricción de
+  sabor pendiente más visible del Faro. Manus debería pulir la prosa de
+  `story.ch6.dato4.*` (FICHA de sabor) esta semana — antes de que el
+  jugador confundido abra un [BUG] que no lo es.
+- **Engine+código tocando la MISMA allowlist el mismo día sin coordinar el
+  test base (O1 exacto vs S2 suma `join`).** El ensayo lo cazó, pero es
+  la segunda noche que la costura O↔S sobre `DEFAULT_CH6_COMMANDS` da
+  fricción. Propuesta para Gwyndolin: cuando S2/S3 vaya a alterar una
+  allowlist, la costura debe declarar «quién es dueño del test» en el plan.
+  Lo apunto como criterio, no como regla dura.
+- Sin [BUG] nuevos hoy. 🧭25 (pipes) sigue en recámara con el dato exacto;
+  🧭26 (`cut` ya vive en ch4, e1 ya no es la puerta del Faro) sigue en
+  semáforo: mi decisión sigue siendo NO cambiar `e1` — la lección del cut
+  vive en dato2/e2, y el viaje troncal→Faro reúsa sin duplicar. Revisit
+  SOLO si `dato4`-post crea una tercera via que lo exija.
 
 **Dirección para mañana (prioridad de diseño):**
-1. **Gwyndolin decide la [P1] de los pipes** con el dato de T1: mi posición
-   es NO ampliar a 3 pipes hoy — `dato4` debe diseñarse cabiendo en 2 pipes
-   + encadenado; si pruebe y falla, entonces se amplía con ADR.
-2. **`dato4` «El cruce» + `dato5` (START forense)** — materia 🪨 de Havel,
-   ahora con el cap. 4 jugable como suelo. `dato4` con `cut|sort` cruzado
-   o `comm/join` (¿está `comm` en allowlist? — verificar antes de asignar).
-3. **Manus: prosa `story.ch4.e1.*`** — el briefing de «La llave prestada»
-   merece beat propio; FICHA vacía ya no puede esperar más noches.
-4. **`story.ch4.e2`** (encadenar `cut -d':'` sobre `host:ruta`, idea de
-   Havel 09/09) — candidato natural de quest del día si `dato4/dato5` no
-   caben; scp como gemelo de cut ya está en el curriculum.
-5. **No tocar:** karma 521/522 (recámara), pack `POSTMORTEM.md` (espera Q
-   con Manus, revisado otra vez esta noche), 🧭20/21/22/23 cerradas y
-   re-verificadas por Oscar, 🧭24 resuelta (allowlist ch4 nace con red).
+1. **`story.ch4.e2` «El volcado que no pesa»** — con `c.join` asentado y el
+   cap. 4 jugable, es el siguiente natural (idea de Havel ya trepando en
+   `abierto.md`): `tail -n +2` + `cut -d'|' -f1 | sort | uniq -c` espejo de
+   e2 del Faro, header del troncal vs header del Faro. ATENCIÓN: ch4 aún NO
+   trae `tail/sort/uniq` en allowlist (idea 7 de Havel del 10/09 en recámara)
+   — decidir la allowlist ANTES de asignar (o nacer con ella, como hizo ch4
+   con ssh/scp).
+2. **Manus: FICHA de `story.ch6.dato4.*`** — el beat del fantasma `PR-0091`
+   merece prosa propia («la purga nombra, el registro calla») y la glosa del
+   filtrado del header. La mecánica ya está en el mundo; el ALMA falta.
+3. **`auditor_join` (recámara, menor):** si el post-mortem del Faro quiere
+   citar el `join -v 1` del jugador como el corte citó el `sort -k12`.
+   Solo si el turno de Manus sobra margen.
+4. **No tocar:** karma 521/522 (espera Q con Manus, sin dueño), pack
+   `POSTMORTEM.md` (sexta noche sin urgencia — `corte`/`orden` siguen
+   cubriendo la voz del interrogatorio), 🧭20–24 cerradas, `comm`/`>` en
+   recámara ([P1] pipes DECIDIDA y ejecutada: dato4 en 0 pipes).
 
-**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=4&seed=42`
-— POR PRIMERA VEZ el cap. 4 es jugable: `cat /etc/hosts` descubre
-`faro`+`troncal-01`, y `scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/`
-te trae el volcado (TR-001). La quest castiga con artillería didáctica si
-no sabes dónde leer (`/etc/hosts`). En el cap. 6 el Faro sigue igual
-(127 en scp, frontera deliberada). El «detallazo» de la mañana:
-`c.cut` ya vive en cap. 4 — si juegas el Faro después, `cut` no es
-novedad, es herramienta.
+**Para Juanma (si juega esta noche):** `https://cyberroot-psi.vercel.app/?chapter=6&seed=42`
+— el Faro tiene dos salas nuevas: `dato4` te pide cruzar `purgas.csv` con
+`registro.csv` con `join -t'|' -1 3 -2 1 -v 1 …` (uno solo, sin pipes) para
+saltarte el fantasma que el registro esconde, y `dato5` te pide `ps aux | grep 11:04`:
+lo que delata la purga no es el nombre del proceso (los dos comparten binario
+`faro-sync`), es CUÁNDO arrancó. La reutilización de `ps` del cap. 3 con
+otra pregunta es el detallazo de la noche.
