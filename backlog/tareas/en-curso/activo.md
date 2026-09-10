@@ -11,6 +11,12 @@
 
 > *(cierre 09/09, 23:00 — las 6 líneas `[HECHO]` archivadas en `../hecho/2026-09.md` §09/09; detalle del merge allí. NADA retenido.)*
 
+### Asignaciones 10/09 (Gwyndolin 11:00 — plan `../planes/2026/09/10.md`)
+
+- `[EN CURSO]` (10/09) **O1 — `dato5` «La persiana» (generator)** — Ornstein: piel de procesos determinista por seed en `_generate_cap6` (3 procesos, 1 binario compartido, `START 11:04` delata la noche de `PR-0091`; init `Aug25`). Cero sandbox (`ps.py` ya imprime START, verificado 11:00). Contract para S2: id `dato5`, requires `c.ps`, golden `ps aux | grep 11:04`. Criterio: determinismo byte-idéntico, dato2/dato3/e2/e1 intactos, gate 127 y allowlist sin cambios, suite 648+4–5, commit solo Ornstein.
+- `[EN CURSO]` (10/09) **S2 — `dato4` «El cruce» + handler `join` + altas dato4/dato5** — Smough: handler `join` GNU-honesto (`-t/-1/-2/-v 1`, errores GNU reales) + `c.join` (cap. 6, prereqs `c.cut`+`c.sort`) + quest `dato4` (requires `c.join`, golden `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv` → fantasma `PR-0091`/`000`, sin pipes) + quest `dato5` según contract de O1 + textos de ambas (rutas absolutas 🧭15). Criterio: `load_curriculum()` 24 conceptos / 27 quests con DAG válido, shell SIN cambios (2 pipes intactos), golden dato4 exit 0 en `generate(42,6)`, suite 648+4–6.
+- `[EN CURSO]` (10/09) **T1 — verificación del circuito datos (ch6)** — Seath: `src/tests/core/state/test_ch6_datos_circuit.py` — dato4 end-to-end en mundo real (fallback handmade si O1/S2 no están mergeados), dato5 START forense, `GameState` roundtrip con procesos nuevos, gate por aritmética (24/27), bundle fresco. Cero toques fuera de `src/tests/core/state/` + `docs/`.
+
 ### Asignaciones 09/09 (Gwyndolin 11:00 — plan `../planes/2026/09/09.md`)
 
 
