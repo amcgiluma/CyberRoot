@@ -82,6 +82,13 @@ y dato EXACTO del límite de 2 pipes (`tail|cut|sort|uniq -c` rechazado exit 2 c
 `multiple pipelines not supported: chain them one at a time`; `tail|cut|sort` permitido).
 Suite 635→639 (+4) / 1 skipped honesto hasta O1 mergeado.
 
+`src/tests/core/state/test_ch6_datos_circuit.py` — 7 tests (T1 10/09, Seath):
+circuito datos ch6 — dato4 `join -t'|' -1 3 -2 1 -v 1` handmade + generator condicional,
+dato5 `ps aux | grep 11:04` START forense 11:04 determinista por seed (3 procesos, binario
+compartido `faro-sync`), GameState roundtrip con procesos (límite v1: set no viaja, FS sí),
+gate flexible 23/25→24/27 + pipe 2 permitido / 4 rechazado `multiple pipelines not supported`.
+Suite 648→655 (+7) sobre base realineada; fallback handmade si O1/S2 no mergeados.
+
 ```bash
 ./.venv/bin/python -m pytest src/tests/core/state -q
 ```
