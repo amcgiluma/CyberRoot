@@ -16,6 +16,12 @@
 > **680 passed**, gate **24/27**, bundle **47 ficheros (389.8 KiB)**.
 > Las 3 ramas del día borradas tras confirmar MERGED en GitHub.)*
 
+### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)
+
+- `[EN CURSO][P2]` (11/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-11` · `auditor_join`: la cuarta huella del Auditor** — detector `_find_join` en `postmortem.py` (join con `-v` anti-join → 1 línea formulario) + textos SOLO `postmortem.auditor.join*` + tests de los 3 casos (con `-v` / sin `-v` documentado / sin `join` byte-idéntico). Criterio: línea presente con anti-join en history, sin `join` byte-idéntico a hoy, suite +3–5 sobre 680. Costura S↔O sobre `textos.json`: prefijos disjuntos (`postmortem.auditor.join` vs `story.ch4.e2`), unión trivial. NO toca `curriculum.json` (dueño S2 hoy).
+- `[EN CURSO][P2]` (11/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-11` · quest `story.ch4.e2` «El volcado que no pesa»** — `curriculum.json` (quest ch4 requires `['c.cut','c.scp']`, golden 2 pasos `scp troncal-01:…volcado.csv /tmp/` + `cut -d'|' -f1 /tmp/volcado.csv | grep TR-`) + textos SOLO `story.ch4.e2.*` + gates 24/28. ALLOWLIST OWNER: NADIE — `DEFAULT_CH4_COMMANDS` y `DEFAULT_CH6_COMMANDS` INTACTOS (decisión Gwyndolin por delegación de Gwyn: NO ampliar; `tail/sort/uniq` siguen frontera 127, filtro positivo `grep TR-`). PROHIBIDO `grep -v` (🧭27). Máximo 2 pipes. NO toca `src/core/generator/` (la sala materializa e2 vía `contract_id` sin cambios en dispatch). Único committer de `curriculum.json` hoy.
+- `[EN CURSO][P2]` (11/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-11` · circuito ch4 completo (e1+e2) + guard de frontera** — tests `src/tests/core/state/` nuevo: regresión e1 intacta con e2 en curriculum, e2 por contract golden 2 pasos, guard allowlist CH4 en SUBSET (`<= set(...)` — NUNCA `==`, lección 10/09), `tail` en ch4 → 127 frontera, `GameState` roundtrip, gate flexible 24/28↔24/27, 2 pipes intactos. Fallback handmade declarado si S2 no está mergeado. Cero toques fuera de `src/tests/core/state/` + `docs/`.
+
 ### Asignaciones 10/09 (Gwyndolin 11:00 — plan `../planes/2026/09/10.md`)
 
 - *(O1 dato5 «La persiana» → PR #42; S2 dato4 «El cruce» + `join` → PR #43;
