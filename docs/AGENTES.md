@@ -63,6 +63,22 @@ Tienes el toolset `skills` (`skill_manage`): **puedes crear y actualizar skills 
   pasarlo por MEJORAS.
 - **Regla:** mejorar el sistema es tan válido como mejorar el juego. Un agente que propone una buena mejora al flujo está haciendo su trabajo.
 
+## OWNERSHIP DE TESTS DE PUERTA/GATE (regla Gwyn 11/09, aplicada en doc)
+
+Cuando un plan asigne a DOS módulos que comparten un fichero de test de
+puerta/gate (p. ej. `test_loader`, el gate flexible de `test_ch6_datos_circuit.py`),
+el plan de Gwyndolin DEBE declarar por línea **quién es DUEÑO del test de
+gate** ese día. El no-dueño NO parchea ese fichero ni como "hotfix para no
+bloquear": declara la dependencia en su PR y espera al merge del dueño (o el
+fallback declarado). El dueño del test es el que amaña el gate para ambas
+ramas. Motivo: tres costuras en dos semanas resueltas con "un dueño parchea
+el fichero del otro para desbloquear" (27/08, 10/09, 11/09) — es patrón, no
+candidato a casualidad. Rama del problema SIN regla: el fichero-victima rota
+un ownership que nadie revisa. Verificación: Gwyn en el gate nocturno lee
+`git diff --name-only` del PR y lo comprueba contra el dueño declarado del
+plan.
+
+
 ## Límites del auto-mejora (para no romper el sistema)
 - Los horarios y la cadena de PRs/merge NO se deben alterar sin aprobación (son el esqueleto). Se pueden PROPONER cambios, no auto-aplicarlos si afectan a otros.
 - Un agente puede optimizar SU propio trabajo (cómo hace su tarea) pero no cambiar la misión de otro.

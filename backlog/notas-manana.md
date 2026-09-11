@@ -106,9 +106,86 @@ Smokes técnicos (sobre combinado 691):
 
 
 
-### 🎯 Gwyn — cierre de diseño 23:00 (10/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (11/09)
 
-**Estado de los merges:** los 3 PRs del día mergeados en el orden ensayado
+**Estado de los merges:** PRs #45 (sandbox S2 `story.ch4.e2`) y #46 (meta-ui
+T1 circuito ch4+guard SUBSET) mergeados en el orden ensayado por Artorias
+(sandbox→meta-ui). Suite **691 passed** exactos (680+4+7), gate **24/28**,
+bundle **47 ficheros (393.3 KiB)** regenerado canónicamente (guardián verde).
+Goldens re-verificados en el mundo real post-merge: golden e2
+`TR-001/TR-002/TR-003` sin header, allowlist 13, `tail`→127, `generate(42,6)`
+intacto. **O1 `auditor_join` NO.mergeado: 💥 NO ENTREGADO** (0 commits, sin
+PR; rama mantenida). Repón con la MISMA spec — nobody la cambió, es buena.
+Las 2 ramas mergeadas borradas tras confirmar MERGED; la 3ª no se toca.
+Resoluciones de huellas: los scripts añaden una assertion "ganó HEAD y
+quedó cronológico" — esta noche el resolutor del 2º merge detectó que la
+rama traía una sección NUEVA (Seath 19:00) que ni HEAD ni la heurística
+"branch es vieja" contemplaba; la aserción de contenido la pescó antes de
+comitear (se insertó cronológicamente). El enésimo salvavidas del patrón.
+
+**Validación del 🧭 de Oscar (11/09):** las 🧭20/21/22/23/24 cerradas con
+re-verificación quedan ARCHIVADAS — no abro discusión. **🧭27 (`grep -v`
+no soportado): mi decisión es MANTENER el filtro positivo como lección y NO
+implementar `-v` como deuda técnica.** Razón de diseño: el patrón
+«filtra por lo que SÍ quieres» (`grep TR-`, `grep 000`, `grep PR-0091`)
+enseñado tres veces en dos capítulos es una idea con más alma que un flag
+menos conocido; y el handler sin flags obliga a componer (pipe) — la
+fricción ES la lección. Si un día una quest exige filtrar por lo que NO es,
+lo reconsidero (boon de hallazgo como propone Artorias, P3). 🧭25 (pipes)
+y 🧭26 (`cut` ya en ch4) quedan en recámara como estaban, sin cambio.
+
+**⭐ Lo que me ha gustado (capa diseño, del 11/09):**
+- **«El volcado que no pesa» es un buen título que enseña lección.** La
+  pista de lo que pesa no es lo que se roba sino lo que EN_COLA espera —
+  `TR-003` es el dato narrativo ESCONDIDO en la sala de datos. El cap. 4
+  (que era puro servicio) ya tiene un misterio propio sin salir de su
+  troncal. ⭐⭐⭐
+- **El cap. 4 ya tiene DOS misiones con tint distinto** y la lección del
+  filtro positivo EVOLUCIONA: en dato4 del Faro se filtra "por el código
+  de purga correcto"; en ch4.e2 se filtra "por el prefijo de lo que SÍ es
+  volcado". Dos usos de la misma idea — no relleno, variación. ⭐⭐
+- **Guard SUBSET de T1 institucionalizado (`<= 13`, nunca `==`).** La
+  lección del 10/09 (llaves exactas se quiebran al añadir) ya es CONSTANTE
+  con nombre propio en el código. El proyecto se hace robusto a sí mismo.
+  ⭐⭐⭐
+
+**⭐ Lo que NO me gusta / deuda que dejo:**
+- **S2 tocó `test_ch6_datos_circuit.py` (dueño T1) como hotfix de gate
+  flexible** — tercera vez en dos semanas que "un dueño parchea el fichero
+  del otro para no bloquear". Ya es patrón, no accidente: le pido a
+  Gwyndolin que en el plan de MAÑANA declare QUIÉN es dueño de cada test
+  de puerta/gate cuando dos módulos colaboren. Si sale otra vez, quite el
+  único-changed-file del dibujo (o pregunto a Juanma por un mini-ADR).
+- **O1 `auditor_join` NO ENTREGADO — tercera vez que Ornstein sufre
+  replanificación** (1ª sin rama 07/09, 2ª 💥, 3ª 💥). Un turno con tres
+  día seguidos sin entrega pide diagnóstico, no empieza de nuevo: pido a
+  Gwyndolin que mañana evalúe si es tamaño de tarea, señal del plan
+  anterior, o load del turno de 13:00 y lo plantee con datos.
+
+**Dirección para mañana (prioridad de diseño):**
+1. **Reposición `auditor_join` (O1, Ornstein 13:00)** — misma spec intacta:
+   prefijo `postmortem.auditor.join` (disjunto de `story.ch4.e2`),
+   detector `_find_join` con `-v`, 3 tests. Con la PR #46 ya mergeada, el
+   Ensayo mañana es de 1 rama (tras 691 base).
+2. **Manus: el ALMA de `story.ch4.e2`** — la FICHA de dato4 la cubrió el
+   05:00 (gracias). Ahora le falta ALMA a e2 del troncal: la prosa de
+   `story.ch4.e2.*` es honesta pero SOBRIA (7 claves, functional). La glosa
+   del «que no pesa» y el destino de `TR-003|EN_COLA` en la historia
+   siguiente merecen una FICHA de sabor como la del dato4.
+3. **`grep -v` NO tocado (decisión arriba)** — prioridad 0 en recámara;
+   despedida limpio.
+4. **No tocar:** karma 521/522 (sin dueño, Q con Manus), pack
+   `POSTMORTEM.md` (séptima noche sin urgencia), 🧭25/26 (recámara).
+
+**Para Juanma (si juega esta noche):** entra al cap. 4 con la llave
+prestada (e1) y verás una SALA NUEVA grey «El volcado que no pesa»:
+`scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/` para bajarte el
+volcado, y el truco que aprendiste en el Faro invertido —
+`cut -d'|' -f1 /tmp/volcado.csv | grep TR-` para quedarte solo con los
+registros (sin el header del servidor). El truco del día: la tercera línea
+del volcado dice `TR-003|EN_COLA` y esa es la que pesa.
+
+### 🎯 Gwyn — cierre 10/09 (histórico; ver entrada del 11/09 arriba)
 (#42 engine → #43 sandbox → #44 meta-ui). El 💥 de O1 se resolvió EN EL MERGE
 aplicando el fix de 1 línea de Artorias (allowlist `<=` en vez de `==`),
 patrocinado y documentado. Suite **680 passed** exacta (648 +5 +20 +7, deltas
