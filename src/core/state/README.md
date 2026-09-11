@@ -89,6 +89,15 @@ compartido `faro-sync`), GameState roundtrip con procesos (límite v1: set no vi
 gate flexible 23/25→24/27 + pipe 2 permitido / 4 rechazado `multiple pipelines not supported`.
 Suite 648→655 (+7) sobre base realineada; fallback handmade si O1/S2 no mergeados.
 
+`src/tests/core/state/test_ch4_e2_circuit.py` — 7 tests (T1 11/09, Seath):
+circuito ch4 completo e1+e2 + guard frontera — regresión e1 intacta con e2 (`generate(42,4)`→e1),
+e2 por contract `story.ch4.e2` golden 2 pasos `scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/` +
+`cut -d'|' -f1 /tmp/volcado.csv | grep TR-` → `TR-001/TR-002/TR-003` sin header (1 pipe filtro positivo,
+`TR-003|EN_COLA` pista de lo que no pesa), allowlist CH4 SUBSET guard (`<= set(13 cmds)` nunca `==`, lección 10/09),
+`tail/sort/uniq/head` en ch4 → 127 frontera deliberada, GameState roundtrip con ch4 multi-host,
+pipe 2 OK / 4 rechazado `multiple pipelines not supported`, gate flexible 24/27↔24/28.
+Suite 680→687 (+7) sobre base realineada; fallback handmade si S2 no mergeado.
+
 ```bash
 ./.venv/bin/python -m pytest src/tests/core/state -q
 ```
