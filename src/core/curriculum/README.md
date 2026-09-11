@@ -4,7 +4,7 @@
 > encargos como nodos-dato) y responde: ¿qué conceptos tiene desbloqueados
 > este jugador? ¿qué pool de práctica corresponde a este capítulo? No conoce
 > runs ni salas: conocimiento puro (ARCHITECTURE §2.3, DESIGN §6.2/§6.4).
-> **Estado (09/09, Smough — O2 ch4.e1):** cap. 0–3 + cap. 4 `c.cut`/`c.scp` + cap. 5 + familia conteo cap. 6 (23 conceptos, 25 quests), validador del DAG, esquema y contrato de consumo documentados.
+> **Estado (11/09, Smough — S2 ch4.e2):** cap. 0–3 + cap. 4 `c.cut`/`c.scp` + cap. 5 + familia conteo cap. 6 (24 conceptos, 28 quests) — `story.ch4.e2` «El volcado que no pesa» (requires c.cut+c.scp, golden scp+cut|grep TR-), validador DAG, esquema y contrato documentados.
 
 ## Piezas (v0)
 
@@ -52,7 +52,7 @@ Reglas estructurales que el validador impone (y testea en negativo):
   capítulos ≤ el de la quest.
 - Textos SIEMPRE como claves (`*_key`): la prosa vive en `data/`/historia.
 
-## Contenido v0 (23 conceptos, 25 quests)
+## Contenido v0 (24 conceptos, 28 quests)
 
 - **Cap. 0 (4):** `c.ls` → `c.cd` → `c.cat` → `c.cp` — EXACTAMENTE el
   `DEFAULT_CAP0_COMMANDS` del sandbox (contrato con generator: la piel del
@@ -69,7 +69,7 @@ Reglas estructurales que el validador impone (y testea en negativo):
   S1 01/09, prereqs `ps`+`env`): el `sudo` GANADO con credencial narrativa que
   O1 materializa como fichero del mundo en la sala del cap. 3. Coherentes con
   `DEFAULT_CH3_COMMANDS` del sandbox (que desde 01/09 incluye `sudo`).
-- **Cap. 4 (2, S1 09/09 O2):** `c.cut` (texto, movido 6→4 prereq `c.wc` para DAG válido — delimitador `|` del volcado troncal) → **`c.scp`** (red, prereq `c.cut`, Havel 07/09 «el : es un | que ya sabes cortar»): copia remota `host:ruta` con descubrimiento previo en `/etc/hosts` (ruido 3). Coherente con `DEFAULT_CH4_COMMANDS` (`cat`/`scp`/`ssh`) que O1 trae en `feat/engine`.
+- **Cap. 4 (3, S1 09/09 O2 + 11/09 S2 e2):** `c.cut` (texto, movido 6→4 prereq `c.wc` para DAG válido — delimitador `|` del volcado troncal) → **`c.scp`** (red, prereq `c.cut`, Havel 07/09 «el : es un | que ya sabes cortar»): copia remota `host:ruta` con descubrimiento previo en `/etc/hosts` (ruido 3). Coherente con `DEFAULT_CH4_COMMANDS` (`cat`/`scp`/`ssh`) que O1 trae en `feat/engine`. **+ quest `story.ch4.e2` (11/09 S2, grey, requires c.cut+c.scp, golden `cut -d'|' -f1 /tmp/volcado.csv | grep TR-` sin header, filtro positivo, 1 pipe, EN_COLA).**
 - **Cap. 6 (4, S1 04/09):** familia conteo `c.head` → `c.tail`, `c.sort` → `c.uniq` (barrera técnica hacia el Faro — las salas-dato de la Lista leen con `head`/`sort`/`uniq`; `c.cut` ya en cap. 4, disponible para Faro). **+ quest `story.ch6.e1` (S2 02/09, grey, cap. 6 — des-isla el conteo: el alfabeto se juega; requiere `c.grep`/`c.wc`/`c.pipe`/`c.head`/`c.sort`/`c.tail`/`c.uniq`, sin `cut` aún — pista de CENSO-LISTA queda para cuando exista el comando; acople O3↔S2 por literales).**
 - **Quests:** `story.ch0.ventana` (grey, los 4 del cap. 0) + `story.ch1.e1`
   (azul), `e2` (azul), `e3` (gris), `e4` (rojo), `e5` (cierre, gris) +

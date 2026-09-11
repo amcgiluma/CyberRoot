@@ -417,6 +417,17 @@
       "beat_key": "story.ch4.e1.beat"
     },
     {
+      "id": "story.ch4.e2",
+      "chapter": 4,
+      "tint": "grey",
+      "requires": [
+        "c.cut",
+        "c.scp"
+      ],
+      "title_key": "story.ch4.e2.title",
+      "beat_key": "story.ch4.e2.beat"
+    },
+    {
       "id": "story.ch6.e1",
       "chapter": 6,
       "tint": "grey",
