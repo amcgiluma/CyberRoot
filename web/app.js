@@ -8,7 +8,7 @@
  *
  * T2 añade:
  * - `?seed=` y `?chapter=` en la URL → `generate(seed, chapter)` + comandos del capítulo.
- *   Capítulos jugables: 0 (tutorial), 2, 3 (orden→sudo→ps/kill) y 6 (Faro con familia conteo) — muerte con `auditor_text` en todos.
+ *   Capítulos jugables: 0 (tutorial), 2, 3 (orden→sudo→ps/kill), 4 (Troncal: red + volcado) y 6 (Faro con familia conteo) — muerte con `auditor_text` en todos.
  * - Bucle de muerte: `total_noise > noise_budget` → pantalla post-mortem con
  *   `build_postmortem` (voz del Auditor en el navegador) + reiniciar.
  * - Status muestra seed y capítulo activos → cada bug reporta su reproducción en la URL.
@@ -220,7 +220,7 @@ function parseCut(line) {
   }
   if (field === null || !file) return null;
   if (!delim) delim = "|"; // default del Faro es | si no se especifica
-  if (!file.includes("purgas.csv") && !file.includes("registro.csv")) return null;
+  if (!file.includes("purgas.csv") && !file.includes("registro.csv") && !file.includes("volcado.csv")) return null;
   return { delim, field, file };
 }
 
@@ -281,6 +281,99 @@ function updateFaroTabla(line) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Tabla del Troncal — panel vivo 'Volcado del Troncal' del cap. 4 (Hito 3, Seath 12/09)
+// Mismo patrón que el Faro, pero para el volcado.csv del troncal (cut -d'|' -f1).
+// Sin cambios de core: lee el CSV del FS via get_csv y destaca la columna cortada.
+// ---------------------------------------------------------------------------
+function parseTroncalCut(line) {
+  // Reutiliza parseCut (ya detecta volcado.csv) y filtra al fichero del troncal.
+  const info = parseCut(line);
+  if (!info) return null;
+  if (!info.file.includes("volcado.csv")) return null;
+  return info;
+}
+
+function hideTroncalTabla() {
+  const el = $id("troncal-tabla");
+  if (el) el.style.display = "none";
+}
+
+function renderTroncalTabla(cutInfo, csvContent) {
+  const panel = $id("troncal-tabla");
+  const metaEl = $id("troncal-tabla-meta");
+  const contentEl = $id("troncal-tabla-content");
+  if (!panel || !metaEl || !contentEl) return;
+  const lines = csvContent.split("\n").filter(l => l.length > 0);
+  if (lines.length === 0) { hideTroncalTabla(); return; }
+  const delim = cutInfo.delim;
+  const colIdx = cutInfo.field - 1;
+  const shortFile = cutInfo.file.split("/").pop();
+  metaEl.textContent = `${shortFile} · columna ${cutInfo.field} (${delim})`;
+  // Construye tabla HTML (mismo estilo que el Faro; acento propio del troncal)
+  let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
+  const headerCells = lines[0].split(delim);
+  html += "<thead><tr>";
+  for (let i = 0; i < headerCells.length; i++) {
+    const cls = i === colIdx ? ' style="background:rgba(140,220,150,.25);color:var(--accent);font-weight:700;border:1px solid var(--border);padding:4px 6px"' : ' style="border:1px solid var(--border);padding:4px 6px;color:var(--muted)"';
+    html += `<th${cls}>${headerCells[i] || "—"}</th>`;
+  }
+  html += "</tr></thead><tbody>";
+  const maxRows = Math.min(lines.length, 16);
+  for (let r = 1; r < maxRows; r++) {
+    const cells = lines[r].split(delim);
+    html += "<tr>";
+    for (let c = 0; c < cells.length; c++) {
+      const cls = c === colIdx ? ' style="background:rgba(140,220,150,.18);color:var(--fg);font-weight:600;border:1px solid var(--border);padding:3px 6px"' : ' style="border:1px solid var(--border);padding:3px 6px"';
+      const val = cells[c] || "—";
+      html += `<td${cls}>${val.length > 24 ? val.slice(0,24)+"…" : val}</td>`;
+    }
+    html += "</tr>";
+  }
+  if (lines.length > maxRows) html += `<tr><td colspan="${headerCells.length}" style="text-align:center;color:var(--muted);padding:6px">… ${lines.length - maxRows} filas más (usa cat/head en la terminal)</td></tr>`;
+  html += "</tbody></table>";
+  contentEl.innerHTML = html;
+  panel.style.display = "block";
+}
+
+function updateTroncalTabla(line) {
+  const info = parseTroncalCut(line);
+  if (!info) return; // sin cut sobre volcado.csv → no toca el panel (no parpadea)
+  if (currentChapter !== 4) return; // solo en el Troncal
+  try {
+    const raw = pyodide.globals.get("get_csv")(info.file);
+    const data = JSON.parse(raw);
+    if (!data.ok || !data.content) { hideTroncalTabla(); return; }
+    renderTroncalTabla(info, data.content);
+  } catch (e) {
+    // no rompe la terminal si falla
+  }
+}
+
+// Preview automático del volcado en boot (cap. 4): antes del scp aún no hay
+// /tmp/volcado.csv → muestra el volcado del bundle (fallback estático) para
+// que ?chapter=4&seed=42 tenga preview inmediato; tras el scp re-renderiza con col 1.
+const TRONCAL_STATIC = "id|origen|destino|bytes|estado\nTR-001|faro|troncal-01|1024|OK\nTR-002|troncal-01|nodo-02|2048|OK\nTR-003|faro|troncal-01|512|EN_COLA\n";
+function previewTroncalTabla() {
+  if (currentChapter !== 4) return;
+  try {
+    const candidates = ["/tmp/volcado.csv", "/srv/archivo-troncal/volcado.csv"];
+    for (const p of candidates) {
+      const raw = pyodide.globals.get("get_csv")(p);
+      const data = JSON.parse(raw);
+      if (data.ok && data.content) {
+        renderTroncalTabla({ delim: "|", field: 1, file: p }, data.content);
+        return;
+      }
+    }
+    // Fallback estático pre-scp: tabla viva inmediata (mismo contenido que TRONCAL_CONTENT)
+    renderTroncalTabla({ delim: "|", field: 1, file: "/srv/archivo-troncal/volcado.csv" }, TRONCAL_STATIC);
+  } catch (e) {
+    // último recurso: estática
+    try { renderTroncalTabla({ delim: "|", field: 1, file: "volcado.csv" }, TRONCAL_STATIC); } catch(_){}
+  }
+}
+
 function parseParams() {
   const p = new URLSearchParams(window.location.search);
   const seedRaw = p.get("seed");
@@ -289,7 +382,7 @@ function parseParams() {
   let chapter = 0;
   if (chapterRaw !== null && chapterRaw !== "") {
     const n = parseInt(chapterRaw, 10);
-    if (!isNaN(n) && [0,2,3,6].includes(n)) chapter = n;
+    if (!isNaN(n) && [0,2,3,4,6].includes(n)) chapter = n;
     else if (!isNaN(n)) chapter = 0; // capítulo no soportado → fallback 0 (no-regresión)
     else chapter = 0;
   }
@@ -324,6 +417,7 @@ function hidePostmortem() {
 async function restartSameSeed() {
   hidePostmortem();
   hideFaroTabla();
+  hideTroncalTabla();
   $id("out").innerHTML = "";
   setStatus(`Reiniciando cap. ${currentChapter} (seed ${currentSeed})…`);
   try {
@@ -400,6 +494,8 @@ async function boot() {
 
   currentNoiseBudget = state.noise_budget;
   setState(state);
+  // Preview del volcado del troncal (cap. 4): oculta sin error si aún no hay fichero
+  previewTroncalTabla();
   const ns0 = $id("noise-status");
   if (ns0) ns0.textContent = `ruido 0/${currentNoiseBudget}`;
   setStatus(`Listo — cap. ${chapter} · seed ${seed} · presupuesto ${currentNoiseBudget} — REPL del core real.`);
@@ -448,6 +544,8 @@ async function dispatch() {
   if (statusEl) statusEl.textContent = `ruido ${total}/${budget}`;
   // Tabla del Faro: refleja el cut sin sustituir la terminal
   try { updateFaroTabla(line); } catch(e) {}
+  // Tabla del Troncal (cap. 4): mismo reflejo del cut sobre volcado.csv
+  try { updateTroncalTabla(line); } catch(e) {}
   if (total > budget) {
     try {
       const pm = JSON.parse(pyodide.globals.get("postmortem")());
