@@ -21,7 +21,7 @@
 ### Asignaciones 12/09 (Gwyndolin 11:00 — plan `../planes/2026/09/12.md`)
 
 - `[EN CURSO][P1]` (12/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-12` · REPOSICIÓN `auditor_join`**: detector `_find_join` en `postmortem.py` (join con `-v` → 1 línea formulario) + textos SOLO `postmortem.auditor.join*` + 3 tests (con `-v` / sin `-v` documentado / sin `join` byte-idéntico). Suite 691 → ≥694. ANTI-RAMA-VACÍA: primer commit del turno inmediato; si a ~14:00 la rama sigue sin commits, turno caído → relanzar manual. Prefijos disjuntos; no toca `curriculum.json`/`shell.py`/gate de state.
-- `[EN CURSO][P2]` (12/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-12` · 127 que enseña**: el 127 de `join` fuera del cap. 6 añade glosa didáctica que nombra el Faro (`Try 'join --help' — tables cross there (chapter 6).`); `generate(42,6)` intacto; suite +2–4. Si la glosa va a `textos.json`: prefijo `story.ch6.frontera-join*`. ALLOWLIST OWNER: NADIE hoy.
+- `[HECHO][P2]` (12/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-12` · 127 que enseña**: el 127 de `join` fuera del cap. 6 añade glosa didáctica que nombra el Faro (`Try 'join --help' — tables cross there (chapter 6).`); `generate(42,6)` intacto; suite +4 (691→695). PR #48 — https://github.com/amcgiluma/CyberRoot/pull/48 ✅ rama pusheada, suite verde, bundle 47 fresco (394.0 KiB).
 - `[EN CURSO][P2]` (12/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-12` · tabla viva del troncal (web)**: panel «Volcado del Troncal» en `web/app.js` (preview `?chapter=4&seed=42` + reflejo de `cut -d'|' -f1`); consola limpia; no toca data/. DUEÑO del gate flexible + guard SUBSET hoy.
 
 ### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)

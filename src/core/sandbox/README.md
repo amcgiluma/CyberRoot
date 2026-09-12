@@ -2,10 +2,10 @@
 
 > **Qué hace:** filesystem virtual + shell con semántica REAL de Linux
 > (ARCHITECTURE §2.2), autónomo y reutilizable, sin I/O ni reloj real.<br>
-> **Estado (08/09, Smough):** comandos del cap. 0 (`ls -a`/`-l` GNU, `cd`, `cat`,
+> **Estado (12/09, Smough):** comandos del cap. 0 (`ls -a`/`-l` GNU, `cd`, `cat`,
 > `cp`) + cap. 2 (`grep`, `wc`) y tubería `cmd1 | cmd2` + cap. 3 (`ps`, `env`
 > — familia procesos; `sudo` GANADO + `kill` Señales v0) + familia conteo
-> (`head`/`tail`/`sort`/`uniq`/`cut`, cap. 6 — lectura frugal) + **red cap.4 pieza1** (`ssh` básico + host-key + stack `exit`/`logout`, hosts como FS simultáneos) + **red cap.4 pieza2** (`scp` copia entre FS del stack, descubrimiento por `cat /etc/hosts`, rechazo que nombra, ruido 3).
+> (`head`/`tail`/`sort`/`uniq`/`cut`, cap. 6 — lectura frugal) + **red cap.4 pieza1** (`ssh` básico + host-key + stack `exit`/`logout`, hosts como FS simultáneos) + **red cap.4 pieza2** (`scp` copia entre FS del stack, descubrimiento por `cat /etc/hosts`, rechazo que nombra, ruido 3) + **12/09** 127 didáctico `join` nombra Faro (`Try 'join --help' — tables cross there (chapter 6).`, solo join fuera de cap.6).
 
 ## Piezas (v0)
 
