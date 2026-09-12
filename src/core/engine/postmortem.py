@@ -59,6 +59,8 @@ LINE_KEY_CIEGA = "postmortem.auditor.ciega"
 LINE_KEY_CORTE = "postmortem.auditor.corte"
 #: O1 06/09 (Ornstein) — el Auditor cita TU eje vertical: si el history contiene `sort` con `-k`, añade línea de orden.
 LINE_KEY_ORDEN = "postmortem.auditor.orden"
+#: O1 12/09 (Ornstein) — el Auditor cita TU cruce de tablas: si el history contiene `join` con `-v`, añade línea de join.
+LINE_KEY_JOIN = "postmortem.auditor.join"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -338,6 +340,64 @@ def _find_sort(shell_dict: dict[str, Any]) -> dict[str, str] | None:
     return None
 
 
+def _extract_join_args(line: str) -> dict[str, str] | None:
+    """Extrae args de un `join` CON `-v` desde la línea cruda.
+
+    Hermano de `_extract_cut_args` / `_extract_sort_args`: detecta el
+    anti-join (`-v`). Busca el token `join` en cualquier posición de la
+    línea (puede ir tras un pipe). SIN `-v` → None. Retorna {} (sin
+    placeholders) para la plantilla join — el texto es estático y no
+    filtra datos de fila. Determinista, sin imports de sandbox.
+    """
+    try:
+        argv = shlex.split(line)
+    except ValueError:
+        return None
+    if not argv:
+        return None
+    try:
+        start = argv.index("join")
+    except ValueError:
+        return None
+    has_v = False
+    i = start + 1
+    while i < len(argv):
+        a = argv[i]
+        if a == "-v" and i + 1 < len(argv):
+            # -v 1 / -v 2 — GNU exige file number; cualquier valor vale
+            has_v = True
+            i += 2
+        elif a.startswith("-v") and len(a) > 2:
+            # -v1 / -v2 combinados
+            has_v = True
+            i += 1
+        elif a == "-v":
+            # -v sin argumento (raro pero cuenta como anti-join)
+            has_v = True
+            i += 1
+        elif a.startswith("-") and "v" in a:
+            # flags combinados que contengan v (p. ej. -av)
+            has_v = True
+            i += 1
+        else:
+            i += 1
+    if not has_v:
+        return None
+    return {}
+
+
+def _find_join(shell_dict: dict[str, Any]) -> dict[str, str] | None:
+    """Primer `join` con `-v` en el history (determinista por orden)."""
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "join" not in line:
+            continue
+        args = _extract_join_args(line)
+        if args is not None:
+            return args
+    return None
+
+
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
     """True si el historial contiene al menos un `sudo`.
 
@@ -455,6 +515,17 @@ def build_postmortem(
         base["auditor_orden_text"] = orden_text
         base["lines_resolved"] = [*base["lines_resolved"], orden_text]
 
+    # O1 12/09 — el Auditor cita TU cruce si hubo join con -v (hermano de corte/orden)
+    join_args = _find_join(shell_dict)
+    if join_args is not None:
+        join_text = _resolve_auditor_text(LINE_KEY_JOIN, join_args)
+        base["auditor_join"] = {
+            "line_key": LINE_KEY_JOIN,
+            "args": join_args,
+        }
+        base["auditor_join_text"] = join_text
+        base["lines_resolved"] = [*base["lines_resolved"], join_text]
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -503,4 +574,5 @@ __all__ = [
     "LINE_KEY_CIEGA",
     "LINE_KEY_CORTE",
     "LINE_KEY_ORDEN",
+    "LINE_KEY_JOIN",
 ]
