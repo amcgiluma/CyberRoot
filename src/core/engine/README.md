@@ -155,3 +155,15 @@ PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q  # 573 passed
 python tools/web/build_bundle.py  # regenera core.json (44 ficheros)
 ```
 
+---
+
+## v0.6 (O1, 12/09) — el Auditor cita TU cruce de tablas (join -v)
+
+**O1 — `postmortem.auditor.join` (Ornstein, reposición 12/09):** cuarta huella hermana de corte/orden — si el history contiene `join` con `-v` (anti-join), añade 1 línea formulario. Helpers `_extract_join_args` + `_find_join` (solo shlex sobre la línea, sin imports sandbox): detectan `-v`/`-v1`/`-v 1` en cualquier posición (tras pipe también), retornan {} (texto estático, nunca datos de fila). `build_postmortem` añade `auditor_join` + `auditor_join_text` y extiende `lines_resolved` (antes de sudo, orden corte→orden→join→lectura). Sin `join` con `-v` → informe byte-idéntico (no rompe tríada lector ni caps 0/2/6). Texto en `data/textos.json`: `Expediente 000: cruce registrado — join anti-join (-v): huérfanas de la primera tabla. Continuidad del ensayo: estable.` Tests en `test_auditor_join.py` (3: con -v dispara / sin -v no dispara documentado / sin join byte-idéntico, determinismo).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_auditor_join.py -o addopts= -q  # 3 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 694 passed
+python tools/web/build_bundle.py  # regenera core.json (47 ficheros)
+```
+
