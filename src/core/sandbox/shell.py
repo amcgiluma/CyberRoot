@@ -19,7 +19,7 @@ from typing import Any
 from core.sandbox.commands.base import CommandResult, build_registry
 from core.sandbox.commands.conteo import SPECS as CONTEO_SPECS
 from core.sandbox.commands.cut import SPECS as CUT_SPECS
-from core.sandbox.commands.join import SPECS as JOIN_SPECS
+from core.sandbox.commands.join import JOIN_NAME, SPECS as JOIN_SPECS
 from core.sandbox.commands.red import (
     EXIT_NAME,
     LOGOUT_NAME,
@@ -359,6 +359,11 @@ class Shell:
             return self._exec_sudo(argv, stdin)
         spec = self.registry.get(argv[0])
         if spec is None:
+            if argv[0] == JOIN_NAME:
+                return CommandResult(
+                    stderr=f"sh: command not found: {argv[0]}\nTry 'join --help' \u2014 tables cross there (chapter 6).",
+                    exit_code=127,
+                )
             return CommandResult(
                 stderr=f"sh: command not found: {argv[0]}", exit_code=127
             )
