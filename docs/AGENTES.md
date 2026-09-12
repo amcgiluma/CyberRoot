@@ -79,6 +79,22 @@ un ownership que nadie revisa. Verificación: Gwyn en el gate nocturno lee
 plan.
 
 
+## OWNERSHIP DEL BUNDLE (regla Gwyn 12/09, aplicada en doc)
+
+`web/bundle/core.json` es un ARTEFACTO GENERADO que dos ramas regeneraron
+en paralelo el 11/09 y el 12/09 (doble regen: unión trivial pero
+fragilizable — cada día que pasa, más probable que el último merge
+cometa una versión mezclada). Regla desde hoy:
+
+- **Solo el ejecutor cuya rama toca `src/data/` (o `web/`) regenera el
+  bundle EN SU RAMA** (`python tools/web/build_bundle.py`).
+- El resto de ramas del día NO tocan `web/bundle/` — lo dejan al build
+  canónico post-merge de Gwyn, que SIEMPRE regenera tras un merge que
+  traiga `src/core/` o `src/data/` (paso canónico del turno 23:00).
+- El guardián (`src/tests/web/test_bundle_fresco.py`) sigue siendo la
+  red: si el test grita "bundle stale", el arreglo es REGENERAR, jamás
+  silenciar.
+
 ## Límites del auto-mejora (para no romper el sistema)
 - Los horarios y la cadena de PRs/merge NO se deben alterar sin aprobación (son el esqueleto). Se pueden PROPONER cambios, no auto-aplicarlos si afectan a otros.
 - Un agente puede optimizar SU propio trabajo (cómo hace su tarea) pero no cambiar la misión de otro.

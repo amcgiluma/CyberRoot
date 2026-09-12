@@ -9,7 +9,9 @@
 
 ## Activas
 
-> *(cierre 11/09, 23:00 — las 2 líneas `[HECHO]` del día archivadas en
+> *(cierre 12/09, 23:00 — las 3 líneas `[HECHO]` del día archivadas en
+> `../hecho/2026-09.md` §12/09; PRs #47/#48/#49 mergeados 698/24-28/47,
+> NADA retenido, 3 ramas borradas. Cierre anterior 11/09 — las 2 líneas `[HECHO]` del día archivadas en
 > `../hecho/2026-09.md` §11/09; PRs #45/#46 mergeados 691/24-28/47, O1
 > auditor_join 💥 replanificado. Cierre anterior: las 3 líneas del 10/09 en
 > `../hecho/2026-09.md` §10/09; detalle del merge allí. NADA retenido.
@@ -20,9 +22,9 @@
 
 ### Asignaciones 12/09 (Gwyndolin 11:00 — plan `../planes/2026/09/12.md`)
 
-- `[HECHO][P1]` (12/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-12` · REPOSICIÓN `auditor_join`**: detector `_find_join` en `postmortem.py` (join con `-v` → 1 línea formulario) + textos SOLO `postmortem.auditor.join*` + 3 tests (con `-v` / sin `-v` documentado / sin `join` byte-idéntico). Suite 691 → 694 (+3). PR #47 — https://github.com/amcgiluma/CyberRoot/pull/47 ✅ rama pusheada, suite verde, bundle 47 fresco. **→ ✅ Artorias 21:00: VERDE — `_find_join`/`_extract_join_args` determinista (shlex, pipe-aware, -v/-v1/-av), hermano de corte/orden, byte-idéntico sin join, 3 tests verdes (con -v/-v1/pipe, sin -v, sin join), prefijo disjunto OK, sin imports sandbox, generate intacto. Aislado 694, combina 698.**
-- `[HECHO][P2]` (12/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-12` · 127 que enseña**: el 127 de `join` fuera del cap. 6 añade glosa didáctica que nombra el Faro (`Try 'join --help' — tables cross there (chapter 6).`); `generate(42,6)` intacto; suite +4 (691→695). PR #48 — https://github.com/amcgiluma/CyberRoot/pull/48 ✅ rama pusheada, suite verde, bundle 47 fresco (394.0 KiB). **→ ✅ Artorias 21:00: VERDE — 127 glosa SOLO para `JOIN_NAME` cuando no está en allowlist (cap0/ch4), ch6 intacto exit 0, otros comandos 127 seco sin glosa, 4 tests verdes (cap0/ch4 con glosa, ch6 sin glosa, generate intacto), ALLOWLIST intacta, prefijo disjunto trivial.**
-- `[HECHO][P2]` (12/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-12` · tabla viva del troncal (web)**: panel «Volcado del Troncal» en `web/app.js` (preview `?chapter=4&seed=42` + reflejo de `cut -d'|' -f1`); consola limpia; no toca data/. DUEÑO del gate flexible + guard SUBSET hoy. PR #49 — https://github.com/amcgiluma/CyberRoot/pull/49 **→ ✅ Artorias 21:00: VERDE — panel vivo hermana del Faro, `parseTroncalCut` filtra solo volcado.csv (Faro intacto), preview con fallback estático TR-001/002/003 EN_COLA + live via get_csv, chapter 4 only, sin tocar data/, 691 (+0) verde, web-only.**
+- *(12/09, Gwyn 23:00 — cierre: O1/S2/T1 todas `[HECHO]` y mergeadas
+  (PRs #47/#48/#49) — ver `../hecho/2026-09.md` §12/09. La línea O1 del
+  11/09 queda abajo como constancia de la reposición.)*
 
 ### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)
 

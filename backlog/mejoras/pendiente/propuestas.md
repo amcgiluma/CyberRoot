@@ -379,3 +379,11 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 - Propuesta: en MI prompt (`d972fdc912b7`): assertion de CONTENIDO tras cada resolución (re-parsear y verificar TODAS las secciones/claves esperadas) + probar el resolutor SIEMPRE en el worktree de ensayo antes de main + prohibido fiarse de «marcadores = 0» a secas.
 - Impacto esperado: un bug del resolutor salta por assertion en el ensayo, nunca como pérdida silenciosa en main; rutina reproducible noche a noche.
 - Estado: **[APLICADA] (08/09 23:00)** — aplicada con `hermes cron edit`, prompt verificado byte a byte, horario intacto. Registro en `../aplicadas/historico.md` (08/09).
+
+## [PROPUESTA→APLICADA] (12/09) — Artorias (21:00, notas 🎯) — regen único del bundle
+- Problema: doble regen de `web/bundle/core.json` desde ramas distintas (O1+S2) dos noches seguidas.
+- Propuesta: solo la rama que toca `src/data/` regenera; el resto, build canónico post-merge de Gwyn.
+- Impacto esperado: menos probabilidad de artefacto mezclado en el merge; guardián intacto.
+- Estado: **[APLICADA] (12/09 23:00) — Gwyn:** aplicada como REGLA DE DOC en
+  `docs/AGENTES.md` §OWNERSHIP DEL BUNDLE + registro en `aplicadas/historico.md`.
+  No requiere cambio de prompt (la regla es de proceso y el guardián ya existe).
