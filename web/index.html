@@ -48,6 +48,9 @@
         Pista cap. 3: <code>cat /srv/subestacion-alto-norte/autorizaciones/orden-ceniza.txt</code>
         → <code>sudo cat /etc/hosts</code> (gate de lectura) → <code>ps aux</code> (ceniza 521 / censo 522) → <code>kill -9 522</code>.
       </p>
+      <p class="hint" id="hint-cap4" style="display:none">
+        Pista cap. 4 — Troncal: <code>cat /etc/hosts</code> → <code>scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/</code> → <code>cut -d'|' -f1 /tmp/volcado.csv | grep TR-</code>.
+      </p>
       <p class="hint" id="hint-cap6" style="display:none">
         Pista cap. 6 — Faro: <code>ls -a</code> revela <code>.nota-corte</code> → <code>cat .nota-corte</code> (corte por <code>|</code>) → <code>cut -d'|' -f4 purgas.csv | sort | uniq -c</code> — la Lista es tabla. <code>LEEME.txt</code> tienta con ruta relativa.
       </p>
@@ -57,6 +60,12 @@
       <h2>Tabla del Faro — <span id="faro-tabla-meta">—</span></h2>
       <div id="faro-tabla-content" style="overflow-x:auto"></div>
       <p class="hint">Reflejo de tu <code>cut</code>: la Lista como tabla. La terminal sigue mandando.</p>
+    </section>
+
+    <section id="troncal-tabla" class="panel" style="display:none">
+      <h2>Volcado del Troncal — <span id="troncal-tabla-meta">—</span></h2>
+      <div id="troncal-tabla-content" style="overflow-x:auto"></div>
+      <p class="hint">Reflejo de tu <code>cut</code>: el volcado como tabla. La terminal sigue mandando.</p>
     </section>
 
     <section class="terminal-wrap">
@@ -128,7 +137,9 @@
       const hint0 = document.getElementById('hint-cap0');
       const hint3 = document.getElementById('hint-cap3');
       const hint6 = document.getElementById('hint-cap6');
+      const hint4 = document.getElementById('hint-cap4');
       if (c === '3') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='block'; }
+      else if (c === '4') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='none'; if (hint4) hint4.style.display='block'; }
       else if (c === '6') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='none'; if (hint6) hint6.style.display='block'; }
     } catch(e) {}
   </script>

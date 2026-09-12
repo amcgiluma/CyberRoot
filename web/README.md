@@ -114,5 +114,20 @@ http://localhost:8765/?seed=1337
   `python3 -m http.server 8765 --directory web` (Chromium headless, sin
   pyproject mock). Sin Delta de suite (+0): solo doc.
 
+## Tabla viva del Troncal (T1 12/09 — Seath, hermana del Faro)
+
+Panel lateral «Volcado del Troncal» en `index.html`+`app.js`, espejo del
+`#faro-tabla` pero para el cap. 4:
+
+| Pieza | Detalle |
+|---|---|
+| Panel | `#troncal-tabla` con `#troncal-tabla-meta`/`#troncal-tabla-content`, tras `#faro-tabla` |
+| Hint | `#hint-cap4` con `cat /etc/hosts → scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/ → cut -d'\|' -f1 /tmp/volcado.csv | grep TR-` |
+| JS | `parseCut` acepta `volcado.csv`, `parseTroncalCut/hideTroncalTabla/renderTroncalTabla/updateTroncalTabla/previewTroncalTabla` (patrón Faro, acento verde), `parseParams` capítulos `[0,2,3,4,6]`, `dispatch` dual, `preview` estático pre-scp (`TRONCAL_STATIC` 3 filas id\|origen\|destino\|bytes\|estado TR-001/002 OK 1024/2048 + TR-003 EN_COLA 512) |
+| Preview | `?chapter=4&seed=42` muestra tabla inmediata (col 1 `|` resaltada) sin necesidad de `cut`; el `cut -d'|' -f1` posterior solo mueve el highlight |
+| Fallback | si `/tmp/volcado.csv`/`/srv/archivo-troncal/volcado.csv` no existen aún, render estático sin error ni consola |
+
+Sin tocar `data/` ni core: reusa `get_csv` vía Pyodide. Faro intacto (`#faro-tabla` solo cap. 6). Suite 691 (+0).
+
 Evidencia del run: `node` log completo en worklog `docs/worklog/2026/09/08.md`
 (Seath).
