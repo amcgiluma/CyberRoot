@@ -10,14 +10,28 @@
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 
-*(Vacío esta noche — la última dirección de Oscar (12/09, 🧭20–28) fue
-VALIDADA e integrada por Gwyn el 12/09 por la noche: 🧭20/21/22/23/28
-CERRADAS archivadas, 🧭24 cerrada con matiz PRE-PUEBLA resuelto (Gwyn
-decide MANTENER la pre-puebla de `shell.hosts` como comodidad — la
-redundancia didáctica del briefing «léelo en /etc/hosts» es un recuerdo
-de la frontera, no un bug; ajustar el briefing es deuda P3 si algún día
-confunde a un jugador real), 🧭25/26/27 PERSISTEN sin cambio. Ver
-`../planes/2026/09/12.md` y worklog 12/09 para el detalle.)*
+### 🧭 Oscar — dirección 05:00 (13/09, MODO B — zona 🔬 auditor_join + 127 + tabla troncal)
+
+**Veredicto de experiencia:** APTO — el camino del novato sigue apto de principio a fin. La zona 🔬 de Gwyn 13/09 se ejecutó COMPLETA desde save limpio (MODO B, build jugable real) y responde SÍ ×3 a sus preguntas de sabor.
+
+**Qué se ha jugado (save limpio, sin atajos):**
+- Prioridad 1 `auditor_join` (dato4 «El cruce», cap. 6): `generate(42,6, contract_id='story.ch6.dato4')` + `new_session` `cd /srv/camara-faro` + `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv` → 3 líneas `sujeto|…` + `000|PR-0091|EN BLANCO|--|ENSAYO` + `000483|PR-0092|…|EN BLANCO, revisado`. `build_postmortem` con `-v` añade `auditor_join` + segunda línea `lines_resolved`; sin `-v` NO añade (solo pico); sin `join` byte-idéntico a antes; variantes `-v1`/`-v 1`/`-av`/pipe+join deterministas; sin filtrar datos de fila (`PR-0091` ausente, solo formulario `Expediente 000`).
+- Prioridad 2 glosa 127 + tabla viva: `join` en cap. 0 →127 con glosa `Try 'join --help' — tables cross there (chapter 6).`, en ch4 idéntica glosa, `foobar`/`tail` →127 seco, `join` en ch6 →0 sin glosa; troncal `cat /etc/hosts`→`scp`→`cut -d'|' -f1 /tmp/volcado.csv | grep TR-` → `TR-001/TR-002/TR-003` sin `id`, web `?chapter=4&seed=42` preview estático pre-scp y tabla viva-live post-`cut`, cap. 4 only, restart limpia ambos paneles. Smoke 698/0, gate 24/28, bundle 47 396.7 KiB.
+
+**Respuesta a las preguntas de sabor de Gwyn:**
+1. *¿feels like the Auditor "saw" your cross?* **Sí.** La 4ª huella `auditor_join` se siente como las otras (`corte`/`orden`): mismo formulario, misma voz «Continuidad del ensayo: estable.», solo aparece cuando usaste anti-join, sin añadir ruido si no cruzaste. No parece tachuelo: parece testigo que confiesa.
+2. *¿la glosa del 127 enseña o marea?* **Enseña.** Solo `join` fuera de ch6 nombra el Faro con `--help`; el resto 127 seco. En ch6 no hay glosa. La frontera sigue siendo honesta (no regala `join` a ch4), pero el novato ya sabe dónde vive el verbo.
+3. *¿la tabla del troncal «da que hacer» o solo «muestra»?* **Da que hacer.** Preview estático `TR-001/002/003` sin `id` antes de `scp` no resuelve nada; solo tras `scp` + `cut -d'|' -f1 | grep TR-` la columna 1 se resalta y el `id` fantasma se hace visible como error corregible. Hermana del Faro sin inventar patrón nuevo.
+
+**Propuestas de dirección (informo, no decido — Gwyn valida):**
+
+1. **🧭29 — CERRADO (verificación positiva, no proponer):** la tríada `corte→orden→join` ya cierra la retícula del post-mortem sin cicatriz. No abrir tarea: las 3 huellas comparten `_find_*` determinista, prefijos disjuntos (`postmortem.auditor.*`), sin tocar `curriculum.json`/`shell.py`. Si algún día la 4ª huella se siente «un tachuelo más», el remedio no es más huellas sino un momento diegético que las nombre juntas (Ceniza/Gris), no una 5ª clave.
+2. **🧭30 — CERRADO (verificación positiva, no proponer):** la glosa 127 y la tabla viva hermana cierran dos superficies sin deuda nueva. La glosa no necesita ampliarse a otros comandos (Gwyn ya decidió: solo `join`); la tabla viva no necesita ampliarse a otros caps. Si mañana se toca `TRONCAL_CONTENT` en `chapter4.py`, recordar que `web/app.js` `TRONCAL_STATIC` duplica el volcado — deuda señalada por Gwyn 12/09, hoy verificada byte-idéntica. Al tocar el volcado, actualizar ambos o romperá el fallback pre-scp.
+3. **🧭24 — PERSISTE con matiz (doc drift P3, decisión Gwyn 12/09 MANTENER pre-puebla):** `new_session` cap. 4 pre-puebla `shell.hosts` con `faro`+`troncal-01/02` (O1 09/09) — `scp` sin `cat` ya no rechaza. El briefing aún documenta el rechazo «léelo en /etc/hosts» como didáctico. Gwyn decidió mantener la pre-puebla como comodidad; yo lo confirmo sin reproche (698/0, `GameState` roundtrip preserva hosts). Si un playtest real muestra confusión con el briefing, se reescribe el briefing, no el código. No abrir tarea hoy.
+4. **🧭25/26/27 — PERSISTEN (recámara, sin urgencia):** límite 2 pipes + `>` no soportado (ch4.e2 evita el límite con 1 pipe), `c.cut` en ch4 pero e1 sigue sin `cut` (e2 sí lo exige por necesidad, diseño correcto), `grep -v` no soportado (filtro positivo `grep TR-`/`grep 000` es lección). Ninguna bloquea; no proponer implementación sin decisión de Gwyn.
+5. **Para dirección futura (no tarea):** el veterano de 20h ya gira entre `cut` (ch4), `cut|sort|uniq -c` (Faro E2) y `join -v` (dato4) como el mismo verbo en 3 altitudes (cortar→agrupar→cruzar). El eco diegético del espejo (🧭9) que nombre ese repertorio («copiaste el volcado / cruzaste tablas / leíste el reloj») sería la pieza que daría cuerpo a ch4.e2+dato4/5 sin añadir comandos.
+
+**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3 (mantener pre-puebla); 🧭25/26/27 en recámara; 🧭28 cerrada (FICHA alma); **🧭29/30 NUEVOS CERRADOS** (tríada con voz + glosa que enseña + tabla que da que hacer). Sin [BUG] nuevo que abra backlog; sin decisión de implementación propuesta.
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 
