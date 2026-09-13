@@ -13,31 +13,24 @@
 > `../hecho/2026-09.md` §12/09; PRs #47/#48/#49 mergeados 698/24-28/47,
 > NADA retenido, 3 ramas borradas. Cierre anterior 11/09 — las 2 líneas `[HECHO]` del día archivadas en
 > `../hecho/2026-09.md` §11/09; PRs #45/#46 mergeados 691/24-28/47, O1
-> auditor_join 💥 replanificado. Cierre anterior: las 3 líneas del 10/09 en
-> `../hecho/2026-09.md` §10/09; detalle del merge allí. NADA retenido.
-> PRs #42/#43/#44 mergeados en orden engine→sandbox→meta-ui con el fix de
-> 1 línea de O1 aplicado EN EL MERGE (patrocinado por Artorias): suite
-> **680 passed**, gate **24/27**, bundle **47 ficheros (389.8 KiB)**.
-> Las 3 ramas del día borradas tras confirmar MERGED en GitHub.)*
+> auditor_join 💥 replanificado y RESUELTO en #47 (12/09).)*
 
-### Asignaciones 12/09 (Gwyndolin 11:00 — plan `../planes/2026/09/12.md`)
+### Asignaciones 13/09 (Gwyndolin 11:00 — plan `../planes/2026/09/13.md`)
 
-- *(12/09, Gwyn 23:00 — cierre: O1/S2/T1 todas `[HECHO]` y mergeadas
-  (PRs #47/#48/#49) — ver `../hecho/2026-09.md` §12/09. La línea O1 del
-  11/09 queda abajo como constancia de la reposición.)*
+- `[EN CURSO][P1]` (13/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-13` · Eco del espejo v0: el Auditor nombra tu repertorio** — el post-mortem añade UNA línea `postmortem.espejo.*` si la sesión contiene ① scp→cut|grep (ch4.e2), ② join con `-v` (dato4) o ③ ps aux+grep de hora (dato5); con las 3, una sola línea enumerándolas (determinista ①→②→③); sin firma → byte-idéntico. Sin datos de fila, forma formulario, sin popup. Módulo `engine/postmortem.py` + `textos.json` (prefijo nuevo `postmortem.espejo.*`) + tests. Criterio: 4 tests, suite 698→≥702. COSTURAS: prefijo disjunto; no toca curriculum/shell/web/gates.
+- `[EN CURSO][P2]` (13/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-13` · quest `story.ch6.dato6` «La segunda purga»** — golden `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` → 1 línea `PR-0092` + variante bonus `cut -d'|' -f3 purgas.csv | grep 000483` (la lección del Faro: NO toda huérfana es fantasma — 000 vs 000483 coma-trampa). Quest nueva en `curriculum.json` + textos prefijo `story.ch6.dato6.*` + SU fichero de tests (`test_ch6_dato6_circuit.py`). Reusa scaffold dato4; NO toca generator.py ni chapter6. **ALLOWLIST OWNER: NADIE** (nada añade comandos). **GATE OWNER: Smough** — flexible 28↔29 en `test_ch6_datos_circuit.py`. Criterio: gate 28→29, golden exit 0, +3–5 tests.
+- `[EN CURSO][P2]` (13/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-13` · Web: huella del troncal visible** — badge ámbar en fila `TR-003|EN_COLA` + header `id` tachado con tooltip tras `cut -d'|' -f1 | grep TR-`. Solo `web/app.js`; reusa patrón `hideTroncalTabla`/tabla Faro; NO toca `TRONCAL_CONTENT` ni data/. Criterio: visible en `?chapter=4&seed=42`, consola limpia, Faro intacto, 0/+1 tests.
 
 ### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)
 
-- `[EN CURSO][P2]` (11/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-11` · `auditor_join`: la cuarta huella del Auditor** — detector `_find_join` en `postmortem.py` (join con `-v` anti-join → 1 línea formulario) + textos SOLO `postmortem.auditor.join*` + tests de los 3 casos (con `-v` / sin `-v` documentado / sin `join` byte-idéntico). Criterio: línea presente con anti-join en history, sin `join` byte-idéntico a hoy, suite +3–5 sobre 680. Costura S↔O sobre `textos.json`: prefijos disjuntos (`postmortem.auditor.join` vs `story.ch4.e2`), unión trivial. NO toca `curriculum.json` (dueño S2 hoy). **→ 💥 Artorias 21:00: NO ENTREGADO — `feat/engine-2026-09-11` 0 commits ahead de origin/main, sin PR abierto (verificado `git log origin/main..feat/engine-2026-09-11` vacío + `gh pr list` sin engine). Criterio no evaluable; replanificar mañana con misma spec y prefijo `postmortem.auditor.join` disjunto. Sin impacto en S2/T1.**
+- *(11/09, Gwyn 23:00 — cierre 12/09: O1 `auditor_join` se REPLANIFICÓ AL 12/09 con la misma spec y SALIÓ — PR #47 mergeado. La línea 💥 original queda abajo como constancia histórica del fallo de arranque; la tarea está viva en `hecho/2026-09.md` §12/09.)*
+- `[EN CURSO][P2]` (11/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-11` · `auditor_join`: la cuarta huella del Auditor** — detector `_find_join` en `postmortem.py` (join con `-v` anti-join → 1 línea formulario) + textos SOLO `postmortem.auditor.join*` + tests de los 3 casos (con `-v` / sin `-v` documentado / sin `join` byte-idéntico). Criterio: línea presente con anti-join en history, sin `join` byte-idéntico a hoy, suite +3–5 sobre 680. Costura S↔O sobre `textos.json`: prefijos disjuntos (`postmortem.auditor.join` vs `story.ch4.e2`), unión trivial. NO toca `curriculum.json` (dueño S2 hoy). **→ 💥 Artorias 21:00: NO ENTREGADO — `feat/engine-2026-09-11` 0 commits ahead de origin/main, sin PR abierto (verificado `git log origin/main..feat/engine-2026-09-11` vacío + `gh pr list` sin engine). Criterio no evaluable; replanificado al 12/09 con misma spec, salió en PR #47 por Gwyn 23:00. Sin impacto en S2/T1.**
 
 ### Asignaciones 10/09 (Gwyndolin 11:00 — plan `../planes/2026/09/10.md`)
 
 - *(O1 dato5 «La persiana» → PR #42; S2 dato4 «El cruce» + `join` → PR #43;
   T1 circuito datos → PR #44 — todas MERGE el 10/09, ver
   `../hecho/2026-09.md` §10/09.)*
-
-### Asignaciones 09/09 (Gwyndolin 11:00 — plan `../planes/2026/09/09.md`)
-
 
 ### Asignaciones 07/09 (Gwyndolin 11:00 — plan `../planes/2026/09/07.md`)
 
@@ -145,16 +138,11 @@
   (07/09: revisado de nuevo — `corte`/`orden` siguen cubriendo la voz del
   interrogatorio en formulario; la pieza sigue sin urgencia).
 
-> **(08/09, Gwyn 23:00 — cierre del día):** PRs #36/#37/#38 mergeados en orden
-> engine→sandbox→meta-ui, suite **635 passed**, gate **22 conceptos / 24
-> quests** (`story.ch6.e2` «La que no pesa» nueva; `e1` intacta), bundle **45
-> ficheros** regenerado (351.1 KiB). Las 6 líneas `[HECHO]` del día archivadas
-> en `../hecho/2026-09.md` §08/09; NADA retenido; las 3 ramas borradas tras
-> merge MERGED (SHAs locales verificados en GitHub). Gate de diseño 23/23 en
-> verde (leer descubre, listar no; golden e2 sin fantasma; scp enseña dónde
-> leer; save aguanta). **La sección «Piezas listas para integrar» queda SIN
-> CAMBIOS de destino**: el pack `POSTMORTEM.md` sigue esperando a un Q con
-> Manus — `corte`/`orden` siguen cubriendo la voz del interrogatorio en
-> formulario y la cualidad del pack (claves de SEÑAL) no es urgente. Vivo de
-> mañana: quests `ch4` (scp como prereq), `dato4/dato5`, karma 521/522 y
-> 🧭24 (allowlist `cat+grep` de caps con red).
+> **(12/09, Gwyn 23:00 — cierre del día):** PRs #47/#48/#49 mergeados en orden
+> engine→sandbox→meta-ui, suite **698 passed**, gate **24 conceptos / 28
+> quests**, bundle **47 ficheros (396.7 KiB)** regenerado canónicamente
+> (guardián verde). **NADA retenido.** Las 3 ramas borradas tras confirmar
+> MERGED en GitHub. Validación completa del 🧭 de Oscar 12/09: 🧭24
+> MANTENER pre-puebla (doc drift P3 recámara), 🧭25/26 recámara, 🧭28
+> cerrada. Vivo de mañana: repo del día 13/09 en plan (eco diegético,
+> dato6, tabla web troncal).
