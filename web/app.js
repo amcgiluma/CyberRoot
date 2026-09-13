@@ -299,38 +299,55 @@ function hideTroncalTabla() {
   if (el) el.style.display = "none";
 }
 
-function renderTroncalTabla(cutInfo, csvContent) {
+function renderTroncalTabla(cutInfo, csvContent, opts) {
   const panel = $id("troncal-tabla");
   const metaEl = $id("troncal-tabla-meta");
   const contentEl = $id("troncal-tabla-content");
   if (!panel || !metaEl || !contentEl) return;
+  const grepFiltered = !!(opts && opts.grepFiltered);
   const lines = csvContent.split("\n").filter(l => l.length > 0);
   if (lines.length === 0) { hideTroncalTabla(); return; }
   const delim = cutInfo.delim;
   const colIdx = cutInfo.field - 1;
   const shortFile = cutInfo.file.split("/").pop();
-  metaEl.textContent = `${shortFile} · columna ${cutInfo.field} (${delim})`;
-  // Construye tabla HTML (mismo estilo que el Faro; acento propio del troncal)
+  metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})${grepFiltered ? " \u00b7 grep TR-" : ""}`;
   let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
   const headerCells = lines[0].split(delim);
   html += "<thead><tr>";
   for (let i = 0; i < headerCells.length; i++) {
-    const cls = i === colIdx ? ' style="background:rgba(140,220,150,.25);color:var(--accent);font-weight:700;border:1px solid var(--border);padding:4px 6px"' : ' style="border:1px solid var(--border);padding:4px 6px;color:var(--muted)"';
-    html += `<th${cls}>${headerCells[i] || "—"}</th>`;
+    const headerVal = headerCells[i] || "\u2014";
+    const isIdHeader = headerVal === "id" && i === 0;
+    if (grepFiltered && isIdHeader) {
+      const tip = "filtrado por grep TR- \u2014 el header miente, \u2018-\u2019 dice la verdad";
+      html += `<th title="${tip}" style="border:1px solid var(--border);padding:4px 6px;color:var(--muted);text-decoration:line-through;opacity:.65;cursor:help;text-decoration-thickness:1.5px">${headerVal}</th>`;
+    } else {
+      const cls = i === colIdx ? ' style="background:rgba(140,220,150,.25);color:var(--accent);font-weight:700;border:1px solid var(--border);padding:4px 6px"' : ' style="border:1px solid var(--border);padding:4px 6px;color:var(--muted)"';
+      html += `<th${cls}>${headerVal}</th>`;
+    }
   }
   html += "</tr></thead><tbody>";
   const maxRows = Math.min(lines.length, 16);
   for (let r = 1; r < maxRows; r++) {
     const cells = lines[r].split(delim);
-    html += "<tr>";
+    const isEnColaRow = cells.includes("TR-003") && cells.includes("EN_COLA");
+    const rowStyle = (grepFiltered && isEnColaRow) ? ' style="background:rgba(255,193,7,.07)"' : "";
+    html += `<tr${rowStyle}>`;
     for (let c = 0; c < cells.length; c++) {
-      const cls = c === colIdx ? ' style="background:rgba(140,220,150,.18);color:var(--fg);font-weight:600;border:1px solid var(--border);padding:3px 6px"' : ' style="border:1px solid var(--border);padding:3px 6px"';
-      const val = cells[c] || "—";
-      html += `<td${cls}>${val.length > 24 ? val.slice(0,24)+"…" : val}</td>`;
+      const isCol = c === colIdx;
+      const baseStyle = isCol ? "background:rgba(140,220,150,.18);color:var(--fg);font-weight:600;border:1px solid var(--border);padding:3px 6px" : "border:1px solid var(--border);padding:3px 6px";
+      const val = cells[c] || "\u2014";
+      const displayVal = val.length > 24 ? val.slice(0,24)+"\u2026" : val;
+      if (grepFiltered && isEnColaRow && val === "EN_COLA") {
+        const tip = "512 bytes, 03:14 \u2014 el que no pesa a\u00fan pesa";
+        const badge = `<span title="${tip}" style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:rgba(255,193,7,.22);border:1px solid rgba(255,193,7,.55);color:#ffcf4a;font-size:.68rem;font-weight:700;vertical-align:middle;cursor:help">EN_COLA \u00b7 512</span>`;
+        html += `<td style="${baseStyle}" title="${tip}">${displayVal} ${badge}</td>`;
+      } else {
+        html += `<td style="${baseStyle}">${displayVal}</td>`;
+      }
     }
     html += "</tr>";
   }
-  if (lines.length > maxRows) html += `<tr><td colspan="${headerCells.length}" style="text-align:center;color:var(--muted);padding:6px">… ${lines.length - maxRows} filas más (usa cat/head en la terminal)</td></tr>`;
+  if (lines.length > maxRows) html += `<tr><td colspan="${headerCells.length}" style="text-align:center;color:var(--muted);padding:6px">\u2026 ${lines.length - maxRows} filas m\u00e1s (usa cat/head en la terminal)</td></tr>`;
   html += "</tbody></table>";
   contentEl.innerHTML = html;
   panel.style.display = "block";
@@ -338,15 +355,16 @@ function renderTroncalTabla(cutInfo, csvContent) {
 
 function updateTroncalTabla(line) {
   const info = parseTroncalCut(line);
-  if (!info) return; // sin cut sobre volcado.csv → no toca el panel (no parpadea)
-  if (currentChapter !== 4) return; // solo en el Troncal
+  if (!info) return;
+  if (currentChapter !== 4) return;
+  const isGrepTR = line.includes("grep") && line.includes("TR-");
+  const grepFiltered = !!(isGrepTR && info.delim === "|" && info.field === 1);
   try {
     const raw = pyodide.globals.get("get_csv")(info.file);
     const data = JSON.parse(raw);
     if (!data.ok || !data.content) { hideTroncalTabla(); return; }
-    renderTroncalTabla(info, data.content);
+    renderTroncalTabla(info, data.content, { grepFiltered });
   } catch (e) {
-    // no rompe la terminal si falla
   }
 }
 
