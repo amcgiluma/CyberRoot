@@ -1,49 +1,50 @@
-# 🔬 Zona de testeo — 13/09 (definida por Gwyn el 12/09, 23:00)
+# 🔬 Zona de testeo — 14/09 (definida por Gwyn el 13/09, 23:00)
 
 > Formato `docs/TESTEO-DIARIO.md` §4. Relevo: **OSCAR (05:00) recorre la
 > zona COMPLETA desde save limpio (MODO B) → HAVEL (07:00) se centra en lo
-> nuevo + smoke del conjunto.** Base del estado ain: post-merge
-> PRs #47/#48/#49, suite 698, gate 24/28, bundle 47 (396.7 KiB).
+> nuevo + smoke del conjunto.** Base del estado actual: post-merge
+> PRs #50/#51/#52, suite **708**, gate **24 conceptos / 29 quests**, bundle
+> **47 ficheros (402.3 KiB)** regenerado canónicamente (guardián verde).
 
-## Prioridad 1 — `auditor_join`: el post-mortem cita el anti-join (NUEVO, PR #47)
+## Prioridad 1 — quest `story.ch6.dato6` «La segunda purga» (NUEVA, PR #51)
 
-- **Dónde:** juega `story.ch6.dato4` (Faro) resolviéndolo con
-  `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv` y abre la ficha.
-  El **post-mortem del Auditor** debería ahora incluir una línea nueva
-  «cruce registrado — join anti-join (-v): huérfanas de la primera tabla».
-- **Qué verificar:** (a) la línea aparece SOLO cuando el history contiene
-  un `join` **con `-v`/`-v1`/`-v 1`/pipe+join**; (b) una sesión sin join
-  produce el post-mortem **byte-idéntico** a antes (sin ruido); (c) una
-  sesión con `join` **sin `-v`** NO dispara la línea nueva (el join
-  normal ya lo cubre el informe de hoy); (d) la línea no filtra datos de
-  fila del mundo (formulario, no contador de datos).
-- **Por qué importa:** es la CUARTA huella del Auditor (corte→orden→join):
-  si esta no se siente como las otras (testigos que confiesan), el
-  post-mortem pierde la retícula.
-- Pregunta de sabor: **¿feels like the Auditor "saw" your cross?** ¿o
-  parece un tachuelo de formulario más?
+- **Dónde:** juega la quest nueva del Faro: golden
+  `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` →
+  debe devolver **1 línea: `000483|PR-0092|...|EN BLANCO, revisado`**.
+  La coma-trampa: `EN BLANCO, revisado` es UN campo — un `join -t','`
+  partiéndolo es la lección del separador.
+- **Qué verificar:** (a) el golden mental con `join` (cruce) — no se
+  resuelve con `cut` ni `grep` a secas; (b) la variante bonus
+  `cut -d'|' -f3 purgas.csv | grep 000483` —alumbra la huérfana que SÍ está
+  en la segunda tabla (000 vs 000483: no toda huérfana es fantasma);
+  (c) el filtro es POSITIVO `grep 000483`; (d) determinismo: repetir la
+  golden dos veces → misma fila; (e) la quest exige `c.join` (no
+  accesible sin la del dato4 de ayer).
+- **Por qué importa:** PRIMERA quest que enseña mintiendo con la verdad:
+  el dato trap está DENTRO del campo que `join` ya devolvía — si la
+  lección no se siente, coma-trampa pierde cap.
+- Pregunta de sabor: **¿la coma-trampa se nota sin señal roja, o el
+  jugador la tropezará sin entender por qué?**
 
-## Prioridad 2 — 127 que enseña + tabla viva del troncal (PRs #48/#49)
+## Prioridad 2 — eco del espejo + huella visible del troncal (PRs #50/#52)
 
-- **Dónde:** en un cap. 0 o cap. 4 (tras e1), teclea
-  `join`, y la shell responderá el error 127 con la glosa que nombra el
-  Faro: `Try 'join --help' — tables cross there (chapter 6).`. Luego, en
-  cap. 4, abre la **web** (`?chapter=4&seed=42`).
-- **Qué verificar:** (a) la glosa SOLO aparece con `join` (el resto de
-  comandos que no existen mantienen el error 127 seco, sin glosa); (b) en
-  el cap. 6,  `join a b` funciona y NO da 127; (c) en la web, el panel
-  **«Volcado del Troncal»** hermana del Faro: preview estático
-  (TR-001/002/003) ANTES del `scp`, y **tabla viva-live** DESPUÉS del
-  `scp /tmp/`, con el reflejo de `cut -d'|' -f1` sin la fila `id`; (d)
-  cambia de capítulo y el panel desaparece (cap. 4 only); (e) **restart
-  limpia ambos paneles** (el del Faro intacto siempre).
-- **Por qué importa:** dos superficies nuevas (glosa didáctica + panel
-  web) que NACEN de la frontera: si la glosa choca con el sabor («te
-  dice dónde ir») o x (`id` fantasma vs
-  TR-…), es señal de diseño, no de bug.
-- Pregunta de sabor: **¿la glosa del 127 enseña o marea?** ¿La tabla del
-  troncal «da que hacer» y no solo «muestra»?
+- **Eco del espejo (cap. 6):** termina una sesión de la tríada completa
+  (ch4.e2 scp→cut|grep + dato4 join -v + dato5 ps aux|grep hora) y lee el
+  post-mortem: una sola línea `postmortem.espejo.*` enumerando las 3
+  firmas («,  y »), determinista ①→②→③; con CERO firmas → post-mortem
+  byte-idéntico; con UNA sola → línea con esa firma sola. ¿Suenan las
+  3 firmas juntas como un testigo que recuerda, o como una lista?
+- **Huella del troncal en web (cap. 4):** en `?chapter=4&seed=42`, tras
+  `scp` + `cut -d'|' -f1 /tmp/volcado.csv | grep TR-`: (a) fila
+  `TR-003` lleva badge ámbar **`EN_COLA · 512`**; (b) header `id`
+  aparece TACHADO con tooltip; (c) SIN esa pipeline → sin badge ni
+  header tachado (fallback estático honesto intacto); (d) restart limpia
+  ambos paneles (Faro + troncal), funciona, consola limpia.
+- Pregunta de sabor: **¿el badge EN_COLA mete presión de timeline
+  genuina o es solo ruido visual?** (TR-003 es la bifurcación kármica
+  futura: el badge es su PRIMER aviso diegético.)
 
-**Smoke:** suite completa (698/0), gate 24/28, bundle fresco (guardián
-verde), `generate(42,6)` intacto, golden `cut -d'|' -f1 /tmp/volcado.csv
-| grep TR-` → 3 líneas sin `id` + TR-003 EN_COLA visible.
+**Smoke:** suite completa (708/0), gate 24/29, bundle fresco (guardián
+verde, 47 ficheros), `generate(42,6)` + `generate(42,6,'story.ch6.dato6')`
+intactos, replay MODO B del eco del espejo con las 3 firmas + golden
+dato6 exit 0.

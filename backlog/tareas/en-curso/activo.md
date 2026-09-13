@@ -9,17 +9,21 @@
 
 ## Activas
 
-> *(cierre 12/09, 23:00 — las 3 líneas `[HECHO]` del día archivadas en
-> `../hecho/2026-09.md` §12/09; PRs #47/#48/#49 mergeados 698/24-28/47,
-> NADA retenido, 3 ramas borradas. Cierre anterior 11/09 — las 2 líneas `[HECHO]` del día archivadas en
-> `../hecho/2026-09.md` §11/09; PRs #45/#46 mergeados 691/24-28/47, O1
-> auditor_join 💥 replanificado y RESUELTO en #47 (12/09).)*
+> *(cierre 13/09, 23:00 — las 3 líneas `[HECHO]` del día archivadas en
+> `../hecho/2026-09.md` §13/09; PRs #50/#51/#52 mergeados en orden
+> engine→sandbox→meta-ui por Gwyn, suite **708 passed**, gate **24/29**,
+> bundle **47 ficheros (402.3 KiB)** regenerado canónicamente. NADA
+> retenido, 3 ramas borradas tras confirmar integradas en GitHub.
+> Cierre anterior 12/09 — PRs #47/#48/#49, 698/24-28/47.)*
 
-### Asignaciones 13/09 (Gwyndolin 11:00 — plan `../planes/2026/09/13.md`)
+### Asignaciones 13/09 (awaiting: nada — día CERRADO)
 
-- `[HECHO][P1]` (13/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-13` · Eco del espejo v0: el Auditor nombra tu repertorio** — el post-mortem añade UNA línea `postmortem.espejo.*` si la sesión contiene ① scp→cut|grep (ch4.e2), ② join con `-v` (dato4) o ③ ps aux+grep de hora (dato5); con las 3, una sola línea enumerándolas (determinista ①→②→③); sin firma → byte-idéntico. Sin datos de fila, forma formulario, sin popup. Módulo `engine/postmortem.py` + `textos.json` (prefijo nuevo `postmortem.espejo.*`) + tests. Criterio: 4 tests, suite 698→≥702. COSTURAS: prefijo disjunto; no toca curriculum/shell/web/gates. → **✅ Artorias 21:00: VERDE — PR #50 (5 tests: volcado/testigos/reloj/byte-idéntico/3-en-1 orden), bundle regen OK, prefijo disjunto, sin tocar gate. LISTO PARA GWYN.**
-- `[HECHO][P2]` (13/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-13` · quest `story.ch6.dato6` «La segunda purga»** — golden `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` → 1 línea `PR-0092` + variante bonus `cut -d'|' -f3 purgas.csv | grep 000483` (la lección del Faro: NO toda huérfana es fantasma — 000 vs 000483 coma-trampa). Quest nueva en `curriculum.json` + textos prefijo `story.ch6.dato6.*` + SU fichero de tests (`test_ch6_dato6_circuit.py`). Reusa scaffold dato4; NO toca generator.py ni chapter6. **ALLOWLIST OWNER: NADIE** (nada añade comandos). **GATE OWNER: Smough** — flexible 28↔29 en `test_ch6_datos_circuit.py`. Criterio: gate 28→29, golden exit 0, +3–5 tests. → **✅ Artorias 21:00: VERDE — PR #51 (5 tests: golden/variante/filtro-positivo/coma/determinismo), curriculum 24/29 DAG válido, gate owner respetado, ALLOWLIST intacta. LISTO PARA GWYN.**
-- `[HECHO][P2]` (13/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-13` · Web: huella del troncal visible** — badge ámbar en fila `TR-003|EN_COLA` + header `id` tachado con tooltip tras `cut -d'|' -f1 | grep TR-`. Solo `web/app.js`; reusa patrón `hideTroncalTabla`/tabla Faro; NO toca `TRONCAL_CONTENT` ni data/. Criterio: visible en `?chapter=4&seed=42`, consola limpia, Faro intacto, 0/+1 tests. → **✅ Artorias 21:00: VERDE — PR #52 (solo web/app.js, sin bundle/data, patrón hideTroncalTabla reusado, Faro intacto, +0 tests declarado). LISTO PARA GWYN.**
+> *(13/09, Gwyn 23:00 — las 3 tareas del día SALIERON: ver
+> `../hecho/2026-09.md` §13/09. Sin deuda de hoy ninguna.)*
+
+- *(13/09, O1 mergeado por Gwyn como PR #50 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
+- *(13/09, S2 mergeado por Gwyn como PR #51 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
+- *(13/09, T1 mergeado por Gwyn como PR #52 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
 
 ### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)
 
@@ -138,11 +142,15 @@
   (07/09: revisado de nuevo — `corte`/`orden` siguen cubriendo la voz del
   interrogatorio en formulario; la pieza sigue sin urgencia).
 
-> **(12/09, Gwyn 23:00 — cierre del día):** PRs #47/#48/#49 mergeados en orden
-> engine→sandbox→meta-ui, suite **698 passed**, gate **24 conceptos / 28
-> quests**, bundle **47 ficheros (396.7 KiB)** regenerado canónicamente
+> **(13/09, Gwyn 23:00 — cierre del día):** PRs #50/#51/#52 mergeados en orden
+> engine→sandbox→meta-ui, suite **708 passed**, gate **24 conceptos / 29
+> quests**, bundle **47 ficheros (402.3 KiB)** regenerado canónicamente
 > (guardián verde). **NADA retenido.** Las 3 ramas borradas tras confirmar
-> MERGED en GitHub. Validación completa del 🧭 de Oscar 12/09: 🧭24
-> MANTENER pre-puebla (doc drift P3 recámara), 🧭25/26 recámara, 🧭28
-> cerrada. Vivo de mañana: repo del día 13/09 en plan (eco diegético,
-> dato6, tabla web troncal).
+> integradas en GitHub. Validación del 🧭 de Oscar 13/09: 🧭29/30
+> re-verificadas CERRADAS con juego real desde save limpio; 🧭24 sigue
+> P3 en recámara. Piezas listas para integrar: sin cambios — el pack
+> `POSTMORTEM.md` sigue esperando un Q con Manus (la tríada
+> corte/orden/join cubre la voz del Auditor; el eco del espejo añade
+> repertorio, no exige claves de SEÑAL). Vivo de mañana: MODO B de la
+> zona 🔬 (dato6 coma-trampa + eco del espejo + badge TR-003).
+
