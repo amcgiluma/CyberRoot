@@ -65,6 +65,7 @@
     "story.ch4.e2.hint_1": "¿scp dice host no descubierto? Lee /etc/hosts con cat. Solo la lectura descubre faro y troncal-01. Luego verifica que /tmp/volcado.csv aparecio con cat.",
     "story.ch4.e2.hint_2": "El encabezado id entra si no filtras. Prueba cut -d'|' -f1 /tmp/volcado.csv | grep TR- para dejar fuera id y quedarte solo con los tres registros que pesan. TR-003 con EN_COLA es la pista.",
     "story.ch4.e2.detail": "Sala troncal cap. 4: troncal-01 con /srv/archivo-troncal/volcado.csv (id|origen|destino|bytes|estado, TR-001|faro|troncal-01|1024|OK, TR-002|troncal-01|nodo-02|2048|OK, TR-003|faro|troncal-01|512|EN_COLA, cabecera id|...). Golden: cat /etc/hosts descubre faro+troncal-01, scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/ copia, cut -d'|' -f1 /tmp/volcado.csv | grep TR- deja 3 lineas TR-001/TR-002/TR-003 sin id. Filtro positivo, 1 pipe, 03:14 como marca de lo que no pesa.",
-    "postmortem.auditor.join": "Expediente 000: cruce registrado — join anti-join (-v): huérfanas de la primera tabla. Continuidad del ensayo: estable."
+    "postmortem.auditor.join": "Expediente 000: cruce registrado — join anti-join (-v): huérfanas de la primera tabla. Continuidad del ensayo: estable.",
+    "postmortem.espejo.repertorio": "Expediente 000: repertorio — {huellas}. Continuidad del ensayo: estable."
   }
 }

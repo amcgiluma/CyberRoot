@@ -61,6 +61,10 @@ LINE_KEY_CORTE = "postmortem.auditor.corte"
 LINE_KEY_ORDEN = "postmortem.auditor.orden"
 #: O1 12/09 (Ornstein) — el Auditor cita TU cruce de tablas: si el history contiene `join` con `-v`, añade línea de join.
 LINE_KEY_JOIN = "postmortem.auditor.join"
+#: O1 13/09 (Ornstein) — Eco del espejo v0: el Auditor nombra tu repertorio.
+#: Si el history contiene alguna de las 3 firmas (scp→cut|grep, join -v, ps aux+grep),
+#: añade 1 línea repertorio enumerándolas en orden ①→②→③ (sin datos de fila).
+LINE_KEY_ESPEJO = "postmortem.espejo.repertorio"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -398,6 +402,58 @@ def _find_join(shell_dict: dict[str, Any]) -> dict[str, str] | None:
     return None
 
 
+def _has_espejo_volcado(shell_dict: dict[str, Any]) -> bool:
+    """Firma ①: `scp` a `/tmp/volcado.csv` seguido de `cut|grep` (ch4.e2).
+
+    Orden determinista: busca el primer scp que mencione volcado.csv+/tmp
+    y, desde ahí (inclusive), un `cut`+`grep` en la misma línea (pipe) o
+    en orden posterior (cut visto → grep después). Solo shlex/substring,
+    sin imports de sandbox.
+    """
+    history = shell_dict.get("history") or []
+    scp_idx: int | None = None
+    for i, entry in enumerate(history):
+        line = str(entry.get("line", ""))
+        if "scp" in line and "volcado.csv" in line and "/tmp" in line:
+            scp_idx = i
+            break
+    if scp_idx is None:
+        return False
+    # Misma línea scp ya con cut|grep (raro pero cubre `scp ... | cut ... | grep`)
+    # y búsqueda posterior
+    for entry in history[scp_idx:]:
+        line = str(entry.get("line", ""))
+        if "cut" in line and "grep" in line:
+            return True
+    # Orden separado: cut después de scp y luego grep
+    seen_cut = False
+    for entry in history[scp_idx + 1 :]:
+        line = str(entry.get("line", ""))
+        if "cut" in line:
+            seen_cut = True
+        if seen_cut and "grep" in line:
+            return True
+    return False
+
+
+def _has_espejo_reloj(shell_dict: dict[str, Any]) -> bool:
+    """Firma ③: `ps aux` + `grep` de hora (dato5).
+
+    Detecta la tubería canónica `ps aux | grep 11:04` en una sola línea
+    (misma entrada de history). Requiere `ps`+`grep` y (`aux` o `:`/hora)
+    para no disparar con un grep suelto. Solo substring+regex, sin sandbox.
+    """
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "ps" not in line or "grep" not in line:
+            continue
+        has_aux = "aux" in line
+        has_time = bool(re.search(r"\d{1,2}:\d{2}", line))
+        if has_aux or has_time:
+            return True
+    return False
+
+
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
     """True si el historial contiene al menos un `sudo`.
 
@@ -526,6 +582,29 @@ def build_postmortem(
         base["auditor_join_text"] = join_text
         base["lines_resolved"] = [*base["lines_resolved"], join_text]
 
+    # O1 13/09 — Eco del espejo v0: el Auditor nombra tu repertorio (① scp→cut|grep · ② join -v · ③ ps aux+grep)
+    _huellas: list[str] = []
+    if _has_espejo_volcado(shell_dict):
+        _huellas.append("copiaste el volcado")
+    if _find_join(shell_dict) is not None:
+        _huellas.append("cruzaste dos testigos")
+    if _has_espejo_reloj(shell_dict):
+        _huellas.append("leíste el reloj")
+    if _huellas:
+        if len(_huellas) == 1:
+            huellas_str = _huellas[0]
+        elif len(_huellas) == 2:
+            huellas_str = f"{_huellas[0]} y {_huellas[1]}"
+        else:
+            huellas_str = f"{_huellas[0]}, {_huellas[1]} y {_huellas[2]}"
+        espejo_text = _resolve_auditor_text(LINE_KEY_ESPEJO, {"huellas": huellas_str})
+        base["auditor_espejo"] = {
+            "line_key": LINE_KEY_ESPEJO,
+            "args": {"huellas": huellas_str},
+        }
+        base["auditor_espejo_text"] = espejo_text
+        base["lines_resolved"] = [*base["lines_resolved"], espejo_text]
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -575,4 +654,5 @@ __all__ = [
     "LINE_KEY_CORTE",
     "LINE_KEY_ORDEN",
     "LINE_KEY_JOIN",
+    "LINE_KEY_ESPEJO",
 ]
