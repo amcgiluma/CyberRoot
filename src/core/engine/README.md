@@ -167,3 +167,15 @@ PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 694 passed
 python tools/web/build_bundle.py  # regenera core.json (47 ficheros)
 ```
 
+---
+
+## v0.7 (O1, 13/09) — Eco del espejo v0: el Auditor nombra tu repertorio
+
+**O1 — `postmortem.espejo.repertorio` (Ornstein, P1 13/09):** quinta huella, eco diegético que nombra el repertorio ya dominado sin enseñar comando nuevo. Si el history contiene alguna de las 3 firmas (① `scp` a `/tmp/volcado.csv` seguido de `cut|grep` — ch4.e2; ② `join` con `-v` — dato4; ③ `ps aux|grep` con hora — dato5), añade **1 sola línea** `postmortem.espejo.repertorio` con `args {huellas}` enumerándolas en orden ①→②→③ ("copiaste el volcado", "cruzaste dos testigos", "leíste el reloj" → "A, B y C"). Helpers `_has_espejo_volcado`/`_has_espejo_reloj` (solo substring+regex, sin sandbox) y reutiliza `_find_join` para ②. Sin firma → byte-idéntico (no key, no línea). Texto en `data/textos.json`: `Expediente 000: repertorio — {huellas}. Continuidad del ensayo: estable.` — sin datos de fila, sin popup, formulario. `test_auditor_join.py` actualizado para coexistencia (join dispara `auditor_join`+`auditor_espejo`, len 2→in 2,3). Tests en `test_postmortem_espejo.py` (5: ①/②/③ cada uno dispara + byte-idéntico sin firma + ①+②+③ en una línea orden determinista).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_postmortem_espejo.py -o addopts= -q  # 5 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 703 passed
+python tools/web/build_bundle.py  # regenera core.json (47 ficheros, 400.2 KiB)
+```
+

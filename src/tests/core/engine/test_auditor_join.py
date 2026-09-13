@@ -31,7 +31,7 @@ def test_join_con_v_dispara():
     textos = load_textos()
     assert resolve(LINE_KEY_JOIN, inf["auditor_join"]["args"], textos) == inf["auditor_join_text"]
     assert inf["auditor_join_text"] in inf["lines_resolved"]
-    assert len(inf["lines_resolved"]) == 2  # pico + join
+    assert len(inf["lines_resolved"]) in (2, 3)  # + espejo si aplica (13/09)
     # determinismo
     assert build_postmortem(sd, {"noise_budget": 12}) == inf
     # variante -v1 sin espacio
