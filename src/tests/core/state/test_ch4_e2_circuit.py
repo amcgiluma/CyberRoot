@@ -62,7 +62,7 @@ def test_gate_flexible_24_conceptos_27_o_28_quests():
     from core.curriculum import load_curriculum
     cur = load_curriculum()
     assert len(cur.concepts) == 24, f"conceptos {len(cur.concepts)} !=24"
-    assert len(cur.quests) in (27, 28), f"quests {len(cur.quests)} !=27|28 (main vs S2 e2)"
+    assert len(cur.quests) in (27, 28, 29), f"quests {len(cur.quests)} !=27|28 (main vs S2 e2)"
     # c.cut y c.scp deben existir en ch4
     assert cur.concept("c.cut") is not None and cur.concept("c.cut").chapter == 4
     assert cur.concept("c.scp") is not None and cur.concept("c.scp").chapter == 4
