@@ -221,3 +221,82 @@ def evaluate_logros(state: "GameState") -> list[str]:
             state.logros[LOGRO_MANO_SEDA] = True
             newly.append(LOGRO_MANO_SEDA)
     return newly
+
+#: Eco de Gris — el volcado que no pesa (O1 14/09, 🧭9 mitad Gris).
+#: Tras completar `story.ch4.e2` con `scp → cut|grep TR-` limpio, Gris nombra
+#: lo copiado. Prefijo disjunto `hub.gris.*` (no colisiona con
+#: `postmortem.espejo.*` ni `postmortem.auditor.*`).
+GRIS_VOLCADO_KEY = "hub.gris.volcado"
+
+def _ch4_e2_volcado_completado(shell: Any) -> bool:
+    """True si la sesión completó el gesto de `story.ch4.e2` limpio (§4.4 cap. 4).
+
+    Gesto canónico (2 pasos, 1 pipe, filtro positivo):
+      1. `scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/` con exit 0
+         (cualquier scp que mencione `volcado.csv` + `/tmp` cuenta; la copia es
+         la misma en todas las seeds).
+      2. `cut -d'|' -f1 /tmp/volcado.csv | grep TR-` con exit 0 en la misma
+         línea (pipe). También acepta `cut`+`grep TR-` separados en orden si
+         el shell partió el pipe en dos entradas (compat handmade).
+    Señal mínima desde el save: solo `shell.history` (exit_code + line).
+    Sin scp previo, aunque haya cut|grep, no hay volcado que filtrar.
+    """
+    history = getattr(shell, "history", None)
+    if history is None:
+        return False
+    # 1. ¿hubo scp a /tmp/volcado.csv con éxito?
+    scp_idx: int | None = None
+    for i, entry in enumerate(history):
+        if entry.get("result", {}).get("exit_code", 0) != 0:
+            continue
+        line = str(entry.get("line", ""))
+        if "scp" in line and "volcado.csv" in line and "/tmp" in line:
+            scp_idx = i
+            break
+    if scp_idx is None:
+        return False
+    # 2. ¿hubo cut|grep TR- limpio tras el scp?
+    for entry in history[scp_idx:]:
+        if entry.get("result", {}).get("exit_code", 0) != 0:
+            continue
+        line = str(entry.get("line", ""))
+        if "cut" in line and "grep" in line and "TR-" in line:
+            return True
+    # Variante separada: cut después de scp y luego grep TR-
+    seen_cut = False
+    for entry in history[scp_idx + 1:]:
+        if entry.get("result", {}).get("exit_code", 0) != 0:
+            continue
+        line = str(entry.get("line", ""))
+        if "cut" in line:
+            seen_cut = True
+        if seen_cut and "grep" in line and "TR-" in line:
+            return True
+    return False
+
+
+def gris_eco(state: "GameState") -> dict[str, str] | None:
+    """Eco de Gris tras `story.ch4.e2` (§4.3 voz de mercado).
+
+    Si `state.shell` contiene el gesto `scp → cut|grep TR-` limpio, devuelve
+    `{"line_key": GRIS_VOLCADO_KEY, "text": <resuelto>}`; si no, None
+    (byte-idéntico: el save no sugiere nada). El texto se resuelve vía
+    `data.textos.resolve` con fallback honesto a la clave cruda; nunca lanza.
+    Determinista y sin I/O. No toca `engine/postmortem.py`.
+    """
+    if not _ch4_e2_volcado_completado(state.shell):
+        return None
+    # Resolver texto diegético de Gris (sin args; la clave lleva el mensaje completo)
+    try:
+        from data.textos import resolve as _resolve  # type: ignore
+        text = _resolve(GRIS_VOLCADO_KEY, {})
+    except Exception:
+        text = GRIS_VOLCADO_KEY
+    return {"line_key": GRIS_VOLCADO_KEY, "text": text}
+
+
+def gris_linea(state: "GameState") -> str | None:
+    """Atajo que devuelve solo el texto de `gris_eco` o None."""
+    eco = gris_eco(state)
+    return eco["text"] if eco else None
+

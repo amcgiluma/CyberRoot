@@ -115,3 +115,28 @@ el parámetro `bus` es OPCIONAL (None = comportamiento previo, backward-compat).
 
 ## Dueño
 Seath (`feat/meta-ui`), junto a `state/` y `karma/`.
+## v0.4 (O1, 14/09): Gris reconoce qué copiaste — eco `hub.gris.volcado`
+
+Tras completar `story.ch4.e2` con el gesto `scp → cut -d'|' -f1 | grep TR-` limpio,
+Gris dice UNA línea diegética `hub.gris.volcado` (mercado, §4.3 — no popup):
+
+```python
+from core.progression import gris_eco, gris_linea, GRIS_VOLCADO_KEY
+from core.state import GameState
+
+eco = gris_eco(state)  # {"line_key": "hub.gris.volcado", "text": "..."} o None
+linea = gris_linea(state)  # str o None
+# sin gesto → None (byte-idéntico)
+```
+
+- **Señal mínima desde el save:** solo `state.shell.history` (`exit_code` + `line`);
+  fallback honesto si `resumen_competencia` no da para más (el shell es la fuente
+  de verdad, no `mastered`). Orden: `scp volcado.csv -> /tmp` con éxito y luego
+  `cut`+`grep TR-` limpio (pipe o separado).
+- Prefijo `hub.gris.*` disjunto de `postmortem.espejo.*` / `postmortem.auditor.*`.
+- Texto en `src/data/textos.json` `hub.gris.volcado`: «Copiaste el volcado que no pesa — 512 bytes que nadie reclamó a las 03:14…» (voz de Gris con mercado).
+- Sin tocar `engine/postmortem.py`; sin UI nueva.
+
+```bash
+./.venv/bin/python -m pytest src/tests/core/progression -q  # +4 tests eco Gris
+```

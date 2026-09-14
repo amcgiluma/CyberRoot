@@ -7,10 +7,13 @@ tick/order) + `resumen_competencia(state)` (lista de dominados + factura del
 capítulo) y el MECANISMO de logros por factura (`evaluate_logros`: "Cero
 rastro", "Mano de seda"). Regla dura §4.2: el espejo acelera/personaliza,
 jamás sustituye saber. Sin RNG, sin reloj real, sin pyxel, stdlib only. Ver
-PLAN.md (decisiones e hitos). Dueño: Seath (`feat/meta-ui`).
+PLAN.md (decisiones e hitos). Dueño: Seath (`feat/meta-ui`) + Ornstein 14/09 (eco Gris ch4.e2).
 """
 
 from core.progression.progression import (
+    GRIS_VOLCADO_KEY,
+    gris_eco,
+    gris_linea,
     CAP0_CONTRACT_BOON,
     LOGRO_CERO_RASTRO,
     LOGRO_MANO_SEDA,
@@ -21,9 +24,12 @@ from core.progression.progression import (
     resumen_competencia,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
+    "GRIS_VOLCADO_KEY",
+    "gris_eco",
+    "gris_linea",
     "CAP0_CONTRACT_BOON",
     "LOGRO_CERO_RASTRO",
     "LOGRO_MANO_SEDA",
