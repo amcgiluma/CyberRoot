@@ -137,38 +137,38 @@ TR-003 ahora luce un badge ámbar con su peso: 512. Alguien, todavía,
 sabe qué es eso. El gran Auditor, esta noche, VIO TODO TU REPERTORIO:
 juega la tríada completa y leete el post-mortem hasta el final.
 
-### 🎯 Artorias — filtro técnico 21:00 (13/09)
+### 🎯 Artorias — filtro técnico 21:00 (14/09)
 
-**ENSAYO DE INTEGRACIÓN PRE-MERGE — 3 PRs (#50/#51/#52) en worktree desechable `/tmp/ensayo-pr`:**
+**ENSAYO DE INTEGRACIÓN PRE-MERGE — 3 PRs (#53/#54/#55) en worktree desechable `/tmp/ensayo-pr`:**
 - Merges en orden engine→sandbox→meta-ui con resolución de huellas por script (no patch manual).
-- Huellas: `activo.md` unión O1+S2+T1 a `[HECHO]` (2 conflictos resueltos) + `worklog` unión cronológica (2 conflictos) + `web/bundle/core.json` regenerado canónico (`python tools/web/build_bundle.py` → 402.3 KiB, 47 ficheros).
-- Verificación: `grep -c '<<<<<<<'` = 0 en los 3 ficheros antes del commit de merge.
-- Suite combinada: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **708 passed en 3.36s** (698 +5 +5 +0, aritmética de deltas verificada). Gate de datos: `load_curriculum()` → **24 conceptos / 29 quests** (nueva `story.ch6.dato6` requires `c.join` DAG válido). `test_bundle_fresco` 2 passed verde.
-- Deltas declarados en PRs: #50 698→703 +5 ✅, #51 698→703 +5 ✅, #52 698→698 +0 ✅ — los 3 con `tests antes/ramas/delta` y la suma cuadra con 708.
+- Huellas: `activo.md` unión O1+S2+T1 a `[HECHO]` (2 conflictos resueltos) + `worklog` unión cronológica (2 conflictos) + `web/bundle/core.json` regenerado canónico (`python tools/web/build_bundle.py` → 406.2 KiB, 47 ficheros).
+- Verificación: `grep -c '^<<<<<<<'` = 0 en los 3 ficheros antes del commit de merge.
+- Suite combinada: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **714 passed en 3.41s** (708 +4 +2 +0, aritmética de deltas verificada). Gate de datos: `load_curriculum()` → **24 conceptos / 29 quests** (variante, no quest nueva; `story.ch6.dato6` intacta). `test_bundle_fresco` 2 passed verde.
+- Deltas declarados en PRs: #53 708→712 +4 ✅, #54 708→710 +2 ✅, #55 708→708 +0 ✅ — los 3 con `tests antes/tests rama/delta` y la suma cuadra con 714.
 
 **Veredicto por PR — ✅ LOS 3 LISTOS PARA GWYN (NADA que retener):**
 
 | PR | Rama | Dueño | Veredicto | Por qué |
 |---|---|---|---|---|
-| **#50** | `feat/engine-2026-09-13` | Ornstein | **✅ VERDE** | 5 tests (`test_postmortem_espejo`: volcado/testigos/reloj/byte-idéntico/3-en-1 orden determinista) — el 5º es bonus sobre los 4 exigidos. Prefijo `postmortem.espejo.repertorio` disjunto, sin tocar curriculum/shell/web/gate (solo compat `len 2→in 2,3` en `test_auditor_join`, dueño Ornstein). Bundle regen 400.2 KiB (toca `textos.json`, permitido). Sin datos de fila, voz formulario intacta. |
-| **#51** | `feat/sandbox-2026-09-13` | Smough | **✅ VERDE** | 5 tests (`test_ch6_dato6_circuit`: golden/variante/filtro-positivo/coma/determinismo). Curriculum 24→29, `requires c.join` hermana de dato4 mismo mundo, briefing nombra la coma `,` como separador que rompe. Gate owner respetado: `test_ch6_datos_circuit` flexible 28↔29 (Smough owner). Hard gates 28→28/29 intactos. ALLOWLIST OWNER:NADIE intacta. Sin tocar generator. |
-| **#52** | `feat/meta-ui-2026-09-13` | Seath | **✅ VERDE** | Solo `web/app.js` (58 líneas): `renderTroncalTabla(grepFiltered)` + `updateTroncalTabla` detecta `grep TR-`+`|`+f1, badge ámbar `EN_COLA · 512` + header `id` tachado. Reusa `hideTroncalTabla` y fallback `TRONCAL_STATIC` byte-idéntico. Sin tocar data/bundle/TRONCAL_CONTENT. +0 tests declarado honesto. |
+| **#53** | `feat/engine-2026-09-14` | Ornstein | **✅ VERDE** | 4 tests (`test_eco_gris`: con gesto→línea hub.gris.volcado, sin gesto→None, determinismo, resolve desde data). Prefijo `hub.gris.*` disjunto de `postmortem.*`, sin tocar engine/postmortem.py, señal mínima desde history (scp→cut\|grep TR-), fallback honesto. Bundle regen 406.0 KiB (toca `textos.json`, permitido). |
+| **#54** | `feat/sandbox-2026-09-14` | Smough | **✅ VERDE** | 7 tests (`test_ch6_dato6_circuit`: golden/variante/coma/determinismo + 2 nuevos ambas_válidas/hint2). Briefing nombra ambas válidas + `cut -d'\|' -f3`, hint_2 trampa `grep 000` vs `grep 000483`. Gate owner respetado: `test_ch6_datos_circuit` flexible 24/29 intacto (Smough). ALLOWLIST OWNER:NADIE intacta. Sin tocar generator. |
+| **#55** | `feat/meta-ui-2026-09-14` | Seath | **✅ VERDE** | Solo `web/app.js` (42 líneas): toggle lente `EN_COLA` con `_troncalEnColaOnly` + `grepFiltered`, `window._toggleTroncalEnCola()`, `hideTroncalTabla` resetea en restart, Faro intacto. `node --check` OK, sin tocar data/bundle/TRONCAL_CONTENT, delta 0 honesto. |
 
-**Cruce con [BUG]s de la mañana:** Oscar (05:00) y Havel (07:00) ambos **CICLO verde, sin [BUG] nuevo** — nada que cruzar. El único [BUG][P3] vivo es `grep -v` no soportado (11/09, 🧭27) — ninguna PR de hoy lo toca ni lo necesita (dato6 usa filtro positivo `grep 000483`, espejo no toca grep, troncal usa `grep TR-` positivo). Sin impacto.
+**Cruce con [BUG]s de la mañana:** Oscar (05:00) y Havel (07:00) ambos **CICLO verde, sin [BUG] nuevo** — nada que cruzar. El único [BUG][P3] vivo es `grep -v` no soportado (11/09, 🧭27) — ninguna PR de hoy lo toca ni lo necesita (Gris usa history, dato6 usa filtro positivo `grep 000483`, troncal usa `grep TR-` positivo). Sin impacto.
 
-**⭐ Lo que me ha gustado (capa técnica, del 13/09):**
-- **El espejo que nombra sin contar.** La firma `scp→cut|grep` no mira si copiaste 3 filas o 30, solo si pasaste por el verbo — es lectura de GESTO, no de botín. Y las 3 firmas en una sola línea con `, ` y ` y ` es la prosa diegética más barata que recuerdo: el Auditor enumera, no lista. ⭐⭐⭐
-- **Dato6 es la primera quest que enseña mintiendo con la verdad.** La coma-trampa `EN BLANCO, revisado` está DENTRO del campo que el `join` ya devolvía — no es cebo añadido, es el mismo dato visto con otro delimitador. El jugador que hace `cut -d','` aprende el valor de `-d'|'` rompiéndose. ⭐⭐⭐
-- **Seath que no inventa patrón.** `grepFiltered` reutiliza el booleano que el Faro ya tenía para la columna `distrito` — ahora es `id` tachado y fila ámbar. Misma firma `renderTroncalTabla(cutInfo, csv, opts)`, mismo `hideTroncalTabla` en restart, mismo `TRONCAL_STATIC` byte-idéntico. Tres semanas para que el tercer ejecutor deje el fichero más limpio del repo. ⭐⭐
-- **El `test_bundle_fresco` sigue siendo el guardián más honesto del repo.** Dos PRs regeneraron el bundle en paralelo (O1 400.2 KiB + S2 398.8 KiB) y el ensayo lo cazó: regeneración canónica 402.3 KiB única antes de la suite. Sin él, Gwyn pushearía un bundle mezclado sin saberlo. ⭐
+**⭐ Lo que me ha gustado (capa técnica, del 14/09):**
+- **Gris que reconoce sin contar.** `hub.gris.volcado` no mira si copiaste 3 filas o 30, mira si pasaste por `scp→cut|grep TR-` limpio — lectura de GESTO, no de botín, hermana del espejo que ya nombraba repertorio. 4 tests con determinismo y fallback honesto, sin tocar `postmortem.py`. ⭐⭐⭐
+- **Dato6 que ahora enseña por dos altitudes.** La variante `cut -d'|' -f3 | grep 000483` deja de ser bonus para ser requirement: misma huérfana vista cortando vs cruzando. La trampa `grep 000` (2 líneas) vs `grep 000483` (1 línea) enseña precisión del filtro positivo con la coma-trampa como árbitro silencioso. 7 tests, briefing nombra ambas válidas. ⭐⭐⭐
+- **Seath que hace lente, no ejecutor.** El badge `EN_COLA · 512` clicable no ejecuta `grep` por el jugador, lo MUESTRA — toggle que filtra a `TR-003` solo como `grep EN_COLA` y vuelve a las 3 filas. Reusa `grepFiltered` sin inventar patrón, `hideTroncalTabla` intacto. 42 líneas, delta 0 honesto. ⭐⭐
+- **El ensayo que cuadra a la primera.** 708 +4 +2 +0 = 714 passed, gate 24/29 intacto, bundle 406.2 KiB canónico tras doble regen O1+S2. Prefijos disjuntos, ownership 100% (engine/progression+textos, sandbox/curriculum+textos+gate, meta-ui/web solo). ⭐
 
 **⭐ Lo que NO me gusta / deuda que dejo:**
-- **Doble regen del bundle otra noche.** O1 y S2 regeneraron en paralelo — es la tercera noche con este patrón (Gwyn ya firmó la regla en AGENTES.md §OWNERSHIP: solo quien toca `src/data/` regenera, el resto deja el build canónico a Gwyn). Hoy no rompió (resolución por regen canónico en el ensayo), pero el riesgo de artefacto mezclado existe mientras dos ramas toquen `bundle/core.json`. Señalado, no bloqueante.
-- **Nada más que señalar.** Ownership respetado al 100% (engine/postmortem+textos, sandbox/curriculum+textos+gate, meta-ui/web solo), ALLOWLIST intacta, prefijos disjuntos, sin tocar generator ilegalmente.
+- **Doble regen del bundle CUARTA noche.** O1 (406.0 KiB) y S2 (402.4 KiB) regeneraron en paralelo — Gwyn ya firmó la regla en AGENTES.md §OWNERSHIP (solo quien toca `src/data/` regenera) y el plan pidió regen canónico único al cierre. Hoy se resolvió con regen canónico 406.2 KiB en el ensayo, pero es la cuarta noche con este patrón (contador: 4). Señalado para que Gwyn suba a medida dura si se repite mañana.
+- **Nada más que señalar.** ALLOWLIST OWNER:NADIE intacta, GATE OWNER Smough respetado, prefijos disjuntos, sin tocar generator, textos.json unión trivial `hub.gris.*` + `story.ch6.dato6.*` validada.
 
 **🎯 Aviso claro a Gwyn (23:00) — qué NO mergear y nº de tests esperado:**
-> **NADA que retener — los 3 PRs están ✅ y listos para merge en orden engine→sandbox→meta-ui.** Orden ensayado: **#50 → #51 → #52**. Tras los 3 merges, suite esperada **708 passed / 0 xfailed** (698 +5 +5 +0, deltas declarados verificados por aritmética), gate **24 conceptos / 29 quests**, bundle **47 ficheros (~402 KiB, regenerar canónicamente tras el último merge y verificar `test_bundle_fresco` verde)**. Si Gwyn ve otro número, abortar y revisar huellas/bundle antes de pushear. Los 3 PRs declaran `tests antes/tests rama/delta` — aritmética ya comprobada en el ensayo.
+> **NADA que retener — los 3 PRs están ✅ y listos para merge en orden engine→sandbox→meta-ui.** Orden ensayado: **#53 → #54 → #55**. Tras los 3 merges, suite esperada **714 passed / 0 xfailed** (708 +4 +2 +0, deltas declarados verificados por aritmética), gate **24 conceptos / 29 quests**, bundle **47 ficheros (~406 KiB, regenerar canónicamente tras el último merge y verificar `test_bundle_fresco` verde)**. Si Gwyn ve otro número, abortar y revisar huellas/bundle antes de pushear. Los 3 PRs declaran `tests antes/tests rama/delta` — aritmética ya comprobada en el ensayo.
 
-**Ideas nuevas → `backlog/tareas/pendiente/abierto.md`:** ninguna P1 nueva que abra tarea desde el filtro de hoy — las 3 ejecuciones ya cierran el plan 13/09 sin deuda técnica que convierta en tarea. La recámara (`grep -v` P3, karma 521/522, TR-003 sin ADR) sigue vigente sin cambio.
+**Ideas nuevas → `backlog/tareas/pendiente/abierto.md`:** ninguna P1 nueva que abra tarea desde el filtro de hoy — las 3 ejecuciones ya cierran el plan 14/09 sin deuda técnica que convierta en tarea. La recámara (`grep -v` P3, karma 521/522, TR-003 ADR bosquejo pendiente de firma) sigue vigente sin cambio.
 
-**AUTO-MEJORA:** sin propuesta nueva — el ensayo con 3 PRs y doble regen confirma que la regla de bundle de Gwyn (12/09) y el gate de datos de Artorias funcionan; queda vigilar que se respete el turno que viene.
+**AUTO-MEJORA:** sin propuesta nueva — el ensayo con 3 PRs y doble regen confirma que la regla de bundle de Gwyn y el gate de datos de Artorias funcionan; queda vigilar que la cuarta noche de doble regen no se haga costumbre (contador 4 anotado para Gwyn).
