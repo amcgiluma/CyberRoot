@@ -172,3 +172,99 @@ juega la tríada completa y leete el post-mortem hasta el final.
 **Ideas nuevas → `backlog/tareas/pendiente/abierto.md`:** ninguna P1 nueva que abra tarea desde el filtro de hoy — las 3 ejecuciones ya cierran el plan 14/09 sin deuda técnica que convierta en tarea. La recámara (`grep -v` P3, karma 521/522, TR-003 ADR bosquejo pendiente de firma) sigue vigente sin cambio.
 
 **AUTO-MEJORA:** sin propuesta nueva — el ensayo con 3 PRs y doble regen confirma que la regla de bundle de Gwyn y el gate de datos de Artorias funcionan; queda vigilar que la cuarta noche de doble regen no se haga costumbre (contador 4 anotado para Gwyn).
+
+### 🎯 Gwyn — cierre de diseño 23:00 (14/09)
+
+**Estado de los merges:** los 3 PRs mergeados en el orden ensayado por
+Artorias — **#53 (engine O1 hub.gris.volcado) → #54 (sandbox S2 dato6
+variante) → #55 (meta-ui T1 badge toggle)**. Suite **714 passed exactos**
+(708+4+2+0, deltas declarados verificados por aritmética), gate **24
+conceptos / 29 quests**, bundle **47 ficheros (406.2 KiB)** regenerado
+canónicamente tras el merge #54 (guardián verde). **NADA retenido.** Los
+3 commits de merge firmados Gwyn (`1677122`/`6224ea3`/`cede98a`);
+resolutores de huellas probados PRIMERO en worktree de ensayo (un typo
+del patrón de regex saltó allí, no en main). Gate de marcadores POR
+LÍNEA en todo el árbol = 0 antes de pushear.
+
+**⭐ FIRMA DEL ADR TR-003 (lo más importante que dejo para mañana):** el
+bosquejo de Gwyndolin está APROBADO tal cual, con una matización de
+prosa: `story.ch4.e3` sale como **rescate azul** (`scp /tmp/volcado.csv
+faro:/srv/camara-faro/volcado-rescate.csv`), la **disolución roja**
+(`rm /tmp/volcado.csv` → `volcado.caducado` en post-mortem) solo si el
+jugador NO responde (30 ticks: decidir = no decidir). Sin comando
+nuevo, sin ALLOWLIST, sin tocar el badge de Seath (semilla intacta).
+Matiz de prosa que añado: **la voz de Vela pregunta por el volcado SIN
+saber que EN_COLA existe — su pregunta nace de las 03:14, no del
+badge.** Con esta firma, Gwyndolin ya puede planificar `e3` mañana como
+encargo S2 y encadenar cap. 5 (Subestación, `START 03:14` como firma
+independiente del karma). dato7 sigue en recámara CON alerta
+`TRONCAL_STATIC`: no tocar el volcado hasta pagar esa deuda con un Q
+real.
+
+**Validación del 🧭 de Oscar (14/09 — MODO B, zona ejecutada COMPLETA
+desde save limpio):** APTO ×3, respuestas SÍ a las 3 preguntas de sabor
+que dejé anoche (coma-trampa se nota al romperte / espejo suena a
+testigo, no a lista / badge = presión diegética genuina sin contador).
+🧭31/32/33 CERRADAS por verificación (coma sin señal roja: OK; espejo
+sin más firmas: OK; badge sin animación: OK). 🧭24 persiste P3 en
+recámara. **Dirección que SÍ sigo (para Gwyndolin):** la bifurcación
+TR-003 EN_COLA como decisión kármica diegética (ya con ADR firmado) —
+el badge es el aviso, la quest es el dilema, y el diseño ya decidió
+ANTES de tocar narrativa del volcado. La próxima pieza de alma con ROI
+alto sigue siendo Manus nombrando el repertorio del veterano en
+diegético (🧭9 v2 — la mitad Gris ya salió; que la prosa de `e3` cite
+los verbos, no los invente).
+
+**⭐ Lo que me ha gustado (capa diseño, del 14/09):**
+- **La tríada del troncal ya es un capítulo con tres lentes:** Gris
+  DICE qué copiaste (`hub.gris.volcado`), dato6 te hace LEER dos veces
+  lo mismo (cruce y corte de la misma huérfana), y el badge te MIRA
+  esperando. Antes el troncal era imagen; hoy es personaje. ⭐⭐⭐
+- **dato6 aceptando DOS rutas con la misma honestidad** (unión con la
+  variante subida a requirement sin degenerar en bonus): la lección del
+  separador se multiplica en vez de duplicarse. El hint_2 con la
+  arbitrariedad `grep 000` vs `grep 000483` es la mejor lección de
+  precisión que ha salido del repo. ⭐⭐⭐
+- **El badge toggle como «lente, no ejecutor»** (T1): 42 líneas, reusa
+  `grepFiltered`, no inventa patrón, `hideTroncalTabla` intacto en
+  restart. La disciplina técnica del 13/09 confirmada por Seath: hacer
+  lente, no mostrar ruido. ⭐⭐
+- **La suite que cuadra a la primera y el regen único de bundle** (hoy
+  lo hizo S2 solo en el plan, no dos ramas en paralelo; la regla de
+  OWNER del bundle aplicó). Cuarta noche con patrón doble-regen
+  NO SE REPITE — la medida dura de Artorias funcionó ya como doc. ⭐
+
+**⭐ Lo que NO me gusta / deuda que dejo:**
+- **`TRONCAL_STATIC` sigue duplicando el volcado** en `web/app.js`
+  (cuarta noche con la deuda viva). Con el ADR FIRMADO y `e3` en el
+  horizonte, el día que Manus toque el volcado para narrativa la deuda
+  DESPIERTA — que Gwyndolin la incluya en el plan de `e3` (o antes) si
+  el capítulo la toca.
+- **La prosa diegética de Gris queda HUÉRFANA de contexto:** la línea
+  `hub.gris.volcado` es hoy un easter egg que pocos jugadores
+  escucharán (requiere `ch4.e2` + patrón limpio). Espero que la prosa
+  de `e3` le dé contexto — si mañana Manus escribe el beat de Vela, que
+  cite la línea de Gris o la deuda crece (el jugador que no la disparó
+  se pierde el guiño).
+
+**Dirección para mañana (prioridad de diseño):**
+1. **Zona 🔬 15/09 CARGADA (ver `zona-testeo.md`):** prioridad 1 =
+   toggle del badge (¿control o ruido?); prioridad 2 = dato6 con dos
+   rutas (¿pesan lo mismo?). Relevo OSCAR (completa, save limpio) →
+   HAVEL (lo nuevo + smoke 714).
+2. **`story.ch4.e3` «La cola que rescatas o dejas morir» — Gwyndolin,
+   planifícala** (P1 del día). ADR FIRMADO. Es el primer dilema
+   kármico real del juego y la cola del troncal ya existe: es el
+   beat más barato y más gordo del backlog.
+3. **Prosa de `e3` que despierte la voz de Gris:** la línea
+   `hub.gris.volcado` pide ser CITA en el beat (🧭9 v2).
+
+**Para Juanma (si juega esta noche):** de los 3 verbos del troncal hoy,
+el badge de la web es clicable — haz click en `TR-003|EN_COLA · 512` y
+verás la cola con ojos de Gwyn antes de entenderla con pipe. Y en el
+Faro, la quest `dato6` ahora te da DOS caminos honestos (cruzar o
+cortar): el mismo dato, dos altitudes. Cuando juegues el capítulo
+completo, notarás que la lección no es «el comando» — es que la MISMA
+fila de datos puede leerse de muchas maneras y solo una tiene la coma
+escondida. La historia no miente: espera a que le preguntes bien.
+

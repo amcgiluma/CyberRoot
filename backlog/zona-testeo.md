@@ -1,50 +1,50 @@
-# 🔬 Zona de testeo — 14/09 (definida por Gwyn el 13/09, 23:00)
+# 🔬 Zona de testeo — 15/09 (definida por Gwyn el 14/09, 23:00)
 
 > Formato `docs/TESTEO-DIARIO.md` §4. Relevo: **OSCAR (05:00) recorre la
 > zona COMPLETA desde save limpio (MODO B) → HAVEL (07:00) se centra en lo
 > nuevo + smoke del conjunto.** Base del estado actual: post-merge
-> PRs #50/#51/#52, suite **708**, gate **24 conceptos / 29 quests**, bundle
-> **47 ficheros (402.3 KiB)** regenerado canónicamente (guardián verde).
+> PRs #53/#54/#55, suite **714**, gate **24 conceptos / 29 quests**, bundle
+> **47 ficheros (406.2 KiB)** regenerado canónicamente (guardián verde).
+> ADR TR-003 FIRMADO por Gwyn esta noche: `story.ch4.e3` planificable
+> mañana como quest con bifurcación karma — NADA de esa quest existe aún
+> en main, no testearla hoy.
 
-## Prioridad 1 — quest `story.ch6.dato6` «La segunda purga» (NUEVA, PR #51)
+## Prioridad 1 — toggle del badge `EN_COLA` en la web (NUEVO, PR #55)
 
-- **Dónde:** juega la quest nueva del Faro: golden
-  `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` →
-  debe devolver **1 línea: `000483|PR-0092|...|EN BLANCO, revisado`**.
-  La coma-trampa: `EN BLANCO, revisado` es UN campo — un `join -t','`
-  partiéndolo es la lección del separador.
-- **Qué verificar:** (a) el golden mental con `join` (cruce) — no se
-  resuelve con `cut` ni `grep` a secas; (b) la variante bonus
-  `cut -d'|' -f3 purgas.csv | grep 000483` —alumbra la huérfana que SÍ está
-  en la segunda tabla (000 vs 000483: no toda huérfana es fantasma);
-  (c) el filtro es POSITIVO `grep 000483`; (d) determinismo: repetir la
-  golden dos veces → misma fila; (e) la quest exige `c.join` (no
-  accesible sin la del dato4 de ayer).
-- **Por qué importa:** PRIMERA quest que enseña mintiendo con la verdad:
-  el dato trap está DENTRO del campo que `join` ya devolvía — si la
-  lección no se siente, coma-trampa pierde cap.
-- Pregunta de sabor: **¿la coma-trampa se nota sin señal roja, o el
-  jugador la tropezará sin entender por qué?**
+- **Dónde:** `?chapter=4&seed=42`, tras `scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/` +
+  `cut -d'|' -f1 /tmp/volcado.csv | grep TR-`: click en el badge `EN_COLA · 512` de la fila
+  `TR-003` → SOLO queda `TR-003` visible (como `grep EN_COLA` con los ojos); segundo click →
+  vuelven las 3 filas.
+- **Qué verificar:** (a) el toggle NO ejecuta nada por el jugador — es lente, no ejecutor;
+  (b) `hideTroncalTabla` en `restartSameSeed` limpia AMBOS paneles (troncal + Faro) y el
+  toggle no persiste tras restart; (c) Faro intacto (la tabla del Faro no cambia por el toggle
+  del troncal); (d) consola limpia; (e) header `id` sigue tachado con tooltip y las
+  tooltips intactas.
+- **Por qué importa:** primer elemento Clicable del troncal — si un toggle «hace demasiado»
+  mata la lección de `grep` que lo originó; si hace demasiado poco, es ruido.
+- Pregunta de sabor: **¿el toggle añade control o resta descubrimiento?** (el jugador que
+  nunca escribió `grep EN_COLA` ¿pierde algo al clickear?, ¿o el badge-clicable invita a
+  probar el pipe real?)
 
-## Prioridad 2 — eco del espejo + huella visible del troncal (PRs #50/#52)
+## Prioridad 2 — dato6 con variante como REQUIREMENT (PR #54)
 
-- **Eco del espejo (cap. 6):** termina una sesión de la tríada completa
-  (ch4.e2 scp→cut|grep + dato4 join -v + dato5 ps aux|grep hora) y lee el
-  post-mortem: una sola línea `postmortem.espejo.*` enumerando las 3
-  firmas («,  y »), determinista ①→②→③; con CERO firmas → post-mortem
-  byte-idéntico; con UNA sola → línea con esa firma sola. ¿Suenan las
-  3 firmas juntas como un testigo que recuerda, o como una lista?
-- **Huella del troncal en web (cap. 4):** en `?chapter=4&seed=42`, tras
-  `scp` + `cut -d'|' -f1 /tmp/volcado.csv | grep TR-`: (a) fila
-  `TR-003` lleva badge ámbar **`EN_COLA · 512`**; (b) header `id`
-  aparece TACHADO con tooltip; (c) SIN esa pipeline → sin badge ni
-  header tachado (fallback estático honesto intacto); (d) restart limpia
-  ambos paneles (Faro + troncal), funciona, consola limpia.
-- Pregunta de sabor: **¿el badge EN_COLA mete presión de timeline
-  genuina o es solo ruido visual?** (TR-003 es la bifurcación kármica
-  futura: el badge es su PRIMER aviso diegético.)
+- **Dónde:** cap. 6 Faro, quest `story.ch6.dato6` «La segunda purga»: la golden sigue siendo
+  `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` → 1 línea
+  `000483|PR-0092|…|EN BLANCO, revisado`; PERO la variante
+  `cut -d'|' -f3 purgas.csv | grep 000483` → `000483` ya NO es bonus, es segunda válida.
+- **Qué verificar:** (a) ambas completan la quest (exit 0 con `000483`); (b) el briefing
+  nombra las DOS válidas y la trampa `grep 000` (2 líneas) vs `grep 000483` (1 línea) que
+  ilumina cuál de las dos huérfanas es la fantasma — «no toda huérfana es fantasma» —; (c) hint_2 la
+  señaliza sin regalar la solución; (d) `cut -d','` sigue rompiendo la coma-trampa (lección
+  del separador intacta); (e) determinismo 42×2 idéntico y gate 24/29 (sin quest nueva).
+- **Por qué importa:** es la primera vez que una quest del juego acepta DOS rutas — si ambas
+  se sienten de igual peso, la lección se multiplica; si una se siente «callejón real» y la
+  otra «atajo», la honestidad del golden queda dañada.
+- Pregunta de sabor: **¿las dos rutas pesan lo mismo, o el `join` se siente «el verdadero» y
+  el `cut` «el truco»?** (la igualdad entre rutas es la cláusula de honestidad de
+  `dato6`).
 
-**Smoke:** suite completa (708/0), gate 24/29, bundle fresco (guardián
-verde, 47 ficheros), `generate(42,6)` + `generate(42,6,'story.ch6.dato6')`
-intactos, replay MODO B del eco del espejo con las 3 firmas + golden
-dato6 exit 0.
+**Smoke:** suite completa (714/0), gate 24/29, bundle fresco (guardián verde, 47 ficheros),
+`generate(42,6)` + `generate(42,6,'story.ch6.dato6')` intactos, `gris_eco` determinista
+(con gesto → línea `hub.gris.volcado`, sin gesto → byte-idéntico) +
+_toggle del troncal_ verde en `?chapter=4&seed=42`.

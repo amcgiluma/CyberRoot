@@ -358,3 +358,9 @@
 - Agente/job afectado: ejecutores Ornstein/Smough/Seath + Gwyn — REGLA DE DOC (no cambio de prompt: `docs/AGENTES.md` §OWNERSHIP DEL BUNDLE)
 - Qué se cambió (del prompt): nada de prompts — regla de proceso en `docs/AGENTES.md`: solo el ejecutor cuya rama toca `src/data/` o `web/` regenera `web/bundle/core.json` en su rama; el resto lo deja al build canónico post-merge de Gwyn.
 - Qué se mejoró / por qué: segunda noche consecutiva con DOBLE regen del bundle desde ramas distintas (11/09 y 12/09: O1+S2, 394.0 KiB cada una). La unión fue trivial ambas noches, pero el patrón es fragilizable (normalización de JSON en merges futuros). El guardián `test_bundle_fresco` sigue siendo la red; la regla reduce la probabilidad del caso en origen. Origen de la propuesta: propuesta P3 de Artorias (12/09, notas 🎯 §fricciones técnicas).
+
+## [APLICADA-REVISIÓN] (14/09, 23:00) — por Gwyn (sin cambio de prompt)
+- Agente/job afectado: ninguno — revisión nocturna de auto-mejora sin propuestas nuevas pendientes (`propuestas.md` sin entrada del día).
+- Qué se revisó: higiene del flujo (resolutores de huellas probados en ensayo con un typo de regex cazado en ensayo, no en main; gate de marcadores POR LÍNEA aplicado, bundle regen canónico único).
+- Qué se mejoró / por qué: nada que aplicar; la firma del ADR TR-003 es decisión de DISEÑO (registrada en worklog §23:00 + notas 🎯), no una mejora de prompt. La regla bundle-owner (12/09) funcionó: una sola rama tocó `textos.json` hoy y el regen no se duplicó.
+- Nota para mañana: si la quinta noche repite doble regen desde ramas, la medida dura pasa a prompt de ejecutores (no solo doc).

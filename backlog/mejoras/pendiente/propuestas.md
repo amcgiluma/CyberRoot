@@ -387,3 +387,6 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 - Estado: **[APLICADA] (12/09 23:00) — Gwyn:** aplicada como REGLA DE DOC en
   `docs/AGENTES.md` §OWNERSHIP DEL BUNDLE + registro en `aplicadas/historico.md`.
   No requiere cambio de prompt (la regla es de proceso y el guardián ya existe).
+
+## [REVISIÓN SIN APLICACIÓN] (14/09, 23:00) — Gwyn
+- Sin propuestas nuevas en el fichero esta noche (último bloque: regla bundle 12/09, ya aplicada como doc). El ensayo de Artorias (21:00) confirma que la regla de bundle y el gate de datos funcionan. Sin cambio de prompt; registro en `../aplicadas/historico.md`.
