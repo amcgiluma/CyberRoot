@@ -294,9 +294,25 @@ function parseTroncalCut(line) {
   return info;
 }
 
+// Estado toggle TR-003 EN_COLA (lente, no ejecutor — Seath 14/09 T1)
+let _troncalEnColaOnly = false;
+let _troncalLastCut = null;
+let _troncalLastCsv = null;
+let _troncalLastGrep = false;
+function _toggleTroncalEnCola() {
+  _troncalEnColaOnly = !_troncalEnColaOnly;
+  if (_troncalLastCut && _troncalLastCsv !== null) {
+    renderTroncalTabla(_troncalLastCut, _troncalLastCsv, { grepFiltered: _troncalLastGrep });
+  }
+}
+// Exponer para onclick inline del badge
+if (typeof window !== "undefined") window._toggleTroncalEnCola = _toggleTroncalEnCola;
+
 function hideTroncalTabla() {
   const el = $id("troncal-tabla");
   if (el) el.style.display = "none";
+  // Restart limpia paneles — resetea lente
+  _troncalEnColaOnly = false;
 }
 
 function renderTroncalTabla(cutInfo, csvContent, opts) {
@@ -305,12 +321,23 @@ function renderTroncalTabla(cutInfo, csvContent, opts) {
   const contentEl = $id("troncal-tabla-content");
   if (!panel || !metaEl || !contentEl) return;
   const grepFiltered = !!(opts && opts.grepFiltered);
-  const lines = csvContent.split("\n").filter(l => l.length > 0);
-  if (lines.length === 0) { hideTroncalTabla(); return; }
+  // Guarda último estado para toggle (lente EN_COLA)
+  _troncalLastCut = cutInfo;
+  _troncalLastCsv = csvContent;
+  _troncalLastGrep = grepFiltered;
+  const allLines = csvContent.split("\n").filter(l => l.length > 0);
+  if (allLines.length === 0) { hideTroncalTabla(); return; }
   const delim = cutInfo.delim;
   const colIdx = cutInfo.field - 1;
   const shortFile = cutInfo.file.split("/").pop();
-  metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})${grepFiltered ? " \u00b7 grep TR-" : ""}`;
+  // Toggle EN_COLA: filtra filas (como grep EN_COLA), reusa grepFiltered como base
+  const enColaActive = _troncalEnColaOnly;
+  const lines = enColaActive
+    ? [allLines[0]].concat(allLines.slice(1).filter(l => l.split(delim).includes("EN_COLA")))
+    : allLines;
+  if (lines.length === 0) { hideTroncalTabla(); return; }
+  const metaSuffix = enColaActive ? " · EN_COLA solo" : (grepFiltered ? " · grep TR-" : "");
+  metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})${metaSuffix}`;
   let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
   const headerCells = lines[0].split(delim);
   html += "<thead><tr>";
@@ -330,16 +357,17 @@ function renderTroncalTabla(cutInfo, csvContent, opts) {
   for (let r = 1; r < maxRows; r++) {
     const cells = lines[r].split(delim);
     const isEnColaRow = cells.includes("TR-003") && cells.includes("EN_COLA");
-    const rowStyle = (grepFiltered && isEnColaRow) ? ' style="background:rgba(255,193,7,.07)"' : "";
+    const rowStyle = ((grepFiltered || enColaActive) && isEnColaRow) ? ' style="background:rgba(255,193,7,.07)"' : "";
     html += `<tr${rowStyle}>`;
     for (let c = 0; c < cells.length; c++) {
       const isCol = c === colIdx;
       const baseStyle = isCol ? "background:rgba(140,220,150,.18);color:var(--fg);font-weight:600;border:1px solid var(--border);padding:3px 6px" : "border:1px solid var(--border);padding:3px 6px";
       const val = cells[c] || "\u2014";
       const displayVal = val.length > 24 ? val.slice(0,24)+"\u2026" : val;
-      if (grepFiltered && isEnColaRow && val === "EN_COLA") {
-        const tip = "512 bytes, 03:14 \u2014 el que no pesa a\u00fan pesa";
-        const badge = `<span title="${tip}" style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:rgba(255,193,7,.22);border:1px solid rgba(255,193,7,.55);color:#ffcf4a;font-size:.68rem;font-weight:700;vertical-align:middle;cursor:help">EN_COLA \u00b7 512</span>`;
+      if ((grepFiltered || enColaActive) && isEnColaRow && val === "EN_COLA") {
+        const tip = enColaActive ? "filtrando EN_COLA — click para ver las 3 filas" : "512 bytes, 03:14 \u2014 el que no pesa a\u00fan pesa (click para filtrar solo TR-003)";
+        const bg = enColaActive ? "rgba(255,193,7,.35);border:1px solid rgba(255,193,7,.9)" : "rgba(255,193,7,.22);border:1px solid rgba(255,193,7,.55)";
+        const badge = `<span role="button" tabindex="0" title="${tip}" onclick="window._toggleTroncalEnCola()" onkeydown="if(event.key==='Enter'||event.key===' ') {event.preventDefault();window._toggleTroncalEnCola()}" style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:${bg};color:#ffcf4a;font-size:.68rem;font-weight:700;vertical-align:middle;cursor:pointer">EN_COLA \u00b7 512</span>`;
         html += `<td style="${baseStyle}" title="${tip}">${displayVal} ${badge}</td>`;
       } else {
         html += `<td style="${baseStyle}">${displayVal}</td>`;
