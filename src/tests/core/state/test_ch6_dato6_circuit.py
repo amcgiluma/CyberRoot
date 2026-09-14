@@ -1,18 +1,20 @@
-"""S2 13/09 — test circuito dato6 «La segunda purga» (Smough).
+"""S2 14/09 — test circuito dato6 «La segunda purga» (Smough).
 
-Contrato S2 (plan 13/09):
+Contrato S2 (plan 14/09):
   quest story.ch6.dato6 requires c.join, golden
   `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` → 1 línea PR-0092
-  + variante bonus `cut -d'|' -f3 purgas.csv | grep 000483`
+  + variante requirement `cut -d'|' -f3 purgas.csv | grep 000483` (sube de bonus a requirement)
+  hint_2 trampa `grep 000` vs `grep 000483` ("¿no toda huérfana es fantasma?")
   Reusa scaffold dato4 (mismo FS); NO toca generator.py ni chapter6.py.
   Fallback handmade si generator exige branch (test con Shell directo, declarado).
 
 Tests:
   1) golden join|grep 000483 → PR-0092 sin PR-0091
-  2) variante cut|grep 000483 → 000483
+  2) variante requirement cut|grep 000483 → 000483 (ambas válidas)
   3) lección filtro positivo: join solo da 2 huérfanas, grep 000 da 2, grep 000483 da 1
-  4) briefing nombra coma ','
-  5) determinismo seed 42×2 idéntico (generator si disponible, fallback handmade)
+  4) briefing nombra coma ',' + ambas goldens + variante
+  5) hint_2 trampa grep 000 vs 000483
+  6) determinismo seed 42×2 idéntico (generator si disponible, fallback handmade)
 
 Determinista, sin RNG global, sin reloj real, sin pyxel.
 """
@@ -132,11 +134,11 @@ def test_ch6_dato6_golden_join_grep_000483() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 2) variante bonus cut|grep
+# 2) variante requirement cut|grep (14/09: sube de bonus a requirement)
 # ---------------------------------------------------------------------------
 
 def test_ch6_dato6_variante_cut_grep_000483() -> None:
-    """Variante bonus: cut -d'|' -f3 purgas.csv | grep 000483 → 000483."""
+    """Variante requirement 14/09: cut -d'|' -f3 purgas.csv | grep 000483 → 000483 (ambas válidas)."""
     fs = _handmade_ch6_fs()
     shell = _shell_ch6(fs)
     cmd = "cut -d'|' -f3 /srv/camara-faro/purgas.csv | grep 000483"
@@ -147,6 +149,33 @@ def test_ch6_dato6_variante_cut_grep_000483() -> None:
     assert len(lines) == 1
     assert lines[0].strip() == "000483"
     assert "PR-0091" not in r.stdout
+
+
+def test_ch6_dato6_ambas_variantes_validas() -> None:
+    """Ambas goldens válidas: join|grep y cut|grep dan exit 0 con 000483 (requirement 14/09)."""
+    fs = _handmade_ch6_fs()
+    shell = _shell_ch6(fs)
+    r1 = shell.execute("join -t'|' -1 3 -2 1 -v 1 /srv/camara-faro/purgas.csv /srv/camara-faro/registro.csv | grep 000483")
+    if r1.exit_code == 127 and _has_join():
+        from core.sandbox.commands.join import _run_join
+
+        r1 = _run_join(fs, "/", ("-t", "|", "-1", "3", "-2", "1", "-v", "1", "/srv/camara-faro/purgas.csv", "/srv/camara-faro/registro.csv"), tick=0)
+        # grep manual
+        r1_stdout = "\n".join(l for l in r1.stdout.splitlines() if "000483" in l)
+        assert "PR-0092" in r1_stdout
+    else:
+        assert r1.exit_code == 0
+        assert "000483" in r1.stdout
+    r2 = shell.execute("cut -d'|' -f3 /srv/camara-faro/purgas.csv | grep 000483")
+    assert r2.exit_code == 0
+    assert "000483" in r2.stdout
+    # briefing declara ambas válidas
+    with open("src/data/textos.json", encoding="utf-8") as f:
+        data = json.load(f)
+    briefing = data["texts"]["story.ch6.dato6.briefing"]
+    assert "Variante:" in briefing or "Variante" in briefing
+    assert "ambas válidas" in briefing
+    assert "cut -d'|' -f3" in briefing
 
 
 # ---------------------------------------------------------------------------
@@ -201,11 +230,11 @@ def test_ch6_dato6_leccion_filtro_positivo() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 4) briefing nombra coma
+# 4) briefing nombra coma + ambas variantes
 # ---------------------------------------------------------------------------
 
 def test_ch6_dato6_briefing_nombra_coma() -> None:
-    """Briefing de dato6 nombra la coma ',' como separador que rompe."""
+    """Briefing de dato6 nombra la coma ',' como separador que rompe y ambas variantes."""
     with open("src/data/textos.json", encoding="utf-8") as f:
         data = json.load(f)
     briefing = data["texts"].get("story.ch6.dato6.briefing", "")
@@ -213,6 +242,9 @@ def test_ch6_dato6_briefing_nombra_coma() -> None:
     assert "EN BLANCO, revisado" in briefing
     # menciona explícitamente que -d',' rompe y -d'|' no
     assert "-d'|' " in briefing or "-d'|'" in briefing or "cut" in briefing.lower()
+    assert "Variante:" in briefing or "variante" in briefing.lower()
+    assert "ambas válidas" in briefing
+    assert "cut -d'|' -f3" in briefing
     # currículum DAG válido
     from core.curriculum import load_curriculum
 
@@ -223,8 +255,22 @@ def test_ch6_dato6_briefing_nombra_coma() -> None:
     assert q.chapter == 6
 
 
+def test_ch6_dato6_hint2_trampa_filtro() -> None:
+    """hint_2 14/09: trampa grep 000 vs grep 000483 — ¿no toda huérfana es fantasma?"""
+    with open("src/data/textos.json", encoding="utf-8") as f:
+        data = json.load(f)
+    hint2 = data["texts"].get("story.ch6.dato6.hint_2", "")
+    assert "grep 000" in hint2
+    assert "grep 000483" in hint2
+    assert "huérfana es fantasma" in hint2 or "huérfana" in hint2
+    # detail también declara ambas válidas
+    detail = data["texts"].get("story.ch6.dato6.detail", "")
+    assert "ambas válidas" in detail
+    assert "cut -d'|' -f3" in detail
+
+
 # ---------------------------------------------------------------------------
-# 5) determinismo seed 42×2 idéntico (generator si disponible)
+# 6) determinismo seed 42×2 idéntico (generator si disponible)
 # ---------------------------------------------------------------------------
 
 def test_ch6_dato6_determinismo_seed() -> None:
