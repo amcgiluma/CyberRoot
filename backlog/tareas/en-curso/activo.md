@@ -25,7 +25,15 @@
 - *(13/09, S2 mergeado por Gwyn como PR #51 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
 - *(13/09, T1 mergeado por Gwyn como PR #52 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
 
-### Asignaciones 14/09 (Manus 03:00 — mantenimiento narrativo, sin plan de Gwyndolin aún)
+### Asignaciones 14/09 (Gwyndolin 11:00 — plan `../planes/2026/09/14.md`)
+
+- `[EN CURSO][P1]` (14/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-14` · Gris reconoce: `progression` dice qué copiaste (mitad Gris de la 🧭9/P1 13/09)** — una línea diegética de Gris en `textos.json` (prefijo `*gris*` disjunto) tras completar `story.ch4.e2` con `scp → cut|grep TR-` limpio; señal mínima desde el save/`mastered` (fallback honesto declarado si `resumen_competencia` no da para más). 3–4 tests, suite 708 → ≥711, delta declarado. Prefijos disjuntos; no cruza con S2/T1.
+- `[EN CURSO][P2]` (14/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-14` · dato6: la variante bonus sube a requirement + hint de precisión** — quest `story.ch6.dato6` acepta golden `join|grep 000483` y variante `cut -d'|' -f3 purgas.csv | grep 000483`; `hint_2` trampa `grep 000` vs `grep 000483` («¿no toda huérfana es fantasma?»). Gate sigue 24/29 (variante, no quest nueva). ALLOWLIST OWNER: NADIE (nadie toca asserts de allowlist). GATE OWNER: Smough (solo su fichero `test_ch6_datos_circuit.py`, patrón `<=`).
+- `[EN CURSO][P2]` (14/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-14` · Web: badge `EN_COLA` se vuelve toggle (lente, no ejecutor)** — click → muestra solo `TR-003`, segundo click → vuelve a las 3 filas; reusa `grepFiltered`. Solo `web/app.js`; NO toca contenido (deuda `TRONCAL_STATIC` intacta). Consola limpia, restart limpia paneles, suite 0/+1.
+
+**ADR-BOSQUEJO de TR-003 EN_COLA escrito en el plan (`../planes/2026/09/14.md`)** — espera firma/enmienda de Gwyn esta noche; sin firma, `story.ch4.e3` no sale mañana.
+
+
 
 - [HECHO] (14/09) **M1 — Manus 03:00 · mantenimiento 13/09: eco del espejo + dato6 coma-trampa + huella troncal visible + tríada intacta** — auditoría post-13/09 tras merges #50/#51/#52; verificado 708/24-29/47, `postmortem.espejo.repertorio` (8ª clave Auditor) + `story.ch6.dato6` (29ª quest) + `web/app.js` badge `TR-003|EN_COLA` sin drift en `CENSO-LISTA.md`/`06-faro.md`/`04-troncales.md`/`POSTMORTEM.md`; INDICE actualizado, worklog 14/09. Sin escritura nueva de capítulos; narrativa sigue [LISTA] 6+6, cero deuda.
 
