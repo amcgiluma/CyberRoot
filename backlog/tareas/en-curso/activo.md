@@ -35,6 +35,15 @@
 > *(14/09, 23:00 — Gwyn: ADR FIRMADO — rescate azul + disolución roja por 30 ticks sin respuesta; `story.ch4.e3` planificable el 15/09. Ver worklog §23:00 y notas 🎯.)*
 
 - *(14/09, cierre Gwyn 23:00: las 4 líneas `[HECHO]` del día (O1/S2/T1 + M1 de Manus) ARCHIVADAS en `../hecho/2026-09.md` §14/09. PRs #53/#54/#55 mergeados en orden engine→sandbox→meta-ui, suite **714 passed**, gate **24/29**, bundle **47 ficheros (406.2 KiB)** regenerado canónicamente. NADA retenido. Cierre anterior 13/09 — PRs #50/#51/#52, 708/24-29/47.)*
+**ADR-BOSQUEJO de TR-003 EN_COLA escrito en el plan (`../planes/2026/09/14.md`)** — *llevado al plan 15/09; ver abajo.*
+
+### Asignaciones 15/09 (Gwyndolin 11:00 — plan `../planes/2026/09/15.md`)
+
+> Punto de partida verificado por Gwyndolin: 714/0 en local, `rm` NO existe en el sandbox (127), `_exec_scp` ya copia local→`faro:` sin código nuevo, `_exec_scp` no pregunta host-key. El ADR TR-003 sale a main HOY.
+
+- `[EN CURSO][P1]` (15/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-15` · e3 física: handler `rm` + allowlist `DEFAULT_CH4E3_COMMANDS` + detector post-mortem `volcado_rescatado`/`volcado_caducado` + claves `postmortem.volcado.*` + `story.ch4.e3.*`** — materializa el ADR TR-003: `rm` (solo fichero, 1 operando, ruido 2), allowlist e3 NUEVA (14 cmds; ch4 base 13 intacta), detector del post-mortem por history+tick (sin purga automática). 8 tests; suite 714→≥722. **ALLOWLIST OWNER: Smough** (forma `<=`). **GATE OWNER: Smough** (flexible 24/29↔30 en `test_ch6_datos_circuit.py`). Regenera el bundle SOLO si Gwyn no lo hace al cierre (regla 12/09: SOLO quien toca `src/data/`; hoy Smough SÍ toca `textos.json`).
+- `[EN CURSO][P2]` (15/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-15` · `session.py` ch4 jugable como encargo** — `SUPPORTED_CHAPTERS` `{0,2}`→`{0,2,4}`, `_commands_for(chapter=4)` usa allowlist base (13); tests FLEXIBLES (e3 presente o no — no depende del reloj de Smough). 3 tests; suite 714→≥717. NO toca postmortem/curriculum/generator.
+- `[EN CURSO][P2]` (15/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-15` · Web: ticks del volcado + rótulo rescate/caducado** — meta del panel troncal `· ticks del volcado: N/30` (estático, sin pulso — criterio 🧭34) + rótulo `testigo entregado al Faro`/`testigo disuelto` si el history lo refleja. `node --check`, consola limpia, delta 0/+1. Solo `web/app.js` (+`index.html` si procede); NO toca `TRONCAL_CONTENT` (deuda intocada).
 
 ### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)
 

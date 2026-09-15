@@ -91,29 +91,18 @@ saques ese volcado y le digas cuánto pesa de verdad. No quiere que lo leas.
   no era su problema: era la única prueba de que el troncal se reescribe solo
   los días de la firma.
 
-### E3 — «El túnel» (rojo, `story.ch4.e3`)
+### E3 — «Lo que no avanza» (bifurcación, `story.ch4.e3` — ADR 14/09 firmado por Gwyn)
 
-Detrás del salto hay un servicio del Faro que no se anuncia en ninguna lista:
-se llega a él por un túnel cifrado que alguien tendió hace años y nunca cerró.
-Gris ha oído hablar de lo que hay al final y lo quiere antes de que la Oficina
-se entere de que el túnel existe. Te apunta el puerto y te dice el «por qué»,
-que es lo único que nunca da gratis.
+El volcado que trajiste a `/tmp/volcado.csv` sigue en tu disco local después de haberlo cortado. Son 512 bytes con estado `EN_COLA` desde las 03:14, la fila `TR-003` que el Faro nunca reclamó porque no pesa lo bastante para que Lumen la mire. Gris ya sabe que la tienes. Te dice dos precios sin que le preguntes y los dos son distintos, como siempre:
 
-- Técnico: abrir un túnel cifrado (encuadre `ssh -L` o el equivalente del
-  sandbox) para alcanzar el servicio que el salto no expone, y apuntar bien
-  lo que ves al otro lado.
-- Beat: al final del túnel hay una terminal de Continuidad que lleva años
-  abierta y silenciosa. No pide contraseña: le basta con que la llave del
-  salto siga viva. El túnel es la primera pisada del «giro»: algo en el Faro
-  está esperando una llave concreta y no pregunta quién la trae.
-- Karma: rojo. Llegar al final y contar a Gris qué hay (rojo: la palabra vale,
-  y el túnel sigue abierto para quien la compre) o llegar, mirar, y cerrar el
-  túnel por dentro (azul: más caro, dejas el servicio como si nadie hubiera
-  entrado, y la llave de acceso muere contigo).
-- Gancho: al cerrar (o no) el túnel, la terminal de Continuidad envía una
-  línea que no pidió nadie: `EXPEDIENTE 000 — SIN ARCHIVO ADJUNTO — CONFIRME
-  RECEPCIÓN`. La primera pieza del informe que el Auditor te diría solo si le
-  preguntaras algo que no está en el formulario.
+> — Quinientos doce bytes que nadie reclamó a las 03:14, y tú los tienes en `/tmp`. Si lo subes al Faro te pago lo que vale un testigo. Si lo dejas morir aquí te pago lo que vale un silencio. Elige. Y decide pronto: eso no espera.
+
+La megafonía del Faro, a la misma hora, suelta un aviso de Vela que no nombra tu volcado porque no sabe que existe. Pide voluntarios para revisar conexiones no conciliadas de las 03:14. La pregunta nace de la hora, no del badge. Vela no ha visto el `EN_COLA`.
+
+- Técnico: el fichero ya está en `/tmp/volcado.csv` tras el `scp` de E2. Ahora decides qué hacer con él, sin comando nuevo: para rescatar, `scp /tmp/volcado.csv faro:/srv/camara-faro/volcado-rescate.csv` lo lleva al Faro y lo deja donde el `join` de dato4/dato6 puede cruzarlo con el registro; para soltarlo, `rm /tmp/volcado.csv` lo borra y el Auditor lo anota como `volcado.caducado`. Si no haces nada durante 30 ticks, el sistema lo purga solo: decidir es no decidir, y también deja `volcado.caducado`. Rutas absolutas, un solo verbo por línea, sin pipe nuevo.
+- Beat: rescatar pone la fila `TR-003` al alcance del Faro. Quien lea el censo a las 03:14 —si alguien lo lee— aparece en el cruce. Soltarlo deja la cola sin testigo: la hora sigue existiendo, pero ya no hay fila que la demuestre. Ceniza no te empuja. Dice solo: «Si lo subes, la prueba viaja. Si lo borras, la hora se queda sin papel. Las dos cosas se pagan.»
+- Karma: azul rescatar — conservas la prueba íntegra para la cadena de LUZ PLENA, el Faro custodia el volcado y el `join` futuro habla; rojo borrar o dejar que se purgue — quitas un testigo que pesaba poco pero estaba, y el Auditor apunta `volcado.caducado` en tu expediente. La disolución por tiempo no es bug: es la segunda mitad de la bifurcación, firmada como «se purga solo».
+- Gancho: el Auditor registra lo que hiciste sin valorar. Si rescataste, el siguiente `cat` en `faro:/srv/camara-faro/volcado-rescate.csv` devuelve la fila `TR-003|faro|troncal-01|512|EN_COLA` idéntica a la de `/tmp`; si borraste o se purgó, el post-mortem trae una línea nueva: `Expediente 000: volcado EN_COLA sin entrega — caducado a los 30 ticks. Continuidad del ensayo: estable.` Esa línea es la que el cap. 5 (Subestación, `START 03:14`) usa como testigo ausente o presente.
 
 ### E4 — «La cuenta que no existe» (rojo, `story.ch4.e4`)
 
@@ -277,25 +266,20 @@ deja de ser refugio — el asalto llega al Hub.*
 - Claves sugeridas: `story.ch4.apertura`, `story.ch4.e1`–`story.ch4.e5`,
   `story.ch4.auditor` (el giro, beat 8), `story.ch4.postmortem_ceniza`,
   `story.ch4.auditor_azul`, `story.ch4.auditor_rojo`, `story.ch4.troncal`.
+  **E3 `story.ch4.e3` es bifurcación karma (ADR 14/09 firmado): azul `scp /tmp/volcado.csv faro:/srv/camara-faro/volcado-rescate.csv`, rojo `rm /tmp/volcado.csv` / purga 30 ticks → `volcado.caducado` en post-mortem; sin comando nuevo, sin pipe nuevo, prefijo `story.ch4.e3.*` para beat/briefing/detail. Dueño S2 mañana.**
 - Voz verificada contra PERSONAJES.md (Ceniza, Gris, Zeta no aparece en este
   capítulo, Auditor, Vela). Test del nombre tapado: Ceniza en la apertura y
   el gancho (condición de salida, dato antes que ánimo, no promete salida
   segura); Gris en E2/E3 (precio dos veces, el «por qué» como favor que
   nunca da gratis); el Auditor en su giro (frase formulario + pregunta fuera
   de registro + remata «continuidad del ensayo: estable» — es SU sello).
-- Karma de cap. 4: E1 azul, E2 gris, E3 rojo, E4 rojo, E5 de cierre con ambas
+- Karma de cap. 4: E1 azul, E2 gris, E3 bifurcación azul/rojo (rescate vs ceniza), E4 rojo, E5 de cierre con ambas
   salidas. Coherente con el descenso del Acto 2 (§3.3): un perfil que ya
   subió al Alto recibe en la frontera trabajos más sucios, y la frontera
   cobra en testigos lo que el Alto cobraba en alertas.
-- ⚠️ Bloques de terminal: el capítulo asume `ssh`, `scp` y un mecanismo de
-  túnel (`ssh -L` como referencia conceptual). Esto es CONTRATO PEDAGÓGICO,
-  no salida reproducible: hay que verificar contra la implementación real del
-  sandbox cuando la familia Red entre en currículo (igual que los pipes del
-  cap. 2 se verificaron con `test_session_ch2.py`). La nota para Smough:
-  antes de `story.ch4.*` en `curriculum.json`, el sandbox necesita modelar
-  credenciales/llaves (`ssh`), copia remota (`scp`) y un túnel — o bien el
-  capítulo se ajusta a lo que el sandbox soporte cuando el cap. 4 se
-  integre. Hasta entonces, los encargos E1-E5 son espina narrativa.
+- ⚠️ Bloques de terminal: el capítulo asume `ssh`, `scp` y `rm` (bifurcación E3). Esto es CONTRATO PEDAGÓGICO
+  verificado: `cat /etc/hosts` descubre hosts, `scp` copia entre FS, `rm` existe; `ssh -L` túnel queda como referencia conceptual no bloqueante (E3 ya no lo exige). La nota para Smough:
+  E3 `story.ch4.e3` requiere detector de `scp ... volcado-rescate.csv` vs `rm /tmp/volcado.csv` + purga 30 ticks (`volcado.caducado`), sin comando nuevo ni pipe nuevo. Hasta entonces, los encargos E1-E5 son espina narrativa.
 - El giro del Auditor (beat 8 → `story.ch4.auditor`) se PLANTA aquí, no se
   resuelve. Su arco (§9) es que «la burocracia desarrolla conciencia por
   acumulación de casos»: este capítulo es el primer caso. No adelantar su
