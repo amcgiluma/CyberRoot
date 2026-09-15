@@ -98,8 +98,8 @@ def test_command_result_ok_es_exit_zero() -> None:
 def test_registry_registra_obtiene_y_ordena_por_codepoint() -> None:
     """names/specs salen ordenados por codepoint; get devuelve None si falta."""
     reg = build_registry(NAV_SPECS + FILE_SPECS)
-    assert reg.names() == ("cat", "cd", "cp", "ls")
-    assert [s.name for s in reg.specs()] == ["cat", "cd", "cp", "ls"]
+    assert reg.names() == ("cat", "cd", "cp", "ls", "rm")
+    assert [s.name for s in reg.specs()] == ["cat", "cd", "cp", "ls", "rm"]
     assert reg.get("ls") is LS_SPEC
     assert reg.get("cd") is CD_SPEC
     assert reg.get("cp") is CP_SPEC

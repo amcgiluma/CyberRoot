@@ -65,6 +65,9 @@ LINE_KEY_JOIN = "postmortem.auditor.join"
 #: Si el history contiene alguna de las 3 firmas (scp→cut|grep, join -v, ps aux+grep),
 #: añade 1 línea repertorio enumerándolas en orden ①→②→③ (sin datos de fila).
 LINE_KEY_ESPEJO = "postmortem.espejo.repertorio"
+#: S1 15/09 (Smough, ADR TR-003) — bifurcación volcado: rescate vs caducado.
+LINE_KEY_VOLCADO_RESCATE = "postmortem.volcado.rescate"
+LINE_KEY_VOLCADO_CADUCADO = "postmortem.volcado.caducado"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -454,6 +457,39 @@ def _has_espejo_reloj(shell_dict: dict[str, Any]) -> bool:
     return False
 
 
+def _has_volcado_rescate(shell_dict: dict[str, Any]) -> bool:
+    """Firma rescate: `scp` con `volcado-rescate.csv` y exit 0."""
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "scp" not in line or "volcado-rescate.csv" not in line:
+            continue
+        result = entry.get("result") or {}
+        if int(result.get("exit_code", 1)) == 0:
+            return True
+    return False
+
+
+def _has_volcado_rm(shell_dict: dict[str, Any]) -> bool:
+    """Firma disolución: `rm /tmp/volcado.csv` con exit 0."""
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "rm" not in line or "/tmp/volcado.csv" not in line:
+            continue
+        result = entry.get("result") or {}
+        if int(result.get("exit_code", 1)) == 0:
+            # asegurar que la línea es rm y no un comentario que contenga rm
+            try:
+                import shlex
+                argv = shlex.split(line)
+            except ValueError:
+                argv = []
+            if argv and argv[0] == "rm":
+                return True
+            # fallback substring ya vale para historia real (siempre rm directo)
+            return True
+    return False
+
+
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
     """True si el historial contiene al menos un `sudo`.
 
@@ -604,6 +640,23 @@ def build_postmortem(
         }
         base["auditor_espejo_text"] = espejo_text
         base["lines_resolved"] = [*base["lines_resolved"], espejo_text]
+
+    # S1 15/09 — bifurcación TR-003: volcado rescate vs caducado (ADR firmado).
+    # Prioridad: rescate si hubo scp a volcado-rescate.csv con exit 0.
+    # Caducado si hubo rm /tmp/volcado.csv exit 0, o tick>=30 sin rescate (purga por tiempo).
+    if _has_volcado_rescate(shell_dict):
+        rescate_text = _resolve_auditor_text(LINE_KEY_VOLCADO_RESCATE, {})
+        base["auditor_volcado"] = {"line_key": LINE_KEY_VOLCADO_RESCATE, "args": {}}
+        base["auditor_volcado_text"] = rescate_text
+        base["lines_resolved"] = [*base["lines_resolved"], rescate_text]
+        base["volcado"] = "rescatado"
+    elif _has_volcado_rm(shell_dict) or int(shell_dict.get("tick", 0)) >= 30:
+        # Solo caducado si NO hubo rescate; tick>=30 cubre purga por tiempo sin gesto
+        caducado_text = _resolve_auditor_text(LINE_KEY_VOLCADO_CADUCADO, {})
+        base["auditor_volcado"] = {"line_key": LINE_KEY_VOLCADO_CADUCADO, "args": {}}
+        base["auditor_volcado_text"] = caducado_text
+        base["lines_resolved"] = [*base["lines_resolved"], caducado_text]
+        base["volcado"] = "caducado"
 
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):

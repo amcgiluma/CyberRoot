@@ -16,6 +16,7 @@ from core.sandbox.noise import NOISE_PROFILE
 
 CAT_NAME = "cat"
 CP_NAME = "cp"
+RM_NAME = "rm"
 
 #: kind → texto GNU para `cp` (PLAN §decisión 3, simplificado).
 #:
@@ -163,6 +164,48 @@ def _run_cp(
     return CommandResult(noise=noise)
 
 
+def _run_rm(
+    fs: FileSystem,
+    cwd: str,
+    argv: tuple[str, ...],
+    tick: int,
+    stdin: str = "",
+) -> CommandResult:
+    """`rm`: elimina UN fichero (ADR TR-003, S1 15/09).
+
+    Solo 1 operando, sin flags. `rm` sin args → exit 1 GNU (missing operand);
+    >1 operando → exit 1 GNU honest; flags `-r`/`-f`/`-i`/cualquier `-*` → exit 1
+    `invalid option`; directorio → exit 1 `Is a directory`; no encontrado →
+    exit 1 `No such file or directory`. Un fichero eliminado desaparece de `ls`.
+    """
+    noise = noise_event(RM_NAME, argv, tick)
+    if len(argv) == 0:
+        return CommandResult(stderr="rm: missing operand", exit_code=1, noise=noise)
+    # flags tienen prioridad sobre conteo (rm -r f → invalid option, no too many)
+    for a in argv:
+        if a.startswith("-"):
+            return CommandResult(
+                stderr=f"rm: invalid option -- '{a.lstrip('-')}'",
+                exit_code=1,
+                noise=noise,
+            )
+    if len(argv) > 1:
+        return CommandResult(stderr="rm: too many arguments", exit_code=1, noise=noise)
+    arg = argv[0]
+    try:
+        fs.remove_file(arg, cwd)
+    except FsError as e:
+        kind_map = {
+            "not_found": "No such file or directory",
+            "not_a_directory": "Not a directory",
+            "is_a_directory": "Is a directory",
+            "permission_denied": "Permission denied",
+        }
+        msg = kind_map.get(e.kind, e.kind)
+        return CommandResult(stderr=f"rm: cannot remove '{arg}': {msg}", exit_code=1, noise=noise)
+    return CommandResult(noise=noise)
+
+
 CAT_SPEC = CommandSpec(
     name=CAT_NAME,
     concepts=frozenset({"cat"}),
@@ -177,4 +220,11 @@ CP_SPEC = CommandSpec(
     run=_run_cp,
 )
 
-SPECS: tuple[CommandSpec, ...] = (CAT_SPEC, CP_SPEC)
+RM_SPEC = CommandSpec(
+    name=RM_NAME,
+    concepts=frozenset({"rm"}),
+    noise=NOISE_PROFILE[RM_NAME],
+    run=_run_rm,
+)
+
+SPECS: tuple[CommandSpec, ...] = (CAT_SPEC, CP_SPEC, RM_SPEC)

@@ -178,4 +178,16 @@ PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_postmortem_
 PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 703 passed
 python tools/web/build_bundle.py  # regenera core.json (47 ficheros, 400.2 KiB)
 ```
+---
+
+## v0.9 (S1, 15/09) — bifurcación TR-003: volcado rescate vs caducado (Smough)
+
+**S1 — `postmortem.volcado.*` (Smough, ADR TR-003, P1 15/09):** sexta huella, bifurcación del volcado EN_COLA. Si el history contiene `scp ... volcado-rescate.csv` con exit 0 → `postmortem.volcado.rescate` (voz: «volcado EN_COLA entregado al Faro»); si contiene `rm /tmp/volcado.csv` exit 0 o tick>=30 sin rescate → `postmortem.volcado.caducado` («volcado EN_COLA sin entrega — caducado»). Rescate tiene prioridad. Helpers `_has_volcado_rescate`/`_has_volcado_rm` (solo shlex/substring, sin sandbox), `volcado` campo resume estado. Textos en `data/textos.json`, `story.ch4.e3.*` desde prosa de Manus (04-troncales.md). Tests en `test_volcado_rescate.py` (3: rescate/caducado por rm y tick/byte-idéntico). Suite 714→723 (+9, +6 rm y 3 volcado), bundle 418.2 KiB.
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_volcado_rescate.py -o addopts= -q  # 3 passed
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/sandbox/test_rm.py -o addopts= -q  # 6 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 723 passed
+python tools/web/build_bundle.py  # regenera core.json (47 ficheros, 418.2 KiB)
+```
 

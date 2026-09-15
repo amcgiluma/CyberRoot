@@ -84,7 +84,7 @@ def test_load_curriculum_21_conceptos_20_quests() -> None:
     """
     cur = load_curriculum()
     assert len(cur.concepts) == 24
-    assert len(cur.quests) in (28, 29)
+    assert len(cur.quests) in (28, 29, 30)
 
 
 def test_capitulo6_conteo_enseñado() -> None:

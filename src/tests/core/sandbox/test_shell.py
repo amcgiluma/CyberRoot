@@ -272,6 +272,6 @@ def test_todas_las_specs_estan_disponibles_para_el_set() -> None:
     01/09; cut, S1 04/09 — la Lista es tabla cortable). `sudo` NO es una spec: es un wrapper del shell."""
     assert {s.name for s in SPECS_ALL} == {
         "ls", "cd", "cat", "cp", "grep", "wc", "ps", "env",
-        "head", "tail", "sort", "uniq", "kill", "cut",
+        "head", "tail", "sort", "uniq", "kill", "cut", "rm",
     }
     assert FILE_SPECS and NAVIGATION_SPECS
