@@ -179,3 +179,15 @@ PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 703 passed
 python tools/web/build_bundle.py  # regenera core.json (47 ficheros, 400.2 KiB)
 ```
 
+---
+
+## v0.8 (O1, 15/09) — session.py ch4 jugable como encargo
+
+**O1 — `session.py` cap. 4 (Ornstein, 15/09, ADR TR-003):** el flujo de encargo materializa el capítulo 4 «Troncales» — `SUPPORTED_CHAPTERS` {0,2}→{0,2,4}, `_commands_for(4)` devuelve `DEFAULT_CH4_COMMANDS` base (13, sin `rm` — el `rm` de e3 lo aporta Smough con `DEFAULT_CH4E3_COMMANDS` (14) en su allowlist e3). `abrir_encargo` genera sala ch4 con `contract_id` determinista `quest:seed` (cap. !=0 → con contrato; 0 sin), compatible con e1/e2 actuales y con e3 cuando Smough la suba al `curriculum.json` (el engine lee del curriculum, no hardcodea e3). `listar_encargos(4)` ordena por id, `abrir` rechaza accionable con `falta` honesto si faltan prereqs, `cerrar_encargo` adjunta `postmortem` intacto (firma no cambia). Tests flexibles en `test_session_ch4.py` (4: SUPPORTED+commands + listar honesto e1+e2⊆ids e3 opcional + abrir e2 con cut+scp y shell activa + cerrar e2→postmortem completado/expulsión).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch4.py -o addopts= -q  # 4 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 718 passed (717 +1 bundle stale → 718 tras regen Gwyn)
+python tools/web/build_bundle.py  # regen canónico al cierre de Gwyn (regla 12/09)
+```
+
