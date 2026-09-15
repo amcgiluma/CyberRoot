@@ -143,6 +143,24 @@ def get_csv(path):
         return _j.dumps({"ok": True, "content": content, "path": str(path)})
     except Exception as e:
         return _j.dumps({"ok": False, "error": repr(e)})
+
+def get_tick():
+    shell = _lib.get("shell")
+    if shell is None:
+        return 0
+    return int(getattr(shell, "tick", 0))
+
+def get_history():
+    import json as _j
+    shell = _lib.get("shell")
+    if shell is None:
+        return _j.dumps([])
+    try:
+        hist = getattr(shell, "history", [])
+        lines = [h.get("line", "") for h in hist if isinstance(h, dict)]
+        return _j.dumps(lines, ensure_ascii=False)
+    except Exception as e:
+        return _j.dumps([])
 `;
 
 // ---------------------------------------------------------------------------
@@ -315,6 +333,39 @@ function hideTroncalTabla() {
   _troncalEnColaOnly = false;
 }
 
+// Helpers T1 15/09 — Seath: ticks del volcado + rótulo rescate/caducado (sin pulso, estático)
+function _getVolcadoTick() {
+  try {
+    if (!pyodide || !pyodide.globals) return 0;
+    const fn = pyodide.globals.get("get_tick");
+    if (!fn) return 0;
+    const v = fn();
+    const n = parseInt(v, 10);
+    return isNaN(n) ? 0 : n;
+  } catch (e) { return 0; }
+}
+function _getVolcadoStatus(tick) {
+  // Lee history y decide rótulo: rescate > disuelto > caducado > null
+  try {
+    if (!pyodide || !pyodide.globals) return null;
+    const fn = pyodide.globals.get("get_history");
+    if (!fn) return null;
+    const raw = fn();
+    const lines = JSON.parse(raw);
+    if (!Array.isArray(lines)) return null;
+    let hasRescate = false, hasDisuelto = false;
+    for (const ln of lines) {
+      const s = String(ln);
+      if (s.includes("volcado-rescate.csv") && s.includes("scp")) hasRescate = true;
+      if (s.includes("rm") && s.includes("/tmp/volcado.csv")) hasDisuelto = true;
+    }
+    if (hasRescate) return "testigo entregado al Faro";
+    if (hasDisuelto) return "testigo disuelto";
+    if (tick >= 30) return "volcado caducado (30 ticks)";
+    return null;
+  } catch (e) { return null; }
+}
+
 function renderTroncalTabla(cutInfo, csvContent, opts) {
   const panel = $id("troncal-tabla");
   const metaEl = $id("troncal-tabla-meta");
@@ -337,7 +388,11 @@ function renderTroncalTabla(cutInfo, csvContent, opts) {
     : allLines;
   if (lines.length === 0) { hideTroncalTabla(); return; }
   const metaSuffix = enColaActive ? " · EN_COLA solo" : (grepFiltered ? " · grep TR-" : "");
-  metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})${metaSuffix}`;
+  const _tick = _getVolcadoTick();
+  const _status = _getVolcadoStatus(_tick);
+  const _tickSuffix = ` · ticks del volcado: ${_tick}/30`;
+  const _rotulo = _status ? ` · ${_status}` : "";
+  metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})${metaSuffix}${_tickSuffix}${_rotulo}`;
   let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
   const headerCells = lines[0].split(delim);
   html += "<thead><tr>";
