@@ -79,6 +79,10 @@ DEFAULT_CH4_COMMANDS: tuple[str, ...] = (
     "cat", "cd", "cp", "cut", "env", "grep", "kill", "ls", "ps", "scp", "ssh", "sudo", "wc",
 )
 
+#: Allowlist e3 (S1 15/09, ADR TR-003): CH4 base (13) + `rm` (14) SOLO en la sala e3.
+#: La allowlist base NO SE TOCA (guard SUBSET intacto; `rm`→127 fuera de e3).
+DEFAULT_CH4E3_COMMANDS: tuple[str, ...] = DEFAULT_CH4_COMMANDS + ("rm",)
+
 #: Comandos del set del cap. 6 (S2, 02/09): desbloquea la familia conteo
 #: (head/tail/sort/uniq) sobre la base del cap. 3. El cap. 6 «Faro» lee la
 #: Lista de Lumen con grep/wc/pipe + conteo; necesita TODO lo anterior

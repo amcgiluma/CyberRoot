@@ -19,7 +19,7 @@ def test_perfil_contiene_los_comandos_del_cap0_y_pipes() -> None:
     # + join (S3 10/09, familia tabla, cap. 6 quest dato4).
     assert set(NOISE_PROFILE) == {
         "cd", "ls", "cat", "cp", "grep", "wc", "ps", "env", "sudo",
-        "head", "tail", "sort", "uniq", "kill", "cut", "ssh", "scp", "exit", "logout",
+        "head", "tail", "sort", "uniq", "kill", "cut", "ssh", "scp", "rm", "exit", "logout",
         "join",
     }
 

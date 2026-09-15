@@ -415,6 +415,34 @@ class FileSystem:
                 mtime=src_node.mtime,
             )
 
+    def remove_file(self, path: str, cwd: str = "/") -> None:
+        """Elimina UN fichero del FS (S1 15/09 — `rm`, ADR TR-003).
+
+        Solo ficheros: directorios → `is_a_directory`. Errores:
+        `not_found` (no existe o padre ausente), `not_a_directory` (componente
+        intermedio es fichero), `is_a_directory` (destino es directorio).
+        """
+        raw = path.split("/") if path.startswith("/") else self._segments(cwd) + path.split("/")
+        segs = self._normalize(raw)
+        if not segs:
+            raise FsError("not_found", path)
+        parent: Node = self.root
+        for seg in segs[:-1]:
+            if isinstance(parent, FileNode):
+                raise FsError("not_a_directory", path)
+            assert isinstance(parent, DirNode)
+            if seg not in parent.children:
+                raise FsError("not_found", path)
+            parent = parent.children[seg]
+        assert isinstance(parent, DirNode)
+        name = segs[-1]
+        node = parent.children.get(name)
+        if node is None:
+            raise FsError("not_found", path)
+        if isinstance(node, DirNode):
+            raise FsError("is_a_directory", path)
+        del parent.children[name]
+
     def append_file(self, path: str, text: str, cwd: str = "/") -> None:
         """Appenda `text` al contenido de un fichero (S1 01/09 — firma sudo).
 

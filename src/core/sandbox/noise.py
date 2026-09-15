@@ -66,6 +66,7 @@ NOISE_PROFILE: dict[str, int] = {
     # comparte perfil con familia Procesos (misma cuenta de ruido). ⚠️ v1
     "ssh": 2,
     "scp": 3,
+    "rm": 2,
     "exit": 0,
     "logout": 0,
 }
