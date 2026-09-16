@@ -314,14 +314,14 @@ def test_ch6_gamestate_roundtrip_con_procesos() -> None:
 # ---------------------------------------------------------------------------
 
 def test_ch6_gate_por_aritmetica_y_pipe_limite() -> None:
-    """Gate flexible: main 23/25, tras S2 24/27, tras S2 ch4.e2 24/28, tras S2 dato6 24/29; pipe 2 permitido, 4 rechazado."""
+    """Gate flexible: main 23/25, tras S2 24/27, tras S2 ch4.e2 24/28, tras S2 dato6 24/29, tras S1 dato7 24/31; pipe 2 permitido, 4 rechazado."""
     from core.curriculum import load_curriculum
 
     curr = load_curriculum()
     n_concepts = len(curr.concepts)
     n_quests = len(curr.quests)
     # main 23/25, tras merge S2 24/27, tras S2 ch4.e2 24/28, tras S2 dato6 24/29 — flexible 28↔29 (Smough 13/09, GATE OWNER)
-    assert (n_concepts, n_quests) in [(23, 25), (24, 27), (24, 28), (24, 29), (24, 30)], f"gate inesperado {n_concepts}/{n_quests}"
+    assert (n_concepts, n_quests) in [(23, 25), (24, 27), (24, 28), (24, 29), (24, 30), (24, 31)], f"gate inesperado {n_concepts}/{n_quests}"
     # Si estamos en 24/27, verificar que c.join y dato4/dato5 existen y DAG válido
     if n_concepts == 24:
         ids_c = {c.id for c in curr.concepts}

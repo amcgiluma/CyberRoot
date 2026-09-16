@@ -77,14 +77,14 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
 
 
 def test_load_curriculum_21_conceptos_20_quests() -> None:
-    """El catálogo real: 24 conceptos y 28–29 encargos (conteo 11/09 — S2 ch4.e2 + dato4/dato5 + c.join).
+    """El catálogo real: 24 conceptos y 28–31 encargos (conteo 16/09 — dato7).
 
     Conteo del 11/09: conceptos 24 (10/09) + quests 27 (10/09) + story.ch4.e2
     (requires c.join, join -v 1) + story.ch6.dato5 (requires c.ps, ps aux | grep 11:04). Gate 25→27, 23→24.
     """
     cur = load_curriculum()
     assert len(cur.concepts) == 24
-    assert len(cur.quests) in (28, 29, 30)
+    assert len(cur.quests) in (28, 29, 30, 31)
 
 
 def test_capitulo6_conteo_enseñado() -> None:
