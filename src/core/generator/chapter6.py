@@ -42,6 +42,15 @@ CAP6_DIR = "/srv/camara-faro"
 REGISTRO_FILE = "registro.csv"
 PURGAS_FILE = "purgas.csv"
 
+#: Volcado rescate (dato7 — S1 16/09, cadena TR-003). Solo existe si rescate.
+VOLCADO_RESCATE_FILE = "volcado-rescate.csv"
+VOLCADO_RESCATE_PATH = f"{CAP6_DIR}/{VOLCADO_RESCATE_FILE}"
+VOLCADO_RESCATE_HEADER = "id|origen|destino|bytes|estado"
+VOLCADO_RESCATE_CONTENT = (
+    VOLCADO_RESCATE_HEADER + "\n"
+    + "TR-003|faro|troncal-01|512|EN_COLA\n"
+)
+
 #: Rutas absolutas (contrato con S2: la quest apunta a estos ficheros).
 REGISTRO_PATH = f"{CAP6_DIR}/{REGISTRO_FILE}"
 PURGAS_PATH = f"{CAP6_DIR}/{PURGAS_FILE}"
@@ -189,7 +198,7 @@ def _ch6_processes_for_rng(fs_rng: Any) -> tuple[Proceso, ...]:
     return procs
 
 
-def build_chapter6_fs(fs_rng: Any) -> FileSystem:
+def build_chapter6_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSystem:
     """Monta el árbol de la sala-dato del cap. 6 «Faro».
 
     El FS de la sala contiene SIEMPRE:
@@ -206,16 +215,7 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
     """
     processes = _ch6_processes_for_rng(fs_rng)
     environment = dict(CHAPTER6_ENVIRONMENT)
-    return FileSystem(
-        root=DirNode(
-            name="/",
-            children={
-                "srv": DirNode(
-                    name="srv",
-                    children={
-                        "camara-faro": DirNode(
-                            name="camara-faro",
-                            children={
+    camara_children: dict[str, FileNode] = {
                                 REGISTRO_FILE: FileNode(
                                     name=REGISTRO_FILE,
                                     content=REGISTRO_CONTENT,
@@ -258,7 +258,25 @@ def build_chapter6_fs(fs_rng: Any) -> FileSystem:
                                     group="cero",
                                     mode="644",
                                 ),
-                            },
+                            }
+    if volcado_rescatado:
+        camara_children[VOLCADO_RESCATE_FILE] = FileNode(
+            name=VOLCADO_RESCATE_FILE,
+            content=VOLCADO_RESCATE_CONTENT,
+            owner="lumen",
+            group="censo",
+            mode="644",
+        )
+    return FileSystem(
+        root=DirNode(
+            name="/",
+            children={
+                "srv": DirNode(
+                    name="srv",
+                    children={
+                        "camara-faro": DirNode(
+                            name="camara-faro",
+                            children=camara_children,
                         ),
                     },
                 ),

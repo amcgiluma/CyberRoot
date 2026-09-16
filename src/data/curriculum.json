@@ -567,6 +567,16 @@
             ],
             "title_key": "story.ch6.dato6.title",
             "beat_key": "story.ch6.dato6.beat"
+        },
+        {
+            "id": "story.ch6.dato7",
+            "chapter": 6,
+            "tint": "grey",
+            "requires": [
+                "c.join"
+            ],
+            "title_key": "story.ch6.dato7.title",
+            "beat_key": "story.ch6.dato7.beat"
         }
     ]
 }
