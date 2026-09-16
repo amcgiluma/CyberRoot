@@ -32,7 +32,7 @@ from typing import Any, Iterable
 from core.engine.postmortem import build_postmortem
 from core.generator import Incursion, generate
 from core.generator.model import Contract
-from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH4_COMMANDS, Shell
+from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH4_COMMANDS, DEFAULT_CH4E3_COMMANDS, Shell
 
 #: Conjunto de capítulos cuyo flujo de encargo está materializado (v0: 0, 2 y 4).
 SUPPORTED_CHAPTERS: frozenset[int] = frozenset({0, 2, 4})
@@ -40,11 +40,19 @@ SUPPORTED_CHAPTERS: frozenset[int] = frozenset({0, 2, 4})
 _KARMA_HINT_ES: dict[str, str] = {"blue": "azul", "red": "rojo", "grey": "gris"}
 
 
-def _commands_for(chapter: int) -> tuple[str, ...]:
-    """Set de comandos de la sesión por capítulo (el 0 es escenario sin pipes)."""
+def _commands_for(chapter: int, quest_id: str | None = None) -> tuple[str, ...]:
+    """Set de comandos de la sesión por capítulo (el 0 es escenario sin pipes).
+
+    Cap. 4 tiene dos allowlists: base 13 para e1/e2 y e3 extendida 14 con ``rm``
+    SOLO cuando quest_id == 'story.ch4.e3' (simetría scp/rm, 🧭36). Sin
+    quest_id (llamada legacy) devuelve la base 13 — retrocompatible con tests
+    y con e1/e2.
+    """
     if chapter == 2:
         return DEFAULT_CH2_COMMANDS
     if chapter == 4:
+        if quest_id == "story.ch4.e3":
+            return DEFAULT_CH4E3_COMMANDS
         return DEFAULT_CH4_COMMANDS
     return DEFAULT_CAP0_COMMANDS
 
@@ -189,16 +197,39 @@ def abrir_encargo(
     seed = _seed_de_sala(quest_id, run_seed)
     # Cap. 2/4 → sala del contrato concreto (contract_id); cap. 0 → su única quest.
     incursion = generate(seed, chapter, contract_id=quest.id) if chapter != 0 else generate(seed, chapter)
+    shell = Shell(
+        incursion.room.fs.snapshot(),
+        host=incursion.room.host,
+        commands=_commands_for(chapter, quest_id),
+        cwd=incursion.scaffold.initial_cwd(),
+    )
+    # Cap. 4: pre-puebla hosts remotos deterministas (como generator.new_session)
+    # para que scp funcione sin depender de que el jugador haga cat previo.
+    if chapter == 4:
+        try:
+            from core.generator.chapter4 import build_ch4_remote_fs
+            from core.sandbox.shell import _parse_hosts_content
+
+            try:
+                from core.sandbox.fs import FileNode as _FN
+
+                node = shell.fs.resolve("/etc/hosts", "/")
+                text = node.content if isinstance(node, _FN) else ""
+            except Exception:
+                text = ""
+            for h in _parse_hosts_content(text):
+                if h not in shell.hosts:
+                    try:
+                        shell.hosts[h] = build_ch4_remote_fs(h)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
     session = EncargoSession(
         quest_id=quest_id,
         chapter=chapter,
         incursion=incursion,
-        shell=Shell(
-            incursion.room.fs.snapshot(),
-            host=incursion.room.host,
-            commands=_commands_for(chapter),
-            cwd=incursion.scaffold.initial_cwd(),
-        ),
+        shell=shell,
         seed=seed,
         contract=contract,
     )

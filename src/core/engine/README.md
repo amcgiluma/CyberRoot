@@ -203,3 +203,14 @@ PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 718 passed (717 +1 b
 python tools/web/build_bundle.py  # regen canónico al cierre de Gwyn (regla 12/09)
 ```
 
+---
+
+## v0.9 (O1, 16/09) — session.py e3 cablea `rm` (simetría scp/rm, 🧭36)
+
+**O1 — `session.py` e3 (Ornstein, 16/09, 🧭36):** `_commands_for(4, quest_id)` devuelve `DEFAULT_CH4E3_COMMANDS` (14, con `rm`) SOLO cuando `quest_id == 'story.ch4.e3'`; base 13 INTACTA en e1/e2 (llamada legacy sin quest_id → base). `abrir_encargo` crea el `Shell` con la allowlist correcta y pre-puebla `hosts` remotos (como `generator.new_session`) para que `scp`/`rm` funcionen sin `cat` previo. `rm /tmp/volcado.csv` exit 0 → `build_postmortem` marca `volcado: caducado` (detector ya existente de S1 15/09); e1/e2 `rm→127` frontera intacta. Tests en `test_session_ch4_e3.py` (4: base vs e3 / e3 scp+rm→caducado / e1/e2 rm 127 / determinismo+listar). Suite 727→731 (+4, bundle stale honesto pendiente regen canónico Gwyn).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch4_e3.py -o addopts= -q  # 4 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 731 (730 +1 bundle stale → 731 tras regen Gwyn)
+```
+
