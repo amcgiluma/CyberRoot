@@ -257,7 +257,13 @@ function renderFaroTabla(cutInfo, csvContent) {
   const delim = cutInfo.delim;
   const colIdx = cutInfo.field - 1;
   const shortFile = cutInfo.file.split("/").pop();
-  metaEl.textContent = `${shortFile} · columna ${cutInfo.field} (${delim})`;
+  const _faroSuffix = _getFaroRescateSuffix();
+  if (_faroSuffix) {
+    const _faroTip = "El volcado rescatado en ch4.e3 viaj\u00f3 al Faro \u2014 TR-003|EN_COLA presente en /srv/camara-faro/volcado-rescate.csv (lente, no ejecuta el core)";
+    metaEl.innerHTML = `${_escapeHtml(shortFile)} \u00b7 columna ${cutInfo.field} (${_escapeHtml(delim)})<span title="${_escapeHtml(_faroTip)}" style="cursor:help;color:var(--accent)"> \u00b7 TR-003 rescatado \u2014 volcado-rescate.csv</span>`;
+  } else {
+    metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})`;
+  }
   // Construye tabla HTML
   let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
   // header
@@ -334,6 +340,39 @@ function hideTroncalTabla() {
 }
 
 // Helpers T1 15/09 — Seath: ticks del volcado + rótulo rescate/caducado (sin pulso, estático)
+// Helper T1 16/09 — Seath: escape HTML mínimo para innerHTML seguro (lente, no ejecutor)
+function _escapeHtml(s) {
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+// Faro — lente del rescate (solo web/app.js, consume get_history/get_csv ya expuestos)
+function _isFaroRescatePresent() {
+  try {
+    if (!pyodide || !pyodide.globals) return false;
+    // 1) history: scp + volcado-rescate.csv (señal del gesto e3 azul)
+    try {
+      const hraw = pyodide.globals.get("get_history")();
+      const lines = JSON.parse(hraw);
+      if (Array.isArray(lines)) {
+        for (const ln of lines) {
+          const s = String(ln);
+          if (s.includes("volcado-rescate.csv") && s.includes("scp")) return true;
+        }
+      }
+    } catch(e) {}
+    // 2) file: /srv/camara-faro/volcado-rescate.csv existe y contiene TR-003
+    try {
+      const raw = pyodide.globals.get("get_csv")("/srv/camara-faro/volcado-rescate.csv");
+      const data = JSON.parse(raw);
+      if (data.ok && data.content && String(data.content).includes("TR-003")) return true;
+    } catch(e) {}
+    return false;
+  } catch(e) { return false; }
+}
+function _getFaroRescateSuffix() {
+  if (currentChapter !== 6) return "";
+  if (_isFaroRescatePresent()) return " \u00b7 TR-003 rescatado \u2014 volcado-rescate.csv";
+  return "";
+}
 function _getVolcadoTick() {
   try {
     if (!pyodide || !pyodide.globals) return 0;
@@ -390,9 +429,10 @@ function renderTroncalTabla(cutInfo, csvContent, opts) {
   const metaSuffix = enColaActive ? " · EN_COLA solo" : (grepFiltered ? " · grep TR-" : "");
   const _tick = _getVolcadoTick();
   const _status = _getVolcadoStatus(_tick);
-  const _tickSuffix = ` · ticks del volcado: ${_tick}/30`;
-  const _rotulo = _status ? ` · ${_status}` : "";
-  metaEl.textContent = `${shortFile} \u00b7 columna ${cutInfo.field} (${delim})${metaSuffix}${_tickSuffix}${_rotulo}`;
+  const _tickTip = "Ticks desde que apareció el volcado. A los 30 caduca si no lo rescatas (scp a faro:/srv/camara-faro/volcado-rescate.csv) o lo disuelves (rm /tmp/volcado.csv) \u2014 lectura estática, sin pulso (\u00b734)";
+  const _tickSpan = `<span title="${_escapeHtml(_tickTip)}" style="cursor:help;text-decoration:underline dotted 1px rgba(140,220,150,.55);text-underline-offset:2px"> \u00b7 ticks del volcado: ${_tick}/30</span>`;
+  const _rotulo = _status ? ` \u00b7 ${_escapeHtml(_status)}` : "";
+  metaEl.innerHTML = `${_escapeHtml(shortFile)} \u00b7 columna ${cutInfo.field} (${_escapeHtml(delim)})${_escapeHtml(metaSuffix)}${_tickSpan}${_rotulo}`;
   let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
   const headerCells = lines[0].split(delim);
   html += "<thead><tr>";
