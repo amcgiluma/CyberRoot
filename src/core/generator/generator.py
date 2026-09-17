@@ -49,6 +49,12 @@ from core.generator.chapter3 import (
     SUDO_CREDENTIAL_PATH,
     build_chapter3_fs,
 )
+from core.generator.chapter5 import (
+    CUSTODIA_CONTENT,
+    CUSTODIA_FILE,
+    CUSTODIA_PATH,
+    build_chapter5_fs,
+)
 from core.generator.chapter6 import (
     CANON_STEPS_RAW_CH6_E2,
     CANON_STEPS_RAW_CH6_E2_TAIL,
@@ -526,7 +532,53 @@ def validate_incursion(incursion: Incursion) -> None:
                 exit_code=1,
                 stderr=f"/tmp/volcado.csv sin TR-001: {target.content[:120]!r}",
             )
+    elif room.chapter == 5:
+        # Cap. 5 — testigo condicional + intruso 03:14
+        from core.generator.chapter5 import CUSTODIA_PATH as CH5_CUSTODIA_PATH, INTRUSO_START, INTRUSO_USER, INTRUSO_CMD
 
+        procs = getattr(shell.fs, "processes", ()) or getattr(room.fs, "processes", ())
+        if not any(p.user == INTRUSO_USER and p.start == INTRUSO_START and INTRUSO_CMD in p.cmd for p in procs):
+            raise UnsolvableRoomError.from_step(
+                step_index=len(room.canon.steps),
+                argv=("ps", "aux"),
+                expect_exit=0,
+                exit_code=1,
+                stderr="cap.5 sin intruso --vigilar-censo (censo, 03:14) en ps aux",
+            )
+        try:
+            node = shell.fs.resolve(CH5_CUSTODIA_PATH, "/")
+            has_custodia = not isinstance(node, DirNode)
+        except Exception:
+            has_custodia = False
+        if has_custodia:
+            try:
+                content = shell.fs.read_file(CH5_CUSTODIA_PATH, "/")  # type: ignore[attr-defined]
+            except Exception as exc:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("cat", CH5_CUSTODIA_PATH),
+                    expect_exit=0,
+                    exit_code=1,
+                    stderr=f"custodia no legible: {exc!r}",
+                ) from exc
+            if "TR-003" not in content or "EN_COLA" not in content:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("cat", CH5_CUSTODIA_PATH),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"custodia sin TR-003|EN_COLA: {content[:80]!r}",
+                )
+        else:
+            missing_res = shell.execute(f"cat {CH5_CUSTODIA_PATH}")
+            if missing_res.exit_code == 0:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps),
+                    argv=("cat", CH5_CUSTODIA_PATH),
+                    expect_exit=1,
+                    exit_code=0,
+                    stderr="custodia existe cuando debería estar ausente (caducado)",
+                )
 
 
 def generate(
@@ -1063,6 +1115,113 @@ def _generate_cap4(
         canon=canon,
         objective=objective,
         concept_pool=concept_pool if concept_pool else ("c.scp",),
+    )
+    incursion = Incursion(
+        seed=seed,
+        chapter=chapter,
+        contract=contract,
+        scaffold=scaffold,
+        room=room,
+    )
+    validate_incursion(incursion)
+    return incursion
+
+
+def _generate_cap5(
+    seed: SeedLike,
+    variant: str,
+    curriculum: Curriculum,
+    contract_id: str | None,
+    volcado_rescatado: bool = False,
+) -> Incursion:
+    """Ruta de la Subestación del cap. 5 «El Asalto» (O1, 17/09).
+
+    Materializa el testigo condicional: `/tmp/volcado-custodia.csv` como
+    copia local del volcado del troncal. Si `volcado_rescatado=True`
+    (el jugador rescató en ch4.e3), el fichero existe con
+    `TR-003|faro|troncal-01|512|EN_COLA`; si caducado, NO existe
+    (ausencia honesta como detector — `cat` → `No such file`).
+
+    Misma firma `volcado_rescatado=False` que ya usa dato7 para que el
+    engine pueda propagar la decisión de ch4 sin cambiar API. Cap. 5
+    queda fuera de `SUPPORTED_CHAPTERS` HOY (sesión para mañana).
+    """
+    chapter = 5
+    concept_pool = _concept_pool(curriculum, chapter)
+    if not concept_pool:
+        try:
+            concept_pool = tuple(sorted(_taught_up_to(curriculum, chapter)))
+        except Exception:
+            concept_pool = ()
+
+    rng = Rng(seed)
+    id_rng = rng.fork("room-id")
+    fs_rng = rng.fork("fs")
+
+    fs = build_chapter5_fs(fs_rng, volcado_rescatado=volcado_rescatado)
+    room_id = f"room-ch5-{id_rng.below(2**32):08x}-{variant}"
+
+    ch_quests = curriculum.quests_for_chapter(chapter) if hasattr(curriculum, "quests_for_chapter") else []
+    quest = None
+    if contract_id is not None:
+        quest = curriculum.quest(contract_id) if hasattr(curriculum, "quest") else None
+        if quest is None or quest.chapter != chapter:
+            raise GeneratorError(f"contract_id {contract_id!r} no es un encargo del capítulo {chapter}")
+    else:
+        if ch_quests:
+            quest = ch_quests[0]
+        else:
+            quest = None
+
+    if quest is not None:
+        missing = set(quest.requires) - _taught_up_to(curriculum, chapter)
+        if missing:
+            raise GeneratorError(
+                f"quest {quest.id!r} requiere conceptos que ningún capítulo ≤ {chapter} "
+                f"enseña: {sorted(missing)} (viola §6.4.1)"
+            )
+        objective = Objective(
+            id=f"serie-{quest.id}",
+            story_key=quest.id,
+            summary_text_key=quest.title_key,
+            file=CUSTODIA_FILE,
+            src=CUSTODIA_PATH,
+        )
+        contract = Contract(
+            chapter=chapter,
+            objective_key=quest.id,
+            brief_text_key=f"{quest.id}.brief",
+            karma_hint=_TINT_ES.get(quest.tint, "gris"),
+        )
+    else:
+        objective = Objective(
+            id="serie-story.ch5.e2",
+            story_key="story.ch5.e2",
+            summary_text_key="story.ch5.e2.brief",
+            file=CUSTODIA_FILE,
+            src=CUSTODIA_PATH,
+        )
+        contract = Contract(
+            chapter=chapter,
+            objective_key="story.ch5.e2",
+            brief_text_key="story.ch5.e2.brief",
+            karma_hint="gris",
+        )
+
+    from core.generator.chapter5 import CANON_STEPS_RAW_CH5, CANON_STEPS_RAW_CH5_CADUCADO
+
+    raw = CANON_STEPS_RAW_CH5 if volcado_rescatado else CANON_STEPS_RAW_CH5_CADUCADO
+    canon = CanonSolution(steps=tuple(CanonStep(argv=r) for r in raw))
+
+    scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
+
+    room = Room(
+        id=room_id,
+        chapter=chapter,
+        fs=fs,
+        canon=canon,
+        objective=objective,
+        concept_pool=concept_pool if concept_pool else ("c.cat", "c.scp"),
     )
     incursion = Incursion(
         seed=seed,
