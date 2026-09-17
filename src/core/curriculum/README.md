@@ -4,7 +4,7 @@
 > encargos como nodos-dato) y responde: ¿qué conceptos tiene desbloqueados
 > este jugador? ¿qué pool de práctica corresponde a este capítulo? No conoce
 > runs ni salas: conocimiento puro (ARCHITECTURE §2.3, DESIGN §6.2/§6.4).
-> **Estado (11/09, Smough — S2 ch4.e2):** cap. 0–3 + cap. 4 `c.cut`/`c.scp` + cap. 5 + familia conteo cap. 6 (24 conceptos, 28 quests) — `story.ch4.e2` «El volcado que no pesa» (requires c.cut+c.scp, golden scp+cut|grep TR-), validador DAG, esquema y contrato documentados.
+> **Estado (17/09, Smough — S2 ch5.e2 testigo):** 24 conceptos, 31 quests — `story.ch5.e2` «El testigo que no llegó» reescrita a grey [c.cat, c.scp] (testigo del troncal que viaja al Faro, cat /srv/camara-faro/volcado-rescate.csv → TR-003 si rescate, No such file si caducado), gate 24/32 flexible, 2 tests nuevos.
 
 ## Piezas (v0)
 

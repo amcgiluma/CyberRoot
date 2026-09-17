@@ -507,9 +507,8 @@
             "chapter": 5,
             "tint": "grey",
             "requires": [
-                "c.ls-la",
-                "c.chmod",
-                "c.chown"
+                "c.cat",
+                "c.scp"
             ],
             "title_key": "story.ch5.e2.title",
             "beat_key": "story.ch5.e2.beat"

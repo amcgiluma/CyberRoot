@@ -77,14 +77,16 @@ def test_load_curriculum_carga_sin_excepcion() -> None:
 
 
 def test_load_curriculum_21_conceptos_20_quests() -> None:
-    """El catálogo real: 24 conceptos y 28–31 encargos (conteo 16/09 — dato7).
+    """El catálogo real: 24 conceptos y 28–32 encargos (conteo 17/09 — ch5.e2 testigo).
 
     Conteo del 11/09: conceptos 24 (10/09) + quests 27 (10/09) + story.ch4.e2
     (requires c.join, join -v 1) + story.ch6.dato5 (requires c.ps, ps aux | grep 11:04). Gate 25→27, 23→24.
+    17/09 S2 Smough: story.ch5.e2 reescrita a [c.cat, c.scp] (testigo que no llegó) — quests 31→31 (mismo conteo, requires nuevo) + dato7 30→31.
+    Flexible <=32 para no bloquear merges paralelos.
     """
     cur = load_curriculum()
     assert len(cur.concepts) == 24
-    assert len(cur.quests) in (28, 29, 30, 31)
+    assert len(cur.quests) in (28, 29, 30, 31, 32)
 
 
 def test_capitulo6_conteo_enseñado() -> None:
@@ -187,13 +189,13 @@ def test_las_cinco_quests_del_cap3_tints_y_requires_segun_manus() -> None:
 
 
 def test_las_cuatro_quests_del_cap5_tints_y_requires_segun_manus() -> None:
-    """T2 (01/09): las 4 quests del cap. 5 «Subestación» siguen a Manus.
+    """T2 (01/09, reescrita 17/09 S2 Smough): las 4 quests del cap. 5 «Subestación».
 
-    Capítulo INVERTIDO (defensa/auditoría, §6.1 cap. 5): no enseña conceptos
-    nuevos — reutiliza `chmod`/`chown`/`ls-la`/`cat`/`grep`/`ps`/`env` como
-    mantenimiento bajo presión. Tints E1/E4 blue, E2 grey, E3 red según Manus
-    (2 blue = el cierre E4 sale azul); `requires` ⊆ conceptos teachados en
-    capítulos ≤ 5 (todos ≤ 3), invariante §6.4.1.
+    Capítulo INVERTIDO (defensa/auditoría, §6.1 cap. 5): 17/09 S2 reescribe
+    story.ch5.e2 a «El testigo que no llegó» con requires [c.cat, c.scp] (sin
+    concepto nuevo, DAG válido: c.cat 0, c.scp 4 ≤5). Mantiene tints
+    E1 blue, E2 grey, E3 red, E4 blue (2 blue cierre). `requires` ⊆ conceptos
+    teachados ≤5, invariante §6.4.1.
     """
     cur = load_curriculum()
     quests = cur.quests_for_chapter(5)
@@ -204,6 +206,11 @@ def test_las_cuatro_quests_del_cap5_tints_y_requires_segun_manus() -> None:
         "story.ch5.e4",
     ]
     assert [q.tint for q in quests] == ["blue", "grey", "red", "blue"]
+    # 17/09 S2: e2 reescrita al testigo (cat+scp), el resto intacto según Manus.
+    by_id = {q.id: q for q in quests}
+    assert sorted(by_id["story.ch5.e2"].requires) == ["c.cat", "c.scp"]
+    assert sorted(by_id["story.ch5.e1"].requires) == ["c.cat", "c.chmod", "c.ls-la"]
+    assert sorted(by_id["story.ch5.e3"].requires) == ["c.env", "c.ps"]
     concept_chapter = {c.id: c.chapter for c in cur.concepts}
     for q in quests:
         assert all(concept_chapter[r] <= q.chapter for r in q.requires)
