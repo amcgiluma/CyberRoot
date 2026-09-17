@@ -1,50 +1,41 @@
-# 🔬 Zona de testeo — 15/09 (definida por Gwyn el 14/09, 23:00)
+# 🔬 Zona de testeo — 18/09 (definida por Gwyn el 17/09, 23:00)
 
 > Formato `docs/TESTEO-DIARIO.md` §4. Relevo: **OSCAR (05:00) recorre la
 > zona COMPLETA desde save limpio (MODO B) → HAVEL (07:00) se centra en lo
-> nuevo + smoke del conjunto.** Base del estado actual: post-merge
-> PRs #53/#54/#55, suite **714**, gate **24 conceptos / 29 quests**, bundle
-> **47 ficheros (406.2 KiB)** regenerado canónicamente (guardián verde).
-> ADR TR-003 FIRMADO por Gwyn esta noche: `story.ch4.e3` planificable
-> mañana como quest con bifurcación karma — NADA de esa quest existe aún
-> en main, no testearla hoy.
+> nuevo + smoke del conjunto.** Base post-merge: suite **749 passed**,
+> gate **24 conceptos / 31 quests**, bundle **48 ficheros (441.4 KiB)**
+> regenerado canónicamente (guardián verde).
 
-## Prioridad 1 — toggle del badge `EN_COLA` en la web (NUEVO, PR #55)
+## Prioridad 1 — cap. 5 «Subestación»: el testigo condicional (NUEVO, PRs #62+#63)
 
-- **Dónde:** `?chapter=4&seed=42`, tras `scp troncal-01:/srv/archivo-troncal/volcado.csv /tmp/` +
-  `cut -d'|' -f1 /tmp/volcado.csv | grep TR-`: click en el badge `EN_COLA · 512` de la fila
-  `TR-003` → SOLO queda `TR-003` visible (como `grep EN_COLA` con los ojos); segundo click →
-  vuelven las 3 filas.
-- **Qué verificar:** (a) el toggle NO ejecuta nada por el jugador — es lente, no ejecutor;
-  (b) `hideTroncalTabla` en `restartSameSeed` limpia AMBOS paneles (troncal + Faro) y el
-  toggle no persiste tras restart; (c) Faro intacto (la tabla del Faro no cambia por el toggle
-  del troncal); (d) consola limpia; (e) header `id` sigue tachado con tooltip y las
-  tooltips intactas.
-- **Por qué importa:** primer elemento Clicable del troncal — si un toggle «hace demasiado»
-  mata la lección de `grep` que lo originó; si hace demasiado poco, es ruido.
-- Pregunta de sabor: **¿el toggle añade control o resta descubrimiento?** (el jugador que
-  nunca escribió `grep EN_COLA` ¿pierde algo al clickear?, ¿o el badge-clicable invita a
-  probar el pipe real?)
+- **Dónde:** `build_chapter5_fs(42, volcado_rescatado=True/False)` + quest `story.ch5.e2`
+  (grey, `['c.cat','c.scp']`). Rescate (vía e3 `scp` a `faro:`) → `/srv/camara-faro/volcado-rescate.csv`
+  existe con `TR-003` y `/tmp/volcado-custodia.csv` presente en el FS del asalto;
+  caducado → `cat` → `No such file` y el proceso `intruso --vigilar-censo` (USER censo, `START 03:14`)
+  patrulla igual.
+- **Qué verificar:** (a) determinismo ×2 seeds byte-idéntico en AMBAS variantes;
+  (b) `No such file` es trayectoria válida, no error — el briefing lo dice como pista
+  («si lo subiste, la prueba viaja; si lo borraste o tardaste, la hora amanece sin papel»);
+  (c) NOTA: `session.py` aún NO expone cap. 5 (fuera de `SUPPORTED_CHAPTERS`) — probar por
+  `generate(42,5,volcado_rescatado=…)` + Shell directo, no por `abrir_encargo` (llega mañana);
+  (d) capítulos 0/2/3/4/6 byte-idénticos (no-regresión 7 goldens).
+- **Por qué importa:** primera vez que una decisión de hace 2 capítulos cambia la GEOGRAFÍA
+  de otro capítulo — si el jugador no siente que la ausencia «le habla», la bifurcación pierde peso.
+- Pregunta de sabor: ¿el testigo ausente se siente vacío (bug) o ausencia elocuente (drama)?
 
-## Prioridad 2 — dato6 con variante como REQUIREMENT (PR #54)
+## Prioridad 2 — web: tooltip N/30 + lente rescate Faro (PR #61)
 
-- **Dónde:** cap. 6 Faro, quest `story.ch6.dato6` «La segunda purga»: la golden sigue siendo
-  `join -t'|' -1 3 -2 1 -v 1 purgas.csv registro.csv | grep 000483` → 1 línea
-  `000483|PR-0092|…|EN BLANCO, revisado`; PERO la variante
-  `cut -d'|' -f3 purgas.csv | grep 000483` → `000483` ya NO es bonus, es segunda válida.
-- **Qué verificar:** (a) ambas completan la quest (exit 0 con `000483`); (b) el briefing
-  nombra las DOS válidas y la trampa `grep 000` (2 líneas) vs `grep 000483` (1 línea) que
-  ilumina cuál de las dos huérfanas es la fantasma — «no toda huérfana es fantasma» —; (c) hint_2 la
-  señaliza sin regalar la solución; (d) `cut -d','` sigue rompiendo la coma-trampa (lección
-  del separador intacta); (e) determinismo 42×2 idéntico y gate 24/29 (sin quest nueva).
-- **Por qué importa:** es la primera vez que una quest del juego acepta DOS rutas — si ambas
-  se sienten de igual peso, la lección se multiplica; si una se siente «callejón real» y la
-  otra «atajo», la honestidad del golden queda dañada.
-- Pregunta de sabor: **¿las dos rutas pesan lo mismo, o el `join` se siente «el verdadero» y
-  el `cut` «el truco»?** (la igualdad entre rutas es la cláusula de honestidad de
-  `dato6`).
+- **Dónde:** `?chapter=4&seed=42` hover sobre `· ticks del volcado: N/30` → tooltip
+  descriptivo (30 ticks, rescate `scp` vs disolución `rm`, sin pulso). `?chapter=6&seed=42`
+  tras rescate → meta del panel anota `TR-003 rescatado — volcado-rescate.csv` (lente pura).
+- **Qué verificar:** (a) tooltip es `title=` nativo, sin `setInterval` (🧭34); (b) la lente
+  del Faro NO ejecuta nada del core — solo refleja history; (c) `TRONCAL_STATIC` intacta,
+  toggle EN_COLA y `hideTroncalTabla` restart intactos; (d) con save caducado, la lente NO
+  aparece (falso positivo); (e) consola limpia en ambas tarjetas.
+- **Por qué importa:** la cadena TR-003 ya es visible en el panel — si la web la cuenta
+  entera sin que el jugador la haya vivido, se la cuele antes de tiempo; si no la cuenta, lente muerta.
+- Pregunta de sabor: ¿la web anticipa la historia o la acompaña?
 
-**Smoke:** suite completa (714/0), gate 24/29, bundle fresco (guardián verde, 47 ficheros),
-`generate(42,6)` + `generate(42,6,'story.ch6.dato6')` intactos, `gris_eco` determinista
-(con gesto → línea `hub.gris.volcado`, sin gesto → byte-idéntico) +
-_toggle del troncal_ verde en `?chapter=4&seed=42`.
+**Smoke:** suite completa (749/0), gate 24/31, bundle fresco (guardián verde, 48 ficheros),
+`generate(42,6)` + dato7 condicional (`volcado_rescatado=True/False`) intactos,
+e3 allowlist 14 con `rm` en session intacto, badge toggle + Gris + espejo byte-idénticos.

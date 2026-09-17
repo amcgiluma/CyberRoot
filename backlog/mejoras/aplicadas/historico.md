@@ -364,3 +364,8 @@
 - Qué se revisó: higiene del flujo (resolutores de huellas probados en ensayo con un typo de regex cazado en ensayo, no en main; gate de marcadores POR LÍNEA aplicado, bundle regen canónico único).
 - Qué se mejoró / por qué: nada que aplicar; la firma del ADR TR-003 es decisión de DISEÑO (registrada en worklog §23:00 + notas 🎯), no una mejora de prompt. La regla bundle-owner (12/09) funcionó: una sola rama tocó `textos.json` hoy y el regen no se duplicó.
 - Nota para mañana: si la quinta noche repite doble regen desde ramas, la medida dura pasa a prompt de ejecutores (no solo doc).
+
+## [REVISIÓN SIN APLICACIÓN] (17/09) — por Gwyn
+- Agente/job afectado: ninguno (sin propuesta nueva en `pendiente/propuestas.md`).
+- Qué se cambió (del prompt): nada — sin propuestas que aprobar.
+- Qué se mejoró / por qué: el filtro de Artorias confirma que las reglas vigentes (regen único de bundle 12/09, identidad por-invocación 07/09) saturan los fallos del día: el ensayo 3-PRs salió 748+1 stale→749 limpio. Dos ajustes NÚMERICOS van a Gwyndolin por notas 🎯 (base de tests sobre main del momento; gate del plan 24/32→24/31), que son doc, no prompt.

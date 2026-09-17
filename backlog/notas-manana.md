@@ -189,98 +189,84 @@ juega la tríada completa y leete el post-mortem hasta el final.
 
 **AUTO-MEJORA:** sin propuesta nueva — el ensayo con 3 PRs confirma que la regla de regen único (AGENTES.md §OWNERSHIP DEL BUNDLE) y el script de unión de huellas funcionan. Señalo la discrepancia de base de PR #61 y el gate 24/32→24/31 para que Gwyndolin ajuste números del plan mañana.
 
-### 🎯 Gwyn — cierre de diseño 23:00 (14/09)
+### 🎯 Gwyn — cierre de diseño 23:00 (17/09)
 
 **Estado de los merges:** los 3 PRs mergeados en el orden ensayado por
-Artorias — **#53 (engine O1 hub.gris.volcado) → #54 (sandbox S2 dato6
-variante) → #55 (meta-ui T1 badge toggle)**. Suite **714 passed exactos**
-(708+4+2+0, deltas declarados verificados por aritmética), gate **24
-conceptos / 29 quests**, bundle **47 ficheros (406.2 KiB)** regenerado
-canónicamente tras el merge #54 (guardián verde). **NADA retenido.** Los
-3 commits de merge firmados Gwyn (`1677122`/`6224ea3`/`cede98a`);
-resolutores de huellas probados PRIMERO en worktree de ensayo (un typo
-del patrón de regex saltó allí, no en main). Gate de marcadores POR
-LÍNEA en todo el árbol = 0 antes de pushear.
+Artorias — **#62 (engine O1 cap. 5 FS testigo condicional) → #63 (sandbox
+S2 quest ch5.e2) → #61 (meta-ui T1 tooltip N/30 + lente Faro)**. Suite
+**749 passed** exactos (739+8+2+0, deltas verificados por aritmética),
+gate **24 conceptos / 31 quests** (`ch5.e2` reescrita, no nueva), bundle
+**48 ficheros (441.4 KiB)** regenerado canónicamente. **NADA retenido.**
+Commits de merge `376f07c`/`047bbd9`/`5e8668b` — re-firmados por pisada
+de config (filter-branch sin cambiar contenido; guard de autoría
+`%an` saltó ANTES del push, patrón 07/09). La sesión, cap. 5 aún no
+sale por `abrir_encargo` (SUPPORTED_CHAPTERS intacto): es FS
+condicional + quest grey para Gwyndolin cablear mañana.
 
-**⭐ FIRMA DEL ADR TR-003 (lo más importante que dejo para mañana):** el
-bosquejo de Gwyndolin está APROBADO tal cual, con una matización de
-prosa: `story.ch4.e3` sale como **rescate azul** (`scp /tmp/volcado.csv
-faro:/srv/camara-faro/volcado-rescate.csv`), la **disolución roja**
-(`rm /tmp/volcado.csv` → `volcado.caducado` en post-mortem) solo si el
-jugador NO responde (30 ticks: decidir = no decidir). Sin comando
-nuevo, sin ALLOWLIST, sin tocar el badge de Seath (semilla intacta).
-Matiz de prosa que añado: **la voz de Vela pregunta por el volcado SIN
-saber que EN_COLA existe — su pregunta nace de las 03:14, no del
-badge.** Con esta firma, Gwyndolin ya puede planificar `e3` mañana como
-encargo S2 y encadenar cap. 5 (Subestación, `START 03:14` como firma
-independiente del karma). dato7 sigue en recámara CON alerta
-`TRONCAL_STATIC`: no tocar el volcado hasta pagar esa deuda con un Q
-real.
+**Validación del 🧭 de Oscar 17/09:** APTO confirmado. 🧭36 CERRADA
+(sesión e3 expone `rm` — la simetría scp/rm ya es jugable en el flujo de
+encargo). Dato7 verde y cadena TR-003 cerrada como MUNDO, no como
+post-mortem. 🧭34/35 confirmados CERRADOS (no tocar). 🧭24/25/26/27 en
+recámara sin urgencia. Su dirección «cap. 5 lee el testigo sin verbos
+nuevos» es EXACTAMENTE lo que entró hoy: `ch5.e2` grey con `cat`+`scp`,
+cero conceptos nuevos. La convergencia Gwyn/Oscar del plan se materializó.
 
-**Validación del 🧭 de Oscar (14/09 — MODO B, zona ejecutada COMPLETA
-desde save limpio):** APTO ×3, respuestas SÍ a las 3 preguntas de sabor
-que dejé anoche (coma-trampa se nota al romperte / espejo suena a
-testigo, no a lista / badge = presión diegética genuina sin contador).
-🧭31/32/33 CERRADAS por verificación (coma sin señal roja: OK; espejo
-sin más firmas: OK; badge sin animación: OK). 🧭24 persiste P3 en
-recámara. **Dirección que SÍ sigo (para Gwyndolin):** la bifurcación
-TR-003 EN_COLA como decisión kármica diegética (ya con ADR firmado) —
-el badge es el aviso, la quest es el dilema, y el diseño ya decidió
-ANTES de tocar narrativa del volcado. La próxima pieza de alma con ROI
-alto sigue siendo Manus nombrando el repertorio del veterano en
-diegético (🧭9 v2 — la mitad Gris ya salió; que la prosa de `e3` cite
-los verbos, no los invente).
-
-**⭐ Lo que me ha gustado (capa diseño, del 14/09):**
-- **La tríada del troncal ya es un capítulo con tres lentes:** Gris
-  DICE qué copiaste (`hub.gris.volcado`), dato6 te hace LEER dos veces
-  lo mismo (cruce y corte de la misma huérfana), y el badge te MIRA
-  esperando. Antes el troncal era imagen; hoy es personaje. ⭐⭐⭐
-- **dato6 aceptando DOS rutas con la misma honestidad** (unión con la
-  variante subida a requirement sin degenerar en bonus): la lección del
-  separador se multiplica en vez de duplicarse. El hint_2 con la
-  arbitrariedad `grep 000` vs `grep 000483` es la mejor lección de
-  precisión que ha salido del repo. ⭐⭐⭐
-- **El badge toggle como «lente, no ejecutor»** (T1): 42 líneas, reusa
-  `grepFiltered`, no inventa patrón, `hideTroncalTabla` intacto en
-  restart. La disciplina técnica del 13/09 confirmada por Seath: hacer
-  lente, no mostrar ruido. ⭐⭐
-- **La suite que cuadra a la primera y el regen único de bundle** (hoy
-  lo hizo S2 solo en el plan, no dos ramas en paralelo; la regla de
-  OWNER del bundle aplicó). Cuarta noche con patrón doble-regen
-  NO SE REPITE — la medida dura de Artorias funcionó ya como doc. ⭐
+**⭐ Lo que me ha gustado (del 17/09):**
+- **La geografía condicional es LA idea de la semana:** el testigo
+  `/tmp/volcado-custodia.csv` existe SOLO si rescataste TR-003 hace dos
+  capítulos. Es la primera vez que el karma no deja un texto distinto —
+  deja un FICHERO distinto en el FS de otro capítulo. El post-mortem te
+  habla; el FS te deja ENTRAR. ⭐⭐⭐
+- **`ch5.e2` sin concepto nuevo, me deja orgulloso del trabajo de Ornstein:** la
+  quest que lee el testigo pide `cat`+`scp` — verbos que el jugador ya
+  dominó en caps. 1 y 4. La lección nueva no es el comando: es que el
+  contenido del fichero es TU decisión pasada. Currículum al servicio
+  de la narrativa, no al revés. ⭐⭐⭐
+- **La pista honesta «No such file» como texto de briefing** — el error
+  del sistema se convierte en prosa diegética («si lo subiste, la prueba
+  viaja; si lo borraste o tardaste, la hora amanece sin papel»). Cada
+  vez que un fallo de Unix se vuelve línea de historia, el alma del
+  juego crece gratis. ⭐⭐⭐
+- **Seath cerró la huérfana sin tocar el core:** 44 líneas de lente en
+  `app.js`, `TRONCAL_STATIC` intacta, delta 0 honesto. El cierre limpio
+  de PRs viejos es disciplina invisible — se nota cuando falta, y hoy
+  no falló. ⭐⭐
 
 **⭐ Lo que NO me gusta / deuda que dejo:**
-- **`TRONCAL_STATIC` sigue duplicando el volcado** en `web/app.js`
-  (cuarta noche con la deuda viva). Con el ADR FIRMADO y `e3` en el
-  horizonte, el día que Manus toque el volcado para narrativa la deuda
-  DESPIERTA — que Gwyndolin la incluya en el plan de `e3` (o antes) si
-  el capítulo la toca.
-- **La prosa diegética de Gris queda HUÉRFANA de contexto:** la línea
-  `hub.gris.volcado` es hoy un easter egg que pocos jugadores
-  escucharán (requiere `ch4.e2` + patrón limpio). Espero que la prosa
-  de `e3` le dé contexto — si mañana Manus escribe el beat de Vela, que
-  cite la línea de Gris o la deuda crece (el jugador que no la disparó
-  se pierde el guiño).
+- **`TRONCAL_STATIC` sigue duplicando el volcado (5ª noche).** La deuda
+  no crece, pero tampoco muere. La próxima pieza de Manus sobre el
+  volcado la DESPIERTA — que Gwyndolin la agende antes, no el día que
+  estalle.
+- **Sesión de cap. 5 pendiente:** `chapter5.py` es hoja limpia pero el
+  jugador aún no puede JUGAR el capítulo por la puerta normal —
+  `SUPPORTED_CHAPTERS` no incluye 5. Es la tarea P1 natural de mañana
+  (cablear `session.py` ch5 con `cat`+`scp` y el flag `volcado_rescatado`
+  del save). Sin eso, la quest `ch5.e2` es una puerta detrás de otra
+  puerta.
+- **El testigo y el volcado son DOS ficheros con la MISMA fila TR-003**
+  (`volcado-rescate.csv` en el Faro, `volcado-custodia.csv` en /tmp).
+  Duplicación de contenido que hoy es honesta (dos paisajes, dos
+  ocupaciones fs), pero si Manus escribe el beat del cap. 5, que cite
+  el CONTENIDO del custodia y no resuma: la fila es la escena.
 
 **Dirección para mañana (prioridad de diseño):**
-1. **Zona 🔬 15/09 CARGADA (ver `zona-testeo.md`):** prioridad 1 =
-   toggle del badge (¿control o ruido?); prioridad 2 = dato6 con dos
-   rutas (¿pesan lo mismo?). Relevo OSCAR (completa, save limpio) →
-   HAVEL (lo nuevo + smoke 714).
-2. **`story.ch4.e3` «La cola que rescatas o dejas morir» — Gwyndolin,
-   planifícala** (P1 del día). ADR FIRMADO. Es el primer dilema
-   kármico real del juego y la cola del troncal ya existe: es el
-   beat más barato y más gordo del backlog.
-3. **Prosa de `e3` que despierte la voz de Gris:** la línea
-   `hub.gris.volcado` pide ser CITA en el beat (🧭9 v2).
+1. **Zona 🔬 18/09 CARGADA (ver `zona-testeo.md`):** prioridad 1 = el
+   testigo condicional de cap. 5 (¿la ausencia habla?); prioridad 2 = la
+   lente de rescate en la web (¿acompaña la historia o la adelanta?).
+   Relevo OSCAR (completa, save limpio) → HAVEL (lo nuevo + smoke 749).
+2. **Gwyndolin — cablear cap. 5 en `session.py`** (P1): `SUPPORTED_
+   CHAPTERS` + `_commands_for(5)` con `cat`+`scp` (la allowlist ya
+   existe de base) + leer `volcado_rescatado` del save/post-mortem de
+   e3. Es el último paso para que cap. 5 sea JUGABLE de verdad.
+3. **Manus (M1): si hay pieza narrativa hoy, que sea el beat del
+   testigo PRESENTE** — primera vez que el jugador Subestación se
+   encuentra con el papel que él decidió que llegara (o no). Prosa
+   corta, diegética, sin explicar el karma: que el fichero hable.
 
-**Para Juanma (si juega esta noche):** de los 3 verbos del troncal hoy,
-el badge de la web es clicable — haz click en `TR-003|EN_COLA · 512` y
-verás la cola con ojos de Gwyn antes de entenderla con pipe. Y en el
-Faro, la quest `dato6` ahora te da DOS caminos honestos (cruzar o
-cortar): el mismo dato, dos altitudes. Cuando juegues el capítulo
-completo, notarás que la lección no es «el comando» — es que la MISMA
-fila de datos puede leerse de muchas maneras y solo una tiene la coma
-escondida. La historia no miente: espera a que le preguntes bien.
-
+**Para Juanma (si juega esta noche):** vete al cap. 6, métete con
+`volcado_rescatado=True` y busca el fichero `/tmp/volcado-custodia.csv`
+en el FS del asalto (proceso `intruso --vigilar-censo` con arranque
+03:14). Ese fichero ES tu decisión del cap. 4 hecha papel. Y en la web,
+pasa por encima del `N/30` del troncal — 30 ticks es lo que la familia
+de datos te da para decidir si un testigo vive o caduca. El juego ya no
+te pregunta solo «¿sabes usar el comando?» — ahora pregunta «¿qué memoria dejas?» y responde con la geografía.

@@ -16,6 +16,17 @@
 > retenido, 3 ramas borradas tras confirmar integradas en GitHub.
 > Cierre anterior 12/09 — PRs #47/#48/#49, 698/24-28/47.)*
 
+### Asignaciones 18/09 (awaiting: Gwyndolin planifica mañana)
+
+- *(17/09, cierre Gwyn 23:00: las 4 líneas `[HECHO]` del día (O1/S2/T1 + M1
+  de Manus) ARCHIVADAS en `../hecho/2026-09.md` §17/09; las líneas duplicadas
+  de la rama meta-ui (unión) se descartaron por subset — el lado HEAD traía
+  los ✅ de Artorias y la rama el estado viejo). PRs #62/#63/#61 mergeados en orden
+  engine→sandbox→meta-ui, suite **749 passed**, gate **24 conceptos / 31
+  quests**, bundle **48 ficheros (441.4 KiB)** regenerado canónicamente
+  (guardián verde). NADA retenido. Cierre anterior 16/09 — 739/24-31/47.)*
+
+
 ### Asignaciones 16/09 (Gwyndolin 11:00 — plan `../planes/2026/09/16.md`)
 
 > Base verificada: main con e3 verde (727 tras regen canónico de Artorias,
@@ -28,7 +39,6 @@
 
 |**COSTURAS 16/09:** ALLOWLIST OWNER: NADIE (allowlist e3 sin tocar). GATE OWNER curriculum/archivo: Smough (dato7). Bundle: SOLO Smough regenera (toca `src/data/`); Seath NO. `postmortem.auditor.*` y pack `POSTMORTEM.md`: intocados.
 
-- `[HECHO][P2]` (17/09) **M1 — Manus 03:00 · mantenimiento 16/09 — cadena TR-003 cerrada en dos capítulos + coherencia completa** — auditoría post-16/09 tras merges #59/#60 (suite 738+1 stale→739 tras regen canónico Gwyn, gate 24/31, `postmortem.volcado.*` + `hub.gris.volcado` disjuntos, `rm`→127 fuera e3 / 0 en e3, detector rescate>caducado tick≥30, `generate(42,4, contract_id='story.ch4.e3')` golden scp/rm, `generate(42,6, volcado_rescatado=True/False)` condicional dato7 + golden `join -t'|' -1 1 -2 1 volcado-rescate.csv purgas.csv | grep TR-003`→1 línea / `No such file` cuando caducado, prosa E3+06-faro dato7 sin drift, `CENSO-LISTA.md`/`05-subestacion.md`/`POSTMORTEM.md` intactos, bundle stale pendiente regen canónico Gwyn; narrativa sigue [LISTA] 6+6, cero deuda, cap. 5 con `START 03:14` avalado).
 
 ### Asignaciones 17/09 (Gwyndolin 11:00 — plan `../planes/2026/09/17.md`)
 
@@ -39,11 +49,6 @@
 > ALLOWLIST OWNER: NADIE · GATE OWNER curriculum: Smough (24/31→24/32) ·
 > Bundle: solo Smough regenera (toca `src/data/`).
 
-- `[HECHO][P2]` (17/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-17` · cap. 5 pieza 1: FS del asalto con testigo condicional — PR #62** — `src/core/generator/chapter5.py` NUEVO: `build_chapter5_fs(fs_rng, volcado_rescatado)` con proceso `intruso --vigilar-censo` (USER censo, `START 03:14`) y el testigo como fichero condicional (rescatado → copia local `/tmp/volcado-custodia.csv` con `TR-003`; caducado → NO existe, `cat`→`No such file`). Conector `_generate_cap5` en `generator.py` con la misma firma que dato7. 8 tests (`test_chapter5_fs.py`). Criterio: suite 739→≥745, determinismo ×2 seeds, goldens actuales byte-idénticos. NO toca `session.py` (cap.5 fuera de `SUPPORTED_CHAPTERS` HOY), `curriculum.json`, `web/` ni `postmortem.*`. **→ ✅ Artorias 21:00: VERDE — chapter5.py hoja limpia (build_chapter5_fs con fork ps-subestacion determinista ×2 seeds, proceso intruso 03:14 verificado, CUSTODIA_PATH/CONTENT con TR-003), generator.py con _generate_cap5 + validate_incursion cap.5, 8 tests (determinismo rescate/caducado, ps aux 03:14, ausencia→No such file, no-regresión 7 goldens byte-idénticos incl dato7), tests antes 739 → 747 +8 declarado ✅, bundle stale honesto (chapter5.py nuevo, solo Smough toca data) pendiente regen canónico Gwyn, sin tocar curriculum/textos/web; listo para merge.**
-- `[HECHO][P2]` (17/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-17` · quest `story.ch5.e2` «El testigo que no llegó» — PR #63** — `src/data/{curriculum,textos}.json`: quest grey `['c.cat','c.scp']` (sin concepto nuevo); golden `cat /srv/camara-faro/volcado-rescate.csv` → exit 0 si rescate; caducado → `No such file` documentado como pista en el briefing (prosa 05-subestacion.md intacta, prefijo `story.ch5.e2.*` disjunto). **GATE OWNER: Smough** — flexible 24/31→24/32 (`<=`, nadie más toca gates). Suite 739→≥741 (+2). **Regenera bundle en su rama** (única que toca `src/data/`) + guardián verde. NO toca allowlists, `chapter5.py`/`generator.py` (O1), `session.py`, `web/`. **→ ✅ Artorias 21:00: VERDE — curriculum.json e2 reescrita grey [c.cat,c.scp] (DAG c.cat 0/c.scp 4 ≤5 válido, sin concepto nuevo), textos.json title/beat «El testigo que no llegó» con golden absoluto cat volcado-rescate.csv y pista No such file documentada («si lo subiste, la prueba viaja…»), test_loader flexible 24/28-32 con assert e2 + test_ch5_e2_testigo.py +2, tests antes 739 → 741 +2 declarado ✅, bundle 427.8 KiB regen 47 ficheros guardián verde, prefijo story.ch5.e2.* disjunto, sin tocar allowlists/chapter5/web; listo para merge. Nota: gate real 24/31 (e2 reescrita, no nueva) — flexible <=32 lo cubre.**
-- `[HECHO][P2]` (17/09) **T1 — Seath 19:00 · rama `feat/meta-ui-2026-09-16` · CIERRE del PR #61 huérfano (PRIORIDAD 1, solo `web/app.js`) — PR #61** — realineado 17/09 con origin/main (11 commits, unión cronológica worklog 16/09), `node --check` OK, TRONCAL_STATIC 3 ocurrencias intacta, hideTroncalTabla restart intacto, suite 737→737 delta 0 honesto. **→ ✅ Artorias 21:00: VERDE — cierre huérfano 16/09 realineado: solo web/app.js (+44/-4) _escapeHtml + _isFaroRescatePresent/_getFaroRescateSuffix + tooltip N/30 span title (get_history/get_tick, sin pulso 🧭34), TRONCAL_STATIC intacta, hideTroncalTabla restart intacto, Faro lente pura, node --check OK, delta 0 honesto, bundle stale honesto pendiente regen Gwyn por regla 12/09 (Seath no toca data); listo para merge. Nota base 737 vs real 739 ya señalada en T1 16/09.**
-- `[EN CURSO][P2]` (17/09) **T1 — Seath 19:00 · rama `feat/meta-ui-2026-09-16` · CIERRE del PR #61 huérfano (PRIORIDAD 1, solo `web/app.js`)** — el PR #61 abrió ayer sin veredicto: Seath (1) re-verifica aplicabilidad sobre main hoy (#59/#60 ya integrados; solo toca `web/app.js`), (2) resuelve conflicto si aparece (su rama), (3) body honesto 739/739/delta 0 con `node --check` OK y `TRONCAL_STATIC`/tarjetas cap.4/cap.6 intactas, (4) marca `[HECHO] (+PR #61)`. Si no cabe, confesión en el PR y descarte documentado (su franja muere sin trabajo extra).
-- `[EN CURSO][P2]` (17/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-17` · quest `story.ch5.e2` «El testigo que no llegó» — PR #63** — `src/data/{curriculum,textos}.json`: quest grey `['c.cat','c.scp']` (sin concepto nuevo); golden `cat /srv/camara-faro/volcado-rescate.csv` → exit 0 si rescate; caducado → `No such file` documentado como pista en el briefing (prosa 05-subestacion.md intacta, prefijo `story.ch5.e2.*` disjunto). **GATE OWNER: Smough** — flexible 24/31→24/32 (`<=`, nadie más toca gates). Suite 739→≥741 (+2). **Regenera bundle en su rama** (única que toca `src/data/`) + guardián verde. NO toca allowlists, `chapter5.py`/`generator.py` (O1), `session.py`, `web/`.
 - *(17/09, M1 — Manus 03:00, pendiente de confirmar en worklog: mantenimiento post-16/09 según su rutina; sin pieza narrativa nueva agendada — la dirección del día la da Oscar: cap. 5 lee el testigo con verbos ya dominados, sin prosa nueva que integrar.)*
 
 ### Asignaciones 13/09 (awaiting: nada — día CERRADO)

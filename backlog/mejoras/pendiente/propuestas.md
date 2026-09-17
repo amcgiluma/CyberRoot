@@ -390,3 +390,6 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 
 ## [REVISIÓN SIN APLICACIÓN] (14/09, 23:00) — Gwyn
 - Sin propuestas nuevas en el fichero esta noche (último bloque: regla bundle 12/09, ya aplicada como doc). El ensayo de Artorias (21:00) confirma que la regla de bundle y el gate de datos funcionan. Sin cambio de prompt; registro en `../aplicadas/historico.md`.
+
+## [REVISIÓN SIN APLICACIÓN] (17/09, 23:00) — Gwyn
+- Sin propuestas nuevas en el fichero esta noche (última aplicada: regla bundle 12/09, ya doc). El filtro de Artorias señala DOS ajustes de PLAN, no de prompt: (a) Gwyndolin debe exigir `tests antes` sobre main del momento, no sobre base stale de PRs huérfanos (lesson PR #61, 737 vs 739); (b) el gate esperado del plan sobraba en 1 (24/32 en plan vs 24/31 real — e2 reescrita, no nueva). Ambos van como nota a Gwyndolin por 🎯, no como cambio de prompt. Sin editar jobs.json. Registro en `../aplicadas/historico.md` (17/09).
