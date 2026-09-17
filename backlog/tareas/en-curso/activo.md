@@ -30,10 +30,21 @@
 
 - `[HECHO][P2]` (17/09) **M1 — Manus 03:00 · mantenimiento 16/09 — cadena TR-003 cerrada en dos capítulos + coherencia completa** — auditoría post-16/09 tras merges #59/#60 (suite 738+1 stale→739 tras regen canónico Gwyn, gate 24/31, `postmortem.volcado.*` + `hub.gris.volcado` disjuntos, `rm`→127 fuera e3 / 0 en e3, detector rescate>caducado tick≥30, `generate(42,4, contract_id='story.ch4.e3')` golden scp/rm, `generate(42,6, volcado_rescatado=True/False)` condicional dato7 + golden `join -t'|' -1 1 -2 1 volcado-rescate.csv purgas.csv | grep TR-003`→1 línea / `No such file` cuando caducado, prosa E3+06-faro dato7 sin drift, `CENSO-LISTA.md`/`05-subestacion.md`/`POSTMORTEM.md` intactos, bundle stale pendiente regen canónico Gwyn; narrativa sigue [LISTA] 6+6, cero deuda, cap. 5 con `START 03:14` avalado).
 
-### Asignaciones 13/09 (awaiting: nada — día CERRADO)
+### Asignaciones 17/09 (Gwyndolin 11:00 — plan `../planes/2026/09/17.md`)
 
-> *(13/09, Gwyn 23:00 — las 3 tareas del día SALIERON: ver
-> `../hecho/2026-09.md` §13/09. Sin deuda de hoy ninguna.)*
+> Base verificada: suite 738+1 stale → 739 tras regen canónico de Gwyn
+> (cierre 16/09), gate 24/31, bundle 47 (~426 KiB). UNA rama huérfana:
+> **PR #61** (`feat/meta-ui-2026-09-16`, T1 de Seath, sin veredicto de
+> Artorias) — su dueño la cierra HOY como prioridad 1. Día de CAP. 5.
+> ALLOWLIST OWNER: NADIE · GATE OWNER curriculum: Smough (24/31→24/32) ·
+> Bundle: solo Smough regenera (toca `src/data/`).
+
+- `[HECHO][P2]` (17/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-17` · cap. 5 pieza 1: FS del asalto con testigo condicional — PR #62** — `src/core/generator/chapter5.py` NUEVO: `build_chapter5_fs(fs_rng, volcado_rescatado)` con proceso `intruso --vigilar-censo` (USER censo, `START 03:14`) y el testigo como fichero condicional (rescatado → copia local `/tmp/volcado-custodia.csv` con `TR-003`; caducado → NO existe, `cat`→`No such file`). Conector `_generate_cap5` en `generator.py` con la misma firma que dato7. 8 tests (`test_chapter5_fs.py`). Criterio: suite 739→≥745, determinismo ×2 seeds, goldens actuales byte-idénticos. NO toca `session.py` (cap.5 fuera de `SUPPORTED_CHAPTERS` HOY), `curriculum.json`, `web/` ni `postmortem.*`.
+- `[EN CURSO][P2]` (17/09) **S2 — Smough 16:00 · `feat/sandbox-2026-09-17` · quest `story.ch5.e2` «El testigo que no llegó» — PR #63** — `src/data/{curriculum,textos}.json`: quest grey `['c.cat','c.scp']` (sin concepto nuevo); golden `cat /srv/camara-faro/volcado-rescate.csv` → exit 0 si rescate; caducado → `No such file` documentado como pista en el briefing (prosa 05-subestacion.md intacta, prefijo `story.ch5.e2.*` disjunto). **GATE OWNER: Smough** — flexible 24/31→24/32 (`<=`, nadie más toca gates). Suite 739→≥741 (+2). **Regenera bundle en su rama** (única que toca `src/data/`) + guardián verde. NO toca allowlists, `chapter5.py`/`generator.py` (O1), `session.py`, `web/`.
+- `[EN CURSO][P2]` (17/09) **T1 — Seath 19:00 · rama `feat/meta-ui-2026-09-16` · CIERRE del PR #61 huérfano (PRIORIDAD 1, solo `web/app.js`)** — el PR #61 abrió ayer sin veredicto: Seath (1) re-verifica aplicabilidad sobre main hoy (#59/#60 ya integrados; solo toca `web/app.js`), (2) resuelve conflicto si aparece (su rama), (3) body honesto 739/739/delta 0 con `node --check` OK y `TRONCAL_STATIC`/tarjetas cap.4/cap.6 intactas, (4) marca `[HECHO] (+PR #61)`. Si no cabe, confesión en el PR y descarte documentado (su franja muere sin trabajo extra).
+- *(17/09, M1 — Manus 03:00, pendiente de confirmar en worklog: mantenimiento post-16/09 según su rutina; sin pieza narrativa nueva agendada — la dirección del día la da Oscar: cap. 5 lee el testigo con verbos ya dominados, sin prosa nueva que integrar.)*
+
+### Asignaciones 13/09 (awaiting: nada — día CERRADO)
 
 - *(13/09, O1 mergeado por Gwyn como PR #50 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
 - *(13/09, S2 mergeado por Gwyn como PR #51 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
