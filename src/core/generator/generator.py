@@ -61,6 +61,9 @@ from core.generator.chapter6 import (
     PURGAS_FILE,
     PURGAS_PATH,
     REGISTRO_PATH,
+    VOLCADO_RESCATE_CONTENT,
+    VOLCADO_RESCATE_FILE,
+    VOLCADO_RESCATE_PATH,
     build_chapter6_fs,
 )
 from core.generator.errors import GeneratorError, UnsolvableRoomError
@@ -389,6 +392,78 @@ def validate_incursion(incursion: Incursion) -> None:
                         exit_code=0,
                         stderr=f"golden E3 esperaba 3 líneas, devolvió {len(lines)}: {raw.strip()!r}",
                     )
+        elif quest_id == "story.ch6.dato7":
+            # dato7 — validación condicional por volcado
+            # Si el FS tiene volcado-rescate.csv, debe contener TR-003 y ser grep-able
+            # Si no, debe NO existir (caducado) — join debe fallar con No such file
+            from core.generator.chapter6 import VOLCADO_RESCATE_PATH as _VRP
+            try:
+                node = shell.fs.resolve(_VRP, "/")
+                has_volcado = not isinstance(node, DirNode)
+            except Exception:
+                has_volcado = False
+            if has_volcado:
+                # Debe contener TR-003
+                try:
+                    content = shell.fs.read_file(_VRP, "/")
+                except Exception as exc:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("cat", _VRP),
+                        expect_exit=0,
+                        exit_code=1,
+                        stderr=f"volcado-rescate.csv no legible: {exc!r}",
+                    ) from exc
+                if "TR-003" not in content or "EN_COLA" not in content:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("cat", _VRP),
+                        expect_exit=0,
+                        exit_code=0,
+                        stderr=f"volcado-rescate.csv sin TR-003|EN_COLA: {content[:80]!r}",
+                    )
+                # Golden cat|grep debe producir TR-003
+                last = shell.history[-1]["result"]
+                raw = str(last.get("stdout", ""))
+                if "TR-003" not in raw:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("cat", _VRP, "|", "grep", "TR-003"),
+                        expect_exit=0,
+                        exit_code=0,
+                        stderr=f"golden dato7 no devolvió TR-003: {raw.strip()!r}",
+                    )
+                if last.get("exit_code", 1) != 0:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("cat", _VRP, "|", "grep", "TR-003"),
+                        expect_exit=0,
+                        exit_code=int(last.get("exit_code", 1)),
+                        stderr=f"golden dato7 exit {last.get('exit_code')}",
+                    )
+            else:
+                # Sin volcado: debe NO existir — verificar que cat falla y join falla
+                # El canon en este caso es el default (grep ENSAYO), que debe seguir verde
+                last = shell.history[-1]["result"]
+                raw = str(last.get("stdout", ""))
+                if raw.strip() != CH6_GREP_WC_EXPECTED:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("grep", "ENSAYO", PURGAS_PATH, "|", "wc", "-l"),
+                        expect_exit=0,
+                        exit_code=0,
+                        stderr=f"golden cap. 6 (dato7 caducado) devolvió {raw.strip()!r}, esperaba {CH6_GREP_WC_EXPECTED!r}",
+                    )
+                # Verificar ausencia: cat volcado debe fallar
+                missing_res = shell.execute(f"cat {_VRP}")
+                if missing_res.exit_code == 0:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps),
+                        argv=("cat", _VRP),
+                        expect_exit=1,
+                        exit_code=0,
+                        stderr=f"volcado-rescate.csv existe cuando debería estar ausente (caducado)",
+                    )
         else:
             # E1 (default) — golden grep ENSAYO
             last = shell.history[-1]["result"]
@@ -461,6 +536,7 @@ def generate(
     variant: str = "canonical",
     curriculum: Curriculum | None = None,
     contract_id: str | None = None,
+    volcado_rescatado: bool = False,
 ) -> Incursion:
     """Genera UNA Incursion determinista y validada, consciente del capítulo.
 
@@ -505,7 +581,7 @@ def generate(
         return _generate_cap3(seed, variant, curriculum, contract_id)
     if chapter == 4:
         return _generate_cap4(seed, variant, curriculum, contract_id)
-    return _generate_cap6(seed, variant, curriculum, contract_id)
+    return _generate_cap6(seed, variant, curriculum, contract_id, volcado_rescatado)
 
 
 def _generate_cap0(
@@ -782,6 +858,7 @@ def _generate_cap6(
     variant: str,
     curriculum: Curriculum,
     contract_id: str | None,
+    volcado_rescatado: bool = False,
 ) -> Incursion:
     """Ruta de la sala-dato del cap. 6 «Faro» (O3, 02/09).
 
@@ -807,7 +884,7 @@ def _generate_cap6(
     id_rng = rng.fork("room-id")
     fs_rng = rng.fork("fs")
 
-    fs = build_chapter6_fs(fs_rng)
+    fs = build_chapter6_fs(fs_rng, volcado_rescatado=volcado_rescatado)
     room_id = f"room-ch6-{id_rng.below(2**32):08x}-{variant}"
 
     ch_quests = curriculum.quests_for_chapter(chapter)
@@ -852,7 +929,7 @@ def _generate_cap6(
         karma_hint=_TINT_ES.get(quest.tint, "gris"),
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
-    # Canon por quest: dato2/dato3/e2 tienen goldens propios.
+    # Canon por quest: dato2/dato3/e2/dato7 tienen goldens propios.
     if quest.id == "story.ch6.dato2":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2))
@@ -862,6 +939,16 @@ def _generate_cap6(
     elif quest.id == "story.ch6.e2":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2_TAIL
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2_TAIL))
+    elif quest.id == "story.ch6.dato7":
+        # dato7 — el fantasma que pesa: volcado rescate condicional
+        # Si rescatado: cat volcado-rescate.csv | grep TR-003 → TR-003
+        # Si caducado: no hay fichero, canon es cat que debe fallar (validado por FS directo)
+        if volcado_rescatado:
+            from core.generator.chapter6 import VOLCADO_RESCATE_PATH
+            canon = CanonSolution(steps=(CanonStep(argv=("cat", VOLCADO_RESCATE_PATH, "|", "grep", "TR-003")),))
+        else:
+            # Sin rescate: el fichero NO existe — validación por FS directo, canon trivial que no exige fichero
+            canon = CanonSolution(steps=CANON_STEPS_CH6)
     else:
         canon = CanonSolution(steps=CANON_STEPS_CH6)
 

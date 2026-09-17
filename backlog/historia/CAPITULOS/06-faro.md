@@ -397,7 +397,7 @@ respuesta de la fila 000 queda escrita donde el jugador decida escribirla.*
 ### Notas para el integrador
 
 - Claves sugeridas: `story.ch6.apertura`, `story.ch6.e1` (sala-dato E1 sobre la Lista) +
-  `story.ch6.dato2`/`dato3` (salas-dato del alfabeto conteo: corte `cut -f4` y orden `sort -k12`) +
+  `story.ch6.dato2`/`dato3` (salas-dato del alfabeto conteo: corte `cut -f4` y orden `sort -k12`) + `story.ch6.dato4`–`dato7` (`dato4` El cruce, `dato5` persiana forense, `dato6` segunda purga coma-trampa, `dato7` fantasma que pesa — cadena troncal→Faro) +
   `story.ch6.e2`–`e5` narrativos («La que no pesa», «La persiana», «El armario», «La hoja de cierre» — **E-space 1:1 con la prosa**, liberado tras el rename T1 del 06/09),
   `story.ch6.vela` (la confrontación, que el motor ramifica por karma),
   `story.ch6.auditor` (la 3.ª sombra del Arco del Auditor), `story.ch6.postmortem_ceniza`,
@@ -408,8 +408,8 @@ respuesta de la fila 000 queda escrita donde el jugador decida escribirla.*
   confrontación (duelo de pruebas / persecución / mesa) lo elige el motor por
   la variable de karma; la prosa aquí es reactiva a las tres.
 - **Worldbuilding del censo**: M1 aterrizó en `backlog/historia/CENSO-LISTA.md`.
-  Las salas-dato de E1/`dato2`/`dato3` cruzan `registro.csv` y `purgas.csv` (delimitador `|`)
-  con la familia conteo (S2). Goldens verificados 07/09: `dato2` = `cut -d'|' -f4 | sort | uniq -c`, `dato3` = `sort -t'|' -k12 -n | head -n 3` (PR-0091 al frente, 4 filas con trampa `,`); E1 sigue `grep ENSAYO|wc -l`. Smough: verificar que `story.ch6.*` usa solo
+  Las salas-dato de E1/`dato2`/`dato3`/`dato4`–`dato7` cruzan `registro.csv` y `purgas.csv` (delimitador `|`)
+  con la familia conteo (S2). Goldens verificados 17/09: `dato2` = `cut -d'|' -f4 | sort | uniq -c`, `dato3` = `sort -t'|' -k12 -n | head -n 3` (PR-0091 al frente, 4 filas con trampa `,`), `dato4` `join -t'|' -1 3 -2 1 -v 1 | grep 000`→2 huérfanas, `dato6` `| grep 000483`→solo PR-0092, `dato7` `join -t'|' -1 1 -2 1 volcado-rescate.csv purgas.csv | grep TR-003`→1 línea si rescate / `No such file` si caducado (cadena troncal→Faro); E1 sigue `grep ENSAYO|wc -l`. Smough: verificar que `story.ch6.*` usa solo
   conceptos ya en currículo (pipes y `grep`/`sort`/`uniq` de cap. 2 + S2,
   procesos de cap. 3, red de cap. 4, defensa del cap. 5) más la escalada
   opcional (`openssl`/claves, `shred`, SUID/cron como ENSEÑANZA nueva del cap. 6
@@ -443,3 +443,4 @@ respuesta de la fila 000 queda escrita donde el jugador decida escribirla.*
   integre datos, igual que se hizo con ch3/ch5). Así que este capítulo es
   espina narrativa hasta que la familia de escalada y la familia conteo estén
   en el sandbox real.
+- **Cadena TR-003 (dato7, 16/09):** el Faro planta `volcado-rescate.csv` solo si el jugador rescató en `story.ch4.e3` (`scp /tmp/volcado.csv faro:/srv/camara-faro/volcado-rescate.csv` → `postmortem.volcado.rescate`); si borró (`rm`) o dejó pasar 30 ticks → `caducado` y el fichero NO existe. Golden condicional verificado 17/09 arriba; narrativa 04-troncales E3 ya describe ambos verbos + silencio de 30 ticks sin pipe nuevo. No añade comandos nuevos ni rompe `generate(42,6)` por defecto.
