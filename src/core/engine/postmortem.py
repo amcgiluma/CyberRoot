@@ -68,6 +68,8 @@ LINE_KEY_ESPEJO = "postmortem.espejo.repertorio"
 #: S1 15/09 (Smough, ADR TR-003) — bifurcación volcado: rescate vs caducado.
 LINE_KEY_VOLCADO_RESCATE = "postmortem.volcado.rescate"
 LINE_KEY_VOLCADO_CADUCADO = "postmortem.volcado.caducado"
+#: S1 18/09 (Smough, cap. 5 custodia) — testigo leído en casa.
+LINE_KEY_CUSTODIA = "postmortem.auditor.custodia"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -490,6 +492,29 @@ def _has_volcado_rm(shell_dict: dict[str, Any]) -> bool:
     return False
 
 
+def _has_volcado_custodia(shell_dict: dict[str, Any]) -> bool:
+    """Firma custodia: `cat /tmp/volcado-custodia.csv` con exit 0."""
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "cat" not in line or "/tmp/volcado-custodia.csv" not in line:
+            continue
+        result = entry.get("result") or {}
+        if int(result.get("exit_code", 1)) != 0:
+            continue
+        try:
+            argv = shlex.split(line)
+        except ValueError:
+            argv = []
+        # cat directo o cat dentro de pipe: si la línea contiene cat y ruta, vale
+        # validación extra: el primer token cat o que la línea tenga "cat" antes de "|"
+        if argv and argv[0] == "cat":
+            return True
+        # pipe caso: "cat /tmp/volcado-custodia.csv | grep ..."
+        if "cat" in line:
+            return True
+    return False
+
+
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
     """True si el historial contiene al menos un `sudo`.
 
@@ -658,6 +683,13 @@ def build_postmortem(
         base["lines_resolved"] = [*base["lines_resolved"], caducado_text]
         base["volcado"] = "caducado"
 
+    # S1 18/09 — custodia leída en casa (hermano de rescate, independiente)
+    if _has_volcado_custodia(shell_dict):
+        custodia_text = _resolve_auditor_text(LINE_KEY_CUSTODIA, {})
+        base["auditor_custodia"] = {"line_key": LINE_KEY_CUSTODIA, "args": {}}
+        base["auditor_custodia_text"] = custodia_text
+        base["lines_resolved"] = [*base["lines_resolved"], custodia_text]
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -708,4 +740,7 @@ __all__ = [
     "LINE_KEY_ORDEN",
     "LINE_KEY_JOIN",
     "LINE_KEY_ESPEJO",
+    "LINE_KEY_CUSTODIA",
+    "LINE_KEY_VOLCADO_RESCATE",
+    "LINE_KEY_VOLCADO_CADUCADO",
 ]
