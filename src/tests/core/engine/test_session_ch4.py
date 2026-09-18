@@ -20,7 +20,7 @@ CUR = load_curriculum()
 def test_session_ch4_supported_and_commands():
     """SUPPORTED_CHAPTERS incluye 4 y _commands_for(4) es la base 13."""
     assert 4 in SUPPORTED_CHAPTERS
-    assert SUPPORTED_CHAPTERS == frozenset({0, 2, 4})
+    assert frozenset({0, 2, 4}) <= SUPPORTED_CHAPTERS
     assert _commands_for(4) == DEFAULT_CH4_COMMANDS
     # regresión: 0 y 2 intactos
     from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS

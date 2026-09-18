@@ -25,17 +25,32 @@ informe del Auditor listo para el Hub. Solo stdlib.
 """
 
 from __future__ import annotations
-
 from dataclasses import dataclass, field
 from typing import Any, Iterable
-
 from core.engine.postmortem import build_postmortem
 from core.generator import Incursion, generate
 from core.generator.model import Contract
 from core.sandbox.shell import DEFAULT_CAP0_COMMANDS, DEFAULT_CH2_COMMANDS, DEFAULT_CH4_COMMANDS, DEFAULT_CH4E3_COMMANDS, Shell
 
-#: Conjunto de capítulos cuyo flujo de encargo está materializado (v0: 0, 2 y 4).
-SUPPORTED_CHAPTERS: frozenset[int] = frozenset({0, 2, 4})
+try:
+    from core.sandbox.shell import DEFAULT_CH5_COMMANDS as _DEFAULT_CH5_COMMANDS  # type: ignore[attr-defined]
+except ImportError:
+    _DEFAULT_CH5_COMMANDS: tuple[str, ...] = ("cat", "scp")
+
+#: Conjunto de capítulos cuyo flujo de encargo está materializado (v0: 0, 2, 4 y 5).
+SUPPORTED_CHAPTERS: frozenset[int] = frozenset({0, 2, 4, 5})
+
+
+def volcado_del_save(postmortem: dict[str, object] | None) -> bool:
+    """Helper público: lee ``volcado: rescatado`` del post-mortem del Hub.
+
+    El caller que cerró e3 puede reusar el dict del Hub sin brujerías
+    internas: si ``pm.get("volcado") == "rescatado"`` devuelve True,
+    en cualquier otro caso False (determinista y honesto).
+    """
+    if not isinstance(postmortem, dict):
+        return False
+    return postmortem.get("volcado") == "rescatado"
 
 _KARMA_HINT_ES: dict[str, str] = {"blue": "azul", "red": "rojo", "grey": "gris"}
 
@@ -47,6 +62,8 @@ def _commands_for(chapter: int, quest_id: str | None = None) -> tuple[str, ...]:
     SOLO cuando quest_id == 'story.ch4.e3' (simetría scp/rm, 🧭36). Sin
     quest_id (llamada legacy) devuelve la base 13 — retrocompatible con tests
     y con e1/e2.
+    Cap. 5 (Subestación) → ("cat", "scp") — allowlist nova de S1, con fallback
+    local idéntico para que la rama 13:00 sea ejecutable antes de Smough.
     """
     if chapter == 2:
         return DEFAULT_CH2_COMMANDS
@@ -54,6 +71,8 @@ def _commands_for(chapter: int, quest_id: str | None = None) -> tuple[str, ...]:
         if quest_id == "story.ch4.e3":
             return DEFAULT_CH4E3_COMMANDS
         return DEFAULT_CH4_COMMANDS
+    if chapter == 5:
+        return _DEFAULT_CH5_COMMANDS
     return DEFAULT_CAP0_COMMANDS
 
 
@@ -120,7 +139,7 @@ def listar_encargos(
     if chapter not in SUPPORTED_CHAPTERS:
         raise ValueError(
             f"flujo de encargo no materializado para el capítulo {chapter} "
-            f"(v0: 0, 2 y 4)"
+            f"(v0: 0, 2, 4 y 5)"
         )
     quests = sorted(curriculum.quests_for_chapter(chapter), key=lambda q: q.id)
     return [_quest_dict(curriculum, q, knowledge) for q in quests]
@@ -155,6 +174,7 @@ def abrir_encargo(
     knowledge: Iterable[str],
     *,
     run_seed: Any = 0,
+    volcado_rescatado: bool = False,
 ) -> dict[str, Any]:
     """Abre `quest_id`: valida prereqs al ABRIR (🧭8=(b)) y, si procede,
     genera la sala del contrato y monta la sesión jugable.
@@ -168,6 +188,11 @@ def abrir_encargo(
     `prereqs_met` se evalúa AQUÍ (al abrir), nunca en `generate()`: la sala se
     genera aunque el capítulo no haya enseñado aún el concepto — es el jugador
     quien decide aceptar el reto.
+
+    Cap. 5 — HOY solo e2 abre (la puerta normal del Asalto). e1/e3/e4
+    devuelven rechazo accionable con mensaje honesto sin generar sala.
+    `volcado_rescatado` propaga la decisión de ch4.e3 a la geografía del
+    asalto (testigo condicional custodiado vs ausente).
     """
     quest = curriculum.quest(quest_id)
     if quest is None:
@@ -177,6 +202,13 @@ def abrir_encargo(
         return {
             "abrible": False,
             "missing": [f"capítulo {chapter} sin flujo materializado"],
+            "quest_id": quest_id,
+        }
+    # Cap. 5 — HOY solo e2 tiene flujo materializado (puerta normal del Asalto).
+    if chapter == 5 and quest_id != "story.ch5.e2":
+        return {
+            "abrible": False,
+            "missing": ["encargo sin flujo materializado en cap. 5 (hoy solo e2)"],
             "quest_id": quest_id,
         }
 
@@ -195,8 +227,12 @@ def abrir_encargo(
         }
 
     seed = _seed_de_sala(quest_id, run_seed)
-    # Cap. 2/4 → sala del contrato concreto (contract_id); cap. 0 → su única quest.
-    incursion = generate(seed, chapter, contract_id=quest.id) if chapter != 0 else generate(seed, chapter)
+    if chapter == 5:
+        incursion = generate(seed, chapter, contract_id=quest.id, volcado_rescatado=volcado_rescatado)
+    elif chapter != 0:
+        incursion = generate(seed, chapter, contract_id=quest.id)
+    else:
+        incursion = generate(seed, chapter)
     shell = Shell(
         incursion.room.fs.snapshot(),
         host=incursion.room.host,
@@ -269,4 +305,5 @@ __all__ = [
     "rechazo_accionable",
     "abrir_encargo",
     "cerrar_encargo",
+    "volcado_del_save",
 ]
