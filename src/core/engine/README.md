@@ -214,3 +214,14 @@ PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch4
 PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 731 (730 +1 bundle stale → 731 tras regen Gwyn)
 ```
 
+
+---
+
+## v0.10 (O1, 18/09) — session.py ch5: la puerta normal del Asalto — PR #64
+
+**O1 — `session.py` cap. 5 (Ornstein, 18/09, 🧭37/38):** `SUPPORTED_CHAPTERS` {0,2,4}→{0,2,4,5}, `_commands_for(5)` → `("cat","scp")` con fallback local idéntico (costura O↔S: Ornstein consume con try/except, Smough crea `DEFAULT_CH5_COMMANDS` nova en `shell.py` a las 16:00 — unión por terminal si choca). Mensaje de `listar_encargos` actualizado a "0, 2, 4 y 5". Solo `story.ch5.e2` abre hoy (e1/e3/e4 → `{"abrible": False, "missing": ["encargo sin flujo materializado en cap. 5 (hoy solo e2)"]}` sin generar sala). Kwarg `volcado_rescatado: bool=False` en `abrir_encargo` propagado a `generate(seed,5, volcado_rescatado)` — geografía condicional: rescatado → `/tmp/volcado-custodia.csv` exit 0 `TR-003|faro|troncal-01|512|EN_COLA`; caducado → exit 1 `No such file`. Helper `volcado_del_save(pm)->bool` lee `pm.get("volcado")=="rescatado"` del post-mortem del Hub. Shell montada con snapshot FS del asalto y allowlist ch5. Generador `chapter 5` wired (allow 5 + dispatch `_generate_cap5` + `_session_commands` cat/ps/scp para validación canónica intruso 03:14). Tests `test_session_ch5.py` 7 tests + flexibilización de asserts ch4/errores para superset 5.
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch5.py -o addopts= -q  # 7 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 755 passed +1 bundle stale → 756 tras regen Gwyn
+```
