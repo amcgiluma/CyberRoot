@@ -105,6 +105,12 @@ def _session_commands(chapter: int) -> tuple[str, ...]:
         return DEFAULT_CH3_COMMANDS
     if chapter == 4:
         return DEFAULT_CH4_COMMANDS
+    if chapter == 5:
+        # Cap. 5 Subestación: cat (testigo) + scp (custodia) + ps (intruso)
+        # La allowlist de sesión es solo cat+scp (2), pero la validación
+        # canónica necesita ps para verificar el intruso 03:14 — el FS
+        # es el mismo, solo la sesión jugable restringe.
+        return ("cat", "ps", "scp")
     if chapter == 6:
         # O1 10/09 — «La persiana» necesita ps (START forense) + env/kill/sudo
         # heredados del cap. 3 y la familia conteo. Usa el set canónico del shell
@@ -611,7 +617,7 @@ def generate(
     """
     if isinstance(seed, bool):
         raise TypeError("seed bool no admitida por el generador (usa 0/1 explícitos)")
-    if chapter not in (0, 2, 3, 4, 6):
+    if chapter not in (0, 2, 3, 4, 5, 6):
         raise ValueError(
             f"solo los caps. 0 (la firma), 2 (facturas), 3 (Bombas, sala sudo), 4 (Troncales) y 6 (Faro, sala-dato) "
             f"están disponibles en v0.1; el resto llega con curriculum.json "
@@ -619,7 +625,7 @@ def generate(
         )
     if variant not in VARIANTS:
         raise ValueError(f"variant desconocida: {variant!r} (espera canonical|practice)")
-    if contract_id is not None and chapter not in (2, 3, 4, 6):
+    if contract_id is not None and chapter not in (2, 3, 4, 5, 6):
         raise ValueError("contract_id solo aplica a los caps. 2, 3, 4 y 6 (el cap. 0 ofrece su única quest)")
 
     if curriculum is None:
@@ -633,6 +639,8 @@ def generate(
         return _generate_cap3(seed, variant, curriculum, contract_id)
     if chapter == 4:
         return _generate_cap4(seed, variant, curriculum, contract_id)
+    if chapter == 5:
+        return _generate_cap5(seed, variant, curriculum, contract_id, volcado_rescatado)
     return _generate_cap6(seed, variant, curriculum, contract_id, volcado_rescatado)
 
 
