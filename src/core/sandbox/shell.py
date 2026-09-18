@@ -83,6 +83,10 @@ DEFAULT_CH4_COMMANDS: tuple[str, ...] = (
 #: La allowlist base NO SE TOCA (guard SUBSET intacto; `rm`→127 fuera de e3).
 DEFAULT_CH4E3_COMMANDS: tuple[str, ...] = DEFAULT_CH4_COMMANDS + ("rm",)
 
+#: Comandos del set del cap. 5 (S1, 18/09): allowlist nova del Asalto — solo
+#: lectura del testigo custodiado + su copia (cat/scp). Nova, no toca CH4.
+DEFAULT_CH5_COMMANDS: tuple[str, ...] = ("cat", "scp")
+
 #: Comandos del set del cap. 6 (S2, 02/09): desbloquea la familia conteo
 #: (head/tail/sort/uniq) sobre la base del cap. 3. El cap. 6 «Faro» lee la
 #: Lista de Lumen con grep/wc/pipe + conteo; necesita TODO lo anterior
