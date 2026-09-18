@@ -116,6 +116,28 @@ entrar cuando quiera.
   lleva horas en su silla, dice: «seis años para cortar el cable de uno
   mismo».
 
+### Interludio — «El papel en custodia» (testigo condicional, sin encargo)
+
+Entre E2 y E3 la casa guarda un papel que no debería estar aquí. No lo trajo Gris ni lo escribió Ceniza. Lo trajiste tú hace dos capítulos y la Subestación lo custodió porque nadie le dijo que no.
+
+Si en `story.ch4.e3` hiciste `scp /tmp/volcado.csv faro:/srv/camara-faro/volcado-rescate.csv`, el asalto amanece con un fichero en `/tmp/volcado-custodia.csv` que pesa 34 bytes y contiene una sola línea:
+
+```
+TR-003|faro|troncal-01|512|EN_COLA
+```
+
+`cat /tmp/volcado-custodia.csv` devuelve esa línea. `ps aux` muestra al lado al intruso que la vigila: `censo  1847  0.0  0.1  03:14  intruso --vigilar-censo`. Misma hora que el volcado original, mismo verbo en custodia. El censo no reclamó esa fila a las 03:14 y tú la guardaste donde la casa puede leerla sin salir.
+
+Si borraste el volcado con `rm /tmp/volcado.csv` o dejaste que se purgara durante 30 ticks, el mismo `cat /tmp/volcado-custodia.csv` responde:
+
+```
+cat: /tmp/volcado-custodia.csv: No such file or directory
+```
+
+El proceso `intruso --vigilar-censo` sigue ahí, con el mismo `START 03:14` y el mismo USER `censo`. La hora no desaparece cuando el papel no llega. Es lo único que queda para medir la ausencia. Nadie en la casa lo explica. Nadie lo necesita explicar: el que lee el censo sabe qué falta cuando falta una sola línea entre tres.
+
+---
+
 ### E3 — «La visita» (rojo, `story.ch5.e3`)
 
 La Oficina no ha entrado aún, pero su gente ha dejado algo dentro: un
