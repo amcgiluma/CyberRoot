@@ -67,6 +67,8 @@ NOISE_PROFILE: dict[str, int] = {
     "ssh": 2,
     "scp": 3,
     "rm": 2,
+    "chmod": 1,
+    "chown": 1,
     "exit": 0,
     "logout": 0,
 }

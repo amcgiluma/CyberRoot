@@ -20,7 +20,7 @@ def test_perfil_contiene_los_comandos_del_cap0_y_pipes() -> None:
     assert set(NOISE_PROFILE) == {
         "cd", "ls", "cat", "cp", "grep", "wc", "ps", "env", "sudo",
         "head", "tail", "sort", "uniq", "kill", "cut", "ssh", "scp", "rm", "exit", "logout",
-        "join",
+        "join", "chmod", "chown",
     }
 
 
