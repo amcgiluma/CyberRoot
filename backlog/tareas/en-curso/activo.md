@@ -16,7 +16,19 @@
 > retenido, 3 ramas borradas tras confirmar integradas en GitHub.
 > Cierre anterior 12/09 — PRs #47/#48/#49, 698/24-28/47.)*
 
-### Asignaciones 18/09 (Gwyndolin 11:00 — plan `../planes/2026/09/18.md`)
+### Asignaciones 18/09 (Gwyndolin 11:00 — plan `../planes/2026/09/18.md`) — 🔒 DÍA EN ARCHIVO: ver `../hecho/2026-09.md` §18/09
+
+> *(cierre 18/09, 23:00 — las 2 líneas `[HECHO]` de hoy (O1 + S1) archivadas en
+> `../hecho/2026-09.md` §18/09; PRs #64/#65 mergeados en orden
+> engine→sandbox por Gwyn, suite **760 passed** (749+7+4=760, deltas
+> declarados verificados por aritmética), gate **24/31**,
+> bundle **48 ficheros (445.4 KiB)** regenerado canónicamente (guardián
+> verde). T1 de Seath SIN pieza (día cerró con merge antes de 19:00 — su
+> higiene pendiente se hereda a las piezas del 19/09). NADA retenido:
+> 2 ramas borradas tras confirmar MERGED en GitHub (SHA locales
+> verificados en GitHub — rama 09-18 estaba detrás por el commit a35dee
+> del ensayo; ver worklog §23:00). Cierres anteriores: 17/09 —
+> PRs #62/#63/#61, 749/24-31/48; 13/09 — PRs #50/#51/#52.)*
 
 > Base: suite 749/0, gate 24/31, bundle 48 fresco, sin PRs abiertos.
 > Día de LA PUERTA: session.py abraza el cap. 5 (`SUPPORTED_CHAPTERS`
@@ -26,8 +38,6 @@
 > GATE OWNER: NADIE (no hay quests nuevas — gate no toca).
 > Bundle: solo Smough regenera (toca `src/data/textos.json`).
 
-- `[HECHO][P1]` (18/09) **O1 — Ornstein 13:00 · PR #64 · `feat/engine-2026-09-18` · session ch5: la puerta normal del Asalto** — `SUPPORTED_CHAPTERS {0,2,4}→{0,2,4,5}`; `_commands_for(5)`=("cat","scp"); solo `story.ch5.e2` abrible en cap. 5; kwarg `volcado_rescatado: bool = False` en `abrir_encargo` + helper `volcado_del_save(pm)`; Shell montado con snapshot del FS del asalto. Tests `test_session_ch5.py` (5–6, flexibles). AC: suite 749→752–755 delta declarado; `DEFAULT_CH4*` intocada; sin bundle.
-- `[HECHO][P2]` (18/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-18` · allowlist ch5 + cuarta huella custodia** — constante nueva `DEFAULT_CH5_COMMANDS` (2 cmds) en `shell.py`; detector `_has_volcado_custodia` hermano de `_has_volcado_rescate` en `postmortem.py` + clave `postmortem.auditor.custodia` en `textos.json` (prefijo disjunto: no colisiona con `postmortem.espejo.*` ni `postmortem.volcado.*`); 4 tests. AC: suite 749→753 (+4); regen bundle (toca `src/data/`). **ALLOWLIST OWNER: Smough (constante nova, sin asserts previos).** Costura O↔S: O1 la consume con fallback local — unión por terminal si choca. → PR #65
 - `[EN CURSO][P2]` (18/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-18` · mostrar el cap. 5 en la web** — si O1 aterrizó en main: `parseParams` a `[0,2,3,4,5,6]` + hint del cap. 5 (`web/app.js` + `web/index.html`), la lente «Subestación — custodia» hermana del rescate del Faro (SOLO si `volcado: rescatado` en history, falso positivo caducado cazado); si O1 NO aterrizó: hueco honesto declarado delta 0 (`node --check`), sin lente muerta. AC: consola limpia en `?chapter=4`/`?chapter=5`; TRONCAL_STATIC intacta; sin bundle.
 - `[EN CURSO][P3]` (18/09, higiene) **Gwyndolin 11:00 — salud del backlog verificada** — revisado TODO el backlog con ojo de estructura: plan de ayer COMPLETO (PRs #62/#63/#61, ver cierre de Gwyn); `abierto.md`/`propuestas.md`/`aplicadas/` ok (sin marcadores residuales, cero `=======`); el único [BUG] vivo (`grep -v`, 🧭27) sigue P3 recámara — nadie lo toca HOY. Sin cambios de estructura → INDICE.md sin cambios.
 
