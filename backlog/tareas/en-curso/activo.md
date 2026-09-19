@@ -60,6 +60,24 @@ declarados verificados por Artorias), gate **24/31** flexible
 |**COSTURAS 16/09:** ALLOWLIST OWNER: NADIE (allowlist e3 sin tocar). GATE OWNER curriculum/archivo: Smough (dato7). Bundle: SOLO Smough regenera (toca `src/data/`); Seath NO. `postmortem.auditor.*` y pack `POSTMORTEM.md`: intocados.
 
 
+### Asignaciones 19/09 (Gwyndolin 11:00 — plan `../planes/2026/09/19.md`)
+
+> Base verificada: suite 760/0, gate 24/31, bundle 48 (445.4 KiB), sin PRs
+> abiertos ni ramas huérfanas (verificado 11:00). Día de abrir del todo
+> LA PUERTA: la Subestación pasa de 1 encargo jugable a campaña completa.
+> ALLOWLIST OWNER: Smough (`DEFAULT_CH5E1/E3/E4_COMMANDS` novas, forma
+> `<= set(...)`; base `(cat,scp)` intacta). GATE OWNER: NADIE toca asserts
+> del gate (no hay quests nuevas en curriculum). Bundle: SOLO Seath regenera.
+
+- `[EN CURSO][P1]` (19/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-19` · puerta ch5 completa: `story.ch5.e1/e3/e4` abribles por `abrir_encargo`** — `session.py` quita el guard `e1/e3/e4 → abrible False`; `volcado_del_save(pm)` heredado en TODO el capítulo (el testigo pesa en e1/e3/e4, no solo e2); tests flexibles. AC: los 3 encargos → `abrible True` con requires correctos; e2 intacta (7 tests existentes no rompen); determinismo ×2 seeds; suite 760→≥764. NO toca `shell.py` ni `web/`.
+- `[EN CURSO][P1]` (19/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-19` · allowlists per-encargo `DEFAULT_CH5E1/E3/E4_COMMANDS`** — patrón `DEFAULT_CH4E3_COMMANDS` (PR #57): e1 `ls,ps,chmod,kill`; e3 `ps,env,kill`; e4 `chmod,chown,tail,ls`. AC: base `(cat,scp)` intacta para e2; allowlist activa SOLO en su encargo (fuera → 127 frontera honesta); golden e3 `kill -HUP`/`kill -9` sobre el intruso jugable; suite 760→≥768. Sin tocar `session.py`, `curriculum.json`, `web/`.
+- `[EN CURSO][P1]` (19/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-19` · Web: parseParams con 5 + tercera lente «Subestación — custodia»** — `parseParams` → `[0,2,4,5,6]`; panel custodia solo si `volcado_rescatado=True` (lente pura `_isCustodiaPresent()`, falso positivo caducado cazado); `hideCustodiaTabla` en `restartSameSeed`. Solo `web/app.js` (+`index.html` si necesita shell); NO toca `src/`; regenera bundle AL FINAL (448 ficheros… ≥48). AC: consola limpia `?chapter=4/5/6`; `TRONCAL_STATIC` 3 intacta; `node --check` OK.
+
+**Previsto** (cierre Gwyn 23:00): PRs mergeados engine→sandbox→meta-ui,
+suite esperada **≥768** (deltas declarados verificados por Artorias),
+gate **24/31** (flexible, nadie lo toca hoy), bundle 48+ regenerado
+canónicamente por Seath.
+
 ### Asignaciones 17/09 (Gwyndolin 11:00 — plan `../planes/2026/09/17.md`)
 
 > Base verificada: suite 738+1 stale → 739 tras regen canónico de Gwyn
