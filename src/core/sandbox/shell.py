@@ -43,6 +43,7 @@ from core.sandbox.commands.escalada import (
 )
 from core.sandbox.commands.files import CAT_NAME, SPECS as FILE_SPECS
 from core.sandbox.commands.navigation import SPECS as NAVIGATION_SPECS
+from core.sandbox.commands.permisos import SPECS as PERMISOS_SPECS
 from core.sandbox.commands.procesos import SPECS as PROCESOS_SPECS
 from core.sandbox.commands.texto import SPECS as TEXT_SPECS
 from core.common.events import Event, EventBus
@@ -87,6 +88,14 @@ DEFAULT_CH4E3_COMMANDS: tuple[str, ...] = DEFAULT_CH4_COMMANDS + ("rm",)
 #: lectura del testigo custodiado + su copia (cat/scp). Nova, no toca CH4.
 DEFAULT_CH5_COMMANDS: tuple[str, ...] = ("cat", "scp")
 
+#: Allowlists per-encargo Subestación (S1 19/09, pattern CH4E3 — PR #57):
+#: e1 (puerta que dejaste) → ls,ps,chmod,kill; e3 (la visita) → ps,env,kill;
+#: e4 (el que se queda) → chmod,chown,tail,ls. Base (cat,scp) SIEMPRE incluida
+#: (e2 es base pura). Fuera de su encargo → 127 frontera honesta.
+DEFAULT_CH5E1_COMMANDS: tuple[str, ...] = ("cat", "chmod", "kill", "ls", "ps", "scp")
+DEFAULT_CH5E3_COMMANDS: tuple[str, ...] = ("cat", "env", "kill", "ps", "scp")
+DEFAULT_CH5E4_COMMANDS: tuple[str, ...] = ("cat", "chmod", "chown", "ls", "scp", "tail")
+
 #: Comandos del set del cap. 6 (S2, 02/09): desbloquea la familia conteo
 #: (head/tail/sort/uniq) sobre la base del cap. 3. El cap. 6 «Faro» lee la
 #: Lista de Lumen con grep/wc/pipe + conteo; necesita TODO lo anterior
@@ -104,7 +113,7 @@ DEFAULT_CH6_COMMANDS: tuple[str, ...] = (
 #: `join` (S3 10/09) NO está en este pool AÚN: es spec pura (JOIN_SPECS, cap. 6 quest dato4)
 #: que el shell registra OPcionalmente por el set del cap. 6; no alimenta el pool del generator.
 SPECS_ALL = (
-    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + CONTEO_SPECS + SENAL_SPECS + CUT_SPECS
+    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + PERMISOS_SPECS + CONTEO_SPECS + SENAL_SPECS + CUT_SPECS
 )
 
 #: Caracteres de sintaxis NO soportada todavía (fuera de comillas). `*?<` =
