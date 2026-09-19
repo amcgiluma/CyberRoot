@@ -33,3 +33,28 @@ deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 *Artorias (21:00): aviso de qué NO mergear hoy + notas de gusto.
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
+
+### 🎯 Artorias — filtro 21:00 (19/09, técnica)
+
+**Ensayo de integración pre-merge (OBLIGATORIO ≥2 ramas):** `git worktree add --detach -f /tmp/ensayo-pr origin/main` + `git merge --no-ff origin/feat/sandbox-2026-09-19` (verde) + `git merge --no-ff origin/feat/meta-ui-2026-09-19` (conflicto `activo.md` resuelto con script python de unión cronológica, `grep -c '<<<<<<<'` 0, `git commit`). Suite combinada: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **768 passed +1 failed bundle stale** → tras `python tools/web/build_bundle.py` → **769 passed / 0 failed** (49 ficheros, 453.9 KiB). Gate `load_curriculum()` 24/31 flexible intacto. Worktree desechable eliminado.
+
+**Per-PR (tests/lint/smoke real):**
+- **O1 `feat/engine-2026-09-19` (Ornstein, PR no abierto) → 💥 NO ENTREGADO.** `gh pr list` sin engine, `git branch -a` sin rama `feat/engine-2026-09-19` (0 commits ahead). Criterio no evaluable. Replanificar mañana P1 con misma spec: quitar guard `e1/e3/e4 → abrible False` en `session.py` + `volcado_del_save` heredado en los 4 encargos. Sin impacto técnico en S1/T1 (rutas disjuntas).
+- **S1 `feat/sandbox-2026-09-19` PR #66 → ✅ VERDE.** `DEFAULT_CH5_COMMANDS` base 2 (`cat,scp`) intacta, novas `DEFAULT_CH5E1` 6 / `E3` 5 / `E4` 6 forma `<= set(...)` verificada, frontera 127 honesta por encargo (`ls` fuera E3 →127, `chmod` fuera E3 →127), `chmod`/`chown` GNU-honesto (ruido 1, 600/octal/+x, `gris:apagados`, mtime), golden E3 `kill -HUP 522` (→ HUP_522=1) / `kill -9 522` (→ ps sin 522) sobre `intruso --vigilar-censo START 03:14` jugable, 9 tests nuevos `test_ch5_allowlist` 9/9 + `test_noise`/`test_shell` actualizados, `PYTHONPATH=src pytest` aislado **768 passed +1 failed bundle stale honesto** (sin bundle 768 passed), gate 24/31, sin tocar `session.py`/`curriculum.json`/`web/`. Smoke: `Shell(DEFAULT_CH5E1_COMMANDS).execute("chmod 600 /tmp/x")` →0 mode 600; `tail` en E4 →0. Deltas declarados en PR verificados: tests antes 760 · rama 768 · delta +9 ✔.
+- **T1 `feat/meta-ui-2026-09-19` PR #67 → ✅ VERDE.** Solo `web/app.js` + `web/index.html` (+docs), `parseParams` `[0,2,3,4,6]`→`[0,2,3,4,5,6]` (5 nuevo, 3 intacto no-regresión, superset del plan), lente custodia `CUSTODIA_STATIC` byte-idéntica a `CUSTODIA_CONTENT`, `_isCustodiaPresent()` file `TR-003` como verdad (falso positivo caducado cazado), `hideCustodiaTabla` en `restartSameSeed` limpia 3 lentes, dispatch triple + boot `previewCustodiaTabla`, `TRONCAL_STATIC` 3 intacta, `node --check web/app.js` OK, consola limpia `?chapter=4/5/6` (custodia oculta sin error cuando caducado), suite aislada **760 passed** delta 0 honesto, sin `src/` tocado. Deltas PR verificados: 760·760+0 ✔.
+
+**Cruce con [BUG] mañana:** único `[BUG][P3]` vivo `grep -v` 11/09 (🧭27) no tocado ni causado por S1/T1 (filtro positivo honesto, briefing ya lo sortea). No duplicar.
+
+**AVISO CLARO A GWYN (qué NO mergear hoy):**
+- ❌ **O1 NO existe** — nada que mergear; replanificar mañana.
+- ✅ **S1 PR #66 listo** y ✅ **T1 PR #67 listo** — mergeables en orden sandbox→meta-ui (engine ausente, sin orden engine delante). **NO hay bloqueo técnico entre S1 y T1.**
+- ⚠️ **Bundle stale honesto en ensemble:** aislados S1 falla `test_bundle_fresco` (faltan `permisos.py`/`noise.py`/`shell.py`), T1 pasa verde; **ensemble sin regen → 768+1 failed, con regen canónica → 769 passed**. Gwyn DEBE regenerar canónicamente tras merges (`python tools/web/build_bundle.py` + commit) — regla 12/09, owner Seath. **Nº tests esperado tras merges sandbox+meta-ui + regen: 769 passed / 0 failed** (760+9+0=769). Gate 24/31. Verificado por Artorias con deltas declarados.
+
+**Notas de gusto ⭐ (qué me ha gustado / qué no / ideas):**
+- 👍 S1: patrón per-encargo `<= set` ya es idioma del proyecto (CH4E3→CH5E1/E3/E4) — base intacta demostrada, fronteras honestas, golden kill con `START 03:14` jugable. `permisos.py` GNU-honesto con spec limpia.
+- 👍 T1: lente custodia hermana de Faro/Troncal sin tocar `src/`, `previewCustodiaTabla` en boot con ausencia elocuente `No such file` (no consola roja). `parseParams` superset elegante que no rompe `?chapter=3`.
+- 👎 O1 ausente lastró el día: LA PUERTA completa (e1/e3/e4) era la promesa del plan; sin engine, S1 deja allowlists huérfanas sin puerta que las abra (no es bug de S1, es deuda heredada).
+- 💡 Priorizar mañana: **O1 del engine delante de todo** (quitar guard + `volcado_del_save` en e1/e3/e4). Con O1 verde, S1 ya no es huérfano y la campaña ch5 pasa a 4 encargos jugables por la puerta normal. Luego, karma del volcado (`scp` azul / `rm` rojo) y sinergia custodia — recámara P2.
+- 💡 Siguiente web: la lente custodia ya es verificadora; si O1 aterriza, añadir `ps` a `DEFAULT_CH5_COMMANDS` para que `ps aux` vía `abrir_encargo` deje de ser 127 (observación 🧭40 de Oscar — hoy `cat` es el testigo, `ps` es contexto).
+
+**Nuevas tareas para Gwyndolin (si aporta):** ninguna hoy — recámara ya cubre. Si O1 falla otra vez, abrir `[BUG]` de proceso (no de código).
