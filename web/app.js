@@ -515,6 +515,123 @@ function previewTroncalTabla() {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Tabla de la Subestación — custodia (lente custodia, Seath 19/09 T1)
+// Hermana de Faro/Troncal: renderiza /tmp/volcado-custodia.csv SOLO si
+// volcado_rescatado=True (fs condicional). Ausencia honesta → No such file.
+// ---------------------------------------------------------------------------
+const CUSTODIA_STATIC = "id|origen|destino|bytes|estado\nTR-003|faro|troncal-01|512|EN_COLA\n";
+function _isCustodiaPresent() {
+  try {
+    if (!pyodide || !pyodide.globals) return false;
+    try {
+      const raw = pyodide.globals.get("get_csv")("/tmp/volcado-custodia.csv");
+      const data = JSON.parse(raw);
+      if (data.ok && data.content && String(data.content).includes("TR-003")) return true;
+    } catch(e) {}
+    return false;
+  } catch(e) { return false; }
+}
+function _getCustodiaSuffix() {
+  if (currentChapter !== 5) return "";
+  if (_isCustodiaPresent()) return " \u00b7 TR-003 custodiado \u2014 volcado-custodia.csv";
+  return "";
+}
+function hideCustodiaTabla() {
+  const el = $id("custodia-tabla");
+  if (el) el.style.display = "none";
+}
+function parseCustodiaCut(line) {
+  // cut sobre volcado-custodia.csv → reusa parseCut + filtro custodia
+  if (line.includes("volcado-custodia.csv") || line.includes("volcado-custodia")) {
+    const info = parseCut(line);
+    if (info) return info;
+    // cat sin cut: fallback columna 1
+    if (line.includes("cat") && line.includes("volcado-custodia")) {
+      return { delim: "|", field: 1, file: "/tmp/volcado-custodia.csv" };
+    }
+    // cut no parseable pero menciona custodia → asumimos cut estándar
+    if (line.includes("cut")) return { delim: "|", field: 1, file: "/tmp/volcado-custodia.csv" };
+    // genérico: cat/otros sobre custodia
+    return { delim: "|", field: 1, file: "/tmp/volcado-custodia.csv" };
+  }
+  return null;
+}
+function renderCustodiaTabla(cutInfo, csvContent) {
+  const panel = $id("custodia-tabla");
+  const metaEl = $id("custodia-tabla-meta");
+  const contentEl = $id("custodia-tabla-content");
+  if (!panel || !metaEl || !contentEl) return;
+  const lines = csvContent.split("\n").filter(l => l.length > 0);
+  if (lines.length === 0) { hideCustodiaTabla(); return; }
+  const delim = cutInfo.delim || "|";
+  const colIdx = (cutInfo.field || 1) - 1;
+  const shortFile = (cutInfo.file || "/tmp/volcado-custodia.csv").split("/").pop();
+  const _custSuf = _getCustodiaSuffix();
+  const _tick = _getVolcadoTick();
+  const _status = _getVolcadoStatus(_tick);
+  const _tickTip = "Ticks desde que apareció el volcado. A los 30 caduca si no lo rescatas (scp a faro:/srv/camara-faro/volcado-rescate.csv) o lo disuelves (rm /tmp/volcado.csv) \u2014 lectura estática, sin pulso (\u00b734)";
+  const _tickSpan = `<span title="${_escapeHtml(_tickTip)}" style="cursor:help;text-decoration:underline dotted 1px rgba(140,220,150,.55);text-underline-offset:2px"> \u00b7 ticks del volcado: ${_tick}/30</span>`;
+  const _rotulo = _status ? ` \u00b7 ${_escapeHtml(_status)}` : "";
+  const _custTip = "El testigo custodiado en la Subestación \u2014 /tmp/volcado-custodia.csv existe solo si rescataste en ch4.e3 (scp a faro) y no expiró (lente, no ejecuta el core)";
+  const _custSpan = _custSuf ? `<span title="${_escapeHtml(_custTip)}" style="cursor:help;color:var(--accent)"> \u00b7 TR-003 custodiado \u2014 volcado-custodia.csv</span>` : "";
+  metaEl.innerHTML = `${_escapeHtml(shortFile)} \u00b7 columna ${cutInfo.field || 1} (${_escapeHtml(delim)})${_tickSpan}${_rotulo}${_custSpan}`;
+  let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem">';
+  const headerCells = lines[0].split(delim);
+  html += "<thead><tr>";
+  for (let i = 0; i < headerCells.length; i++) {
+    const cls = i === colIdx ? ' style="background:rgba(140,220,150,.25);color:var(--accent);font-weight:700;border:1px solid var(--border);padding:4px 6px"' : ' style="border:1px solid var(--border);padding:4px 6px;color:var(--muted)"';
+    html += `<th${cls}>${_escapeHtml(headerCells[i] || "\u2014")}</th>`;
+  }
+  html += "</tr></thead><tbody>";
+  const maxRows = Math.min(lines.length, 16);
+  for (let r = 1; r < maxRows; r++) {
+    const cells = lines[r].split(delim);
+    html += "<tr>";
+    for (let c = 0; c < cells.length; c++) {
+      const baseStyle = c === colIdx ? "background:rgba(140,220,150,.18);color:var(--fg);font-weight:600;border:1px solid var(--border);padding:3px 6px" : "border:1px solid var(--border);padding:3px 6px";
+      const val = cells[c] || "\u2014";
+      const disp = val.length > 24 ? val.slice(0,24)+"\u2026" : val;
+      html += `<td style="${baseStyle}">${_escapeHtml(disp)}</td>`;
+    }
+    html += "</tr>";
+  }
+  if (lines.length > maxRows) html += `<tr><td colspan="${headerCells.length}" style="text-align:center;color:var(--muted);padding:6px">\u2026 ${lines.length - maxRows} filas m\u00e1s (usa cat/head en la terminal)</td></tr>`;
+  html += "</tbody></table>";
+  contentEl.innerHTML = html;
+  panel.style.display = "block";
+}
+function updateCustodiaTabla(line) {
+  const info = parseCustodiaCut(line);
+  if (!info) return;
+  if (currentChapter !== 5) return;
+  try {
+    const raw = pyodide.globals.get("get_csv")(info.file);
+    const data = JSON.parse(raw);
+    if (!data.ok || !data.content) {
+      // Ausencia honesta: oculta tabla (no error consola) — el briefing la nombra como pista
+      hideCustodiaTabla();
+      return;
+    }
+    renderCustodiaTabla(info, data.content);
+  } catch(e) {}
+}
+function previewCustodiaTabla() {
+  if (currentChapter !== 5) return;
+  try {
+    const raw = pyodide.globals.get("get_csv")("/tmp/volcado-custodia.csv");
+    const data = JSON.parse(raw);
+    if (data.ok && data.content) {
+      renderCustodiaTabla({ delim: "|", field: 1, file: "/tmp/volcado-custodia.csv" }, data.content);
+      return;
+    }
+    // Miss honesto: panel oculto (no error) — tooltip No such file documentado en meta si luego hay cut
+    hideCustodiaTabla();
+  } catch(e) {
+    hideCustodiaTabla();
+  }
+}
+
 function parseParams() {
   const p = new URLSearchParams(window.location.search);
   const seedRaw = p.get("seed");
@@ -523,7 +640,7 @@ function parseParams() {
   let chapter = 0;
   if (chapterRaw !== null && chapterRaw !== "") {
     const n = parseInt(chapterRaw, 10);
-    if (!isNaN(n) && [0,2,3,4,6].includes(n)) chapter = n;
+    if (!isNaN(n) && [0,2,3,4,5,6].includes(n)) chapter = n;
     else if (!isNaN(n)) chapter = 0; // capítulo no soportado → fallback 0 (no-regresión)
     else chapter = 0;
   }
@@ -559,6 +676,7 @@ async function restartSameSeed() {
   hidePostmortem();
   hideFaroTabla();
   hideTroncalTabla();
+  hideCustodiaTabla();
   $id("out").innerHTML = "";
   setStatus(`Reiniciando cap. ${currentChapter} (seed ${currentSeed})…`);
   try {
@@ -637,6 +755,7 @@ async function boot() {
   setState(state);
   // Preview del volcado del troncal (cap. 4): oculta sin error si aún no hay fichero
   previewTroncalTabla();
+  previewCustodiaTabla();
   const ns0 = $id("noise-status");
   if (ns0) ns0.textContent = `ruido 0/${currentNoiseBudget}`;
   setStatus(`Listo — cap. ${chapter} · seed ${seed} · presupuesto ${currentNoiseBudget} — REPL del core real.`);
@@ -687,6 +806,8 @@ async function dispatch() {
   try { updateFaroTabla(line); } catch(e) {}
   // Tabla del Troncal (cap. 4): mismo reflejo del cut sobre volcado.csv
   try { updateTroncalTabla(line); } catch(e) {}
+  // Tabla de la Subestación — custodia (cap. 5)
+  try { updateCustodiaTabla(line); } catch(e) {}
   if (total > budget) {
     try {
       const pm = JSON.parse(pyodide.globals.get("postmortem")());
