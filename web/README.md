@@ -131,3 +131,17 @@ Sin tocar `data/` ni core: reusa `get_csv` vía Pyodide. Faro intacto (`#faro-ta
 
 Evidencia del run: `node` log completo en worklog `docs/worklog/2026/09/08.md`
 (Seath).
+
+## Tabla viva de la Subestación — custodia (T1 19/09 — Seath, tercera lente)
+
+Panel «Volcado custodiado» en `index.html`+`app.js`, hermana de Troncal/Faro para cap. 5:
+
+| Pieza | Detalle |
+|---|---|
+| Panel | `#custodia-tabla` con `#custodia-tabla-meta`/`#custodia-tabla-content`, tras `#troncal-tabla` |
+| Hint | `#hint-cap5` con `cat /tmp/volcado-custodia.csv → ps aux` (intruso 03:14 `--vigilar-censo`) — el testigo custodiado solo si rescataste en ch4.e3 |
+| JS | `_isCustodiaPresent()` (lee `/tmp/volcado-custodia.csv` vía `get_csv` + `TR-003` — falso positivo caducado cazado), `parseCustodiaCut/hideCustodiaTabla/renderCustodiaTabla/updateCustodiaTabla/previewCustodiaTabla` (patrón Troncal/Faro), `CUSTODIA_STATIC` (`id|origen|destino|bytes|estado` TR-003 EN_COLA 512 — byte-idéntico a `CUSTODIA_CONTENT`), `parseParams` capítulos `[0,2,3,4,5,6]` (5 nuevo, 3 intacto no-regresión), `dispatch` triple, `restartSameSeed` limpia 3 lentes, `boot` preview custodia |
+| Preview | `?chapter=5&seed=42` sin rescate → panel oculto (ausencia honesta `No such file`, sin error consola); con rescate (`volcado_rescatado=True` vía `generate`/`abrir_encargo`) → tabla viva inmediata col 1 `|` + tick `N/30` + rótulo rescate/caducado + `TR-003 custodiado` |
+| Fallback | `cat /tmp/volcado-custodia.csv` exit 1 → `hideCustodiaTabla()` sin consola; `cut`/`cat` sobre custodia en cap. 5 → render con columna resaltada, meta con tick/estado |
+
+Sin tocar `src/` ni `TRONCAL_STATIC` (3 intacta). Faro/Troncal intactos. Suite delta 0, `node --check` OK, guardián verde. Bundle regenerado por Seath (regla 12/09).
