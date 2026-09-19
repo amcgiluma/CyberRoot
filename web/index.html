@@ -54,6 +54,9 @@
       <p class="hint" id="hint-cap6" style="display:none">
         Pista cap. 6 — Faro: <code>ls -a</code> revela <code>.nota-corte</code> → <code>cat .nota-corte</code> (corte por <code>|</code>) → <code>cut -d'|' -f4 purgas.csv | sort | uniq -c</code> — la Lista es tabla. <code>LEEME.txt</code> tienta con ruta relativa.
       </p>
+      <p class="hint" id="hint-cap5" style="display:none">
+        Pista cap. 5 — Subestación: <code>cat /tmp/volcado-custodia.csv</code> → <code>ps aux</code> (intruso 03:14 <code>--vigilar-censo</code>) — el testigo custodiado solo si rescataste en ch4.e3.
+      </p>
     </section>
 
     <section id="faro-tabla" class="panel" style="display:none">
@@ -66,6 +69,12 @@
       <h2>Volcado del Troncal — <span id="troncal-tabla-meta">—</span></h2>
       <div id="troncal-tabla-content" style="overflow-x:auto"></div>
       <p class="hint">Reflejo de tu <code>cut</code>: el volcado como tabla. La terminal sigue mandando.</p>
+    </section>
+
+    <section id="custodia-tabla" class="panel" style="display:none">
+      <h2>Volcado custodiado — <span id="custodia-tabla-meta">—</span></h2>
+      <div id="custodia-tabla-content" style="overflow-x:auto"></div>
+      <p class="hint">Reflejo de tu <code>cat</code>/<code>cut</code>: el testigo en casa. Si ves <code>cat: No such file</code>, el volcado caducó o lo disolviste — ausencia honesta.</p>
     </section>
 
     <section class="terminal-wrap">
@@ -138,8 +147,10 @@
       const hint3 = document.getElementById('hint-cap3');
       const hint6 = document.getElementById('hint-cap6');
       const hint4 = document.getElementById('hint-cap4');
+      const hint5 = document.getElementById('hint-cap5');
       if (c === '3') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='block'; }
       else if (c === '4') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='none'; if (hint4) hint4.style.display='block'; }
+      else if (c === '5') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='none'; if (hint5) hint5.style.display='block'; }
       else if (c === '6') { if (hint0) hint0.style.display='none'; if (hint3) hint3.style.display='none'; if (hint6) hint6.style.display='block'; }
     } catch(e) {}
   </script>
