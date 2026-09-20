@@ -189,10 +189,10 @@ def abrir_encargo(
     genera aunque el capítulo no haya enseñado aún el concepto — es el jugador
     quien decide aceptar el reto.
 
-    Cap. 5 — HOY solo e2 abre (la puerta normal del Asalto). e1/e3/e4
-    devuelven rechazo accionable con mensaje honesto sin generar sala.
+    Cap. 5 — los 4 encargos e1/e2/e3/e4 abren por la misma puerta
+    (misma rutina: prereqs → abrible False / OK → EncargoSession).
     `volcado_rescatado` propaga la decisión de ch4.e3 a la geografía del
-    asalto (testigo condicional custodiado vs ausente).
+    asalto (testigo condicional custodiado vs ausente) en los 4.
     """
     quest = curriculum.quest(quest_id)
     if quest is None:
@@ -202,13 +202,6 @@ def abrir_encargo(
         return {
             "abrible": False,
             "missing": [f"capítulo {chapter} sin flujo materializado"],
-            "quest_id": quest_id,
-        }
-    # Cap. 5 — HOY solo e2 tiene flujo materializado (puerta normal del Asalto).
-    if chapter == 5 and quest_id != "story.ch5.e2":
-        return {
-            "abrible": False,
-            "missing": ["encargo sin flujo materializado en cap. 5 (hoy solo e2)"],
             "quest_id": quest_id,
         }
 

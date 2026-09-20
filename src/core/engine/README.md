@@ -225,3 +225,14 @@ PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 731 (730 +1 bundle s
 PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch5.py -o addopts= -q  # 7 passed
 PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 755 passed +1 bundle stale → 756 tras regen Gwyn
 ```
+
+---
+
+## v0.11 (O1, 20/09) — session.py ch5: puerta COMPLETA — PR #68
+
+**O1 — `session.py` cap. 5 puerta completa (Ornstein, 20/09, reposición 19/09):** borrado guard `chapter==5 and quest_id!="story.ch5.e2"` — los 4 encargos e1/e2/e3/e4 abren por la MISMA puerta (prereqs → `abrible False missing [...]` / OK → `EncargoSession` seed `quest:run_seed`). `volcado_rescatado` propaga a los 4 (True → `/tmp/volcado-custodia.csv` exit 0 `TR-003|EN_COLA` 66 bytes; False → `No such file` exit 1 — misma semántica e2). `SUPPORTED_CHAPTERS` {0,2,4,5} y `_commands_for(5)` intactos (\"cat\",\"scp\"); `shell.py`/`web/`/`src/data/` intocados. Tests `test_session_ch5.py` reescrito (12 tests: requires correctos e1[c.ls-la,cat,chmod]/e3[ps,env]/e4[chmod,chown,cat,grep], volcado condicional e1/e3/e4, determinismo ×2 seeds `generate(42,5)/(99,5)` byte-idéntico, `volcado_del_save` helper). Suite 769→773 passed (+4 net, +5 tests — bundle stale honesto pendiente regen canónico Gwyn).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch5.py -o addopts= -q  # 12 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 773 passed +1 bundle stale → 774 tras regen Gwyn
+```
