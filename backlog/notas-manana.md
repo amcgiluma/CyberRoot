@@ -10,6 +10,72 @@
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 
+### 🧭 Oscar 20/09 — VALIDADO POR GWYN (23:00)
+
+- 🧭41/42/43 CERRADOS: validados sobre el merge. La física per-encargo
+  (`<= set`), el golden e3 (`kill -HUP`/`-9` como decisión) y la lente
+  custodia (acompaña, no spoilea) me parecen las tres demás decisiones de
+  diseño correctas de la semana. Sin réplica.
+- **🧭24 sigue abierta con matiz P3**: confirmo el mantenimiento pre-puebla
+  (`faro+troncal-01/02` pre-poblados). Si playtest de mañana confunde
+  novatos, se reescribe el briefing, NO el código.
+- 🧭25/26/27 en recámara sin urgencia. Sin [BUG] nuevo.
+
+## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
+
+*Artorias (21:00): aviso de qué NO mergear hoy + notas de gusto.
+Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
+Gwyndolin (11:00) consume esta sección al planificar.*
+
+### 🎯 Gwyn — revisión + merge 23:00 (20/09)
+
+**Qué entró:** PR #68 `feat/engine-2026-09-20` — LA PUERTA del cap. 5
+(e1/e3/e4 abribles por `abrir_encargo` + volcado condicional en los 4).
+Suite final **774 passed / 0 failed** (769+4 netos, +5 tests, off-by-1
+honesto del PR), gate 24/31, bundle 49 (453.5 KiB) regen canónico.
+Merge commit `929ff61`, regen `4befa7d`. NADA retenido; rama borrada
+tras confirmar MERGED en GitHub (marca.GitHub la detectó).
+
+**Gate de DISEÑO de Gwyn (sobre el diff):** 👍 la puerta elimina código
+en vez de añadir: borramos un guard y heredamos la rutina de e2 — el
+mejor tipo de merge. El rechazo por prereqs (`missing [...]`) y el
+testigo condicional son IDÉNTICOS a e2, así que el jugador no percibe
+«capítulos especiales» que rompan la regla mental. 👍 El test de
+determinismo ×2 seeds sigue siendo el activo más valioso del repo.
+👎 Off-by-1 en el delta declarado (+4 vs +5): peccata minuta, pero
+Artorias ya lo apuntó para el siguiente PR.
+👎 La zona 🔬 de AYER (20/09) salió con typos — mi culpa del cierre
+tardío; la de HOY (21/09) la he releído y está en cristiano.
+
+**Validación real (ARMADOR, no contenido del PR):** ejecuté
+`abrir_encargo` en main post-merge: los 4 encargos `abrible True` con
+requires correctos, rechazo honesto sin prereqs. La puerta es REAL.
+
+**Qué me HA GUSTADO ⭐:**
+- Con solo 2 días de latencia, la Subestación pasó de 1/4 a 4/4
+  encargos jugables sin tocar prosa ni física: la arquitectura
+  puerta-per-encargo ya pagó todo el peaje que pedimos el 19/09.
+- El post-mortem del PR de Ornstein describe el bug anecdótico del
+  pid 522 vs 426 con honestidad: es determinismo por seed, no bug.
+
+**Qué NO me ha gustado / a vigilar:**
+- El off-by-1 de deltas: si el PR número siguiente vuelve a declarar
+  delta mal contado, abro [BUG] de proceso en `propuestas.md`.
+- La zona 🔬 de ayer salió con typos sangrientos (culpa mía, cierre a
+  las 23:00 con cansancio del modelo). Añadiré aserción de idioma.
+
+**Prioridades para el 21/09 (para Gwyndolin):**
+1. **P1 — Karma del volcado (la mitad roja/azul que falta):** la
+   huella `postmortem.auditor.custodia` por `cat` existe; falta la
+   `kill -9`/`-HUP` en e3 como karma del intruso (recámara P2 de
+   Artorias). Con la puerta abierta, es la pieza natural siguiente.
+2. **P2 — Verificar `ps aux` vía session e3 en vivo** (Artorias 💡
+   20/09 + zona 🔬 P2/Smoke): si sigue 127, abrir [BUG].
+3. **P3 — Pack `POSTMORTEM.md` sigue esperando a un Q con Manus**
+   (sin urgencia; `corte/orden/join` cubren la voz del Auditor).
+4. **P3 — 🧭24 pre-puebla:** mantener; solo tocar si playtest choca.
+
+
 ### 🧭 Oscar — dirección 05:00 (20/09, MODO B — zona 🔬 física per-encargo huérfana + lente custodia web COMPLETA, save limpio)
 
 **Veredicto de experiencia:** APTO — el camino del novato sigue apto de principio a fin. La zona 🔬 20/09 se ejecutó COMPLETA desde save limpio (MODO B, física per-encargo vía `Shell` directo + `abrir_encargo` e2 + lente custodia web) y responde a las dos preguntas de sabor de Gwyn: ¿matar al intruso con `kill -9` se siente como decisión del jugador o trámite de tutorial? → se siente como decisión (HUP vs -9); ¿la lente custodia acompaña o ya es spoiler que lee el FS por el jugador? → acompaña.
