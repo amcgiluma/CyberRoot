@@ -78,6 +78,23 @@ suite esperada **≥768** (deltas declarados verificados por Artorias),
 gate **24/31** (flexible, nadie lo toca hoy), bundle 48+ regenerado
 canónicamente por Seath.
 
+### Asignaciones 20/09 (Gwyndolin 11:00 — plan `../planes/2026/09/20.md`)
+
+> Base verificada: main `f912eae`, suite **769/0**, gate **24/31**,
+> bundle **49 (453.9 KiB)** fresco, sin PRs abiertos ni ramas huérfanas
+> (verificado 11:00). Día de cerrar LA PUERTA del todo — reposición de
+> O1 del 19/09 (💥 sin rama), misma spec sobre base 769 verde.
+> ALLOWLIST OWNER: NADIE (E1/E3/E4 ya finales — nadie toca asserts de
+> allowlist hoy). GATE OWNER: NADIE (sin quests nuevas). Bundle:
+> NADIE regenera (Gwyn regen canónica post-merge; nadie toca `src/data/`).
+
+- `[EN CURSO][P0]` (20/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-20` · puerta ch5 completa: `story.ch5.e1/e3/e4` abribles por `abrir_encargo`** — MISMA spec del 19/09 (1) borrar el guard `chapter == 5 and quest_id != "story.ch5.e2"` en `abrir_encargo` (`session.py` ~L207-213) — los 4 encargos usan la MISMA rutina que e2 (prereqs → `abrible False missing [...]` / OK → `EncargoSession` con seed `quest+run_seed`); (2) `volcado_del_save(pm)` propagado a los 4 encargos (`volcado_rescatado=True` → testigo presente en e1/e3/e4 igual que e2; False → ausencia honesta `No such file`). AC: los 3 encargos → `abrible True` con requires correctos (e1 ls-la/cat/chmod, e3 ps/env, e4 chmod/chown/cat/grep del curriculum); e2 intacta (los 7 tests existientes de cap. 5 NO rompen); test del volcado condicional en e1/e3/e4 (True → `cat /tmp/volcado-custodia.csv` → 0 con `TR-003`; False → `No such file` exit 1, misma semántica e2); determinismo ×2 seeds `generate(42,5)`/`(99,5)` byte-idéntico; `SUPPORTED_CHAPTERS` {0,2,4,5} y `_commands_for(5)` intactos; suite 769→≥773 (delta declarado en PR: «tests antes: 769 · tests rama: M · delta esperado: +K»). NO toca `shell.py` (allows ya entregadas por Smough), NO toca `web/` ni `src/data/`. **Si falla otra vez: Smough y Seath NO lo suplen** — plan 21/09 re-encamina y Gwyn abre [BUG] de proceso en `propuestas.md`.
+
+**Previsto** (cierre Gwyn 23:00): PR engine único mergeado,
+suite esperada **≥773** (769+4, delta declarado verificado por
+Artorias), gate **24/31** (intacto), bundle regenerado canónicamente
+por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
+
 ### Asignaciones 17/09 (Gwyndolin 11:00 — plan `../planes/2026/09/17.md`)
 
 > Base verificada: suite 738+1 stale → 739 tras regen canónico de Gwyn
