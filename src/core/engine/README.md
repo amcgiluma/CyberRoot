@@ -236,3 +236,17 @@ PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 755 passed +1 bundle
 PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_session_ch5.py -o addopts= -q  # 12 passed
 PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 773 passed +1 bundle stale → 774 tras regen Gwyn
 ```
+
+---
+
+## v0.12 (O1, 21/09) — session.py ch5 per-encargo + postmortem HUP/KILL — PR #69
+
+**T1 (P2, 🧭44) — `_commands_for(5, quest_id)` per-encargo (Ornstein, patrón CH4E3 14/09):** `_commands_for(5)` base `(cat,scp)` intacta (legacy sin quest_id → base); `quest_id=='story.ch5.e1'` → `DEFAULT_CH5E1_COMMANDS` (cat,chmod,kill,ls,ps,scp), `e3` → `DEFAULT_CH5E3_COMMANDS` (cat,env,kill,ps,scp), `e4` → `DEFAULT_CH5E4_COMMANDS` (cat,chmod,chown,ls,scp,tail). `abrir_encargo` monta `Shell` con la allowlist correcta; `ps aux` vía puerta → 0 con `censo <pid> intruso --vigilar-censo START 03:14` (seed 42→424, 99→421, forma `<=` en tests, `03:14` invariante; `kill -HUP`/`-9` jugable por la puerta, `ls`/`chmod` e1 y `chmod/chown/tail` e4 → 0, e2 127 honesto). `session.py` importa las 3 allowlists novas con try/except fallback idéntico (costura O↔S). Tests `test_ch5_per_encargo.py` (5: commands_for ramifica / e3 ps jugable / e1 ls/chmod / e4 tail / e2 intacta). Suite 774→784 (+10 con T2).
+
+**T2 (P1, karma del volcado) — `postmortem.py` huella kármica vigilante (Ornstein, propuesta Havel 20/09):** detector `_detect_vigilante` lee `fs.environment[HUP_*]` + ausencia `--vigilar-censo` en `fs.processes` + `history` con `kill` (solo shlex/substring, sin sandbox). `kill -HUP <pid>` sobre intruso → `postmortem.auditor.hup` («señal de reconfiguración registrada…») + `karma_delta 1` azul (`karma_tint blue`, `karma {delta:1,tint:blue}`, `micro_karma {blue:1}`); `kill -9` (o TERM/-KILL/-15) → `postmortem.auditor.kill` («proceso de vigilancia eliminado…») +1 rojo. Sin kill → informe byte-idéntico (no key, no karma, no línea); e1/e4 sin falsa detección (misma FS, sin HUP). Textos nuevos `postmortem.auditor.hup/kill` en `data/textos.json` (prefijo disjunto, sin tocar `postmortem.auditor.corte/orden/join` etc.). Tests `test_postmortem_hup_kill.py` (5: HUP azul / KILL rojo / sin kill byte-idéntico / e1/e4 sin falsa / prefijo disjunto). Bundle 49 (459.2 KiB) regen en rama (toca `textos.json`).
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest src/tests/core/engine/test_ch5_per_encargo.py src/tests/core/engine/test_postmortem_hup_kill.py -o addopts= -q  # 10 passed
+PYTHONPATH=src .venv/bin/python -m pytest -o addopts= -q  # 784 passed
+python tools/web/build_bundle.py  # 49 ficheros → 459.2 KiB
+```
