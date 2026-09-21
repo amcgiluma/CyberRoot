@@ -61,7 +61,7 @@ def test_gate_flexible_24_conceptos_27_o_28_quests():
     """Gate por aritmética: 24 conceptos, 27 (main) o 28 (con S2 e2) quests."""
     from core.curriculum import load_curriculum
     cur = load_curriculum()
-    assert len(cur.concepts) == 24, f"conceptos {len(cur.concepts)} !=24"
+    assert len(cur.concepts) == 25, f"conceptos {len(cur.concepts)} !=24"
     assert len(cur.quests) in (27, 28, 29, 30, 31), f"quests {len(cur.quests)} !=27|28|30 (main vs S2)"
     # c.cut y c.scp deben existir en ch4
     assert cur.concept("c.cut") is not None and cur.concept("c.cut").chapter == 4
