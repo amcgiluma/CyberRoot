@@ -70,6 +70,9 @@ LINE_KEY_VOLCADO_RESCATE = "postmortem.volcado.rescate"
 LINE_KEY_VOLCADO_CADUCADO = "postmortem.volcado.caducado"
 #: S1 18/09 (Smough, cap. 5 custodia) — testigo leído en casa.
 LINE_KEY_CUSTODIA = "postmortem.auditor.custodia"
+#: O1 21/09 (Ornstein, P1 karma del volcado) — huella kármica vigilante.
+LINE_KEY_HUP = "postmortem.auditor.hup"
+LINE_KEY_KILL = "postmortem.auditor.kill"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -537,6 +540,88 @@ def _has_sudo(shell_dict: dict[str, Any]) -> bool:
     return False
 
 
+def _detect_vigilante(shell_dict: dict[str, Any]) -> str | None:
+    """Detecta huella kármica del vigilante (O1 21/09).
+
+    Lee `fs.environment[HUP_*]` + ausencia del intruso en `ps`.
+
+    - HUP: existe HUP_<pid> en environment y el proceso <pid> sigue
+      presente con --vigilar-censo (--reloaded opcional).
+    - KILL: no queda ningún proceso con --vigilar-censo y el history
+      contiene un kill con señal de muerte (-9/-KILL/-TERM/-15).
+
+    Retorna \"hup\" / \"kill\" o None. Sin kill en la historia → None
+    (byte-idéntico a hoy). Solo shlex/substring, sin sandbox.
+    """
+    fs = shell_dict.get("fs") or {}
+    procs = fs.get("processes") or []
+    env = fs.get("environment") or {}
+    history = shell_dict.get("history") or []
+
+    # Normaliza procs a lista de dicts
+    if not isinstance(procs, list):
+        procs = list(procs)
+    if not isinstance(env, dict):
+        env = {}
+    # HUP: busca HUP_<pid> con proceso vigilante presente
+    for k, v in env.items():
+        if not isinstance(k, str) or not k.startswith("HUP_"):
+            continue
+        if str(v) != "1":
+            continue
+        try:
+            pid = int(k[4:])
+        except ValueError:
+            continue
+        for p in procs:
+            if not isinstance(p, dict):
+                continue
+            try:
+                p_pid = int(p.get("pid", -1))
+            except Exception:
+                continue
+            if p_pid != pid:
+                continue
+            cmd = str(p.get("cmd", ""))
+            if "--vigilar-censo" in cmd:
+                return "hup"
+    # KILL: vigilante ausente + kill con señal de muerte en history
+    has_vigilante = False
+    for p in procs:
+        if isinstance(p, dict) and "--vigilar-censo" in str(p.get("cmd", "")):
+            has_vigilante = True
+            break
+    if has_vigilante:
+        return None
+    # Vigilante ausente — ¿hubo kill de muerte?
+    for entry in history:
+        line = str(entry.get("line", ""))
+        if "kill" not in line:
+            continue
+        # Excluir HUP: si la línea contiene HUP/-1/-SIGHUP, es reconfiguración, no kill
+        upper = line.upper()
+        if "HUP" in upper:
+            continue
+        # Heurística HUP numérico: \"kill -1 ...\" es HUP, no kill
+        # Detecta \"-1\" como token aislado (shlex)
+        try:
+            argv = shlex.split(line)
+        except ValueError:
+            argv = line.split()
+        is_hup_numeric = False
+        for tok in argv:
+            if tok == "-1" or tok == "-SIGHUP" or tok == "-1.0":
+                is_hup_numeric = True
+                break
+        if is_hup_numeric:
+            continue
+        # Cualquier otro kill (default TERM, -9, -KILL, -15, -TERM) cuenta
+        # Verifica que realmente tuvo efecto (exit 0 o al menos se intentó)
+        # Si el history existe, asumimos que el kill que vació al vigilante es éste
+        return "kill"
+    return None
+
+
 def build_postmortem(
     shell_dict: dict[str, Any], state: dict[str, Any] | None
 ) -> dict[str, Any]:
@@ -690,6 +775,27 @@ def build_postmortem(
         base["auditor_custodia_text"] = custodia_text
         base["lines_resolved"] = [*base["lines_resolved"], custodia_text]
 
+    # O1 21/09 — huella kármica del vigilante (HUP azul vs KILL rojo)
+    vigilante = _detect_vigilante(shell_dict)
+    if vigilante == "hup":
+        hup_text = _resolve_auditor_text(LINE_KEY_HUP, {})
+        base["auditor_hup"] = {"line_key": LINE_KEY_HUP, "args": {}}
+        base["auditor_hup_text"] = hup_text
+        base["lines_resolved"] = [*base["lines_resolved"], hup_text]
+        base["karma_delta"] = 1
+        base["karma_tint"] = "blue"
+        base["karma"] = {"delta": 1, "tint": "blue"}
+        base["micro_karma"] = {"blue": 1}
+    elif vigilante == "kill":
+        kill_text = _resolve_auditor_text(LINE_KEY_KILL, {})
+        base["auditor_kill"] = {"line_key": LINE_KEY_KILL, "args": {}}
+        base["auditor_kill_text"] = kill_text
+        base["lines_resolved"] = [*base["lines_resolved"], kill_text]
+        base["karma_delta"] = 1
+        base["karma_tint"] = "red"
+        base["karma"] = {"delta": 1, "tint": "red"}
+        base["micro_karma"] = {"red": 1}
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -741,6 +847,8 @@ __all__ = [
     "LINE_KEY_JOIN",
     "LINE_KEY_ESPEJO",
     "LINE_KEY_CUSTODIA",
+    "LINE_KEY_HUP",
+    "LINE_KEY_KILL",
     "LINE_KEY_VOLCADO_RESCATE",
     "LINE_KEY_VOLCADO_CADUCADO",
 ]

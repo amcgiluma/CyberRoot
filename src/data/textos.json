@@ -77,6 +77,8 @@
         "postmortem.volcado.rescate": "Expediente 000: volcado EN_COLA entregado al Faro. Continuidad del ensayo: estable.",
         "postmortem.volcado.caducado": "Expediente 000: volcado EN_COLA sin entrega — caducado. Continuidad del ensayo: estable.",
         "postmortem.auditor.custodia": "Expediente 000: custodia leída en casa: el testigo viajó. Continuidad del ensayo: estable.",
+        "postmortem.auditor.hup": "Expediente 000: señal de reconfiguración registrada — proceso de vigilancia reconfigurado. Continuidad del ensayo: estable.",
+        "postmortem.auditor.kill": "Expediente 000: proceso de vigilancia eliminado — el testigo queda sin ojos. Continuidad del ensayo: estable.",
         "story.ch4.e3.title": "Lo que no avanza",
         "story.ch4.e3.beat": "El volcado que trajiste a /tmp/volcado.csv sigue en tu disco local después de haberlo cortado. Son 512 bytes con estado EN_COLA desde las 03:14, la fila TR-003 que el Faro nunca reclamó. Gris te dice dos precios sin preguntar: si lo subes al Faro te paga el testigo, si lo dejas morir te paga el silencio. Vela pide voluntarios para revisar conexiones no conciliadas de las 03:14 sin saber que el EN_COLA existe.",
         "story.ch4.e3.brief": "Encargo gris. El fichero ya está en /tmp/volcado.csv tras el scp de E2. Decide: rescatar con scp /tmp/volcado.csv faro:/srv/camara-faro/volcado-rescate.csv lo deja donde el join futuro cruza; soltar con rm /tmp/volcado.csv lo borra y deja volcado.caducado. Sin gesto durante 30 ticks el sistema lo purga solo. Rutas absolutas, un verbo por línea, sin pipe nuevo.",

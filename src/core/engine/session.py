@@ -37,6 +37,15 @@ try:
 except ImportError:
     _DEFAULT_CH5_COMMANDS: tuple[str, ...] = ("cat", "scp")
 
+try:
+    from core.sandbox.shell import DEFAULT_CH5E1_COMMANDS as _DEFAULT_CH5E1_COMMANDS  # type: ignore[attr-defined]
+    from core.sandbox.shell import DEFAULT_CH5E3_COMMANDS as _DEFAULT_CH5E3_COMMANDS  # type: ignore[attr-defined]
+    from core.sandbox.shell import DEFAULT_CH5E4_COMMANDS as _DEFAULT_CH5E4_COMMANDS  # type: ignore[attr-defined]
+except ImportError:
+    _DEFAULT_CH5E1_COMMANDS: tuple[str, ...] = ("cat", "chmod", "kill", "ls", "ps", "scp")
+    _DEFAULT_CH5E3_COMMANDS: tuple[str, ...] = ("cat", "env", "kill", "ps", "scp")
+    _DEFAULT_CH5E4_COMMANDS: tuple[str, ...] = ("cat", "chmod", "chown", "ls", "scp", "tail")
+
 #: Conjunto de capítulos cuyo flujo de encargo está materializado (v0: 0, 2, 4 y 5).
 SUPPORTED_CHAPTERS: frozenset[int] = frozenset({0, 2, 4, 5})
 
@@ -62,8 +71,10 @@ def _commands_for(chapter: int, quest_id: str | None = None) -> tuple[str, ...]:
     SOLO cuando quest_id == 'story.ch4.e3' (simetría scp/rm, 🧭36). Sin
     quest_id (llamada legacy) devuelve la base 13 — retrocompatible con tests
     y con e1/e2.
-    Cap. 5 (Subestación) → ("cat", "scp") — allowlist nova de S1, con fallback
-    local idéntico para que la rama 13:00 sea ejecutable antes de Smough.
+    Cap. 5 (Subestación) per-encargo (🧭44, patrón CH4E3): e1 → CH5E1
+    (cat,chmod,kill,ls,ps,scp), e3 → CH5E3 (cat,env,kill,ps,scp), e4 →
+    CH5E4 (cat,chmod,chown,ls,scp,tail), e2/base → (cat,scp). Sin quest_id
+    legacy devuelve la base (cat,scp) — retrocompatible con tests e2 intacta.
     """
     if chapter == 2:
         return DEFAULT_CH2_COMMANDS
@@ -72,6 +83,12 @@ def _commands_for(chapter: int, quest_id: str | None = None) -> tuple[str, ...]:
             return DEFAULT_CH4E3_COMMANDS
         return DEFAULT_CH4_COMMANDS
     if chapter == 5:
+        if quest_id == "story.ch5.e1":
+            return _DEFAULT_CH5E1_COMMANDS
+        if quest_id == "story.ch5.e3":
+            return _DEFAULT_CH5E3_COMMANDS
+        if quest_id == "story.ch5.e4":
+            return _DEFAULT_CH5E4_COMMANDS
         return _DEFAULT_CH5_COMMANDS
     return DEFAULT_CAP0_COMMANDS
 
