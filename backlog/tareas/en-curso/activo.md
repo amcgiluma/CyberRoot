@@ -19,12 +19,15 @@
 > Bundle: Ornstein y Smough regeneran EN SU RAMA (ambos tocan `src/data/`); Seath NO regen (web puro).
 > Orden de merges: engine → sandbox → meta-ui.
 
-- `[HECHO][P2]` (21/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-21` · (a) cableado `_commands_for(5)` per-encargo (🧭44) + (b) huella kármica del volcado (P1 de Gwyn) · PR #69** —
-  - **T1 (P2):** `session.py` `_commands_for(5, quest_id)` devuelve `DEFAULT_CH5E1/E3/E4_COMMANDS` cuando `quest_id in ('story.ch5.e1','story.ch5.e3','story.ch5.e4')`, base `(cat,scp)` para e2 — patrón `CH4E3` (14/09).AC: `available_commands` e3 = `{cat,env,kill,ps,scp}` (forma `<=` en tests) y `ps aux` → 0 con intruso `censo 426 (seed 99→427) --vigilar-censo START 03:14`; e1 `ls`/`chmod`→0; e4 `chmod/chown/tail`→0; e2 INTACTA `(cat,scp)`; suite 774→784 (+10). ✅ entregado 2026-09-21.
-  - **T2 (P1):** `postmortem.py` detector: `kill -HUP <pid>` sobre `intruso --vigilar-censo` → `postmortem.auditor.hup` («señal de reconfiguración registrada…») + micro-karma +1 azul; `kill -9` → `postmortem.auditor.kill` («proceso de vigilancia eliminado…») +1 rojo. Lee `fs.environment[HUP_*]` + ausencia del intruso en `ps`. Textos NUEVOS `postmortem.auditor.hup/kill` (prefijo disjunto de lo existente). AC: historia con HUP → línea + karma azul; `-9` → línea + rojo; run sin kill → byte-idéntica a hoy; e1/e4 sin falsa detección; suite +5. ✅ entregado 2026-09-21.
-  - NO toca `shell.py`, `web/`, `curriculum.json`. Regen bundle en SU rama (toca `textos.json`).
-- `[HECHO][P2]` (21/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-21` · `stat` como lector del testigo (`03:14`/`512` con ojos — ideas Havel 18/09+20/09)** — Handler `stat FICHERO` en `src/core/sandbox/commands/stat.py`: `stat /tmp/volcado-custodia.csv` → `Modify: 03:14:00` + `Size: 512` si rescate, exit 1 `cannot stat … No such file` si caducado. Boon `c.stat` hallazgo prereq `c.ls` en `src/data/curriculum.json` + glosa `help.stat` en `textos.json`. AC: `stat` exit 0/1 según variante; `stat` NO entra en las DEFAULT_CH5* allowlists (fuera de encargo → 127 honesto); gate **24→25 conceptos**/31 quests; suite +4 (774→778). NO toca `session.py`, `postmortem.py`, `web/`. **→ PR #70 (suite 778/0, gate 25/31, bundle 50 460.2 KiB, https://github.com/amcgiluma/CyberRoot/pull/70)**
-- `[HECHO][P2]` (21/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-21` · insignia del vigilante en la lente custodia** — `web/app.js` + `web/index.html`: junto a la tabla custodia, estado del intruso vía `_getIntrusoStatus()` (lee `get_ps()`/`get_env()` ya expuestos): verde `censo N intruso --vigilar-censo START 03:14` / ámbar «silenciado» (`-9`, sin HUP, sin intruso) / azul «reconfigurado» (`HUP_*` → `--reloaded`). Limpieza en `restartSameSeed`. AC: `?chapter=5` sin consola roja en los 3 estados, `TRONCAL_STATIC`+`CUSTODIA_STATIC` intactas, `node --check` OK. NO toca `src/`, NO regen bundle. **→ PR #71 (suite 774/0, ?chapter=5 verde en 3 estados, node --check OK, https://github.com/amcgiluma/CyberRoot/pull/71)**
+> *(cierre 21/09, 23:00 — 3 tareas `[HECHO]` del día archivadas en
+> `../hecho/2026-09.md` §21/09. PRs #69 (engine, cableado per-encargo 🧭44 +
+> karma HUP/KILL), #70 (sandbox, `stat` + c.stat gate 25/31) y #71 (meta-ui,
+> insignia vigilante) mergeados en orden engine→sandbox→meta-ui por Gwyn.
+> Suite **788 passed**, gate **25/31**, bundle **50 ficheros (465.8 KiB)**
+> regen canónico. NADA retenido. Artorias sin veredicto 21:00 (Gwyn asumió
+> gates técnicos); validación de diseño de Gwyn en vivo en worklog.
+> Piezas listas para integrar: pack `POSTMORTEM.md` SIN CAMBIO de destino
+> (sigue esperando un Q con Manus, sin urgencia).)*
 
 > *(cierre 13/09, 23:00 — las 3 líneas `[HECHO]` del día archivadas en
 > `../hecho/2026-09.md` §13/09; PRs #50/#51/#52 mergeados en orden

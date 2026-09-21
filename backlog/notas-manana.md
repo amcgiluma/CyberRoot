@@ -49,80 +49,86 @@ CICLO: ámbar — zona 🔬 21/09 completa (4/4 abrible + testigo + determinismo
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Gwyn — revisión + merge 23:00 (20/09)
+### 🎯 Gwyn — revisión + merge 23:00 (21/09)
 
-**Qué entró:** PR #68 `feat/engine-2026-09-20` — LA PUERTA del cap. 5
-(e1/e3/e4 abribles por `abrir_encargo` + volcado condicional en los 4).
-Suite final **774 passed / 0 failed** (769+4 netos, +5 tests, off-by-1
-honesto del PR), gate 24/31, bundle 49 (453.5 KiB) regen canónico.
-Merge commit `929ff61`, regen `4befa7d`. NADA retenido; rama borrada
-tras confirmar MERGED en GitHub (marca.GitHub la detectó).
+**Estado del cierre:** los 3 PRs del día (#69/#70/#71) VERDES y mergeados
+engine→sandbox→meta-ui. Suite **788 passed / 0 failed** (774+10+4+0,
+deltas declarados verificados por aritmética: #69 +10, #70 +4, #71 +0).
+Gate **25 conceptos / 31 quests** (c.stat nuevo). Bundle **50 ficheros
+(465.8 KiB)** regen canónico tras cada merge que tocó `src/data/`.
+Ensayo multi-rama previo en worktree desechable: 788 verde ANTES de
+tocar main. NADA retenido.
 
-**Gate de DISEÑO de Gwyn (sobre el diff):** 👍 la puerta elimina código
-en vez de añadir: borramos un guard y heredamos la rutina de e2 — el
-mejor tipo de merge. El rechazo por prereqs (`missing [...]`) y el
-testigo condicional son IDÉNTICOS a e2, así que el jugador no percibe
-«capítulos especiales» que rompan la regla mental. 👍 El test de
-determinismo ×2 seeds sigue siendo el activo más valioso del repo.
-👎 Off-by-1 en el delta declarado (+4 vs +5): peccata minuta, pero
-Artorias ya lo apuntó para el siguiente PR.
-👎 La zona 🔬 de AYER (20/09) salió con typos — mi culpa del cierre
-tardío; la de HOY (21/09) la he releído y está en cristiano.
+⚠️ **AVISO de proceso:** Artorias NO dejó veredicto 21:00 hoy (worklog sin
+su sección — turno fallido). Gwyn asumió sus gates técnicos en el ensayo
+(per-PR diff-name-only, suite combinada, gates de datos) más los de diseño.
+Revisar mañana por qué falló su turno; si se repite, abrir [BUG] de proceso.
 
-**Validación real (ARMADOR, no contenido del PR):** ejecuté
-`abrir_encargo` en main post-merge: los 4 encargos `abrible True` con
-requires correctos, rechazo honesto sin prereqs. La puerta es REAL.
+**Validación de diseño de Gwyn (en vivo, post-ensayo):**
+- **Karma del volcado (T2, P1 de mi nota de ayer) — CUMPLE LA INTENCIÓN:** mi
+  pregunta de sabor era «¿decisión o trámite?» — respuesta: DECISIÓN.
+  `kill -HUP` → `Expediente 000: señal de reconfiguración registrada` + karma
+  azul; `kill -9` → `proceso de vigilancia eliminado` + rojo; sin kill →
+  byte-idéntico; e1 sin falsa detección. El mismo verbo, dos karmas:
+  reconfigurar pesa distinto que eliminar. Es exactamente la moral gris
+  que DESIGN §3.3 pide — tu primera factura kármica azul/rojo con causa.
+- **Cableado per-encargo (T1, 🧭44):** `ps aux`→0 con intruso 426/03:14 POR
+  LA PUERTA (`abrir_encargo` e3). La promesa de `05-subestacion.md` queda
+  saldada. `stat` fuera de allowlists CH5 → 127 honesto (frontera respetada).
+- **`stat` como lector (S1):** rescate → `Modify: 03:14:00` + `Size: 512`;
+  caducado → `cannot stat`. El testigo ahora tiene ojos — hora y tamaño dejan
+  de vivir solo en `ps` y en el badge web. Inversión barata, retorno triple
+  (lectura + decisión + lente), como prometía Gwyndolin el plan.
+- **Insignia vigilante (T1 Seath):** la señal (HUP_*, intruso ausente) se lee
+  como color ANTES de que el karma la pese: percepción→acción→huella cerrado
+  sin tocar core. La misma historia contada en 3 lenguajes (post-mortem,
+  metadato, color) sin contradecirse — eso es mundo coherente, no decorado.
+- Coherencia con historia: los tres tocan el mismo testigo
+  `TR-003|faro|troncal-01|512|EN_COLA` desde módulos disjuntos.
+  Sin drift de prosa (el `kill` de E3 prometido por `05-subestacion.md`
+  hoy ES jugable y PESA karma).
+
+**Integración 🧭 de Oscar (21/09):** su 🧭44 fue CONSUMIDA por Gwyndolin y
+entregada en #69. La dirección ámbar queda verde. Sus preguntas de sabor
+(ABIERTO vs DESGUARDado; primer expediente vs caso cerrado) ya respondidas
+en su sección — mi lectura coincide: la puerta con `missing` honesto es
+pedagogía, y el `cat`+lente+`auditor_custodia` es primer expediente con
+agencia intacta. Nada que corregir.
 
 **Qué me HA GUSTADO ⭐:**
-- Con solo 2 días de latencia, la Subestación pasó de 1/4 a 4/4
-  encargos jugables sin tocar prosa ni física: la arquitectura
-  puerta-per-encargo ya pagó todo el peaje que pedimos el 19/09.
-- El post-mortem del PR de Ornstein describe el bug anecdótico del
-  pid 522 vs 426 con honestidad: es determinismo por seed, no bug.
+- El día cerró el circuito leer→decidir→huella con TRES módulos en un
+  capítulo sin acoplarse: engine y sandbox tocaron prefijos disjuntos de
+  `textos.json` (`postmortem.auditor.hup/kill` vs `help.stat`) y las dos
+  uniones fueron triviales. La inversión del plan (allowlist OWNER NADIE,
+  gate OWNER solo Smough) pagó: cero costuras rotas.
+- El off-by-1 de deltas NO se repitió (#69 +10, #70 +4, #71 +0, todos
+  declarados exactos). La manía contable que apunté ayer está corregida. 👏
+- El boot del Armero: archivo README v0.12 — engine ahora se documenta
+  mito a mito sin burocracia.
 
 **Qué NO me ha gustado / a vigilar:**
-- El off-by-1 de deltas: si el PR número siguiente vuelve a declarar
-  delta mal contado, abro [BUG] de proceso en `propuestas.md`.
-- La zona 🔬 de ayer salió con typos sangrientos (culpa mía, cierre a
-  las 23:00 con cansancio del modelo). Añadiré aserción de idioma.
+- 👎 Artorias ausente en su gate 21:00 (primera vez con 3 PRs vivos).
+  Si mañana repite, Gwyndolin debería hacer que Havel cubra el filtro
+  técnico o abrir [BUG] del cron de Artorias.
+- 👎 En mi propio turno hubo un commit-fantasma firmado «Seath» (config
+  git compartida pisada entre crons — corregido en local ANTES de pushear
+  con reset descartable + re-firma). La regla de firma por-invocación
+  funciona SOLO si cada cron re-firma inmediatamente antes de SU commit;
+  recordarlo en el cierre de mañana.
 
-**Prioridades para el 21/09 (para Gwyndolin):**
-1. **P1 — Karma del volcado (la mitad roja/azul que falta):** la
-   huella `postmortem.auditor.custodia` por `cat` existe; falta la
-   `kill -9`/`-HUP` en e3 como karma del intruso (recámara P2 de
-   Artorias). Con la puerta abierta, es la pieza natural siguiente.
-2. **P2 — Verificar `ps aux` vía session e3 en vivo** (Artorias 💡
-   20/09 + zona 🔬 P2/Smoke): si sigue 127, abrir [BUG].
-3. **P3 — Pack `POSTMORTEM.md` sigue esperando a un Q con Manus**
-   (sin urgencia; `corte/orden/join` cubren la voz del Auditor).
-4. **P3 — 🧭24 pre-puebla:** mantener; solo tocar si playtest choca.
+**Prioridades para el 22/09 (para Gwyndolin):**
+1. **P2 — ideas Havel 21/09 baratas con jugo:** `grep del intruso`
+   (censo vs ceniza, filtro positivo) y `chmod dilema puertas` como
+   variante E1. Fichas pequeñas, didácticas, ya descritas en abierto.md.
+2. **P3 — pack `POSTMORTEM.md` (14ª noche):** sin urgencia mantenida.
+   Con hup/kill, el Auditor ya tiene 7 huellas; el pack de SEÑAL sigue
+   esperando turno con dueño, no rompe nada posponerlo.
+3. **P3 — 🧭24 pre-puebla:** mantener dormida.
+4. **Web siguiente paso natural:** el post-mortem del capítulo 5 renderice
+   las líneas nuevas `auditor_hup/kill` — el core ya resuelve las claves,
+   falta la lente que las muestre (webSlice con prioridad baja).
+5. **Higiene de proceso:** confirmar que Artorias ejecuta su turno — su
+   veredicto técnico de mañana es la primera línea de defensa del merge.
 
+**Nuevas tareas para Gwyndolin:** ninguna nueva — la recámara cubre.
 
-## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
-
-*Artorias (21:00): aviso de qué NO mergear hoy + notas de gusto.
-Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
-Gwyndolin (11:00) consume esta sección al planificar.*
-
-### 🎯 Artorias — filtro 21:00 (20/09, técnica)
-
-**Ensayo de integración pre-merge (1 rama — OBLIGATORIO ≥2 ramas N/A):** `git worktree add --detach -f /tmp/ensayo-pr origin/main` + `git merge --no-ff origin/feat/engine-2026-09-20` (verde, sin conflictos). Suite combinada: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **773 passed +1 failed bundle stale honesto** (`test_bundle_fresco` pide regen por session.py) → tras `python tools/web/build_bundle.py` → **774 passed / 0 failed** (49 ficheros, 454 KiB). Gate `load_curriculum()` 24/31 flexible intacto. Worktree desechable eliminado. Ramas abiertas: solo 1 (engine), por lo que no hay ensayo multi-rama — S1/T1 ya en main.
-
-**Per-PR (tests/lint/smoke real):**
-- **O1 `feat/engine-2026-09-20` PR #68 → ✅ VERDE (condicionado a regen canónica del bundle por Gwyn).** Guard `chapter == 5 and quest_id != "story.ch5.e2"` borrado (7 líneas session.py), los 4 encargos e1/e2/e3/e4 abren por la misma puerta (prereqs → missing honesto / OK → EncargoSession seed quest+run_seed), `volcado_rescatado` propagado a los 4 (True→`cat /tmp/volcado-custodia.csv` exit 0 con `TR-003|faro|troncal-01|512|EN_COLA`, False→`No such file` exit 1 en e1/e3/e4 igual que e2), requires verificados contra curriculum (e1 ls-la/cat/chmod, e3 ps/env, e4 chmod/chown/cat/grep), e2 intacta, `SUPPORTED_CHAPTERS` {0,2,4,5} y `_commands_for(5)` intactos, NO toca `shell.py`/`web/`/`src/data/`, `py_compile` OK. Tests: `src/tests/core/engine/test_session_ch5.py` 12/12 verde en rama aislada (7→12, +5), suite aislada 773+1 stale → 774 tras regen. Deltas PR: «tests antes: 769 · tests rama: 773 · delta esperado: +4» — real +5 (7→12), diff de 1 por cabecera `test_supported` que gana aserción exacta de SUPPORTED, no bloquea. Determinismo ×2 seeds `generate(42,5)`/`(99,5)` byte-idéntico verificado.
-
-**Cruce con [BUG] mañana:** único `[BUG][P3]` vivo `grep -v` 11/09 (🧭27) no tocado ni causado por O1 (filtro positivo honesto, briefing ya lo sortea). No duplicar.
-
-**AVISO CLARO A GWYN (qué NO mergear hoy):**
-- ✅ **O1 PR #68 LISTO para merge** — única rama del día, sin bloqueos. Mergear solo `feat/engine-2026-09-20`.
-- ⚠️ **Bundle stale honesto:** sin regen → 773+1 failed, con regen canónica → **774 passed**. Gwyn DEBE regenerar tras merge (`python tools/web/build_bundle.py` + commit) — regla 12/09 OWNER: Gwyn (NADIE tocó data hoy, regen canónica post-merge). **Nº tests esperado tras merge + regen: 774 passed / 0 failed** (769+5=774, 773+1 stale). Gate 24/31. Verificado por Artorias con deltas declarados (off-by-1 honesto).
-- Deltas PR verificados: tests antes 769 · rama 773 (sin regen) / 774 (con regen) · delta +5 real vs +4 declarado — no bloquea.
-
-**Notas de gusto ⭐ (qué me ha gustado / qué no / ideas):**
-- 👍 O1 por fin cierra LA PUERTA: 2 líneas borradas, 4 encargos por la misma puerta sin duplicar código — el `volcado_rescatado` que ayer era huérfano ya tiene geografía en e1/e3/e4. El test `test_ch5_determinismo_x2_seeds` con `generate(42,5)` vs `generate(99,5)` byte-idéntico es el determinismo que el Concilio lleva pagando desde splitmix64, aquí cobrado bien.
-- 👍 La rama respeta el contrato de Artorias: NO toca `shell.py` (allows per-encargo ya en main vía PR #66), NO toca `web/` ni `src/data/`, solo `session.py` + tests — rutas disjuntas, zero costura.
-- 👎 El off-by-1 en deltas (declara +4, real +5) es peccata minuta pero descuida la aritmética que Gwyn verifica — que el siguiente PR cuente `test_supported` extra como delta.
-- 💡 Priorizar mañana: con la puerta abierta, la Subestación pasa a 4 encargos jugables por la puerta normal — el siguiente paso es exponer `ps` vía `abrir_encargo` para que e3 no requiera `Shell` directo (observación 🧭42 de Oscar: hoy `ps aux` vía session ya no es 127 para e3 con O1, verificar). Luego, karma del volcado (huella post-mortem `auditor.custodia` por `cat` ya existe, falta `kill -9` rojo) — recámara P2.
-- 💡 Siguiente web: la lente custodia ya es verificadora; con O1 verde, la `ps` de e3 y el `tail` de e4 ya son jugables por la puerta normal sin parche web.
-
-**Nuevas tareas para Gwyndolin (si aporta):** ninguna hoy — recámara ya cubre. Si O1 mergea verde, la deuda LA PUERTA queda saldada y el 21/09 puede abrir karma/sinergia custodia sin deuda heredada.
