@@ -161,6 +161,34 @@ def get_history():
         return _j.dumps(lines, ensure_ascii=False)
     except Exception as e:
         return _j.dumps([])
+
+def get_ps():
+    import json as _j
+    shell = _lib.get("shell")
+    if shell is None:
+        return _j.dumps([])
+    try:
+        procs = getattr(shell.fs, "processes", [])
+        out = []
+        for p in procs:
+            try:
+                out.append(p.to_dict() if hasattr(p, "to_dict") else {"pid": getattr(p, "pid", 0), "user": getattr(p, "user", ""), "cmd": getattr(p, "cmd", ""), "start": getattr(p, "start", "")})
+            except Exception:
+                continue
+        return _j.dumps(out, ensure_ascii=False)
+    except Exception as e:
+        return _j.dumps([])
+
+def get_env():
+    import json as _j
+    shell = _lib.get("shell")
+    if shell is None:
+        return _j.dumps({})
+    try:
+        env = getattr(shell.fs, "environment", {}) or {}
+        return _j.dumps(dict(env), ensure_ascii=False)
+    except Exception:
+        return _j.dumps({})
 `;
 
 // ---------------------------------------------------------------------------
@@ -563,7 +591,7 @@ function renderCustodiaTabla(cutInfo, csvContent) {
   const contentEl = $id("custodia-tabla-content");
   if (!panel || !metaEl || !contentEl) return;
   const lines = csvContent.split("\n").filter(l => l.length > 0);
-  if (lines.length === 0) { hideCustodiaTabla(); return; }
+  if (lines.length === 0) { hideCustodiaTabla(); try { _updateIntrusoUI(); } catch(e){} return; }
   const delim = cutInfo.delim || "|";
   const colIdx = (cutInfo.field || 1) - 1;
   const shortFile = (cutInfo.file || "/tmp/volcado-custodia.csv").split("/").pop();
@@ -600,6 +628,7 @@ function renderCustodiaTabla(cutInfo, csvContent) {
   html += "</tbody></table>";
   contentEl.innerHTML = html;
   panel.style.display = "block";
+  try { _updateIntrusoUI(); } catch(e){}
 }
 function updateCustodiaTabla(line) {
   const info = parseCustodiaCut(line);
@@ -616,8 +645,79 @@ function updateCustodiaTabla(line) {
     renderCustodiaTabla(info, data.content);
   } catch(e) {}
 }
+// ---------------------------------------------------------------------------
+// Insignia del vigilante — Seath 21/09 T1 (junto a la tabla custodia)
+// Lee get_ps()/get_env() ya expuestos: 3 estados sin consola roja.
+// Verde: censo N intruso --vigilar-censo START 03:14
+// Ámbar: silenciado (-9, sin HUP, sin intruso)
+// Azul: reconfigurado (HUP_* → --reloaded)
+// ---------------------------------------------------------------------------
+function _getIntrusoStatus() {
+  try {
+    if (!pyodide || !pyodide.globals) return null;
+    let ps = [], env = {};
+    try { ps = JSON.parse(pyodide.globals.get("get_ps")()); } catch(e){ ps = []; }
+    try { env = JSON.parse(pyodide.globals.get("get_env")()); } catch(e){ env = {}; }
+    if (!Array.isArray(ps)) ps = [];
+    if (typeof env !== "object" || env === null) env = {};
+    let hupKey = null;
+    for (const k in env) { if (k.startsWith("HUP_") && String(env[k]) === "1") { hupKey = k; break; } }
+    let intruso = null;
+    for (const p of ps) {
+      const cmd = String(p.cmd || "");
+      const user = String(p.user || "");
+      if (cmd.includes("intruso") && cmd.includes("--vigilar-censo")) { intruso = p; break; }
+      if (cmd.includes("intruso") && cmd.includes("vigilar-censo")) { intruso = p; break; }
+      // fallback estricto user censo
+      if (user === "censo" && cmd.includes("intruso")) { intruso = p; break; }
+    }
+    if (hupKey) {
+      const pidFromHup = hupKey.slice(4);
+      const pid = intruso ? String(intruso.pid) : pidFromHup;
+      const hasReloaded = intruso && String(intruso.cmd).includes("--reloaded");
+      // HUP presente → azul reconfigurado (aunque intruso aún con --reloaded)
+      return { state: "azul", kind: "reconfigurado", pid, cmd: intruso ? String(intruso.cmd) : "intruso --vigilar-censo --reloaded", hupKey, intruso, hasReloaded };
+    }
+    if (intruso) {
+      return { state: "verde", kind: "vigilante", pid: String(intruso.pid), cmd: String(intruso.cmd), start: String(intruso.start || "03:14"), intruso };
+    }
+    return { state: "ambar", kind: "silenciado", pid: null, cmd: null, hupKey: null, intruso: null };
+  } catch(e) { return null; }
+}
+function _intrusoBadgeHtml(s) {
+  if (!s) return "";
+  if (s.state === "verde") {
+    const cmdEsc = _escapeHtml(s.cmd || `censo ${s.pid} intruso --vigilar-censo`);
+    const start = _escapeHtml(s.start || "03:14");
+    return `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(46,204,113,.18);border:1px solid rgba(46,204,113,.45);color:#2ecc71;font-weight:700;font-size:.78rem">● censo ${ _escapeHtml(s.pid)} intruso --vigilar-censo START ${start}</span> <span style="color:var(--muted);font-size:.75rem">vigilante activo</span>`;
+  }
+  if (s.state === "azul") {
+    const pid = _escapeHtml(s.pid || "?");
+    const tip = _escapeHtml(`HUP_${pid}=1 → --reloaded`);
+    return `<span title="${tip}" style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(52,152,219,.18);border:1px solid rgba(52,152,219,.55);color:#5dade2;font-weight:700;font-size:.78rem;cursor:help">◆ reconfigurado — HUP_${pid} → --reloaded</span> <span style="color:var(--muted);font-size:.75rem">señal de reconfiguración</span>`;
+  }
+  // ámbar
+  return `<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(243,156,18,.18);border:1px solid rgba(243,156,18,.45);color:#f39c12;font-weight:700;font-size:.78rem">■ silenciado</span> <span style="color:var(--muted);font-size:.75rem">proceso de vigilancia eliminado</span>`;
+}
+function _updateIntrusoUI() {
+  const el = $id("custodia-intruso");
+  if (!el) return;
+  if (currentChapter !== 5) { el.style.display = "none"; el.innerHTML = ""; return; }
+  try {
+    const st = _getIntrusoStatus();
+    if (!st) { el.style.display = "none"; el.innerHTML = ""; return; }
+    el.innerHTML = _intrusoBadgeHtml(st);
+    el.style.display = "block";
+  } catch(e) { el.style.display = "none"; }
+}
+function hideIntrusoBadge() {
+  const el = $id("custodia-intruso");
+  if (el) { el.style.display = "none"; el.innerHTML = ""; }
+}
 function previewCustodiaTabla() {
-  if (currentChapter !== 5) return;
+  if (currentChapter !== 5) { hideIntrusoBadge(); return; }
+  // Insignia siempre visible en cap. 5 (lente, no ejecuta)
+  try { _updateIntrusoUI(); } catch(e) {}
   try {
     const raw = pyodide.globals.get("get_csv")("/tmp/volcado-custodia.csv");
     const data = JSON.parse(raw);
@@ -677,6 +777,7 @@ async function restartSameSeed() {
   hideFaroTabla();
   hideTroncalTabla();
   hideCustodiaTabla();
+  hideIntrusoBadge();
   $id("out").innerHTML = "";
   setStatus(`Reiniciando cap. ${currentChapter} (seed ${currentSeed})…`);
   try {
@@ -690,6 +791,9 @@ async function restartSameSeed() {
     if (pmUrl) pmUrl.textContent = window.location.href;
     setStatus(`Listo — cap. ${currentChapter} · seed ${currentSeed} · presupuesto ${currentNoiseBudget} — REPL del core real.`);
     renderPrompt(state.cwd);
+    try { previewTroncalTabla(); } catch(e){}
+    try { previewCustodiaTabla(); } catch(e){}
+    try { _updateIntrusoUI(); } catch(e){}
   } catch (e) {
     setStatus("Error reiniciando: " + e);
   }
@@ -756,6 +860,7 @@ async function boot() {
   // Preview del volcado del troncal (cap. 4): oculta sin error si aún no hay fichero
   previewTroncalTabla();
   previewCustodiaTabla();
+  try { _updateIntrusoUI(); } catch(e){}
   const ns0 = $id("noise-status");
   if (ns0) ns0.textContent = `ruido 0/${currentNoiseBudget}`;
   setStatus(`Listo — cap. ${chapter} · seed ${seed} · presupuesto ${currentNoiseBudget} — REPL del core real.`);
@@ -808,6 +913,8 @@ async function dispatch() {
   try { updateTroncalTabla(line); } catch(e) {}
   // Tabla de la Subestación — custodia (cap. 5)
   try { updateCustodiaTabla(line); } catch(e) {}
+  // Insignia del vigilante — actualiza tras cada comando en cap.5 (kill/ps)
+  try { if (currentChapter === 5) _updateIntrusoUI(); } catch(e) {}
   if (total > budget) {
     try {
       const pm = JSON.parse(pyodide.globals.get("postmortem")());
@@ -827,6 +934,9 @@ async function dispatch() {
 function renderCursor() {
   return "cero@" + $id("md-host").textContent + ":" + ($id("md-cwd").textContent || "/") + "$ ";
 }
+
+// Exponer para tests / consola
+if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._updateIntrusoUI = _updateIntrusoUI; }
 
 // ---------------------------------------------------------------------------
 // Wire-up.
