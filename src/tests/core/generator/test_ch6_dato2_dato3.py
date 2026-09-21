@@ -42,7 +42,7 @@ def test_quest_ch6_dato2_valida_en_dag_y_gate_23():
     assert q.title_key == "story.ch6.dato2.title"
     assert q.beat_key == "story.ch6.dato2.beat"
     assert len(cur.quests) in (28, 29, 30, 31)
-    assert len(cur.concepts) == 24
+    assert len(cur.concepts) == 25
 
 def test_quest_ch6_dato3_valida_en_dag_y_gate_24():
     cur = load_curriculum()

@@ -30,6 +30,7 @@ from core.sandbox.commands.red import (
     host_key_prompt,
 )
 from core.sandbox.commands.senal import SPECS as SENAL_SPECS
+from core.sandbox.commands.stat import SPECS as STAT_SPECS
 from core.sandbox.commands.escalada import (
     AUTH_LOG_PATH,
     SUDO_AUTHZ_MARKER,
@@ -113,7 +114,7 @@ DEFAULT_CH6_COMMANDS: tuple[str, ...] = (
 #: `join` (S3 10/09) NO está en este pool AÚN: es spec pura (JOIN_SPECS, cap. 6 quest dato4)
 #: que el shell registra OPcionalmente por el set del cap. 6; no alimenta el pool del generator.
 SPECS_ALL = (
-    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + PERMISOS_SPECS + CONTEO_SPECS + SENAL_SPECS + CUT_SPECS
+    NAVIGATION_SPECS + FILE_SPECS + TEXT_SPECS + PROCESOS_SPECS + PERMISOS_SPECS + CONTEO_SPECS + SENAL_SPECS + CUT_SPECS + STAT_SPECS
 )
 
 #: Caracteres de sintaxis NO soportada todavía (fuera de comillas). `*?<` =

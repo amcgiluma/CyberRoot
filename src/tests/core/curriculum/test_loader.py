@@ -82,10 +82,11 @@ def test_load_curriculum_21_conceptos_20_quests() -> None:
     Conteo del 11/09: conceptos 24 (10/09) + quests 27 (10/09) + story.ch4.e2
     (requires c.join, join -v 1) + story.ch6.dato5 (requires c.ps, ps aux | grep 11:04). Gate 25→27, 23→24.
     17/09 S2 Smough: story.ch5.e2 reescrita a [c.cat, c.scp] (testigo que no llegó) — quests 31→31 (mismo conteo, requires nuevo) + dato7 30→31.
+    21/09 S1 Smough: c.stat (hallazgo prereq c.ls, stat como lector 03:14/512) — conceptos 24→25.
     Flexible <=32 para no bloquear merges paralelos.
     """
     cur = load_curriculum()
-    assert len(cur.concepts) == 24
+    assert len(cur.concepts) == 25
     assert len(cur.quests) in (28, 29, 30, 31, 32)
 
 
@@ -233,12 +234,13 @@ def test_ningun_concepto_tiene_prereq_de_capitulo_posterior() -> None:
 def test_campaign_pool_cap1_mastered_cap0_devuelve_7_conceptos() -> None:
     """Con los 4 conceptos del cap. 0 dominados, el pool del cap. 1 son los 4
     del cap. 0 + c.ls-la, c.find y c.man (7 en total) — las cadenas que necesitan
-    permisos/fechas todavía NO están abiertas."""
+    permisos/fechas todavía NO están abiertas. 21/09 S1 añade c.stat (hallazgo c.ls) → 8.
+    """
     cur = load_curriculum()
     mastered = {"c.ls", "c.cd", "c.cat", "c.cp"}
     pool = {c.id for c in cur.campaign_pool(1, mastered)}
-    assert pool == {"c.ls", "c.cd", "c.cat", "c.cp", "c.ls-la", "c.find", "c.man"}
-    assert len(pool) == 7
+    assert pool == {"c.ls", "c.cd", "c.cat", "c.cp", "c.ls-la", "c.find", "c.man", "c.stat"}
+    assert len(pool) == 8
 
 
 def test_curriculum_from_dict_acepta_el_fichero_real() -> None:

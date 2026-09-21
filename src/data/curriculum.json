@@ -101,6 +101,15 @@
             "summary_key": "concept.man.summary"
         },
         {
+            "id": "c.stat",
+            "family": "hallazgo",
+            "chapter": 1,
+            "prerequisites": [
+                "c.ls"
+            ],
+            "summary_key": "concept.stat.summary"
+        },
+        {
             "id": "c.grep",
             "family": "texto",
             "chapter": 2,

@@ -19,7 +19,7 @@ from data.textos import load_textos, resolve
 
 def test_gate_24_28_y_prereq_cut_scp_dag_valido():
     cur = load_curriculum()
-    assert len(cur.concepts) == 24, f"conceptos {len(cur.concepts)} !=24"
+    assert len(cur.concepts) == 25, f"conceptos {len(cur.concepts)} !=24"
     assert len(cur.quests) in (28, 29, 30, 31), f"quests {len(cur.quests)} !=28"
     # c.scp
     scp = cur.concept("c.scp")

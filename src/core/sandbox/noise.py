@@ -69,6 +69,7 @@ NOISE_PROFILE: dict[str, int] = {
     "rm": 2,
     "chmod": 1,
     "chown": 1,
+    "stat": 1,
     "exit": 0,
     "logout": 0,
 }
