@@ -20,10 +20,12 @@ from __future__ import annotations
 from core.engine.postmortem import (
     DEFAULT_NOISE_BUDGET,
     LINE_KEY_CIEGA,
+    LINE_KEY_CIERRE,
     LINE_KEY_CORTE,
     LINE_KEY_CRUCE,
     LINE_KEY_LECTURA,
     LINE_KEY_PICO,
+    LINE_KEY_PUERTA_ABIERTA,
     build_postmortem,
 )
 from core.engine.session import (
@@ -41,10 +43,12 @@ __all__ = [
     "build_postmortem",
     "DEFAULT_NOISE_BUDGET",
     "LINE_KEY_CIEGA",
+    "LINE_KEY_CIERRE",
     "LINE_KEY_CORTE",
     "LINE_KEY_CRUCE",
     "LINE_KEY_LECTURA",
     "LINE_KEY_PICO",
+    "LINE_KEY_PUERTA_ABIERTA",
     "EncargoSession",
     "SUPPORTED_CHAPTERS",
     "abrir_encargo",

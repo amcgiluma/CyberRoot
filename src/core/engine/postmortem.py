@@ -73,6 +73,9 @@ LINE_KEY_CUSTODIA = "postmortem.auditor.custodia"
 #: O1 21/09 (Ornstein, P1 karma del volcado) — huella kármica vigilante.
 LINE_KEY_HUP = "postmortem.auditor.hup"
 LINE_KEY_KILL = "postmortem.auditor.kill"
+#: O1 22/09 (Ornstein, díptico E1) — huella kármica de la puerta: 600 vs 777.
+LINE_KEY_CIERRE = "postmortem.auditor.cierre"
+LINE_KEY_PUERTA_ABIERTA = "postmortem.auditor.puerta_abierta"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -622,6 +625,88 @@ def _detect_vigilante(shell_dict: dict[str, Any]) -> str | None:
     return None
 
 
+def _has_ls_l(shell_dict: dict[str, Any]) -> bool:
+    """True si el history contiene `ls -l` o `ls -la` (permite leer permisos).
+
+    Busca `ls` con flag `l` en cualquier posición de la línea (shlex).
+    Sin ls -l → el detector de puerta no dispara (exige haber mirado).
+    """
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "ls" not in line or "l" not in line:
+            continue
+        try:
+            argv = shlex.split(line)
+        except ValueError:
+            argv = line.split()
+        if not argv or argv[0] != "ls":
+            # ls dentro de pipe? busca token ls
+            try:
+                idx = argv.index("ls")
+            except ValueError:
+                continue
+            flags = argv[idx + 1 :]
+        else:
+            flags = argv[1:]
+        for tok in flags:
+            if tok.startswith("-") and "l" in tok:
+                return True
+    return False
+
+
+def _detect_chmod_puerta(shell_dict: dict[str, Any]) -> str | None:
+    """Detecta huella kármica de la puerta: `chmod 600` vs `chmod 777`.
+
+    Escanea el history en orden y guarda el ÚLTIMO chmod con modo 600 o 777.
+    Soporta `-R`/`--recursive` antes del modo (chmod -R 777 pts0).
+    Retorna \"cierre\" (600), \"puerta_abierta\" (777) o None si no hay chmod
+    relevante. Solo shlex/substring, sin imports de sandbox.
+    """
+    last: str | None = None
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "chmod" not in line:
+            continue
+        try:
+            argv = shlex.split(line)
+        except ValueError:
+            argv = line.split()
+        if not argv:
+            continue
+        try:
+            start = argv.index("chmod")
+        except ValueError:
+            continue
+        # recoge tokens tras chmod, filtrando flags conocidos
+        mode: str | None = None
+        i = start + 1
+        while i < len(argv):
+            tok = argv[i]
+            if tok in ("-R", "--recursive", "-v", "--verbose", "-c", "--changes", "-f", "--silent", "--quiet"):
+                i += 1
+                continue
+            if tok.startswith("-"):
+                # flags combinados tipo -Rv
+                if "R" in tok or "v" in tok or "c" in tok or "f" in tok:
+                    i += 1
+                    continue
+                # flag desconocido con -l etc: ignora y sigue
+                if tok.startswith("--"):
+                    i += 1
+                    continue
+                i += 1
+                continue
+            # primer no-flag es el modo
+            mode = tok
+            break
+        if mode == "600":
+            last = "cierre"
+        elif mode == "777":
+            last = "puerta_abierta"
+        # modos intermedios (644, 755, etc) no son dilema → ignorar
+    return last
+
+
 def build_postmortem(
     shell_dict: dict[str, Any], state: dict[str, Any] | None
 ) -> dict[str, Any]:
@@ -796,6 +881,28 @@ def build_postmortem(
         base["karma"] = {"delta": 1, "tint": "red"}
         base["micro_karma"] = {"red": 1}
 
+    # O1 22/09 — díptico E1: chmod 600 (cierre azul) vs 777 (puerta abierta rojo), tras ls -l
+    _puerta = _detect_chmod_puerta(shell_dict)
+    if _puerta is not None and _has_ls_l(shell_dict):
+        if _puerta == "cierre":
+            cierre_text = _resolve_auditor_text(LINE_KEY_CIERRE, {})
+            base["auditor_cierre"] = {"line_key": LINE_KEY_CIERRE, "args": {}}
+            base["auditor_cierre_text"] = cierre_text
+            base["lines_resolved"] = [*base["lines_resolved"], cierre_text]
+            base["karma_delta"] = 1
+            base["karma_tint"] = "blue"
+            base["karma"] = {"delta": 1, "tint": "blue"}
+            base["micro_karma"] = {"blue": 1}
+        elif _puerta == "puerta_abierta":
+            puerta_text = _resolve_auditor_text(LINE_KEY_PUERTA_ABIERTA, {})
+            base["auditor_puerta_abierta"] = {"line_key": LINE_KEY_PUERTA_ABIERTA, "args": {}}
+            base["auditor_puerta_abierta_text"] = puerta_text
+            base["lines_resolved"] = [*base["lines_resolved"], puerta_text]
+            base["karma_delta"] = 1
+            base["karma_tint"] = "red"
+            base["karma"] = {"delta": 1, "tint": "red"}
+            base["micro_karma"] = {"red": 1}
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -849,6 +956,8 @@ __all__ = [
     "LINE_KEY_CUSTODIA",
     "LINE_KEY_HUP",
     "LINE_KEY_KILL",
+    "LINE_KEY_CIERRE",
+    "LINE_KEY_PUERTA_ABIERTA",
     "LINE_KEY_VOLCADO_RESCATE",
     "LINE_KEY_VOLCADO_CADUCADO",
 ]
