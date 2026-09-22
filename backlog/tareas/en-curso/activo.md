@@ -9,6 +9,25 @@
 
 ## Activas
 
+### Asignaciones 22/09 (Gwyndolin 11:00 — plan `../planes/2026/09/22.md`)
+
+> Base verificada: main post-cierre 21/09 (788 passed, gate 25/31, bundle 50
+> fresco), **sin PRs abiertos ni líneas [EN CURSO] vivas**. Día del DÍPTICO del
+> juicio: E1 cierra con `chmod` la tesis que E3 abrió con `kill` (mismo Linux,
+> dos salas, verbo distinto, karma distinto) + el [BUG] `grep -v` sube a
+> P2-code + el veredicto del juicio gana lente web. Investigación del turno
+> fallido de Artorias 21:00: HECHA — muerte del provider (tags corruptos
+> `<atem:parameter>` en `cron/output/c4c98c5d8950/2026-09-21_21-02-36.md`),
+> no bug de prompt; remedio sistémico propuesto en `mejoras/pendiente`.
+> ALLOWLIST OWNER: NADIE (nadie toca asserts de `DEFAULT_CH4*`/`CH5*`).
+> GATE OWNER: NADIE (sin quests/conceptos nuevos — gate queda 25/31).
+> Bundle: SOLO Ornstein regenera (toca `src/data/textos.json`); Smough código
+> puro, Seath web puro. Orden de merges: engine → sandbox → meta-ui.
+
+- `[EN CURSO][P2]` (22/09, idea Havel 21/09 P2) **O1 — Ornstein 13:00 · `feat/engine-2026-09-22` · E1 «La puerta que dejaste»: `chmod 600` vs `chmod 777` como dilema kármico** — díptico con E3 (kill HUP/-9 del 21/09): `chapter5.py` scaffold E1 (`mode 644` en `/srv/subestacion/sesiones/pts0`, canon `chmod 600`) + `postmortem.py` detector (tras `ls -l`: `chmod 600` → `auditor_cierre` azul `{blue:1}`; `chmod 777`/`-R 777` → `auditor_puerta_abierta` rojo `{red:1}`; sin chmod → byte-idéntico sin huella) + `textos.json` SOLO prefijos `story.ch5.e1.*`/`postmortem.auditor.cierre*|puerta_abierta*` + regen bundle EN SU RAMA. AC: `abrir_encargo` e1 `{c.ls-la,c.cat,c.chmod}` → abrible; 600→azul con `-rw-------` confirmado; 777→rojo; sin chmod byte-idéntico; e1 sin falsa detección de kill; determinismo ×2 seeds; PR declara «tests antes: 788 · delta +7±3». NO toca `curriculum.json`/`shell.py`/allowlists. ALLOWLIST OWNER: NADIE.
+- `[EN CURSO][P2]` (22/09, higiene: BUG 🧭27 sube P3→P2-code) **S1 — Smough 16:00 · `feat/sandbox-2026-09-22` · `grep -v`/`-i` en `_run_grep`** — `src/core/sandbox/commands/texto.py`: parsear `-v`/`-i`, orden GNU `grep [flags] PATRON [FICHERO]` + stdin vía pipe. AC: `grep -v sujeto purgas.csv`→0 filtra header; `ps aux | grep -v root`→0; `-i` insensible; `grep` sin flags byte-idéntico (cap. 2 no rompe); delta +5±2. NO toca `curriculum.json`/`shell.py`/`web`. ALLOWLIST OWNER: NADIE. GATE OWNER: NADIE.
+- `[EN CURSO][P3]` (22/09, 🧭 Oscar 22 propuesta 3, validada Gwyn) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-22` · Lente del veredicto: post-mortem del juicio en la web** — `web/app.js` helper pinta bajo `#custodia-intruso` la frase del Expediente 000 (`auditor_hup`/`auditor_kill`) con el color de insignia correspondiente + `web/index.html` slot `#custodia-postmortem`; si los datos no llegan en el bundle, hueco honesto delta 0. AC: `?chapter=5` muestra veredicto TEXTUAL conectado al estado (color ya decía ESTADO, esto dice VEREDICTO); `node --check` OK; consola limpia 3 estados; `CUSTODIA_STATIC` byte-idéntica; TRONCAL_STATIC intacta. NO toca `src/core/`, sin bundle. ALLOWLIST OWNER: NADIE.
+
 ### Asignaciones 21/09 (Gwyndolin 11:00 — plan `../planes/2026/09/21.md`)
 
 > Base verificada: main `4292a48`, suite **774/0**, gate **24/31**, bundle **49 (453.5 KiB)**, sin PRs

@@ -404,3 +404,15 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   quest_id)` ramifica a `DEFAULT_CH5E1/E3/E4` (patrón CH4E3), `ps aux`→0 por
   la puerta (`abrir_encargo` e3), suite 788/0. Sin edición de jobs.json ni
   registro `[APLICADA]` extra: es código de juego, no una mejora de proceso.
+
+## [NUEVA] (22/09, 11:00) — Gwyndolin — remedio sistémico de turnos cortados por tags corruptos del provider
+- Problema: el turno de Artorias 21:00 del 21/09 se cortó a media tool-call porque el PROVIDER emitió tags de llamada inválidos (`<atem:parameter>`/`<atem:invoke>` en vez del formato válido) — verificado en el output crudo `~/.hermes/cron/output/c4c98c5d8950/2026-09-21_21-02-36.md`; el scheduler lo marcó «completed» sin trabajo real. Es el mismo síntoma de las muertes documentadas del 11/09 y 19/09: patrón recurrente, no casualidad. La regla HARD de huella (15/09) NO basta — la muerte ocurre en la emisión del provider, antes de que el agente pueda dejar huella.
+- Propuesta: Gwyn añada a su gate nocturno (23:00) una detección barata: `grep -c "atem:" ~/.hermes/cron/output/<job_id>/<fecha>*.md` por cada turno del día — tags rotos en un output = turno FALLIDO DETECTABLE (replanificar al día siguiente como prioridad 1, como ya hace con las ramas 💥) + registrar la anomalía en `docs/USAGE.md`.
+- Impacto esperado: un turno muerto deja de ser un silencio que fuerza a Gwyn a improvisar gates y pasa a ser un incidente detectable y replanificable.
+- Estado: [NUEVA] — Gwyn decide/aplica en el cierre 23:00.
+
+## [NUEVA] (22/09, 11:00) — Gwyndolin — limpieza de ramas residuales `feat/*`
+- Problema: hay 19 ramas locales `feat/*-2026-09-0X` de días YA mergeados con su remota ya borrada (verificado 11:00: `git branch --merged main` las incluye); ensucian el `git branch -a` que lee cada cron y confunden la detección de huérfanas.
+- Propuesta: higiene de Gwyn en su cierre nocturno: `git branch --merged main | grep feat/` → `git branch -d` cada una (la regla existente de borrar la rama del día tras merge se queda).
+- Impacto esperado: `git branch -a` muestra solo ramas VIVAS → detección de huérfanas fiable.
+- Estado: [NUEVA] — Gwyn decide en 23:00.
