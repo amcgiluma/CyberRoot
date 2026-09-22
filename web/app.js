@@ -702,16 +702,62 @@ function _intrusoBadgeHtml(s) {
 function _updateIntrusoUI() {
   const el = $id("custodia-intruso");
   if (!el) return;
+  if (currentChapter !== 5) { el.style.display = "none"; el.innerHTML = ""; try { _updateCustodiaPostmortem(); } catch(e){} return; }
+  try {
+    const st = _getIntrusoStatus();
+    if (!st) { el.style.display = "none"; el.innerHTML = ""; try { _updateCustodiaPostmortem(); } catch(e){} return; }
+    el.innerHTML = _intrusoBadgeHtml(st);
+    el.style.display = "block";
+    try { _updateCustodiaPostmortem(); } catch(e){}
+  } catch(e) { el.style.display = "none"; try { _updateCustodiaPostmortem(); } catch(_){} }
+}
+function hideIntrusoBadge() {
+  const el = $id("custodia-intruso");
+  if (el) { el.style.display = "none"; el.innerHTML = ""; }
+  const pm = $id("custodia-postmortem");
+  if (pm) { pm.style.display = "none"; pm.innerHTML = ""; }
+}
+// ---------------------------------------------------------------------------
+// Lente del veredicto — Seath 22/09 T1 (#custodia-postmortem)
+// Pinta bajo #custodia-intruso la frase del Expediente 000 con el color
+// de la insignia (verde vivo / azul --reloaded / ámbar silenciado).
+// Fuente primaria: postmortem() del core (auditor_hup_text / auditor_kill_text);
+// fallback estático idéntico a textos.json si el bundle no trae el dato
+// (hueco honesto delta 0, sin tocar src/core/).
+// ---------------------------------------------------------------------------
+function _updateCustodiaPostmortem() {
+  const el = $id("custodia-postmortem");
+  if (!el) return;
   if (currentChapter !== 5) { el.style.display = "none"; el.innerHTML = ""; return; }
   try {
     const st = _getIntrusoStatus();
     if (!st) { el.style.display = "none"; el.innerHTML = ""; return; }
-    el.innerHTML = _intrusoBadgeHtml(st);
+    let text = null;
+    let color = "#2ecc71";
+    if (st.state === "azul") color = "#5dade2";
+    else if (st.state === "ambar") color = "#f39c12";
+    else color = "#2ecc71";
+    // Intenta leer la frase real del postmortem (datos ya serializados)
+    try {
+      if (pyodide && pyodide.globals) {
+        const pm = JSON.parse(pyodide.globals.get("postmortem")());
+        if (st.state === "azul" && pm.auditor_hup_text) text = pm.auditor_hup_text;
+        else if (st.state === "ambar" && pm.auditor_kill_text) text = pm.auditor_kill_text;
+        else if (st.state === "verde" && pm.auditor_custodia_text) text = pm.auditor_custodia_text;
+      }
+    } catch(e) {}
+    if (!text) {
+      if (st.state === "azul") text = "Expediente 000: señal de reconfiguración registrada — proceso de vigilancia reconfigurado. Continuidad del ensayo: estable.";
+      else if (st.state === "ambar") text = "Expediente 000: proceso de vigilancia eliminado — el testigo queda sin ojos. Continuidad del ensayo: estable.";
+      else text = "Expediente 000: vigilancia activa — el testigo mantiene ojos en la Subestación. Continuidad del ensayo: estable.";
+    }
+    el.innerHTML = `<span style="color:${color};font-weight:700">⬥ Veredicto:</span> <span style="color:${color}">${_escapeHtml(text)}</span>`;
     el.style.display = "block";
+    el.style.borderColor = color + "55";
   } catch(e) { el.style.display = "none"; }
 }
-function hideIntrusoBadge() {
-  const el = $id("custodia-intruso");
+function hideCustodiaPostmortem() {
+  const el = $id("custodia-postmortem");
   if (el) { el.style.display = "none"; el.innerHTML = ""; }
 }
 function previewCustodiaTabla() {
@@ -936,7 +982,7 @@ function renderCursor() {
 }
 
 // Exponer para tests / consola
-if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._updateIntrusoUI = _updateIntrusoUI; }
+if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._updateIntrusoUI = _updateIntrusoUI; window._updateCustodiaPostmortem = _updateCustodiaPostmortem; }
 
 // ---------------------------------------------------------------------------
 // Wire-up.
