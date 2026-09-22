@@ -36,28 +36,66 @@ def _run_grep(
     tick: int,
     stdin: str = "",
 ) -> CommandResult:
-    """`grep PATRON [FICHERO...]`: líneas que contienen el patrón.
+    """`grep [flags] PATRON [FICHERO...]`: líneas que contienen el patrón.
 
-    Sin ficheros lee de `stdin` (la tubería). Emite las líneas coincidentes
+    Flags soportados (S1 22/09, BUG 🧭27): `-v` (invertir) y `-i`
+    (insensible a mayúsculas), combinables (`-vi`, `-iv`, `-v -i`) y en
+    orden GNU `grep [flags] PATRON [FICHERO]`. `--` termina flags. Sin
+    ficheros lee de `stdin` (la tubería). Emite las líneas seleccionadas
     TODAS, en orden, con su `\\n`. Exit codes GNU: 0 si hubo al menos una
-    coincidencia, 1 si ninguna, 2 si hubo algún error de FS o de uso.
+    línea seleccionada, 1 si ninguna, 2 si hubo algún error de FS o de uso.
+    Sin flags el comportamiento es byte-idéntico a la v1.
     """
     noise = noise_event(GREP_NAME, argv, tick)
     if not argv:
         return CommandResult(
             stderr="grep: missing pattern", exit_code=2, noise=noise
         )
-    pattern = argv[0]
-    files = tuple(argv[1:])
+    # --- parse flags líderes -v / -i (combinables) ---
+    invert = False
+    ignore_case = False
+    idx = 0
+    while idx < len(argv):
+        arg = argv[idx]
+        if arg == "--":
+            idx += 1
+            break
+        if arg.startswith("-") and len(arg) > 1 and arg != "-":
+            # Cada char tras '-' es un flag; patrón no empieza por '-' (no -e)
+            for ch in arg[1:]:
+                if ch == "v":
+                    invert = True
+                elif ch == "i":
+                    ignore_case = True
+                else:
+                    return CommandResult(
+                        stderr=f"grep: invalid option -- '{ch}'",
+                        exit_code=2,
+                        noise=noise,
+                    )
+            idx += 1
+            continue
+        break
+    if idx >= len(argv):
+        return CommandResult(
+            stderr="grep: missing pattern", exit_code=2, noise=noise
+        )
+    pattern = argv[idx]
+    files = tuple(argv[idx + 1 :])
 
     matched: list[str] = []
     err_lines: list[str] = []
     had_error = False
 
+    pat_cmp = pattern.lower() if ignore_case else pattern
+
     def _scan(text: str) -> None:
-        """Añade a `matched` las líneas que contienen el patrón (GNU grep)."""
+        """Añade a `matched` las líneas que cumplen (con v/i)."""
         for line in text.splitlines():
-            if pattern in line:
+            hay = (pat_cmp in line.lower()) if ignore_case else (pattern in line)
+            if invert:
+                hay = not hay
+            if hay:
                 matched.append(line)
 
     if not files:
