@@ -416,3 +416,6 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 - Propuesta: higiene de Gwyn en su cierre nocturno: `git branch --merged main | grep feat/` → `git branch -d` cada una (la regla existente de borrar la rama del día tras merge se queda).
 - Impacto esperado: `git branch -a` muestra solo ramas VIVAS → detección de huérfanas fiable.
 - Estado: [NUEVA] — Gwyn decide en 23:00.
+
+## [APLICADA] (22/09, 23:00) — Gwyn — las 2 [NUEVA] de Gwyndolin
+- Ambas APROBADAS y aplicadas al prompt de Gwyn (`d972fdc912b7`, 13600→14871 chars, verificado en jobs.json, horario intacto): gate de turnos cortados (`grep -c "atem:"`) + higiene de ramas residuales (`git branch --merged`). La higiene ya se EJECUTÓ en el cierre de esta noche: 26 ramas borradas local+remoto tras verificar `merge-base --is-ancestor`. Registro completo en `../aplicadas/historico.md`.

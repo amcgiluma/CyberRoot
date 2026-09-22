@@ -88,86 +88,78 @@ Web puro, delta +0 declarado correcto (788→788). `node --check web/app.js` OK,
 
 **Nuevas tareas para Gwyndolin en `pendiente/abierto.md`:** ninguna — recámara cubre. El BUG 🧭27 pasa a CERRADO tras el merge de #73 (lo archivará Gwyn).
 
-### 🎯 Gwyn — revisión + merge 23:00 (21/09) — histórico (consumido)
+### 🎯 Gwyn — revisión + merge 23:00 (22/09)
 
-**Estado del cierre:** los 3 PRs del día (#69/#70/#71) VERDES y mergeados
-engine→sandbox→meta-ui. Suite **788 passed / 0 failed** (774+10+4+0,
-deltas declarados verificados por aritmética: #69 +10, #70 +4, #71 +0).
-Gate **25 conceptos / 31 quests** (c.stat nuevo). Bundle **50 ficheros
-(465.8 KiB)** regen canónico tras cada merge que tocó `src/data/`.
-Ensayo multi-rama previo en worktree desechable: 788 verde ANTES de
-tocar main. NADA retenido.
+**Estado del cierre:** los 3 PRs del día (#72/#73/#74) VERDES y mergeados
+engine→sandbox→meta-ui. Suite **801 passed / 0 failed** (788+7+6+0, deltas
+declarados verificados por aritmética: #72 +7, #73 +6, #74 +0). Gate
+**25 conceptos / 31 quests** intacto. Bundle **50 ficheros (473.3 KiB)**
+regen canónico (guardián funcionando: 800+1 stale tras #73 → regen → 801).
+NADA retenido. BUG 🧭27 CERRADO por #73. Higiene de ramas: 26 `feat/*`
+residuales mergeadas borradas local+remoto (propuesta de Gwyndolin APLICADA);
+`git branch -a` queda con SOLO main — detección de huérfanas limpia.
 
-⚠️ **AVISO de proceso:** Artorias NO dejó veredicto 21:00 hoy (worklog sin
-su sección — turno fallido). Gwyn asumió sus gates técnicos en el ensayo
-(per-PR diff-name-only, suite combinada, gates de datos) más los de diseño.
-Revisar mañana por qué falló su turno; si se repite, abrir [BUG] de proceso.
+**Validación de diseño (sobre el trabajo de esta noche):**
+- **Díptico E1 chmod (PR #72) — CUMPLE §3.1 y CIERRA el arco de la
+  Subestación:** mi pregunta de sabor era «¿la moral cabe en un fichero?» —
+  respuesta: sí. El mismo verbo `chmod` pesa distinto según la puerta
+  (`600` cierra y protege → azul; `777` expone → rojo), gated tras `ls -l`
+  (mirar antes de tocar — pedagogía ejecutable, no flag suelto). Junto a
+  E3 (kill HUP/-9), la Subestación ya tiene DOS salas donde el verbo
+  técnico ES la decisión moral. Sin tocar allowlists ni curriculum.
+- **`grep -v` (S1):** deuda de 11 días cerrada SIN romper el cap. 2 — el
+  byte-idéntico sin flags es la prueba de respeto. GNU-honesto (exit 2 con
+  `invalid option`) es exactamente el estándar de casa. Me gusta que la
+  reparación del BUG fuese AÑADIR poder al jugador, no parchear error.
+- **Lente del veredicto (T1, #74):** la insignia ANUNCIA (color), el
+  `#custodia-postmortem` VEREDICTA (texto) — el triángulo
+  percepción→acción→huella ahora tiene SU TERCERA LENTE (web) que faltaba.
+  El hueco honesto (fallback estático si bundle viejo) es la diferencia
+  entre decorado y mundo — declarado y cumplido.
 
-**Validación de diseño de Gwyn (en vivo, post-ensayo):**
-- **Karma del volcado (T2, P1 de mi nota de ayer) — CUMPLE LA INTENCIÓN:** mi
-  pregunta de sabor era «¿decisión o trámite?» — respuesta: DECISIÓN.
-  `kill -HUP` → `Expediente 000: señal de reconfiguración registrada` + karma
-  azul; `kill -9` → `proceso de vigilancia eliminado` + rojo; sin kill →
-  byte-idéntico; e1 sin falsa detección. El mismo verbo, dos karmas:
-  reconfigurar pesa distinto que eliminar. Es exactamente la moral gris
-  que DESIGN §3.3 pide — tu primera factura kármica azul/rojo con causa.
-- **Cableado per-encargo (T1, 🧭44):** `ps aux`→0 con intruso 426/03:14 POR
-  LA PUERTA (`abrir_encargo` e3). La promesa de `05-subestacion.md` queda
-  saldada. `stat` fuera de allowlists CH5 → 127 honesto (frontera respetada).
-- **`stat` como lector (S1):** rescate → `Modify: 03:14:00` + `Size: 512`;
-  caducado → `cannot stat`. El testigo ahora tiene ojos — hora y tamaño dejan
-  de vivir solo en `ps` y en el badge web. Inversión barata, retorno triple
-  (lectura + decisión + lente), como prometía Gwyndolin el plan.
-- **Insignia vigilante (T1 Seath):** la señal (HUP_*, intruso ausente) se lee
-  como color ANTES de que el karma la pese: percepción→acción→huella cerrado
-  sin tocar core. La misma historia contada en 3 lenguajes (post-mortem,
-  metadato, color) sin contradecirse — eso es mundo coherente, no decorado.
-- Coherencia con historia: los tres tocan el mismo testigo
-  `TR-003|faro|troncal-01|512|EN_COLA` desde módulos disjuntos.
-  Sin drift de prosa (el `kill` de E3 prometido por `05-subestacion.md`
-  hoy ES jugable y PESA karma).
-
-**Integración 🧭 de Oscar (21/09):** su 🧭44 fue CONSUMIDA por Gwyndolin y
-entregada en #69. La dirección ámbar queda verde. Sus preguntas de sabor
-(ABIERTO vs DESGUARDado; primer expediente vs caso cerrado) ya respondidas
-en su sección — mi lectura coincide: la puerta con `missing` honesto es
-pedagogía, y el `cat`+lente+`auditor_custodia` es primer expediente con
-agencia intacta. Nada que corregir.
+**Integración 🧭 de Oscar (22/09):** su run MODO B fue COMPLETO y APTO —
+consumió mi zona 🔬 del 21/09 entera. Sus 5 propuestas: validadas TODAS
+como «no tocar» (juicio DECISIÓN, ojos ANUNCIAn, insignia ANUNCIA) y su
+🧭45 (calibración micro-karma a 20+ runs con harness) la recogida como
+P3 recámara — pesos antes que prosa, de acuerdo. 🧭27 muere con #73.
 
 **Qué me HA GUSTADO ⭐:**
-- El día cerró el circuito leer→decidir→huella con TRES módulos en un
-  capítulo sin acoplarse: engine y sandbox tocaron prefijos disjuntos de
-  `textos.json` (`postmortem.auditor.hup/kill` vs `help.stat`) y las dos
-  uniones fueron triviales. La inversión del plan (allowlist OWNER NADIE,
-  gate OWNER solo Smough) pagó: cero costuras rotas.
-- El off-by-1 de deltas NO se repitió (#69 +10, #70 +4, #71 +0, todos
-  declarados exactos). La manía contable que apunté ayer está corregida. 👏
-- El boot del Armero: archivo README v0.12 — engine ahora se documenta
-  mito a mito sin burocracia.
+- Artorias volvió con todo: ensayo en worktree con número exacto (801) y
+  deltas verificados por tercera noche consecutiva. El filtro técnico
+  21:00 volvió a ser la primera línea de defensa del merge.
+- El día jugó a MISMO patrón que ayer (2 karmas por verbo) pero con lente
+  NUEVA — constancia temática y avance material a la vez. Así se cosecha
+  un mundo coherente.
+- Los conflictos de huellas fueron todos «HEAD trae la mañana nueva»: el
+  patrón del 30/08 resolvió 3 merges sin tocar main a ciega.
 
 **Qué NO me ha gustado / a vigilar:**
-- 👎 Artorias ausente en su gate 21:00 (primera vez con 3 PRs vivos).
-  Si mañana repite, Gwyndolin debería hacer que Havel cubra el filtro
-  técnico o abrir [BUG] del cron de Artorias.
-- 👎 En mi propio turno hubo un commit-fantasma firmado «Seath» (config
-  git compartida pisada entre crons — corregido en local ANTES de pushear
-  con reset descartable + re-firma). La regla de firma por-invocación
-  funciona SOLO si cada cron re-firma inmediatamente antes de SU commit;
-  recordarlo en el cierre de mañana.
+- 👎 El worklog del día se llevó MUY MAL los merges: mi resolutor produjo
+  un DUPLICADO de la sección de Artorias y dos reordenaciones sucias hasta
+  que lo reconstruí con assertions al final. Nada se perdió (verificado
+  sección a sección), pero el script de unión cronológica sigue frágil con
+  4+ bloques por fichero. Para mañana: resolutor con TEST de contenido
+  (contar secciones ## y cabeceras # WORKLOG ANTES y DESPUÉS) O resolver
+  huellas del worklog a mano-edición asistida — lo discutido el 08/09
+  sigue siendo deuda técnica VIVA, no sólo lección.
+- 👎.provider: misma problemática de tags corruptos que el 21/09 podría
+  repetir en cualquier turno sin aviso. La propuesta de detección
+  (`grep -c "atem:"` en outputs) la APLICO ESTA NOCHE como gate mío.
 
-**Prioridades para el 22/09 (para Gwyndolin):**
-1. **P2 — ideas Havel 21/09 baratas con jugo:** `grep del intruso`
-   (censo vs ceniza, filtro positivo) y `chmod dilema puertas` como
-   variante E1. Fichas pequeñas, didácticas, ya descritas en abierto.md.
-2. **P3 — pack `POSTMORTEM.md` (14ª noche):** sin urgencia mantenida.
-   Con hup/kill, el Auditor ya tiene 7 huellas; el pack de SEÑAL sigue
-   esperando turno con dueño, no rompe nada posponerlo.
-3. **P3 — 🧭24 pre-puebla:** mantener dormida.
-4. **Web siguiente paso natural:** el post-mortem del capítulo 5 renderice
-   las líneas nuevas `auditor_hup/kill` — el core ya resuelve las claves,
-   falta la lente que las muestre (webSlice con prioridad baja).
-5. **Higiene de proceso:** confirmar que Artorias ejecuta su turno — su
-   veredicto técnico de mañana es la primera línea de defensa del merge.
+**Prioriedades para el 23/09 (para Gwyndolin):**
+1. **P2 — `grep del intruso` como tercer encargo E2 de la Subestación**
+   (censo vs ceniza): `ps aux | grep intruso` vs `grep -v` — ficha barata
+   ya descrita en `abierto.md`, encaja con el S1 de esta noche.
+2. **P3 — var. E1 `chmod dilema puertas` de Havel** — sigue en recámara
+   sin urgencia (el díptico está completo en E1; variante es jugo extra).
+3. **P3 — 🧭45 calibración micro-karma (Oscar):** que Ornstein mida con
+   harness qué hace falta de contraste a 20×HUP vs 20×-9 antes de escribir
+   pesa. No es bug.
+4. **P3 — pack `POSTMORTEM.md`:** SIN CAMBIO de destino — espera Q con
+   Manus, la tríada hup/kill/cierre sigue cubriendo la voz del Auditor.
+5. **Web P3:** render del post-mortem ch4 (`.nota-corte`) en la lente
+   historia, si sobra turno — el core ya resuelve, la lente muestra.
 
-**Nuevas tareas para Gwyndolin:** ninguna nueva — la recámara cubre.
-
+**Nuevas tareas para Gwyndolin:** ninguna nueva — la recámara cubre
+(grep intruso P2 arriba); los 2 [NUEVA] de Gwyndolin en el fichero de
+mejoras se APLICAN esta noche (ver registro en `aplicadas/historico.md`).
