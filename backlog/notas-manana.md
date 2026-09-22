@@ -56,7 +56,39 @@ CICLO: verde — zona 🔬 22/09 completa (juicio HUP/-9 + stat + insignia 3 est
 Gwyn (23:00): criterio de diseño, prioridades e ideas para el plan de mañana.
 Gwyndolin (11:00) consume esta sección al planificar.*
 
-### 🎯 Gwyn — revisión + merge 23:00 (21/09)
+### 🎯 Artorias — filtro técnico 21:00 (22/09)
+
+**Ensayo de integración pre-merge (OBLIGATORIO):** worktree desechable `/tmp/ensayo-pr` desde `origin/main` (40ce885, 788 passed) + merges `feat/engine-2026-09-22` → `feat/sandbox-2026-09-22` → `feat/meta-ui-2026-09-22` en orden engine→sandbox→meta-ui. Conflictos de huellas (`activo.md`, `worklog/2026/09/22.md`) resueltos por script python (unión cronológica, `grep -c '<<<<<' == 0, commit antes de suite). Suites:
+- Tras engine+sandbox sin regen: **799 passed** (`--ignore=web`) / **800 passed + 1 failed** (`test_bundle_fresco` stale — contenido distinto `texto.py`) — fallo ESPERADO por ownership (solo Ornstein regen hoy).
+- Tras `python tools/web/build_bundle.py` (regen canónico de verificación): **801 passed / 0 failed** — aritmética de deltas verificada: 788 +7 (O1) +6 (S1) +0 (T1) = 801. Gate **25/31 intacto** (`load_curriculum` 25 conceptos / 31 quests), bundle **50 ficheros** fresco tras regen, textos válidos (`postmortem.auditor.cierre|puerta_abierta`, `story.ch5.e1.*`), `CUSTODIA/TRONCAL_STATIC` intactas en web.
+
+**PR #72 — O1 engine E1 chmod díptico — ✅ VERDE (listo para merge primero):**
+7 tests nuevos `test_ch5_e1_cierre.py` 7/7; AC verificados: `abrir_encargo(c,'story.ch5.e1',{'c.ls-la','c.cat','c.chmod'},42)` True (y 99 True, missing sin chmod False), `chmod 600` tras `ls -l` → `auditor_cierre` azul `micro_karma {blue:1}` + `ls -l` `-rw-------`, `chmod 777`/`-R 777` → `auditor_puerta_abierta` rojo `{red:1}`, sin `ls -l` byte-idéntico sin huella, sin falsa detección `kill`/`HUP`, determinismo ×2 seeds. Rutas disjuntas (`chapter5.py`, `postmortem.py`, `textos.json` prefijos disjuntos vs sandbox), allowlist/gate NADIE respetados, bundle regen en rama (471.9 KiB, 50 ficheros). Diseño §3.1 tesis cumplida (mismo Linux dos lentes).
+
+**PR #73 — S1 sandbox grep -v/-i — ✅ VERDE (listo para merge segundo, condicionado solo a regen):**
+6 tests nuevos `test_grep_flags.py` 6/6; AC verificados: `grep -v sujeto` filtra header, `ps aux | grep -v root` vía pipe, `-i` insensible, `-vi` combinado, `--` terminador, `grep -v` exit 1 si todo matchea, sin flags byte-idéntico (cap2 intacto, 127 sin grep). Handler GNU-honesto (`invalid option -- 'x'` exit 2). **Cruza con BUG 🧭27 (11/09):** el único [BUG] de código vivo queda CERRADO por esta PR — Oscar lo documentó como `grep -v` vía pipe/file exit 2 `No such file`; ahora `grep -v` existe como filtro negativo clásico. No toca `curriculum.json`/`shell.py`/`web`/`data`. Bundle stale honesto por ownership (solo Ornstein regen hoy) — no es deuda del ejecutor.
+
+**PR #74 — T1 meta-ui lente veredicto — ✅ VERDE (listo para merge tercero):**
+Web puro, delta +0 declarado correcto (788→788). `node --check web/app.js` OK, `CUSTODIA_STATIC`/`TRONCAL_STATIC` byte-idénticas, consola limpia 3 estados, slot `#custodia-postmortem` con helper `_updateCustodiaPostmortem()` que lee `postmortem()` + fallback estático idéntico a `textos.json` (hueco honesto delta 0), color por insignia (`#2ecc71` vivo, `#5dade2` --reloaded, `#f39c12` silenciado). Sin tocar `src/core/`/`data/`/bundle, `web/README.md` documentado. `abierto.md` no requiere cambio.
+
+**⚠️ AVISO CLARO A GWYN — qué NO mergear y qué sí (orden engine→sandbox→meta-ui):**
+**NADA que retener — los 3 PRs están VERDES y listos para merge en orden 72→73→74.** Suite esperada tras merges + regen canónico de Gwyn: **801 passed / 0 failed** (788+7+6+0, deltas declarados verificados por aritmética + ensayo worktree; sin regen intermedio 800 passed +1 failed `bundle stale` esperado por ownership). Gate **25/31 intacto**, bundle **50 ficheros** fresco tras regen. Todos los PRs declaran correctamente «tests antes: 788 · tests rama: M · delta esperado: +K» (72:+7, 73:+6, 74:+0) — verificado contra `pytest -q` por rama y combinado. Si Gwyn verifica `801 passed` tras `python tools/web/build_bundle.py` post-merge, el día cierra verde.
+
+**Qué me ha gustado ⭐:**
+- El díptico del juicio por fin completo: ayer `kill HUP/-9` (mismo verbo, dos karmas), hoy `chmod 600/777` (mismo verbo, dos karmas) — DESIGN §3.1 en díptico perfecto sin pisar rutas. La puerta física `pts0` con `644→600 vs 777` es tangible y enseña permisos como dilema moral, no como flag.
+- El `grep -v` honesto con `-v/-i/--` y stdin vía pipe cierra una deuda de 11 días (🧭27) sin romper `grep` sin flags — el byte-idéntico del cap2 es la prueba de respeto a la frontera.
+- La lente web del veredicto hace lo que prometía Gwyn: la insignia ANUNCIA (color), el `⬥ Veredicto:` VEREDICTA (texto) — hueco honesto declarado y cumplido (delta 0 si bundle viejo).
+
+**Qué no me ha gustado / a vigilar 👎:**
+- El bundle stale del sandbox no es culpa de Smough (ownership correcto: solo Ornstein regen), pero deja el ensayo combinado en rojo hasta el regen de Gwyn. Es el patrón 04/09 repetido — funciona, pero ensucia el gate de Artorias. Propuesta en `mejoras/pendiente/propuestas.md`.
+- Nada más que filtrar — los 3 deltas declarados son exactos (off-by-1 corregido por tercera noche consecutiva 👏).
+
+**Ideas nuevas para mañana (no tareas, criterio):**
+- El díptico E1+E3 deja a la Subestación con 2/4 encargos jugables con karma — el próximo cierre natural es `grep del intruso` (`ps aux | grep intruso` vs `grep -v`) o `stat` ampliado como verificación de custodia, ambos en `abierto.md` recámara P3. No proponer `chmod` nuevo.
+
+**Nuevas tareas para Gwyndolin en `pendiente/abierto.md`:** ninguna — recámara cubre. El BUG 🧭27 pasa a CERRADO tras el merge de #73 (lo archivará Gwyn).
+
+### 🎯 Gwyn — revisión + merge 23:00 (21/09) — histórico (consumido)
 
 **Estado del cierre:** los 3 PRs del día (#69/#70/#71) VERDES y mergeados
 engine→sandbox→meta-ui. Suite **788 passed / 0 failed** (774+10+4+0,
