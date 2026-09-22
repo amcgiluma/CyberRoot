@@ -145,3 +145,16 @@ Panel «Volcado custodiado» en `index.html`+`app.js`, hermana de Troncal/Faro p
 | Fallback | `cat /tmp/volcado-custodia.csv` exit 1 → `hideCustodiaTabla()` sin consola; `cut`/`cat` sobre custodia en cap. 5 → render con columna resaltada, meta con tick/estado |
 
 Sin tocar `src/` ni `TRONCAL_STATIC` (3 intacta). Faro/Troncal intactos. Suite delta 0, `node --check` OK, guardián verde. Bundle regenerado por Seath (regla 12/09).
+
+## Lente del veredicto — post-mortem del juicio (T1 22/09 — Seath, cuarta lente)
+
+Slot `#custodia-postmortem` bajo `#custodia-intruso` en `index.html` + helper `_updateCustodiaPostmortem()` en `app.js`:
+
+| Pieza | Detalle |
+|---|---|
+| Slot | `#custodia-postmortem` tras `#custodia-intruso` (`display:none` hasta cap. 5) |
+| Helper | `_updateCustodiaPostmortem()` lee `_getIntrusoStatus()` + `postmortem()` (auditor_hup_text / auditor_kill_text) y pinta `⬥ Veredicto:` con el color de la insignia (verde `#2ecc71` vivo / azul `#5dade2` --reloaded / ámbar `#f39c12` silenciado); fallback estático idéntico a `textos.json` si el bundle no trae el dato (hueco honesto delta 0, sin tocar `src/core/`) |
+| Integración | `_updateIntrusoUI()` llama al veredicto tras cada cambio de insignia; `hideIntrusoBadge()` oculta ambos; `previewCustodiaTabla`/`dispatch`/`boot` mantienen 3 estados sin consola; capítulo !=5 → oculto |
+| Verificación | `?chapter=5` muestra veredicto textual conectado al estado (color ya decía ESTADO, la línea nueva dice VEREDICTO); `node --check` OK; `CUSTODIA_STATIC` byte-idéntica; `TRONCAL_STATIC` intacta; sin bundle |
+
+Sin tocar `src/core/` ni `TRONCAL_STATIC`/`CUSTODIA_STATIC`. Suite delta 0, `node --check` OK.
