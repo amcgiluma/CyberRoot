@@ -45,6 +45,18 @@ CUSTODIA_CONTENT = (
 )
 
 # ---------------------------------------------------------------------------
+# E1 — La puerta que dejaste: sesión pts0 con modo 644 (canon chmod 600)
+# ---------------------------------------------------------------------------
+
+#: Directorio y fichero de la sesión registrada (diegesis: pts/0 del Alto).
+SESIONES_DIR = "sesiones"
+PTS0_FILE = "pts0"
+PTS0_PATH = f"/srv/subestacion/{SESIONES_DIR}/{PTS0_FILE}"
+
+#: Contenido de la sesión (who-like): quien estuvo y cuándo.
+PTS0_CONTENT = "operator pts/0        2026-09-21 23:14 (10.6.0.15)\n"
+
+# ---------------------------------------------------------------------------
 # Procesos de la Subestación — el intruso que vigila el censo
 # ---------------------------------------------------------------------------
 
@@ -167,6 +179,16 @@ def build_chapter5_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSyste
             mode="644",
         )
 
+    # E1 — La puerta que dejaste: sesión pts0 con permisos 644 (canon 600)
+    sesiones_children: dict[str, FileNode] = {
+        "pts0": FileNode(
+            name="pts0",
+            content=PTS0_CONTENT,
+            owner="operator",
+            group="operator",
+            mode="644",
+        )
+    }
     return FileSystem(
         root=DirNode(
             name="/",
@@ -181,6 +203,10 @@ def build_chapter5_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSyste
                                 "rack-informes": DirNode(
                                     name="rack-informes",
                                     children={},
+                                ),
+                                "sesiones": DirNode(
+                                    name="sesiones",
+                                    children=sesiones_children,  # type: ignore[arg-type]
                                 ),
                             },
                         ),
@@ -212,4 +238,16 @@ CANON_STEPS_RAW_CH5: tuple[tuple[str, ...], ...] = (
 #: Variante sin testigo (caducado): solo ps (cat fallaría).
 CANON_STEPS_RAW_CH5_CADUCADO: tuple[tuple[str, ...], ...] = (
     ("ps", "aux"),
+)
+
+#: E1 — La puerta que dejaste (° canon: ls -l + chmod 600 sobre pts0).
+CANON_STEPS_RAW_CH5_E1: tuple[tuple[str, ...], ...] = (
+    ("ls", "-l", PTS0_PATH),
+    ("chmod", "600", PTS0_PATH),
+)
+
+#: E1 variante roja: chmod 777 deja la puerta abierta.
+CANON_STEPS_RAW_CH5_E1_RED: tuple[tuple[str, ...], ...] = (
+    ("ls", "-l", PTS0_PATH),
+    ("chmod", "777", PTS0_PATH),
 )
