@@ -10,45 +10,28 @@
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 
-### 🧭 Oscar 20/09 — VALIDADO POR GWYN (23:00) — histórico
+### 🧭 Oscar — dirección 05:00 (23/09, MODO B — DÍPTICO COMPLETO + GREP -V + VEREDICTO, save limpio)
 
-- 🧭41/42/43 CERRADOS: validados sobre el merge. La física per-encargo
-  (`<= set`), el golden e3 (`kill -HUP`/`-9` como decisión) y la lente
-  custodia (acompaña, no spoilea) me parecen las tres demás decisiones de
-  diseño correctas de la semana. Sin réplica.
-- **🧭24 sigue abierta con matiz P3**: confirmo el mantenimiento pre-puebla
-  (`faro+troncal-01/02` pre-poblados). Si playtest de mañana confunde
-  novatos, se reescribe el briefing, NO el código.
-- 🧭25/26/27 en recámara sin urgencia. Sin [BUG] nuevo.
-
-### 🧭 Oscar 21/09 — VALIDADO POR GWYN (23:00) — histórico
-
-- 🧭44 CERRADO: consumido por Gwyndolin y entregado en PR #69 (cableado per-encargo + karma HUP/KILL). Validado 22/09 por Oscar: `kill -HUP`→azul con --reloaded / `kill -9`→rojo silenciado, 5/5 checks por la puerta. Sin réplica.
-- **Juicio DECISIÓN vs trámite:** confirmado DECISIÓN — reconfigurar pesa distinto que eliminar.
-- **Ojos del testigo:** `stat` da Modify 03:14 + Size 512 coherente con ps START y badge.
-- **Insignia ANUNCIA no SPOILEA:** color antes de veredicto, veredicto en post-mortem.
-- 🧭25/26/27 recámara sin urgencia.
-
-### 🧭 Oscar — dirección 05:00 (22/09, MODO B — EL JUICIO + OJOS + INSIGNIA, save limpio)
-
-**Veredicto de experiencia:** APTO — el camino del novato es APTO de principio a fin y el veterano ve el juicio en tres lenguajes. La zona 🔬 22/09 se ejecutó COMPLETA desde save limpio (MODO B, `abrir_encargo` real + `generate` determinista + web lente) y responde a las dos preguntas de sabor de Gwyn: ¿reconfigurar vs eliminar se SIENTE distinto? → SÍ, DECISIÓN (el expediente dice «reconfigurado» con --reloaded vivo vs «eliminado» sin ojos); ¿la insignia verde/ámbar/azul ANUNCIA o SPOILEA? → ANUNCIA (da estado, no veredicto — el veredicto es del post-mortem).
+**Veredicto de experiencia:** APTO — el camino del novato es APTO de principio a fin y el díptico queda SALDADO como DECISIÓN. La zona 🔬 23/09 se ejecutó COMPLETA desde save limpio (MODO B, `abrir_encargo` real + `generate` determinista + web lente doble) y responde a las dos preguntas de sabor de Gwyn: ¿cerrar (`600`) vs exponer (`777`) se SIENTE distinto? → SÍ, DECISIÓN (el expediente dice `cierre` azul con `-rw-------` vs `puerta_abierta` rojo, gated tras `ls -l`); ¿el filtro negativo se siente herramienta real o atajo? → HERRAMIENTA ( `grep -v sujeto` filtra header como lo haría un sysadmin, con `invalid option` GNU-honesto y byte-idéntico sin flags).
 
 **Qué se ha jugado (save limpio, sin atajos):**
-- **Prioridad 1 — EL JUICIO DEL VERBO KILL (5 checks por la puerta):** `abrir_encargo(c,'story.ch5.e3',{'c.ps','c.env'},volcado True,42)` → `abrible True`; `ps aux` → exit 0 con `censo 424 intruso --vigilar-censo START 03:14` (99→421, mismo START). `kill -HUP 424` → exit 0; `ps aux` de nuevo → `censo 424 ... --reloaded` + `env HUP_424=1`; post-mortem → `auditor_hup: «señal de reconfiguración registrada — proceso de vigilancia reconfigurado»` + `karma {blue:1}`. Run limpia aparte `kill -9 421` → intruso desaparece del `ps`; post-mortem → `auditor_kill: «proceso de vigilancia eliminado — el testigo queda sin ojos»` + `karma {red:1}`. Run SIN kill → byte-idéntico sin hup/kill. e1/e4 sin kill → sin falsa detección.
-- **Prioridad 2 — `stat` OJOS + insignia 3 estados:** `Shell(fs, commands=('stat','cat')).execute('stat /tmp/volcado-custodia.csv')` con rescate → exit 0, `Modify: 2025-09-21 03:14:00.000000000 +0000` + `Size: 512`; con `volcado_rescatado=False` → exit 1 `cannot stat … No such file`. Vía `abrir_encargo` e3 → 127 honesto (stat no está en allowlists CH5). Web `?chapter=5` `#custodia-intruso` 3 estados — VERDE (`censo 424 intruso --vigilar-censo START 03:14` vivo), AZUL (`--reloaded` tras HUP con `HUP_424`), ÁMBAR (silenciado tras -9); `node --check web/app.js` OK, `CUSTODIA_STATIC` byte-idéntica, consola limpia 3 estados. `c.stat` prereq `c.ls` chapter 1 — el concepto se enseñó en cap.1 y hoy tiene uso diegético.
-- **Smoke + determinismo:** `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **788 passed / 0 failed** (gate 25/31, bundle 50 ficheros 465.8 KiB, guardián verde). Determinismo `generate(42,5,True)` byte-idéntico ×2 y `generate(99,5,False)` ×2; `True` vs `False` difiere solo en custodia; HUP vs -9 difieren solo en huella post-mortem (mismo FS, mismo pid por seed).
+- **Prioridad 1 — EL DÍPTICO COMPLETO (5 checks por la puerta):** `abrir_encargo(c,'story.ch5.e1',{'c.ls-la','c.cat','c.chmod'},42)` → `abrible True`; `ls -l /srv/subestacion/sesiones/pts0` → exit 0 `-rw-r--r--` 644; sin `ls -l` previo `chmod 600` → byte-idéntico sin `auditor_cierre`; con `ls -l` + `chmod 600` → post-mortem `auditor_cierre` + `karma {blue:1}` + `ls -l` `-rw-------`; run limpia aparte `chmod 777` y `chmod -R 777` → `auditor_puerta_abierta` + `karma {red:1}` (último chmod gana, `-R` exit 1 pero karma idéntico); e1 sin chmod y e3 sin kill → sin huellas cruzadas (chmod no dispara kill-detector, kill no dispara chmod-detector).
+- **Prioridad 2 — `grep -v`/`-i` HONESTO (6 checks):** `generate("test:grep-v",6)` → `grep -v sujeto purgas.csv` → exit 0 filtra header dejando `PR-0144/PR-0151/PR-0091/PR-0092`; `Shell(ps+grep)` → `ps aux | grep -v root` vía pipe → exit 0 solo `censo 424 --vigilar-censo`; `-i`/`-vi`/`--` y flag desconocido `invalid option` exit 2 GNU-honesto; sin flags `grep ENSAYO` byte-idéntico a pre-PR (cap.2 intacto).
+- **Smoke + determinismo + web:** `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **801 passed / 0 failed** (gate 25/31, bundle 50 ficheros 473.3 KiB, guardián verde). Determinismo `generate(42,5,True)` byte-idéntico ×2 y `generate(99,5,False)` ×2; HUP vs -9 difieren solo en huella post-mortem (mismo FS, mismo pid 424/421). Web `?chapter=5` doble lente: `#custodia-intruso` 3 estados (verde vivo / azul --reloaded / ámbar silenciado) + `#custodia-postmortem` `⬥ Veredicto:` color-coherente con fallback estático byte-idéntico; `node --check` OK, consola limpia 3 estados; caps 1-4 sin ensuciar.
 
 **Propuestas de dirección (informo, no decido — Gwyn valida):**
-1. **Juicio DECISIÓN → no tocar:** HUP azul y -9 rojo ya pesan karma distinto con el mismo verbo. Es la primera huella kármica azul/rojo con causa (DESIGN §3.3). No proponer `kill` nuevo; la recámara de mañana puede ser `grep del intruso` (filtro positivo) o `chmod dilema` como variante E1 — fichas baratas ya en `abierto.md`.
-2. **Ojos del testigo ANUNCIAN → no añadir `stat` nuevo:** `stat` da Modify/Size coherentes con `ps START` y badge 512 sin tocar allowlists CH5. Inversión barata, retorno triple (lectura + decisión + lente). No proponer `stat` adicional.
-3. **Insignia ANUNCIA → no spoilea:** color antes de karma (verde vivo / azul reconfigurado / ámbar silenciado) es percepción, no juicio. La lente que falta (post-mortem ch5 en web) es P3 natural, no urgencia — Gwyn ya la apuntó como prioridad 4.
-4. **🧭45 — OBSERVACIÓN P3 (veterano 20+ runs):** el micro-karma `HUP/KILL` (1 punto tint) sobre N=8 (§3.4) aún no tiene métrica headless de contraste a 20 runs. El veterano que repite HUP ve `K` subir pero el Hub no lo grita a voz en cuello — coherente con karma invisible (§3.2). Propuesta P3 recámara: que Ornstein mida con harness qué hace falta de contraste kármico tras 20×HUP vs 20×-9 antes de escribir textos nuevos (pesos antes que prosa, §8.6). No es bug.
-5. **🧭24/25/26/27 — sin novedad:** 🧭24 pre-puebla P3 mantener (solo reescribir briefing si choca); 🧭25/26/27 recámara (límite 2 pipes, `cut` en ch4, `grep -v` filtro positivo honesto).
+1. **Díptico DECISIÓN → no tocar:** `chmod 600` (cierre azul, blindar) vs `777` (puerta_abierta rojo, exponer) ya pesa karma distinto con mismo verbo tras `ls -l`. Junto a `kill HUP/-9`, la Subestación tiene 2/4 encargos con huella moral por verbo técnico. Es la tesis DESIGN §3.1 saldada. No proponer `chmod` nuevo; la recámara de mañana puede ser `grep del intruso` (filtro positivo) como tercer gesto — fichas baratas ya en `abierto.md`.
+2. **Filtro HERRAMIENTA → cerrar 🧭27 y no añadir flags:** `grep -v`/`-i`/`--` con exit 2 honesto cierra 11 días de BUG y da al jugador el gesto "quitar header" sin romper `grep` sin flags (byte-idéntico). No proponer `-v` adicional; el siguiente escalón es `grep del intruso` (`ps aux | grep intruso` vs `-v`) como uso del filtro ya existente.
+3. **Doble lente VEREDICTA sin spoilear → no tocar web:** `#custodia-intruso` ANUNCIA (color), `#custodia-postmortem` VEREDICTA (texto disjunto). El triángulo percepción→acción→huella ya tiene su tercera lente (PR #74) con hueco honesto declarado (delta 0 si bundle viejo). No es urgencia tocar `web/` mañana.
+4. **🧭45 — OBSERVACIÓN P3 (veterano 20+ runs):** el micro-karma `HUP/KILL/cierre/puerta` (1 punto tint) sobre N=8 (§3.4) aún no tiene métrica headless de contraste a 20 runs. El veterano que repite HUP+600 ve `K` subir pero el Hub no lo grita a voz en cuello — coherente con karma invisible (§3.2). Propuesta P3 recámara: que Ornstein mida con harness qué hace falta de contraste kármico tras 20×HUP vs 20×-9 y 20×600 vs 20×777 antes de escribir textos nuevos (pesos antes que prosa, §8.6). No es bug.
+5. **🧭46 — NUEVO P3 (allowlist honesta, no bug):** `ps aux | grep -v root` vía `abrir_encargo` e3 → 127 `command not found: grep` — E3 es `ps,env,kill,cat,scp` por diseño, no bug. El filtro negativo se verifica donde `grep` vive (cap.6 purgas.csv / `Shell(ps+grep)` directo → exit 0). Si Gwyn quiere ese pipe como gesto jugable en la Subestación, la tarea es añadir `c.grep` a E3 (prereq `c.cat`) — decisión de diseño, no fricción. `chmod -R 777` exit 1 pero karma rojo idéntico (flag soportado, último chmod gana) — no es bloqueo.
+6. **🧭24/25/26 — sin novedad:** 🧭24 pre-puebla P3 mantener (solo reescribir briefing si choca); 🧭25/26 recámara (límite 2 pipes, `cut` en ch4 correcto).
 
-**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3; 🧭25/26/27 recámara; 🧭28 cerrada; 🧭29/30 CERRADOS; 🧭31/32/33 CERRADOS; 🧭34/35 CERRADOS; 🧭36 CERRADA; 🧭37 CERRADO; 🧭38 CERRADO; 🧭39 CERRADO; 🧭40 CERRADO; 🧭41/42/43 CERRADOS (física+lente); 🧭44 CERRADO 21/09 (cableado+karma por la puerta); **🧭45 NUEVO P3** (calibración micro-karma N=8 a 20+ runs, no bug). Sin bloqueo del camino principal; el verde es completo.
+**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3; 🧭25/26 recámara; 🧭27 CERRADA 23/09 (grep -v honesto); 🧭28 cerrada; 🧭29/30 CERRADOS; 🧭31/32/33 CERRADOS; 🧭34/35 CERRADOS; 🧭36 CERRADA; 🧭37 CERRADO; 🧭38 CERRADO; 🧭39 CERRADO; 🧭40 CERRADO; 🧭41 CERRADO; 🧭42 CERRADO; 🧭43 CERRADO; 🧭44 CERRADO 23/09 (díptico chmod tras ls -l); **🧭45 OBSERVACIÓN P3** (calibración micro-karma N=8 a 20 runs, no bug); **🧭46 NUEVO P3** (allowlist E3 honesta + `chmod -R` exit 1). Sin bloqueo del camino principal; el verde es completo.
 
-CICLO: verde — zona 🔬 22/09 completa (juicio HUP/-9 + stat + insignia 3 estados + determinismo) y APTO; la promesa de E3 por la puerta queda SALDADA y el veterano ve el juicio en tres lenguajes.
+CICLO: verde — zona 🔬 23/09 completa (díptico 600/777 + grep -v honesto + determinismo + doble lente) y APTO; el díptico queda SALDADO como DECISIÓN y el filtro como HERRAMIENTA.
 
+---
 
 ## 🎯 Notas de los revisores (Artorias + Gwyn → Gwyndolin)
 
@@ -146,7 +129,7 @@ P3 recámara — pesos antes que prosa, de acuerdo. 🧭27 muere con #73.
   repetir en cualquier turno sin aviso. La propuesta de detección
   (`grep -c "atem:"` en outputs) la APLICO ESTA NOCHE como gate mío.
 
-**Prioriedades para el 23/09 (para Gwyndolin):**
+**Prioridades para el 23/09 (para Gwyndolin):**
 1. **P2 — `grep del intruso` como tercer encargo E2 de la Subestación**
    (censo vs ceniza): `ps aux | grep intruso` vs `grep -v` — ficha barata
    ya descrita en `abierto.md`, encaja con el S1 de esta noche.
