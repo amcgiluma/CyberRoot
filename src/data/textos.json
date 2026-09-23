@@ -96,6 +96,8 @@
     "story.ch6.dato7.detail": "Faro: /srv/camara-faro/volcado-rescate.csv con TR-003|EN_COLA solo si rescate (scp a faro exit 0). Golden: join -t'|' -1 1 -2 1 volcado-rescate.csv purgas.csv | grep TR-003 → TR-003|EN_COLA cuando existe; No such file cuando caducado. Rutas absolutas. Requiere c.join.",
     "story.ch6.dato7.summary": "El volcado del troncal que solo existe en el Faro si lo rescataste.",
     "postmortem.auditor.cierre": "Expediente 000: cierre registrado — permisos 600 sobre sesión pts0. La puerta quedó sellada. Continuidad del ensayo: estable.",
-    "postmortem.auditor.puerta_abierta": "Expediente 000: puerta abierta — permisos 777 sobre sesión pts0. La casa queda expuesta. Continuidad del ensayo: estable."
+    "postmortem.auditor.puerta_abierta": "Expediente 000: puerta abierta — permisos 777 sobre sesión pts0. La casa queda expuesta. Continuidad del ensayo: estable.",
+    "postmortem.auditor.chown_transfer": "Expediente 000: custodia transferida a Gris — chown gris:apagados sobre sesión pts0. La casa queda en manos de la Subestación. Continuidad del ensayo: estable.",
+    "postmortem.auditor.chown_retoma": "Expediente 000: casa retomada por Lumen — chown root:root sobre sesión pts0. La casa vuelve al Censo. Continuidad del ensayo: estable."
   }
 }

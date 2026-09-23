@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from core.engine.postmortem import (
     DEFAULT_NOISE_BUDGET,
+    LINE_KEY_CHOWN_RETOMA,
+    LINE_KEY_CHOWN_TRANSFER,
     LINE_KEY_CIEGA,
     LINE_KEY_CIERRE,
     LINE_KEY_CORTE,
@@ -42,6 +44,8 @@ __version__ = "0.2.0"
 __all__ = [
     "build_postmortem",
     "DEFAULT_NOISE_BUDGET",
+    "LINE_KEY_CHOWN_RETOMA",
+    "LINE_KEY_CHOWN_TRANSFER",
     "LINE_KEY_CIEGA",
     "LINE_KEY_CIERRE",
     "LINE_KEY_CORTE",
