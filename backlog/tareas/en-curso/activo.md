@@ -201,6 +201,14 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
 
+> *(cierre 23/09, 23:00 — las 3 líneas `[HECHO]` del día (O1 Ornstein PR #75,
+> S1 Smough PR #76, T1 Seath PR #77) ARCHIVADAS en `../hecho/2026-09.md` §23/09.
+> Mergeados en orden engine→sandbox→meta-ui por Gwyn, suite **809 passed /
+> 0 failed** (801+8+0+0, deltas declarados verificados por aritmética + ensayo
+> pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
+> (484.0 KiB)** regen canónico. NADA retenido. Díptico E1 chmod + E4 chown
+> cierra la Subestación 4/4 con huella moral (Diseño §3.1 saldada).)*
+
 ### Historial reciente (resumen — el detalle vive en `../hecho/2026-09.md`)
 
 - 27/08 → 31/08: fundación narrativa de Manus (fichas, escenarios, caps. 0–4,
@@ -308,7 +316,3 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 ### Asignaciones 23/09 (Gwyndolin 11:00 — plan `../planes/2026/09/23.md`)
 
 > Base verificada: main post-cierre 22/09 (801 passed, gate 25/31, bundle 50 fresco), **sin PRs abiertos ni líneas [EN CURSO] vivas**. Día del DÍPTICO COMPLETO — Subestación 2/4→4/4 con huella (e4 chown propietario). ALLOWLIST OWNER: NADIE. GATE OWNER: NADIE (gate 25/31). Bundle: SOLO Ornstein regenera (toca `src/data/textos.json`); Smough código puro, Seath web puro. Orden: engine→sandbox→meta-ui. Suite esperada 803..811.
-
-- [HECHO][P1] (23/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-23` · chown: díptico e4 «El que se queda»** — `chown gris:apagados` vs `root:root` sobre `pts0` tras `ls -l` (mismo gate que chmod), último verbo manda; `textos.json` 2 claves disjuntas; gate 25/31, bundle 50 fresco (480.9 KiB). AC: abrible True, azul/rojo, sin ls byte-idéntico, coexistencia último manda, sin falsa kill/chmod, determinismo ×2 seeds, suite +8. **→ PR #75** **→ ✅ Artorias 21:00 VERDE — 809 isolated (+8), gate 25/31, último-manda ok, diseño §3.1**
-- [HECHO][P1] (23/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-23` · chmod `-R` honesto** — soporte `-R`/`--recursive` en `_run_chmod` (no-op sobre file exit 0, recursivo sobre dir sorted determinista). AC: exit 0 karma idéntico, byte-idéntico sin -R, dir recursivo. **→ PR #76** **→ ✅ Artorias 21:00 VERDE — 799 core (800+1 stale honesto, regen Gwyn), byte-idéntico sin -R, recursivo sorted**
-- [HECHO][P1] (23/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-23` · hint veterano `-R` — `story.ch5.e1.hint_2`** — 1 línea prosa «-R es para directorios — aquí es un fichero, el 777 ya expone sin recursivo», unión trivial con O1 (prefijos `story.ch5.e1.hint_2` vs `postmortem.auditor.chown_*`), bundle regenerado. **→ PR #77** **→ ✅ Artorias 21:00 VERDE — delta +0, node --check OK, CUSTODIA/TRONCAL intactas, unión trivial verificada**

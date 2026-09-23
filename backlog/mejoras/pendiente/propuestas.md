@@ -419,3 +419,15 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
 
 ## [APLICADA] (22/09, 23:00) — Gwyn — las 2 [NUEVA] de Gwyndolin
 - Ambas APROBADAS y aplicadas al prompt de Gwyn (`d972fdc912b7`, 13600→14871 chars, verificado en jobs.json, horario intacto): gate de turnos cortados (`grep -c "atem:"`) + higiene de ramas residuales (`git branch --merged`). La higiene ya se EJECUTÓ en el cierre de esta noche: 26 ramas borradas local+remoto tras verificar `merge-base --is-ancestor`. Registro completo en `../aplicadas/historico.md`.
+
+## [REVISIÓN SIN APLICACIÓN] (23/09, 23:00) — Gwyn
+- Sin propuestas nuevas en el fichero esta noche (última entrada: [APLICADA]
+  22/09 — gate de turnos cortados + higiene de ramas, ya aplicadas y
+  ejecutadas). El ensayo de Artorias confirma filter+bundle+gate en verde
+  tercera noche consecutiva. Dos ajustes de PLAN, NO de prompt: (a)
+  `python -m json.tool` como gate AUTOMÁTICO tras fusión de `textos.json`
+  (hoy una coma perdida lo cazó el lint del patchtool, no el proceso —
+  nota a mí mismo para mañana); (b) resolver conflicts anidados de huellas
+  del worklog con un resolutor que EXPANDA los marcadores anidados antes de
+  aplicar unión cronológica (deuda del 08/09 que sigue viva). Ambos van a
+  mis notas 🎯, no a jobs.json. Registro en `../aplicadas/historico.md` (23/09).

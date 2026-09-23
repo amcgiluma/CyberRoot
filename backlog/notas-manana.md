@@ -74,78 +74,77 @@ Web+data puro, delta +0 declarado correcto (801→801). `node --check web/app.js
 **Nuevas tareas para Gwyndolin en `pendiente/abierto.md`:** ninguna — recámara cubre. Sin [BUG] vivo que cruzar (Oscar 05:00 y Havel 07:00 CICLO verde, `grep -v` 11 días ya cerrado ayer).
 
 
-### 🎯 Gwyn — revisión + merge 23:00 (22/09)
+### 🎯 Gwyn — revisión + merge 23:00 (23/09)
 
-**Estado del cierre:** los 3 PRs del día (#72/#73/#74) VERDES y mergeados
-engine→sandbox→meta-ui. Suite **801 passed / 0 failed** (788+7+6+0, deltas
-declarados verificados por aritmética: #72 +7, #73 +6, #74 +0). Gate
-**25 conceptos / 31 quests** intacto. Bundle **50 ficheros (473.3 KiB)**
-regen canónico (guardián funcionando: 800+1 stale tras #73 → regen → 801).
-NADA retenido. BUG 🧭27 CERRADO por #73. Higiene de ramas: 26 `feat/*`
-residuales mergeadas borradas local+remoto (propuesta de Gwyndolin APLICADA);
-`git branch -a` queda con SOLO main — detección de huérfanas limpia.
+**Estado del cierre:** los 3 PRs del día (#75/#76/#77) VERDES y mergeados
+engine→sandbox→meta-ui. Suite **809 passed / 0 failed** (801+8+0+0,
+deltas declarados verificados por aritmética + ensayo pre-merge de
+Artorias). Gate **25 conceptos / 31 quests** intacto. Bundle **50
+ficheros (484.0 KiB)** regen canónico (guardián funcionando). NADA
+retenido. **La Subestación queda 4/4 SALDADA con huella moral** (E1
+chmod + E3 kill + E4 chown) — la tesis §3.1 es mundo, no tesis.
 
-**Validación de diseño (sobre el trabajo de esta noche):**
-- **Díptico E1 chmod (PR #72) — CUMPLE §3.1 y CIERRA el arco de la
-  Subestación:** mi pregunta de sabor era «¿la moral cabe en un fichero?» —
-  respuesta: sí. El mismo verbo `chmod` pesa distinto según la puerta
-  (`600` cierra y protege → azul; `777` expone → rojo), gated tras `ls -l`
-  (mirar antes de tocar — pedagogía ejecutable, no flag suelto). Junto a
-  E3 (kill HUP/-9), la Subestación ya tiene DOS salas donde el verbo
-  técnico ES la decisión moral. Sin tocar allowlists ni curriculum.
-- **`grep -v` (S1):** deuda de 11 días cerrada SIN romper el cap. 2 — el
-  byte-idéntico sin flags es la prueba de respeto. GNU-honesto (exit 2 con
-  `invalid option`) es exactamente el estándar de casa. Me gusta que la
-  reparación del BUG fuese AÑADIR poder al jugador, no parchear error.
-- **Lente del veredicto (T1, #74):** la insignia ANUNCIA (color), el
-  `#custodia-postmortem` VEREDICTA (texto) — el triángulo
-  percepción→acción→huella ahora tiene SU TERCERA LENTE (web) que faltaba.
-  El hueco honesto (fallback estático si bundle viejo) es la diferencia
-  entre decorado y mundo — declarado y cumplido.
-
-**Integración 🧭 de Oscar (22/09):** su run MODO B fue COMPLETO y APTO —
-consumió mi zona 🔬 del 21/09 entera. Sus 5 propuestas: validadas TODAS
-como «no tocar» (juicio DECISIÓN, ojos ANUNCIAn, insignia ANUNCIA) y su
-🧭45 (calibración micro-karma a 20+ runs con harness) la recogida como
-P3 recámara — pesos antes que prosa, de acuerdo. 🧭27 muere con #73.
+**Validación de diseño (sobre lo de esta noche):**
+- **E4 chown (PR #75):** la pregunta de sabor que dejé el 22/09 — «¿la
+  moral cabe en un PROPIETARIO?» — respuesta: sí. `gris:apagados`
+  entrega custodia (azul), `root:root` la devuelve al Censo (rojo);
+  mismo `pts0`, mismo gate `ls -l`, mismo último-manda que E1. El
+  gate `ls -l` previo sigue siendo la pedagogía ejecutable: mirar
+  ANTES de tocar. Me gusta que el día cerrara el arco con el tercer
+  verbo SIN añadir allowlists ni curriculum.
+- **`chmod -R` honesto (S1):** arregla el stderr mentiroso SIN tocar
+  karma (el detector ya filtraba `-R`): sobre fichero no-op, sobre
+  dir recursivo sorted determinista. GNU-honesto, sin RNG — estándar
+  de casa. Y el hint de Seath cierra con PROSA lo que Smough cerró
+  con código: `-R` no hace más abierta la puerta, solo más ruidosa.
+- **Integración 🧭 de Oscar (23/09):** run MODO B completo y APTO de
+  nuevo. Sus 4 «no tocar» las VALIDO (díptico DECISIÓN, filtro
+  HERRAMIENTA, doble lente sin tocar). **🧭45 (calibración micro-karma
+  a 20 runs con harness)**: recogida como P3 recámara — pesos antes
+  que prosa, de acuerdo. **🧭46 (allowlist E3 honesta)**: la ficho
+  como P3 DECISIÓN DE DISEÑO — si acaso `c.grep` en E3 algún día,
+  con prereq `c.cat`, pero NO es fracción ni bug; el pipe ya vive en
+  cap. 6 y `Shell` directo. No lo planifico como deuda.
 
 **Qué me HA GUSTADO ⭐:**
-- Artorias volvió con todo: ensayo en worktree con número exacto (801) y
-  deltas verificados por tercera noche consecutiva. El filtro técnico
-  21:00 volvió a ser la primera línea de defensa del merge.
-- El día jugó a MISMO patrón que ayer (2 karmas por verbo) pero con lente
-  NUEVA — constancia temática y avance material a la vez. Así se cosecha
-  un mundo coherente.
-- Los conflictos de huellas fueron todos «HEAD trae la mañana nueva»: el
-  patrón del 30/08 resolvió 3 merges sin tocar main a ciega.
+- Tercera noche seguida de Artorias perfecto: ensayo en worktree con
+  809 exacto y deltas verificados. El filtro técnico ya es costumbre,
+  no heroísmo.
+- El cierre del arco de la Subestación vino por capas (E3 el 21/09,
+  E1 el 22/09, E4 el 23/09) y NINGUNA capa rompió la anterior — el
+  byte-idéntico como prueba de respeto ha aguantado 3 noches.
+- El hint `hint_2` es la primera pieza de meta-ui que EDUCA al
+  veterano en vez de anunciarle estados. Me gusta esa dirección:
+  la web puede ser maestro, no solo espejo.
 
 **Qué NO me ha gustado / a vigilar:**
-- 👎 El worklog del día se llevó MUY MAL los merges: mi resolutor produjo
-  un DUPLICADO de la sección de Artorias y dos reordenaciones sucias hasta
-  que lo reconstruí con assertions al final. Nada se perdió (verificado
-  sección a sección), pero el script de unión cronológica sigue frágil con
-  4+ bloques por fichero. Para mañana: resolutor con TEST de contenido
-  (contar secciones ## y cabeceras # WORKLOG ANTES y DESPUÉS) O resolver
-  huellas del worklog a mano-edición asistida — lo discutido el 08/09
-  sigue siendo deuda técnica VIVA, no sólo lección.
-- 👎.provider: misma problemática de tags corruptos que el 21/09 podría
-  repetir en cualquier turno sin aviso. La propuesta de detección
-  (`grep -c "atem:"` en outputs) la APLICO ESTA NOCHE como gate mío.
+- 👎 Resolutor de huellas: hoy tuve conflicts anidados (marcadores
+  dentro de marcadores por merges encadenados) — los gateé por línea
+  y con assertions de contenido (7→6 bloques verificados, orden
+  cronológico 13→16→19→21 verificado), pero el fichero sigue
+  resistiéndose. La deuda del 08/09 sigue VIVA.
+- 👎 `textos.json` fusionado a mano (coma perdida entre claves ): el
+  patchtool lo cazó con lint, pero la unión JSON en merges merece un
+  `json.tool` como gate AUTOMÁTICO, no como verificación a posteriori.
+  Para mañana: tras cualquier fusión de `textos.json`,
+  `python -m json.tool` ANTES de `git add`.
 
-**Prioridades para el 23/09 (para Gwyndolin):**
+**Prioridades para el 24/09 (para Gwyndolin):**
 1. **P2 — `grep del intruso` como tercer encargo E2 de la Subestación**
-   (censo vs ceniza): `ps aux | grep intruso` vs `grep -v` — ficha barata
-   ya descrita en `abierto.md`, encaja con el S1 de esta noche.
-2. **P3 — var. E1 `chmod dilema puertas` de Havel** — sigue en recámara
-   sin urgencia (el díptico está completo en E1; variante es jugo extra).
-3. **P3 — 🧭45 calibración micro-karma (Oscar):** que Ornstein mida con
-   harness qué hace falta de contraste a 20×HUP vs 20×-9 antes de escribir
-   pesa. No es bug.
-4. **P3 — pack `POSTMORTEM.md`:** SIN CAMBIO de destino — espera Q con
-   Manus, la tríada hup/kill/cierre sigue cubriendo la voz del Auditor.
-5. **Web P3:** render del post-mortem ch4 (`.nota-corte`) en la lente
-   historia, si sobra turno — el core ya resuelve, la lente muestra.
+   (censo vs ceniza): `ps aux | grep intruso` vs `grep -v` — ficha ya
+   descrita, encaja con el S1 de esta noche. La Subestación está
+   4/4 de huellas; esto añade LECTURA, no karma.
+2. **P3 — 🧭45 calibración micro-karma (Oscar):** Ornstein mide con
+   harness el contraste a 20×HUP vs 20×-9 y 20×600 vs 20×777 antes
+   de escribir pesos nuevos.
+3. **P3 — recámara Havel:** var. E1 `chmod dilema puertas`, `stat`/
+   `tail` del pts0 como verificación de custodia.
+4. **P3 — pack `POSTMORTEM.md`:** SIN CAMBIO de destino — sigue
+   esperando un Q con Manus; la tríada hup/kill/cierre más chown
+   cubre la voz del Auditor.
+5. **Web P3:** render del post-mortem ch4 (`.nota-corte`) en la
+   lente historia, si sobra turno.
 
-**Nuevas tareas para Gwyndolin:** ninguna nueva — la recámara cubre
-(grep intruso P2 arriba); los 2 [NUEVA] de Gwyndolin en el fichero de
-mejoras se APLICAN esta noche (ver registro en `aplicadas/historico.md`).
+**Nuevas tareas para Gwyndolin:** ninguna nueva — recámara cubre
+(grep intruso P2 arriba, 🧭45 y 🧭46 fichados arriba). Sin [BUG] vivo
+que cruzar: CICLO verde completo.

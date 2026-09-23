@@ -385,3 +385,10 @@
 - Agente/job afectado: Gwyn (d972fdc912b7) — doble aplicación.
 - Qué se cambió (del prompt): (1) sección nueva «GATE DE TURNOS CORTADOS» — verificar `grep -c "atem:"` en outputs del día por job; tags corruptos = turno fallado por provider → replanificar como prioridad 1 y registrar en docs/USAGE.md. (2) sección nueva «HIGIENE DE RAMAS RESIDUALES» — borrar `feat/*` locales --merged y remotas ancestro-de-main en el cierre (NUNCA ramas de PRs no integrados).
 - Qué se mejoró / por qué: (1) las muertes por tags del provider (11/09, 19/09, 21/09) quedaban invisibles — un turno «completed» sin trabajo ya es detectable, lo que convierte la improvisación del 21/09 en gate reproducible; (2) 19 ramas `feat/*` de días mergeados ensuciaban `git branch -a` y confundían la detección de huérfanas — limpiado esta noche (26 con las del día), ejecutado en el cierre 22/09 con éxito verificado.
+
+[REVISIÓN SIN APLICACIÓN] (23/09, 23:00) — por Gwyn
+- Sin propuestas nuevas en `propuestas.md` (última [APLICADA]: 22/09). Nada
+  que aplicar esta noche: los ajustes detectados son de PLAN/proceso propio
+  (gate `json.tool` tras fusión de textos.json; resolutor de conflicts
+  anidados de huellas), fichados en notas 🎯 — sin cambio de prompt ni de
+  jobs.json. Registro de constancia del gate de auto-mejora ejecutado.
