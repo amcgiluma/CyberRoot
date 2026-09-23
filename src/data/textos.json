@@ -96,6 +96,7 @@
     "story.ch6.dato7.detail": "Faro: /srv/camara-faro/volcado-rescate.csv con TR-003|EN_COLA solo si rescate (scp a faro exit 0). Golden: join -t'|' -1 1 -2 1 volcado-rescate.csv purgas.csv | grep TR-003 → TR-003|EN_COLA cuando existe; No such file cuando caducado. Rutas absolutas. Requiere c.join.",
     "story.ch6.dato7.summary": "El volcado del troncal que solo existe en el Faro si lo rescataste.",
     "postmortem.auditor.cierre": "Expediente 000: cierre registrado — permisos 600 sobre sesión pts0. La puerta quedó sellada. Continuidad del ensayo: estable.",
-    "postmortem.auditor.puerta_abierta": "Expediente 000: puerta abierta — permisos 777 sobre sesión pts0. La casa queda expuesta. Continuidad del ensayo: estable."
+    "postmortem.auditor.puerta_abierta": "Expediente 000: puerta abierta — permisos 777 sobre sesión pts0. La casa queda expuesta. Continuidad del ensayo: estable.",
+    "story.ch5.e1.hint_2": "-R es para directorios — aquí es un fichero, el 777 ya expone sin recursivo."
   }
 }
