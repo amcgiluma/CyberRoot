@@ -3,10 +3,13 @@
 S1 19/09 (Smough): física mínima de auditoría y defensa para la Subestación
 (05-subestacion.md). Cap. 5 es la ÚNICA incursión invertida: defender la
 casa cerrando permisos (E1/E4). Semántica GNU-honesta (DESIGN §2.6.8) en v0
-minimalista: solo lo que exige CH5-E1/E3/E4, sin -R ni modos simbólicos
+minimalista: solo lo que exige CH5-E1/E3/E4, sin modos simbólicos
 complejos. Sin RNG (§2.2).
+S1 23/09 (Smough): soporte `-R`/`--recursive` honesto — sobre fichero es
+no-op válido (exit 0, mismo karma que sin -R); sobre dir recorre children
+en orden determinista (sorted codepoint), sin RNG.
 
-- `chmod MODE FILE...` — MODE octal 0-777 / 0-7777 (3-4 dígitos 0-7) o
+- `chmod [-R] MODE FILE...` — MODE octal 0-777 / 0-7777 (3-4 dígitos 0-7) o
   simple `+x`/`-x`/`+w`/`-r` como alias honesto para E1/E4 (Gwyndolin 19/09:
   `chmod 600` es el caso canónico de CH5). Cambia `node.mode` (str) y deja
   mtime+1. Errores GNU: missing operand, invalid mode, No such file, Is a
@@ -41,6 +44,26 @@ def _chmod_mode_valid(mode: str) -> bool:
     return bool(_OCTAL_RE.match(mode)) or mode in _SIMPLE_SYMBOLIC
 
 
+def _is_recursive_flag(tok: str) -> bool:
+    """True si tok es un flag de recursividad (-R / --recursive / combinados tipo -Rv)."""
+    if tok in ("-R", "--recursive"):
+        return True
+    if tok.startswith("-") and not tok.startswith("--") and "R" in tok:
+        # -Rv, -vR, -Rcf etc — cualquier combinado que contenga R
+        return True
+    return False
+
+
+def _chmod_recursive(node: DirNode | FileNode, mode: str) -> None:
+    """Aplica mode recursivamente en orden determinista (sorted por codepoint)."""
+    effective = mode if _OCTAL_RE.match(mode) else "755" if "+x" in mode else "644"
+    node.mode = effective
+    node.mtime += 1
+    if isinstance(node, DirNode):
+        for name in sorted(node.children):
+            _chmod_recursive(node.children[name], mode)
+
+
 def _run_chmod(
     fs: FileSystem,
     cwd: str,
@@ -56,9 +79,53 @@ def _run_chmod(
             exit_code=1,
             noise=noise,
         )
-    if len(argv) < 2:
+    # --- parse flags leading (-R / --recursive / -v etc) antes del modo ---
+    recursive = False
+    idx = 0
+    # flags válidos que preceden al modo (GNU: -R --recursive -v --verbose -c -f etc)
+    known_flags = {
+        "-R", "--recursive", "-v", "--verbose", "-c", "--changes",
+        "-f", "--silent", "--quiet",
+    }
+    while idx < len(argv):
+        tok = argv[idx]
+        if tok == "--":
+            idx += 1
+            break
+        if tok in known_flags or _is_recursive_flag(tok):
+            if _is_recursive_flag(tok):
+                recursive = True
+            idx += 1
+            continue
+        if tok.startswith("-") and not tok.startswith("--") and len(tok) > 1:
+            # flags combinados tipo -Rv, -cf etc
+            # si contiene R → recursive; si todos son v/c/f/R → flag válido
+            chars = set(tok[1:])
+            if chars <= {"R", "v", "c", "f"}:
+                if "R" in chars:
+                    recursive = True
+                idx += 1
+                continue
+            # flag desconocido con R? ya tratado arriba; resto → invalid option más tarde
+            # si es combinación desconocida, dejar que el parsing de modo lo detecte
+            # pero no avanzar como flag: romper y tratar como posible modo inválido
+            if any(ch in chars for ch in "Rvcf"):
+                # tratar como flag igualmente (GNU ignora orden)
+                if "R" in chars:
+                    recursive = True
+                idx += 1
+                continue
+        break
+    remaining = argv[idx:]
+    if not remaining:
+        return CommandResult(
+            stderr="chmod: missing operand\nTry 'chmod --help' for more information.",
+            exit_code=1,
+            noise=noise,
+        )
+    if len(remaining) < 2:
         # falta file operand
-        mode = argv[0]
+        mode = remaining[0]
         if not _chmod_mode_valid(mode):
             return CommandResult(
                 stderr=f"chmod: invalid mode: ‘{mode}’\nTry 'chmod --help' for more information.",
@@ -70,14 +137,14 @@ def _run_chmod(
             exit_code=1,
             noise=noise,
         )
-    mode, *files = argv
+    mode, *files = remaining
     if not _chmod_mode_valid(mode):
         return CommandResult(
             stderr=f"chmod: invalid mode: ‘{mode}’\nTry 'chmod --help' for more information.",
             exit_code=1,
             noise=noise,
         )
-    # Manejar -- separador
+    # Manejar -- separador como modo
     if mode == "--":
         return CommandResult(
             stderr="chmod: missing operand\nTry 'chmod --help' for more information.",
@@ -100,9 +167,12 @@ def _run_chmod(
             else:
                 errs.append(f"chmod: cannot access '{f}': {e.kind}")
             continue
-        # Cambia mode
-        node.mode = mode if _OCTAL_RE.match(mode) else "755" if "+x" in mode else "644"
-        node.mtime += 1
+        # Cambia mode — con -R recursivo sobre dir
+        if recursive and isinstance(node, DirNode):
+            _chmod_recursive(node, mode)
+        else:
+            node.mode = mode if _OCTAL_RE.match(mode) else "755" if "+x" in mode else "644"
+            node.mtime += 1
         any_ok = True
     if errs:
         return CommandResult(
