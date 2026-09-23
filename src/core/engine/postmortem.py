@@ -76,6 +76,9 @@ LINE_KEY_KILL = "postmortem.auditor.kill"
 #: O1 22/09 (Ornstein, díptico E1) — huella kármica de la puerta: 600 vs 777.
 LINE_KEY_CIERRE = "postmortem.auditor.cierre"
 LINE_KEY_PUERTA_ABIERTA = "postmortem.auditor.puerta_abierta"
+#: O1 23/09 (Ornstein, díptico E4) — huella kármica del propietario: gris vs root sobre pts0.
+LINE_KEY_CHOWN_TRANSFER = "postmortem.auditor.chown_transfer"
+LINE_KEY_CHOWN_RETOMA = "postmortem.auditor.chown_retoma"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -707,6 +710,110 @@ def _detect_chmod_puerta(shell_dict: dict[str, Any]) -> str | None:
     return last
 
 
+def _detect_chown_puerta(shell_dict: dict[str, Any]) -> str | None:
+    """Detecta huella kármica del propietario: `chown gris:apagados` vs `chown root:root`.
+
+    Escanea el history y guarda el ÚLTIMO chown relevante sobre `pts0`:
+    - `chown gris:*` o `chown *:apagados` (canonical `gris:apagados`) → \"transfer\"
+    - `chown root:*` (canonical `root:root`) → \"retoma\"
+    Soporta `-R`/`--recursive` antes del owner, modos con `:` y múltiples ficheros.
+    Solo cuenta si el fichero contiene `pts0`. Sin pts0 → ignorar.
+    Retorna \"transfer\" / \"retoma\" o None. Solo shlex, sin sandbox.
+    """
+    last: str | None = None
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        if "chown" not in line or "pts0" not in line:
+            continue
+        try:
+            argv = shlex.split(line)
+        except ValueError:
+            argv = line.split()
+        if not argv:
+            continue
+        try:
+            start = argv.index("chown")
+        except ValueError:
+            continue
+        # filtrar flags -R etc antes del spec
+        i = start + 1
+        spec: str | None = None
+        while i < len(argv):
+            tok = argv[i]
+            if tok in ("-R", "--recursive", "-v", "--verbose", "-c", "--changes", "-f", "--silent", "--quiet", "-h", "--no-dereference"):
+                i += 1
+                continue
+            if tok.startswith("-"):
+                if "R" in tok or "v" in tok or "c" in tok or "f" in tok or "h" in tok:
+                    i += 1
+                    continue
+                if tok.startswith("--"):
+                    i += 1
+                    continue
+                i += 1
+                continue
+            spec = tok
+            break
+        if spec is None:
+            continue
+        # spec es OWNER[:GROUP] — extraer owner y group
+        if ":" in spec:
+            owner, group = spec.split(":", 1)
+            # owner: vacío invalida, group puede ser vacío
+            if not owner:
+                continue
+        else:
+            owner = spec
+            group = None
+        # determinar tipo
+        # azul: owner gris OR group apagados
+        # rojo: owner root (cubre root:root y root:*)
+        is_transfer = (owner == "gris") or (group == "apagados")
+        is_retoma = (owner == "root")
+        # prioridad: transfer si ambos? gris nunca root, pero caso gris:root sería transfer por owner
+        if is_transfer:
+            # verifica que realmente haya file pts0 entre los ficheros (ya filtrado por substring, pero doble check)
+            # busca ficheros tras spec
+            files = argv[i + 1 :] if i + 1 < len(argv) else []
+            if any("pts0" in f for f in files) or "pts0" in line:
+                last = "transfer"
+        elif is_retoma:
+            files = argv[i + 1 :] if i + 1 < len(argv) else []
+            if any("pts0" in f for f in files) or "pts0" in line:
+                last = "retoma"
+    return last
+
+
+def _last_puerta_index(shell_dict: dict[str, Any], verb: str) -> int:
+    """Último índice en history donde aparece verb+modo relevante sobre pts0/600/777.
+
+    verb: \"chmod\" o \"chown\". Retorna -1 si no hay.
+    """
+    last = -1
+    for idx, entry in enumerate(shell_dict.get("history", []) or []):
+        line = str(entry.get("line", ""))
+        if verb not in line:
+            continue
+        if verb == "chmod":
+            # necesita 600 o 777 en línea y pts0 no requerido? chmod puede no tener pts0 pero igual es dilema? Para e1 sí es pts0, pero chmod detector ignora file, solo modo. Para coexistence, consideramos chmod 600/777 en cualquier file? Mejor solo si contiene pts0? Hoy chmod detector filtra solo por modo, sin file check, pero para coexistencia lo correcto es mismo fichero pts0. Sin embargo test e1 usa pts0; para coexistence asumimos mismo pts0, así que filtramos por pts0 substring también para fair.
+            if "600" not in line and "777" not in line:
+                continue
+            # si hablamos de coexistencia, chmod sobre pts0 también; si no tiene pts0, no es el dilema pts0
+            # pero para compatibilidad, si no hay pts0 en línea, igual lo contamos como dilema (e1 usa pts0)
+            # detectar chown ya requiere pts0; para chmod aceptamos aunque no mencione pts0 explícito? Mantén simple: cuenta si 600/777
+            last = idx
+        elif verb == "chown":
+            if "pts0" not in line:
+                continue
+            # debe ser transfer o retoma pattern
+            # quick check owner parsing: si contiene gris/apagados/root
+            if "gris" in line or "apagados" in line or "root" in line:
+                # valida con detector rápido
+                # we have already filtered, just update
+                last = idx
+    return last
+
+
 def build_postmortem(
     shell_dict: dict[str, Any], state: dict[str, Any] | None
 ) -> dict[str, Any]:
@@ -881,27 +988,58 @@ def build_postmortem(
         base["karma"] = {"delta": 1, "tint": "red"}
         base["micro_karma"] = {"red": 1}
 
-    # O1 22/09 — díptico E1: chmod 600 (cierre azul) vs 777 (puerta abierta rojo), tras ls -l
-    _puerta = _detect_chmod_puerta(shell_dict)
-    if _puerta is not None and _has_ls_l(shell_dict):
-        if _puerta == "cierre":
-            cierre_text = _resolve_auditor_text(LINE_KEY_CIERRE, {})
-            base["auditor_cierre"] = {"line_key": LINE_KEY_CIERRE, "args": {}}
-            base["auditor_cierre_text"] = cierre_text
-            base["lines_resolved"] = [*base["lines_resolved"], cierre_text]
-            base["karma_delta"] = 1
-            base["karma_tint"] = "blue"
-            base["karma"] = {"delta": 1, "tint": "blue"}
-            base["micro_karma"] = {"blue": 1}
-        elif _puerta == "puerta_abierta":
-            puerta_text = _resolve_auditor_text(LINE_KEY_PUERTA_ABIERTA, {})
-            base["auditor_puerta_abierta"] = {"line_key": LINE_KEY_PUERTA_ABIERTA, "args": {}}
-            base["auditor_puerta_abierta_text"] = puerta_text
-            base["lines_resolved"] = [*base["lines_resolved"], puerta_text]
-            base["karma_delta"] = 1
-            base["karma_tint"] = "red"
-            base["karma"] = {"delta": 1, "tint": "red"}
-            base["micro_karma"] = {"red": 1}
+    # O1 22/09 + O1 23/09 — díptico E1+E4: chmod 600/777 vs chown gris/apagados vs root:root, tras ls -l; último verbo manda
+    if _has_ls_l(shell_dict):
+        _puerta = _detect_chmod_puerta(shell_dict)
+        _chown = _detect_chown_puerta(shell_dict)
+        # decidir ganador por último índice en history
+        _winner = None  # "chmod" | "chown" | None
+        if _puerta is not None and _chown is not None:
+            idx_chmod = _last_puerta_index(shell_dict, "chmod")
+            idx_chown = _last_puerta_index(shell_dict, "chown")
+            _winner = "chown" if idx_chown > idx_chmod else "chmod"
+        elif _puerta is not None:
+            _winner = "chmod"
+        elif _chown is not None:
+            _winner = "chown"
+        if _winner == "chmod":
+            if _puerta == "cierre":
+                cierre_text = _resolve_auditor_text(LINE_KEY_CIERRE, {})
+                base["auditor_cierre"] = {"line_key": LINE_KEY_CIERRE, "args": {}}
+                base["auditor_cierre_text"] = cierre_text
+                base["lines_resolved"] = [*base["lines_resolved"], cierre_text]
+                base["karma_delta"] = 1
+                base["karma_tint"] = "blue"
+                base["karma"] = {"delta": 1, "tint": "blue"}
+                base["micro_karma"] = {"blue": 1}
+            elif _puerta == "puerta_abierta":
+                puerta_text = _resolve_auditor_text(LINE_KEY_PUERTA_ABIERTA, {})
+                base["auditor_puerta_abierta"] = {"line_key": LINE_KEY_PUERTA_ABIERTA, "args": {}}
+                base["auditor_puerta_abierta_text"] = puerta_text
+                base["lines_resolved"] = [*base["lines_resolved"], puerta_text]
+                base["karma_delta"] = 1
+                base["karma_tint"] = "red"
+                base["karma"] = {"delta": 1, "tint": "red"}
+                base["micro_karma"] = {"red": 1}
+        elif _winner == "chown":
+            if _chown == "transfer":
+                transfer_text = _resolve_auditor_text(LINE_KEY_CHOWN_TRANSFER, {})
+                base["auditor_chown_transfer"] = {"line_key": LINE_KEY_CHOWN_TRANSFER, "args": {}}
+                base["auditor_chown_transfer_text"] = transfer_text
+                base["lines_resolved"] = [*base["lines_resolved"], transfer_text]
+                base["karma_delta"] = 1
+                base["karma_tint"] = "blue"
+                base["karma"] = {"delta": 1, "tint": "blue"}
+                base["micro_karma"] = {"blue": 1}
+            elif _chown == "retoma":
+                retoma_text = _resolve_auditor_text(LINE_KEY_CHOWN_RETOMA, {})
+                base["auditor_chown_retoma"] = {"line_key": LINE_KEY_CHOWN_RETOMA, "args": {}}
+                base["auditor_chown_retoma_text"] = retoma_text
+                base["lines_resolved"] = [*base["lines_resolved"], retoma_text]
+                base["karma_delta"] = 1
+                base["karma_tint"] = "red"
+                base["karma"] = {"delta": 1, "tint": "red"}
+                base["micro_karma"] = {"red": 1}
 
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
@@ -958,6 +1096,8 @@ __all__ = [
     "LINE_KEY_KILL",
     "LINE_KEY_CIERRE",
     "LINE_KEY_PUERTA_ABIERTA",
+    "LINE_KEY_CHOWN_TRANSFER",
+    "LINE_KEY_CHOWN_RETOMA",
     "LINE_KEY_VOLCADO_RESCATE",
     "LINE_KEY_VOLCADO_CADUCADO",
 ]
