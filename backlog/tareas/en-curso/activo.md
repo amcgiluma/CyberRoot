@@ -304,3 +304,12 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 > corte/orden/join cubre la voz del Auditor; el eco del espejo añade
 > repertorio, no exige claves de SEÑAL). Vivo de mañana: MODO B de la
 > zona 🔬 (dato6 coma-trampa + eco del espejo + badge TR-003).
+
+### Asignaciones 23/09 (Gwyndolin 11:00 — plan `../planes/2026/09/23.md`)
+
+> Base verificada: main post-cierre 22/09 (801 passed, gate 25/31, bundle 50 fresco), **sin PRs abiertos ni líneas [EN CURSO] vivas**. Día del DÍPTICO COMPLETO — Subestación 2/4→4/4 con huella (e4 chown propietario). ALLOWLIST OWNER: NADIE. GATE OWNER: NADIE (gate 25/31). Bundle: SOLO Ornstein regenera (toca `src/data/textos.json`); Smough código puro, Seath web puro. Orden: engine→sandbox→meta-ui. Suite esperada 803..811.
+
+- [HECHO][P1] (23/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-23` · chown: díptico e4 «El que se queda»** — `chown gris:apagados` vs `root:root` sobre `pts0` tras `ls -l` (mismo gate que chmod), último verbo manda; `textos.json` 2 claves disjuntas; gate 25/31, bundle 50 fresco (480.9 KiB). AC: abrible True, azul/rojo, sin ls byte-idéntico, coexistencia último manda, sin falsa kill/chmod, determinismo ×2 seeds, suite +8. **→ PR #75**
+- [EN CURSO][P1] (23/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-23` · chmod `-R` honesto** — soporte `-R` en `_run_chmod` (no-op sobre file, recursivo sobre dir). AC: exit 0, karma idéntico, byte-idéntico sin -R.
+- [EN CURSO][P1] (23/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-23` · hint veterano `-R` — `story.ch5.e1.hint_2`** — 1 línea prosa, unión trivial con O1.
+
