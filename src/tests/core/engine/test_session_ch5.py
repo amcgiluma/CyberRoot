@@ -20,7 +20,9 @@ from core.generator import generate
 def test_supported_incluye_5_y_commands():
     assert 5 in SUPPORTED_CHAPTERS
     assert _commands_for(5) == ("cat", "scp")
-    assert _commands_for(5, "story.ch5.e2") == ("cat", "scp")
+    assert _commands_for(5, "story.ch5.e2") == ("cat", "scp", "ps", "grep")
+    # base intacta: nova añade, no reempaza (forma <=, plan 24/09)
+    assert {"cat", "scp"} <= set(_commands_for(5, "story.ch5.e2"))
     # SUPPORTED debe ser exactamente {0,2,4,5}
     assert SUPPORTED_CHAPTERS == frozenset({0, 2, 4, 5})
 
@@ -74,11 +76,12 @@ def test_abrir_ch5_e4_requires_y_abrible():
 def test_abrir_ch5_e2_intacta():
     cur = load_curriculum()
     q = cur.quest("story.ch5.e2")
-    assert set(q.requires) == {"c.cat", "c.scp"}
-    r = abrir_encargo(cur, "story.ch5.e2", {"c.cat", "c.scp"}, run_seed=42, volcado_rescatado=True)
+    assert set(q.requires) == {"c.cat", "c.scp", "c.grep"}
+    r = abrir_encargo(cur, "story.ch5.e2", {"c.cat", "c.scp", "c.grep"}, run_seed=42, volcado_rescatado=True)
     assert r["abrible"] is True
     sess = r["session"]
-    assert sess.shell.available_commands == {"cat", "scp"}
+    assert sess.shell.available_commands == {"cat", "scp", "ps", "grep"}
+    assert {"cat", "scp"} <= sess.shell.available_commands
     res = sess.ejecutar("cat /tmp/volcado-custodia.csv")
     assert res.exit_code == 0
     assert "TR-003|faro|troncal-01|512|EN_COLA" in res.stdout
@@ -86,7 +89,7 @@ def test_abrir_ch5_e2_intacta():
 
 def test_abrir_ch5_e2_caducado_cat_falla():
     cur = load_curriculum()
-    r = abrir_encargo(cur, "story.ch5.e2", {"c.cat", "c.scp"}, run_seed=42, volcado_rescatado=False)
+    r = abrir_encargo(cur, "story.ch5.e2", {"c.cat", "c.scp", "c.grep"}, run_seed=42, volcado_rescatado=False)
     assert r["abrible"] is True
     sess = r["session"]
     res = sess.ejecutar("cat /tmp/volcado-custodia.csv")

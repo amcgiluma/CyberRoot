@@ -15,7 +15,7 @@ def test_ch5_e2_existe_grey_cat_scp() -> None:
     assert q is not None
     assert q.chapter == 5
     assert q.tint == "grey"
-    assert sorted(q.requires) == ["c.cat", "c.scp"]
+    assert sorted(q.requires) == ["c.cat", "c.grep", "c.scp"]
 
 
 def test_ch5_e2_textos_documenta_ausencia_y_ruta_absoluta() -> None:

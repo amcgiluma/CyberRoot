@@ -209,7 +209,7 @@ def test_las_cuatro_quests_del_cap5_tints_y_requires_segun_manus() -> None:
     assert [q.tint for q in quests] == ["blue", "grey", "red", "blue"]
     # 17/09 S2: e2 reescrita al testigo (cat+scp), el resto intacto según Manus.
     by_id = {q.id: q for q in quests}
-    assert sorted(by_id["story.ch5.e2"].requires) == ["c.cat", "c.scp"]
+    assert sorted(by_id["story.ch5.e2"].requires) == ["c.cat", "c.grep", "c.scp"]
     assert sorted(by_id["story.ch5.e1"].requires) == ["c.cat", "c.chmod", "c.ls-la"]
     assert sorted(by_id["story.ch5.e3"].requires) == ["c.env", "c.ps"]
     concept_chapter = {c.id: c.chapter for c in cur.concepts}

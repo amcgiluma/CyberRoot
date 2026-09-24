@@ -20,7 +20,8 @@ from core.sandbox.shell import DEFAULT_CH5_COMMANDS, DEFAULT_CH5E1_COMMANDS, DEF
 
 def test_commands_for_per_encargo_ramifica():
     assert _commands_for(5) == ("cat", "scp")
-    assert _commands_for(5, "story.ch5.e2") == ("cat", "scp")
+    assert _commands_for(5, "story.ch5.e2") == ("cat", "scp", "ps", "grep")
+    assert {"cat", "scp"} <= set(_commands_for(5, "story.ch5.e2"))
     assert set(_commands_for(5, "story.ch5.e1")) == set(DEFAULT_CH5E1_COMMANDS)
     assert set(_commands_for(5, "story.ch5.e3")) == set(DEFAULT_CH5E3_COMMANDS)
     assert set(_commands_for(5, "story.ch5.e4")) == set(DEFAULT_CH5E4_COMMANDS)
@@ -74,8 +75,12 @@ def test_e4_chmod_chown_tail_jugable():
 
 def test_e2_intacta_cat_scp():
     cur = load_curriculum()
-    r = abrir_encargo(cur, "story.ch5.e2", {"c.cat", "c.scp"}, run_seed=42, volcado_rescatado=True)
+    r = abrir_encargo(cur, "story.ch5.e2", {"c.cat", "c.scp", "c.grep"}, run_seed=42, volcado_rescatado=True)
     assert r["abrible"] is True
     sess = r["session"]
-    assert sess.shell.available_commands == {"cat", "scp"}
-    assert sess.ejecutar("ps aux").exit_code == 127
+    assert sess.shell.available_commands == {"cat", "scp", "ps", "grep"}
+    assert {"cat", "scp"} <= sess.shell.available_commands
+    # e2 ahora permite ps (lectura del intruso), frontera 127 para chmod/kill
+    assert sess.ejecutar("ps aux").exit_code == 0
+    assert sess.ejecutar("chmod 600 /tmp/x").exit_code == 127
+    assert sess.ejecutar("kill 1").exit_code == 127
