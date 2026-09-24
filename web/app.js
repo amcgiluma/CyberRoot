@@ -179,6 +179,50 @@ def get_ps():
     except Exception as e:
         return _j.dumps([])
 
+def get_ls_owner(path=\"/srv/subestacion/sesiones/pts0\"):
+    import json as _j
+    shell = _lib.get(\"shell\")
+    if shell is None:
+        return _j.dumps({\"ok\": False, \"error\": \"no shell\"})
+    try:
+        target = str(path) if path else \"/srv/subestacion/sesiones/pts0\"
+        from core.sandbox.fs import DirNode
+        node = None
+        for base in (\"/\", getattr(shell, \"cwd\", \"/\")):
+            try:
+                n = shell.fs.resolve(target, base)
+                if n is not None:
+                    node = n
+                    break
+            except Exception:
+                continue
+        if node is None:
+            return _j.dumps({\"ok\": False, \"error\": f\"no such file {target}\"})
+        if isinstance(node, DirNode):
+            return _j.dumps({\"ok\": False, \"error\": f\"{target}: Is a directory\"})
+        owner = getattr(node, \"owner\", \"operator\")
+        group = getattr(node, \"group\", \"operator\")
+        mode = int(getattr(node, \"mode\", 0))
+        return _j.dumps({\"ok\": True, \"path\": target, \"owner\": str(owner), \"group\": str(group), \"mode\": mode, \"owner_group\": f\"{owner}:{group}\"}, ensure_ascii=False)
+    except Exception as e:
+        return _j.dumps({\"ok\": False, \"error\": repr(e)})
+
+def get_chown_history():
+    import json as _j
+    shell = _lib.get(\"shell\")
+    if shell is None:
+        return _j.dumps([])
+    try:
+        hist = getattr(shell, \"history\", []) or []
+        out = []
+        for h in hist:
+            line = h.get(\"line\", \"\") if isinstance(h, dict) else str(h)
+            if \"chown\" in line and \"pts0\" in line:
+                out.append(str(line))
+        return _j.dumps(out, ensure_ascii=False)
+    except Exception:
+        return _j.dumps([])
+
 def get_env():
     import json as _j
     shell = _lib.get("shell")
@@ -718,6 +762,62 @@ function hideIntrusoBadge() {
   if (pm) { pm.style.display = "none"; pm.innerHTML = ""; }
 }
 // ---------------------------------------------------------------------------
+// Lente propietario — Seath 24/09 T1 (#ch5-e4-owner, 5º estado del semáforo)
+// Lee get_ls_owner()/get_chown_history() sin ejecutar (lente, no ejecuta).
+// 3 estados: operator:operator neutro / gris:apagados azul / root:root rojo.
+// Hermana de _getIntrusoStatus/_updateCustodiaPostmortem.
+// ---------------------------------------------------------------------------
+function _getOwnerStatus() {
+  try {
+    if (!pyodide || !pyodide.globals) return null;
+    let info = null;
+    try { info = JSON.parse(pyodide.globals.get("get_ls_owner")("/srv/subestacion/sesiones/pts0")); } catch(e) { info = null; }
+    if (!info || !info.ok) {
+      return { state: "neutro", owner: "operator", group: "operator", owner_group: "operator:operator", mode: 644, raw: info };
+    }
+    const owner = String(info.owner || "operator");
+    const group = String(info.group || "operator");
+    const og = owner + ":" + group;
+    let history = [];
+    try { history = JSON.parse(pyodide.globals.get("get_chown_history")()); } catch(e) { history = []; }
+    const last = Array.isArray(history) && history.length ? history[history.length-1] : null;
+    if (og === "gris:apagados") return { state: "azul", owner, group, owner_group: og, mode: info.mode, last, raw: info };
+    if (og === "root:root") return { state: "rojo", owner, group, owner_group: og, mode: info.mode, last, raw: info };
+    if (og === "operator:operator") return { state: "neutro", owner, group, owner_group: og, mode: info.mode, last, raw: info };
+    return { state: "neutro", owner, group, owner_group: og, mode: info.mode, last, raw: info, variant: true };
+  } catch(e) { return null; }
+}
+function _ownerBadgeHtml(s) {
+  if (!s) return "";
+  const og = _escapeHtml(s.owner_group || "operator:operator");
+  const tipMode = s.mode !== undefined ? "mode " + (s.mode.toString(8) || s.mode) : "";
+  const tipLast = s.last ? " · " + _escapeHtml(String(s.last)) : "";
+  const tip = _escapeHtml(tipMode + tipLast + " — propietario de pts0 (ls -l, chown)");
+  if (s.state === "azul") {
+    return `<span title="${tip}" style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(52,152,219,.18);border:1px solid rgba(52,152,219,.55);color:#5dade2;font-weight:700;font-size:.78rem;cursor:help">◆ gris:apagados</span> <span style="color:var(--muted);font-size:.75rem">custodia transferida a Gris</span>`;
+  }
+  if (s.state === "rojo") {
+    return `<span title="${tip}" style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(231,76,60,.18);border:1px solid rgba(231,76,60,.55);color:#e74c3c;font-weight:700;font-size:.78rem;cursor:help">● root:root</span> <span style="color:var(--muted);font-size:.75rem">casa retomada por Lumen</span>`;
+  }
+  const neutroExtra = s.variant ? ` <span style="color:#95a5a6;font-size:.70rem">(${og})</span>` : "";
+  return `<span title="${tip}" style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(149,165,166,.14);border:1px solid rgba(149,165,166,.35);color:#95a5a6;font-weight:700;font-size:.78rem;cursor:help">○ operator:operator</span><span style="color:var(--muted);font-size:.75rem"> propietario neutro</span>${neutroExtra}`;
+}
+function _updateOwnerUI() {
+  const el = $id("ch5-e4-owner");
+  if (!el) return;
+  if (currentChapter !== 5) { el.style.display = "none"; el.innerHTML = ""; return; }
+  try {
+    const st = _getOwnerStatus();
+    if (!st) { el.style.display = "none"; el.innerHTML = ""; return; }
+    el.innerHTML = _ownerBadgeHtml(st);
+    el.style.display = "block";
+  } catch(e) { el.style.display = "none"; }
+}
+function hideOwnerBadge() {
+  const el = $id("ch5-e4-owner");
+  if (el) { el.style.display = "none"; el.innerHTML = ""; }
+}
+// ---------------------------------------------------------------------------
 // Lente del veredicto — Seath 22/09 T1 (#custodia-postmortem)
 // Pinta bajo #custodia-intruso la frase del Expediente 000 con el color
 // de la insignia (verde vivo / azul --reloaded / ámbar silenciado).
@@ -761,9 +861,10 @@ function hideCustodiaPostmortem() {
   if (el) { el.style.display = "none"; el.innerHTML = ""; }
 }
 function previewCustodiaTabla() {
-  if (currentChapter !== 5) { hideIntrusoBadge(); return; }
+  if (currentChapter !== 5) { hideIntrusoBadge(); hideOwnerBadge(); return; }
   // Insignia siempre visible en cap. 5 (lente, no ejecuta)
   try { _updateIntrusoUI(); } catch(e) {}
+  try { _updateOwnerUI(); } catch(e) {}
   try {
     const raw = pyodide.globals.get("get_csv")("/tmp/volcado-custodia.csv");
     const data = JSON.parse(raw);
@@ -824,6 +925,7 @@ async function restartSameSeed() {
   hideTroncalTabla();
   hideCustodiaTabla();
   hideIntrusoBadge();
+  hideOwnerBadge();
   $id("out").innerHTML = "";
   setStatus(`Reiniciando cap. ${currentChapter} (seed ${currentSeed})…`);
   try {
@@ -840,6 +942,7 @@ async function restartSameSeed() {
     try { previewTroncalTabla(); } catch(e){}
     try { previewCustodiaTabla(); } catch(e){}
     try { _updateIntrusoUI(); } catch(e){}
+    try { _updateOwnerUI(); } catch(e){}
   } catch (e) {
     setStatus("Error reiniciando: " + e);
   }
@@ -907,6 +1010,7 @@ async function boot() {
   previewTroncalTabla();
   previewCustodiaTabla();
   try { _updateIntrusoUI(); } catch(e){}
+  try { _updateOwnerUI(); } catch(e){}
   const ns0 = $id("noise-status");
   if (ns0) ns0.textContent = `ruido 0/${currentNoiseBudget}`;
   setStatus(`Listo — cap. ${chapter} · seed ${seed} · presupuesto ${currentNoiseBudget} — REPL del core real.`);
@@ -961,6 +1065,8 @@ async function dispatch() {
   try { updateCustodiaTabla(line); } catch(e) {}
   // Insignia del vigilante — actualiza tras cada comando en cap.5 (kill/ps)
   try { if (currentChapter === 5) _updateIntrusoUI(); } catch(e) {}
+  // Insignia propietario — actualiza tras cada comando en cap.5 (chown/ls)
+  try { if (currentChapter === 5) _updateOwnerUI(); } catch(e) {}
   if (total > budget) {
     try {
       const pm = JSON.parse(pyodide.globals.get("postmortem")());
@@ -982,7 +1088,7 @@ function renderCursor() {
 }
 
 // Exponer para tests / consola
-if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._updateIntrusoUI = _updateIntrusoUI; window._updateCustodiaPostmortem = _updateCustodiaPostmortem; }
+if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._updateIntrusoUI = _updateIntrusoUI; window._updateCustodiaPostmortem = _updateCustodiaPostmortem; window._getOwnerStatus = _getOwnerStatus; window._updateOwnerUI = _updateOwnerUI; }
 
 // ---------------------------------------------------------------------------
 // Wire-up.
