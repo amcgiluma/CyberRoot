@@ -1,61 +1,69 @@
-# 🔬 Zona de testeo — 24/09 (definida por Gwyn el 23/09, 23:00)
+# 🔬 Zona de testeo — 25/09 (definida por Gwyn el 24/09, 23:00)
 
 > Formato `docs/TESTEO-DIARIO.md` §4. Relevo: **OSCAR (05:00) recorre la
 > zona COMPLETA desde save limpio (MODO B) → HAVEL (07:00) se centra en lo
-> nuevo + smoke del conjunto.** Base post-merge 23/09: suite **809 passed /
-> 0 failed** (801+8+0+0, deltas verificados por Artorias + regen canónico),
-> gate **25 conceptos / 31 quests** intacto, bundle **50 ficheros
-> (484.0 KiB)** fresco. PRs #75/#76/#77 MERGEADOS. NADA retenido.
+> nuevo + smoke del conjunto.** Base post-merge 24/09: suite **818 passed /
+> 0 failed** (809+9+0+0, deltas verificados por Artorias + ensayo worktree,
+> re-verificados por Gwyn tras los 3 merges), gate **25 conceptos / 31
+> quests** intacto, bundle **50 ficheros (481.3 KiB)** regen canónico. PRs
+> #78/#79/#80 MERGEADOS. NADA retenido.
 
-## Prioridad 1 — EL DÍPTICO DEL PROPIETARIO: `chown gris:apagados` vs `chown root:root` (NUEVO, PR #75)
+## Prioridad 1 — E2 «grep del intruso» (NUEVO, PR #78): la LECTURA del díptico
 
-- **Dónde:** `abrir_encargo(c,'story.ch5.e4',{'c.ls-la','c.cat','c.chmod','c.chown','c.grep'},42)`
-  abre E4 «El que se queda» — la Subestación ya es 4/4 con huella moral
-  (E1 chmod + E3 kill + E4 chown).
+- **Dónde:** `abrir_encargo(c,'story.ch5.e2',{'c.cat','c.grep','c.scp'},42)`
+  abre E2 en la Subestación — ahora con `grep` permitido
+  (`DEFAULT_CH5E2_COMMANDS = (cat,scp,ps,grep)`).
 - **Qué verificar:**
-  (a) e4 abrible SOLO con knowledge completo que incluya `c.grep` (curriculum
-  lo exige — es el encargo que ya pide grep, documentarlo como díptico
-  honesto); sin prereqs → rechazo honesto `missing [...]`.
-  (b) `ls -l` + `chown gris:apagados pts0` → post-mortem
-  `auditor_chown_transfer` azul + `micro_karma {blue:1}`.
-  (c) Run limpia aparte: `chown root:root pts0` → `auditor_chown_retoma`
-  rojo `{red:1}`.
-  (d) Sin `ls -l` antes → sin huella, byte-idéntico.
-  (e) Coexistencia último-manda: `chmod 600`+`chown root:root` (y al
-  revés) → el ÚLTIMO verbo decide la huella; probar también chown→chmod.
-- **Por qué importa:** mismo fichero `pts0 644`, mismo gate `ls -l`,
-  verbo distinto — la tesis §3.1 «misma materia, lentes distintas» llega
-  al propietario. Pregunta de sabor: ¿entregar la casa a Gris frente a
-  devolvérsela al Censo se SIENTE como decisiones distintas, o pesa igual
-  que el 600/777 de E1?
+  (a) e2 abrible SOLO con `c.grep` en knowledge; sin él → rechazo honesto
+  `missing ['c.grep']` (Alumnos 24/09: NO es fricción, es pedagogía — el
+  gate es la matricula del día).
+  (b) `ps aux | grep censo` → exit 0, UNA línea
+  (`censo --vigilar-censo START 03:14`) + ruido honesto (`grep:2`, `ps:1`).
+  (c) `grep ceniza` → exit 1 (motivo correcto: ceniza no delata nada).
+  (d) `grep -i censo` veterano → exit 0 (ataljo, no canon).
+  (e) Frontera 127 honesta: `chmod` y `kill` en e2 → `command not found`.
+- **Por qué importa:** la Subestación pasa de 4/4 huellas a 4 huellas + 1
+  lectura forense. Pregunta de sabor (OSCAR): ¿delatar al vigilante con
+  `grep` se SIENTE distinto a condenarlo con `kill` — inteligencia vs fuerza?
 
-## Prioridad 2 — `chmod -R` HONESTO + hint veterano (NUEVOS, PRs #76/#77)
+## Prioridad 2 — Lente web del propietario (NUEVO, PR #80): 5º estado del semáforo
 
-- **Dónde:** `chmod -R` en E1/cap. 1 (fichero) y sobre un directorio;
-  hint `story.ch5.e1.hint_2` en la web `?chapter=5`.
+- **Dónde:** web `?chapter=5`, insignia `#ch5-e4-owner` bajo la tabla
+  custodia, con `get_ls_owner()`/`get_chown_history()` (leen FS, nunca
+  ejecutan).
 - **Qué verificar:**
-  (a) `chmod -R 777 pts0` (fichero) → exit 0, modo 777, karma rojo
-  IDÉNTICO a `chmod 777` (sin stderr mentiroso).
-  (b) `chmod --recursive` y `-Rv` → idénticos.
-  (c) `chmod -R 777 <dir>` → recursivo determinista; `chmod 777 <dir>`
-  → solo el dir, hijo intacto.
-  (d) Sin `-R` → byte-idéntico (cap. 1 y e1 cierran con sus 7 tests).
-  (e) Web lente: el hint «-R es para directorios — aquí es un fichero…»
-  visible; consola limpia; caps 1-4 sin ensuciar.
-- **Por qué importa:** el stderr GNU-mentiroso muere y el veterano de
-  Havel (23/09) deja de tropezar con el flag que no hace lo que promete.
-  Pregunta de sabor: ¿el hint CORREGIR al veterano se siente maestro
-  cálido o manta sobre el puzzle?
+  (a) Boot limpio → `operator:operator` neutro `#95a5a6`.
+  (b) `chown gris:apagados pts0` → azul `#5dade2` (DUEÑO entregado).
+  (c) `chown root:root pts0` (o post-azul) → rojo `#e74c3c` (RETOMA).
+  (d) `restartSameSeed` limpia la insignia también.
+  (e) Fuera de cap. 5 → insignia oculta; caps 1-4 sin ensuciar; consola
+  limpia en los 3 estados + post-restart.
+- **Por qué importa:** el tríptico web (intruso + veredicto + propietario)
+  cierra con la misma regla: la lente MIRA, no toca. Pregunta de sabor:
+  ¿-R azul (gris va a vivir) vs rojo (el Censo vuelve) pesa distinto de
+  verlo en web que en post-mortem?
 
 ## Smoke sí o sí
 
-- Suite completa `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q`
-  → **809 passed** (si sale 808+1 `test_bundle_fresco`, es el guardián
-  gritando bundle stale: regen canónico `python tools/web/build_bundle.py`,
-  NUNCA silenciar el test).
-- Determinismo: `generate(42,5,True)` y `generate(99,5,False)` byte-idénticos
-  ×2; HUP vs -9 y 600 vs 777 siguen pesando distinto sin cruzarse.
-- Gate de datos **25/31** y `CUSTODIA/TRONCAL_STATIC` intactas; bundle
-  **50 ficheros (484.0 KiB)** fresco.
-- E1 (chmod) y E3 (kill) siguen BYTE-IDÉNTICOS a ayer: hoy entró E4 al
-  díptico, nadie ha tocado los cierres previos del verbo.
+- Suite completa: `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q`
+  → **818 passed / 0 failed** (delta +9 del engine de ayer). Si NO da 818:
+  circumstancia (re-correr desde la raíz del repo).
+- Gate de datos: `load_curriculum` **25 conceptos / 31 quests** (e2
+  `requires ['c.cat','c.grep','c.scp']` coherente — verificado por
+  Gwyn 24/09 vía Python real).
+- Bundle fresco: `test_bundle_fresco` verde; 50 ficheros, 481.3 KiB.
+- Determinismo: `generate(42,5,volcado_rescatado=True)` byte-idéntico ×2.
+- Web `node --check web/app.js` OK; `CUSTODIA/TRONCAL_STATIC` intactas.
+
+## Recámara de la zona (solo si sobra turno)
+
+- 🧭47: el stock de Gris sigue 0% contraste en el harness de Smough
+  (estático) — si Seath trabaja en lógica kármica de stock, medir el
+  contraste ANTES/AFTER con el mismo `--micro-karma` (no escribir prosa).
+- 6º estado `grep censo` en `#custodia-intruso` (hueco honesto de Seath):
+  SOLO si Gwyndolin lo planifica como tarea.
+
+---
+*(Gwyn 24/09: zone limpia — dos prioridades máximas (regla §4), smoke
+canónico, sin deuda nueva que probar. Oscar empieza por P1: `grep` es el
+primer verbo LECTOR de la Subestación — que se sienta forense, no táctico.)*

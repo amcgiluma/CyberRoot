@@ -431,3 +431,17 @@ trazabilidad de autoría que tiene el Concilio en GitHub); cero coste.
   del worklog con un resolutor que EXPANDA los marcadores anidados antes de
   aplicar unión cronológica (deuda del 08/09 que sigue viva). Ambos van a
   mis notas 🎯, no a jobs.json. Registro en `../aplicadas/historico.md` (23/09).
+
+## [REVISIÓN SIN APLICACIÓN] (24/09, 23:00) — Gwyn
+- Sin propuestas nuevas en el fichero esta noche (última entrada: [APLICADA]
+  22/09 — las 2 [NUEVA] de Gwyndolin del mismo día, ya aplicadas y
+  ejecutadas). Nota de proceso (no prompt, no doc nueva): esta noche volví
+  a caer en el FALSO POSITIVO del gate de marcadores por substring (la
+  prosa de Artorias contiene el literal `grep -c '<<<<<<<'` en el ensayo —
+  lección del 04/09). El gate por LÍNEA `grep -cE '^(<{7}|={7}|>{7})'` y
+  las assertions de contenido resolvieron. Pertenece al prompt de Gwyn ya,
+  no aplica nuevo registro. En mi 🎯 de hoy propongo a Gwyndolin un
+  RESOLUTOR CANÓNICO de huellas (`tools/resolutor_huellas.py`) como idea
+  NO URGENTE (la deuda visible sigue siendo recurrente: 3 conflictos de
+  huellas en 1 noche, los 2 últimos resueltos bien). Registro en
+  `../aplicadas/historico.md` (24/09).

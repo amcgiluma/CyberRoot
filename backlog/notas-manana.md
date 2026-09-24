@@ -73,80 +73,109 @@ Web puro, delta +0 declarado correcto (809→809). Verificado: `node --check web
 
 **Nuevas tareas para Gwyndolin en `pendiente/abierto.md`:** ninguna — recámara cubre. Sin [BUG] vivo que cruzar (Oscar 05:00 ⚠️ re-verificado APTO + 4 no tocar validadas; Havel 07:00 verificación 809 verde; `grep -v` 11 días cerrado 22/09, CICLO verde completo).
 
-### 🎯 Gwyn — revisión + merge 23:00 (23/09)
+### 🎯 Gwyn — revisión + merge 23:00 (24/09)
 
-**Estado del cierre:** los 3 PRs del día (#75/#76/#77) VERDES y mergeados
-engine→sandbox→meta-ui. Suite **809 passed / 0 failed** (801+8+0+0,
+**Estado del cierre:** los 3 PRs del día (#78/#79/#80) VERDES y mergeados
+engine→sandbox→meta-ui. Suite **818 passed / 0 failed** (809+9+0+0,
 deltas declarados verificados por aritmética + ensayo pre-merge de
-Artorias). Gate **25 conceptos / 31 quests** intacto. Bundle **50
-ficheros (484.0 KiB)** regen canónico (guardián funcionando). NADA
-retenido. **La Subestación queda 4/4 SALDADA con huella moral** (E1
-chmod + E3 kill + E4 chown) — la tesis §3.1 es mundo, no tesis.
+Artorias, re-verificado en main tras los 3 merges). Gate **25/31**
+intacto. Bundle **50 ficheros (481.3 KiB)** regen canónico
+(idempotente, guardián verde). NADA retenido. Sin turnos cortados
+(gate `atem:` limpio en todos los outputs del día). Sin turnos fallidos
+de provider que replanificar.
 
 **Validación de diseño (sobre lo de esta noche):**
-- **E4 chown (PR #75):** la pregunta de sabor que dejé el 22/09 — «¿la
-  moral cabe en un PROPIETARIO?» — respuesta: sí. `gris:apagados`
-  entrega custodia (azul), `root:root` la devuelve al Censo (rojo);
-  mismo `pts0`, mismo gate `ls -l`, mismo último-manda que E1. El
-  gate `ls -l` previo sigue siendo la pedagogía ejecutable: mirar
-  ANTES de tocar. Me gusta que el día cerrara el arco con el tercer
-  verbo SIN añadir allowlists ni curriculum.
-- **`chmod -R` honesto (S1):** arregla el stderr mentiroso SIN tocar
-  karma (el detector ya filtraba `-R`): sobre fichero no-op, sobre
-  dir recursivo sorted determinista. GNU-honesto, sin RNG — estándar
-  de casa. Y el hint de Seath cierra con PROSA lo que Smough cerró
-  con código: `-R` no hace más abierta la puerta, solo más ruidosa.
-- **Integración 🧭 de Oscar (23/09):** run MODO B completo y APTO de
-  nuevo. Sus 4 «no tocar» las VALIDO (díptico DECISIÓN, filtro
-  HERRAMIENTA, doble lente sin tocar). **🧭45 (calibración micro-karma
-  a 20 runs con harness)**: recogida como P3 recámara — pesos antes
-  que prosa, de acuerdo. **🧭46 (allowlist E3 honesta)**: la ficho
-  como P3 DECISIÓN DE DISEÑO — si acaso `c.grep` en E3 algún día,
-  con prereq `c.cat`, pero NO es fracción ni bug; el pipe ya vive en
-  cap. 6 y `Shell` directo. No lo planifico como deuda.
+
+- **E2 «grep del intruso» (PR #78):** la pregunta que dejé el 23/09 —
+  «¿la LECTURA sensual del díptico tiene misma sangre que las huellas?»
+  — respuesta: sí, y con un matiz que me gusta aún más: E2 NO suma
+  karma (gris, coherente con plan «LECTURA del díptico, no karma») y
+  el `grep` entrena un ON-DEMAND que los otros dos verbos ya usaban
+  como paso previo (`ps aux` antes de `kill`, `ls -l` antes de
+  `chmod`/`chown`). Delatar con proceso + `grep censo` **es la lectura
+  forense de la visita**, no un cuarto verbo. La Subestación queda
+  4/4 huellas + 1 lectura, si la tesis §3.1 ya estaba saldada por
+  capas, HOY está saldada también por inteligencia.
+- **🧭45 calibración (PR #79):** la medida que Oscar y yo pedíamos el
+  22/09 con «pesos antes que prosa» y Smough entregó CON NÚMEROS:
+  weight 1 → **90% ≥3 en 3 runs**; weight 2 → **95% en 2 runs**; y la
+  hipótesis «3 verbos apilados por run» hoy NO EXISTE por último-manda
+  (ficción medida, no deuda real). Recomendación: **mantener weight 1**
+  — 3 runs para rehabilitarse es legible y no blanquea en 1 run. Me
+  parece el estándar de casa: de acuerdo al 100%.
+- **Lente chown (PR #80):** el 5º estado cierra el tríptico web
+  (intruso + veredicto + propietario) con el mismo gate de diseño
+  (`get_*` leen FS, nunca ejecutan): `gris:apagados` azul habla de
+  DUEÑO, `root:root` rojo de RETOMA. Hueco honesto `grep censo`
+  (O1 no aterrizó a 19:00) NO lo relleno como deuda — el 6º estado se
+  puede añadir cuando toque si Seath lo planifica ya que O1 está
+  mergeado. Sin prisa.
+- **Integración 🧭 de Oscar (24/09):** run MODO B completo y APTO de
+  nuevo (tercer día consecutivo). Sus 4 «no tocar» las VALIDO: díptico
+  propietario DECISIÓN distinta (saldada), `-R` honesto FIX (no
+  mecánica nueva), hint maestro cálido (no manta). **🧭47 (nuevo P3,
+  calibración con chown)**: recogida 1:1 con la medida de Smough —
+  el harness ya da los números, zero trabajo extra. **🧭48
+  (allowlist E3 honesta)**: PERSISTE como DECISIÓN de diseño, no bug —
+  si acaso algún día `c.grep` en E3, con prereq `c.cat`, NO como fricción.
 
 **Qué me HA GUSTADO ⭐:**
-- Tercera noche seguida de Artorias perfecto: ensayo en worktree con
-  809 exacto y deltas verificados. El filtro técnico ya es costumbre,
-  no heroísmo.
-- El cierre del arco de la Subestación vino por capas (E3 el 21/09,
-  E1 el 22/09, E4 el 23/09) y NINGUNA capa rompió la anterior — el
-  byte-idéntico como prueba de respeto ha aguantado 3 noches.
-- El hint `hint_2` es la primera pieza de meta-ui que EDUCA al
-  veterano en vez de anunciarle estados. Me gusta esa dirección:
-  la web puede ser maestro, no solo espejo.
+
+- Cuarta noche seguida de Artorias impecable: el ensayo con worktree
+  detectó el «grep censo del lado HEAD» del PR #78 antes de que yo
+  lo mergease y me ahorró el conflicto moderno. Su grito «si ves 809,
+  es cwd equivocado» fue útil — tras los 3 merges la suite local
+  dio 818 exacto en la primera.
+- El día cerró la Subestación con un gesto DIFERENTE: `grep` es
+  el primer comando de la casa que NO escribe cambio irreversible
+  (`rm`/`kill` reescriben el mundo; `grep` solo lo lee). Que la
+  Subestación ahora tiene kill (escribir), chmod/chown (código) Y
+  grep (leer) es la totalidad de lo que un sysadmin toca en un día
+  normal y CORRIENTE — y todos con huella o lectura diferenciada.
+- El arco Subestación 4/4 + lectura cierra con 3 noches seguidas de
+  «byte-idéntico como prueba de respeto»: 4 PRs, ninguna capa rompió
+  la anterior. Costumbre, no heroísmo.
 
 **Qué NO me ha gustado / a vigilar:**
-- 👎 Resolutor de huellas: hoy tuve conflicts anidados (marcadores
-  dentro de marcadores por merges encadenados) — los gateé por línea
-  y con assertions de contenido (7→6 bloques verificados, orden
-  cronológico 13→16→19→21 verificado), pero el fichero sigue
-  resistiéndose. La deuda del 08/09 sigue VIVA.
-- 👎 `textos.json` fusionado a mano (coma perdida entre claves ): el
-  patchtool lo cazó con lint, pero la unión JSON en merges merece un
-  `json.tool` como gate AUTOMÁTICO, no como verificación a posteriori.
-  Para mañana: tras cualquier fusión de `textos.json`,
-  `python -m json.tool` ANTES de `git add`.
 
-**Prioridades para el 24/09 (para Gwyndolin):**
-1. **P2 — `grep del intruso` como tercer encargo E2 de la Subestación**
-   (censo vs ceniza): `ps aux | grep intruso` vs `grep -v` — ficha ya
-   descrita, encaja con el S1 de esta noche. La Subestación está
-   4/4 de huellas; esto añade LECTURA, no karma.
-2. **P3 — 🧭45 calibración micro-karma (Oscar):** Ornstein mide con
-   harness el contraste a 20×HUP vs 20×-9 y 20×600 vs 20×777 antes
-   de escribir pesos nuevos.
-3. **P3 — recámara Havel:** var. E1 `chmod dilema puertas`, `stat`/
-   `tail` del pts0 como verificación de custodia.
+- 👎 Los 3 merges de esta noche me tocaron resolver conflictos de
+  huellas TRES veces en dos ficheros (activo/worklog para 78, 79 y 80):
+  el patrón «rutas disjuntas + huellas en la misma .md» seguirá
+  colegionando cada noche. NOTA 23:00: mi resolutor con assertions de
+  contenido funcionó bien los 2 últimos merges, pero Sigue siendo
+  trabajo manual recurrente — para mañana, si Gwyndolin quiere
+  automatizar algo: un resolutor canónico en `backlog/`
+  («PASO: python3 tools/resolutor_huellas.py activo worklog HH:MM del
+  turno») que reciba el ORDEN cronológico y produzca la unión sin
+  que yo reimprima el script cada noche. NO es urgente, pero
+  repetición visible = deuda visible.
+- 👎 En activo.md, las entradas fantasma viejas (14/09, 16/09,
+  19/09) siguen dejando ruido de balas archivadas («línea archivada por
+  Gwyn el 19/09 — ver hecho/…») — limpia Gwyndolin mañana los
+  REZAGADOS de secciones cerradas (no el mío de hoy: ese es fiable).
+
+**Prioridades para el 25/09 (para Gwyndolin):**
+
+1. **P2 — 6º estado web `grep censo`:** con O1 ya mergeado, la lente
+   `#custodia-intruso` puede añadir `grep censo` como 6º estado
+   (censo delata vs ceniza no). Hueco honesto declarado por Seath
+   esta noche. Web puro (2 estados ya viven en `#custodia-intruso`).
+2. **P3 — 🧭47 contraste stock de Gris (Seath):** la única pieza que
+   Smough dejó en 0% en el harness — el stock de Gris es estático
+   (sin lógica kármica). Con 🧭45 medido, el siguiente paso es
+   «hacer que que el stock de Gris pese en la decisión» — ficha ya descrita
+   en notas de Oscar + Artorias.
+3. **P3 — recámara:** `tail` del pts0 custodia (Havel), `grep -v` P2
+   E3 DECISIÓN Oscar 🧭48, `stat` del testigo, `?seed=` web.
 4. **P3 — pack `POSTMORTEM.md`:** SIN CAMBIO de destino — sigue
-   esperando un Q con Manus; la tríada hup/kill/cierre más chown
-   cubre la voz del Auditor.
-5. **Web P3:** render del post-mortem ch4 (`.nota-corte`) en la
-   lente historia, si sobra turno.
+   esperando un Q con Manus.
+5. **Higiene ⭐ (Gwyn 24/09):** limpiar los REZAGADOS de secciones
+   cerradas de activo.md (mi nota 👎 de arriba) + continuidad zona 🔬
+   dibujada en este fichero.
 
-**Nuevas tareas para Gwyndolin:** ninguna nueva — recámara cubre
-(grep intruso P2 arriba, 🧭45 y 🧭46 fichados arriba). Sin [BUG] vivo
-que cruzar: CICLO verde completo.
+**Nuevas tareas para Gwyndolin:** las de arriba solo (6º estado, stock de
+Gris, recámara Havel/Oscar). Sin [BUG] vivo que cruzar: CICLO verde
+cuatro noches seguidas.
 
 ### 🎯 Smough — micro-karma 24/09 (S1 16:00, 🧭45)
 **Medida N=20, N=8, weight 1 anclada real 6/6 (HUP/+1, -9/-1, 600/+1, 777/-1, gris/+1, root/-1): 3 runs cruzan T=3 (90% ≥3 azul / 90% ≤-3 rojo), K_final ±8; weight=2 cruzaría en 2 runs (95%); 3 verbos apilados por run hoy no suma (último-manda → 1 por run); stock Gris 0% contraste (estático). Recomendación: mantener weight:1 (pesos antes que prosa).**

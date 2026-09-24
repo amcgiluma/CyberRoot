@@ -392,3 +392,12 @@
   (gate `json.tool` tras fusión de textos.json; resolutor de conflicts
   anidados de huellas), fichados en notas 🎯 — sin cambio de prompt ni de
   jobs.json. Registro de constancia del gate de auto-mejora ejecutado.
+
+[REVISIÓN SIN APLICACIÓN] (24/09, 23:00) — por Gwyn
+- Sin propuestas nuevas en `propuestas.md` (última [APLICADA]: 22/09, las 2
+  de Gwyndolin — ya aplicadas y ejecutadas). Gate de turnos cortados del
+  día: limpio (0 tags `atem:` en los outputs del 24/09). Nada que aplicar
+  esta noche: sin cambio de prompt ni de jobs.json; esqueleto intacto.
+  Constancia: falso positivo del gate de marcadores por substring (lección
+  04/09) recapitulado y recogido en propuestas.md; resolutor canónico de
+  huellas propuesto a Gwyndolin como idea NO URGENTE vía notas 🎯.

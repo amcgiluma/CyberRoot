@@ -9,6 +9,16 @@
 
 ## Activas
 
+> *(cierre 24/09, 23:00 — las 3 líneas `[HECHO]` del día (O1 Ornstein PR #78,
+> S1 Smough PR #79, T1 Seath PR #80) ARCHIVADAS en `../hecho/2026-09.md` §24/09.
+> Mergeados en orden engine→sandbox→meta-ui por Gwyn, suite **818 passed /
+> 0 failed** (809+9+0+0, deltas declarados verificados por aritmética + ensayo
+> pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
+> (481.3 KiB)** regen canónico tras merges. NADA retenido. E2 «grep del
+> intruso» cierra el díptico con LECTURA — Subestación 4 huellas moral
+> (E1 chmod + E2 lectura + E3 kill + E4 chown) + cerebro del plan 🧭45 con
+> números. Sin turnos cortados (gate `atem:` limpio por 49 outputs 24/09).)*
+
 ### Asignaciones 24/09 (Gwyndolin 11:00 — plan `../planes/2026/09/24.md`)
 
 > Base verificada: main post-cierre 23/09 (**809 passed / 0 failed**, gate
@@ -27,9 +37,6 @@
 > Ornstein regenera (toca data). Smough y Seath NO tocan data. Orden de
 > merges: engine → sandbox → meta-ui. postmortem.py INTACTO (sin detectores nuevos hoy).
 
-- `[HECHO][P2]` (24/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-24` · E2 «grep del intruso»: `ps aux | grep censo` como lectura del díptico** — PR #78 — ✅ VERDE (listo para merge primero): 9 tests nuevos `test_ch5_e2_grep_intruso.py` 9/9; `DEFAULT_CH5E2_COMMANDS = ("cat","scp","ps","grep")` forma `<=` base `{'cat','scp'}` intacta; `_commands_for(5,'story.ch5.e2')` ramifica solo e2; `curriculum.json` e2 `requires ['c.cat','c.grep','c.scp']` honesto `missing ['c.grep']`; `textos.json` `hint_2` censo vs ceniza + `grep -i` veterano; `ps aux | grep censo` exit 0 1 línea, `grep ceniza` exit 1, frontera 127 honesta, determinismo ×2 seeds, CUSTODIA/TRONCAL intactas, bundle regen 481.3 KiB 50 ficheros, suite rama 818 (+9).
-- `[HECHO][P3]` (24/09, 🧭45) **S1 — Smough 16:00 · `feat/sandbox-2026-09-24` · calibración micro-karma a 20 runs (pesos antes que prosa)** — PR #79 — ✅ VERDE (listo para merge segundo): `tools/harness/run_seeds.py` modo `--micro-karma` (6 funciones, 2 flags), ancla real 6/6 `{chmod600:1,chmod777:-1,chown_gris:1,chown_root:-1,hup:1,kill:-1}`, corpus N=20 sin error, 90% ≥3 en 3 runs (K_final 8), 95% con weight 2 en 2 runs, hipótesis 3 verbos 100% en 1 run (hoy último-manda); `SIN tocar src/ ni web/ ni data`, postmortem.py intacto, suite 809 delta +0.
-- `[HECHO][P3]` (24/09, web) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-24` · lente web chown: 5º estado del semáforo del Grid** — PR #80 — ✅ VERDE (listo para merge tercero): `web/app.js` +2 helpers `get_ls_owner()`/`get_chown_history()` lectura FS sin ejecutar, `web/index.html` `#ch5-e4-owner` 3 estados `operator:operator` gris / `gris:apagados` azul `#5dade2` / `root:root` rojo `#e74c3c`, hermanas `_getIntrusoStatus`, `restartSameSeed` limpia, `node --check` OK, `CUSTODIA/TRONCAL_STATIC` byte-idénticas, hueco honesto grep censo (O1 no aterrizó, delta +0), sin tocar `src/core/` ni `src/data/` ni bundle, suite 809 delta +0.
 
 ---
 
