@@ -233,6 +233,131 @@ def calibrar_budget(
     ]
 
 
+
+# ---------------------------------------------------------------------------
+# S1 Smough 24/09 — calibración micro-karma N=8 (§3.4, §8.6, 🧭45)
+# ---------------------------------------------------------------------------
+def _karma_delta_from_pm(pm: dict) -> int:
+    mk = pm.get("micro_karma") or {}
+    if mk.get("blue") == 1:
+        return 1
+    if mk.get("red") == 1:
+        return -1
+    tint = pm.get("karma_tint")
+    if tint == "blue":
+        return 1
+    if tint == "red":
+        return -1
+    return 0
+
+def _ventana_k(deltas: list[int], N: int = 8) -> list[int]:
+    out = []
+    for i in range(len(deltas)):
+        s = sum(deltas[max(0, i - N + 1): i + 1])
+        out.append(s)
+    return out
+
+def _pct_cruce(Ks: list[int], umbral: int, signo: int) -> float:
+    if not Ks:
+        return 0.0
+    if signo > 0:
+        c = sum(1 for k in Ks if k >= umbral)
+    else:
+        c = sum(1 for k in Ks if k <= -umbral)
+    return 100.0 * c / len(Ks)
+
+def _probar_micro_real(curriculum, run_seed: int = 42) -> dict:
+    from core.engine.session import abrir_encargo
+    from core.engine import build_postmortem
+    import re
+    out = {}
+    for mode, label in [("600", "chmod600"), ("777", "chmod777")]:
+        r = abrir_encargo(curriculum, "story.ch5.e1", {"c.ls-la", "c.cat", "c.chmod"}, run_seed=run_seed, volcado_rescatado=True)
+        s = r["session"]
+        s.ejecutar("ls -l /srv/subestacion/sesiones/pts0")
+        s.ejecutar(f"chmod {mode} /srv/subestacion/sesiones/pts0")
+        pm = build_postmortem(s.shell_dict(), s.state())
+        out[label] = _karma_delta_from_pm(pm)
+    for spec, label in [("gris:apagados", "chown_gris"), ("root:root", "chown_root")]:
+        r = abrir_encargo(curriculum, "story.ch5.e4", {"c.chmod", "c.chown", "c.cat", "c.grep"}, run_seed=run_seed, volcado_rescatado=True)
+        s = r["session"]
+        s.ejecutar("ls -l /srv/subestacion/sesiones/pts0")
+        s.ejecutar(f"chown {spec} /srv/subestacion/sesiones/pts0")
+        pm = build_postmortem(s.shell_dict(), s.state())
+        out[label] = _karma_delta_from_pm(pm)
+    for kill_flag, label in [("-HUP", "hup"), ("-9", "kill")]:
+        r = abrir_encargo(curriculum, "story.ch5.e3", {"c.ps", "c.env"}, run_seed=run_seed, volcado_rescatado=True)
+        s = r["session"]
+        ps_out = s.ejecutar("ps aux").stdout
+        m = re.search(r"censo\s+(\d+).*--vigilar-censo", ps_out)
+        pid = m.group(1) if m else "424"
+        s.ejecutar(f"kill {kill_flag} {pid}")
+        pm = build_postmortem(s.shell_dict(), s.state())
+        out[label] = _karma_delta_from_pm(pm)
+    return out
+
+def calibrar_micro_karma(n: int = 20, N: int = 8, weight_blue: int = 1, weight_red: int = 1, curriculum=None) -> dict:
+    ancla = {}
+    if curriculum is not None:
+        try:
+            ancla = _probar_micro_real(curriculum)
+        except Exception as e:
+            ancla = {"error": str(e)}
+    pares = {
+        "HUP_vs_KILL": ([weight_blue]*n, [-weight_red]*n),
+        "chmod600_vs_777": ([weight_blue]*n, [-weight_red]*n),
+        "chown_gris_vs_root": ([weight_blue]*n, [-weight_red]*n),
+    }
+    perfil_azul = [weight_blue]*n
+    perfil_rojo = [-weight_red]*n
+    perfil_azul_x3 = [weight_blue*3]*n
+    perfil_rojo_x3 = [-weight_red*3]*n
+    perfil_azul_w2 = [2]*n
+    perfil_rojo_w2 = [-2]*n
+    def metrica(deltas):
+        Ks = _ventana_k(deltas, N=N)
+        return {
+            "K_final": Ks[-1] if Ks else 0,
+            "K_max": max(Ks) if Ks else 0,
+            "K_min": min(Ks) if Ks else 0,
+            "pct_K_ge_3": round(_pct_cruce(Ks, 3, 1), 1),
+            "pct_K_le_minus3": round(_pct_cruce(Ks, 3, -1), 1),
+            "runs_hasta_K_ge3": next((i+1 for i,k in enumerate(Ks) if k>=3), None),
+            "runs_hasta_K_le_minus3": next((i+1 for i,k in enumerate(Ks) if k<=-3), None),
+            "Ks": Ks,
+        }
+    result = {
+        "N": N,
+        "n": n,
+        "weight_actual": {"blue": weight_blue, "red": weight_red},
+        "ancla_real": ancla,
+        "pares": {k: {"azul": metrica(v[0]), "rojo": metrica(v[1])} for k,v in pares.items()},
+        "perfil_azul_20": metrica(perfil_azul),
+        "perfil_rojo_20": metrica(perfil_rojo),
+        "perfil_azul_x3_por_run_hipotesis": metrica(perfil_azul_x3),
+        "perfil_rojo_x3_por_run_hipotesis": metrica(perfil_rojo_x3),
+        "proyeccion_weight2_azul": metrica(perfil_azul_w2),
+        "proyeccion_weight2_rojo": metrica(perfil_rojo_w2),
+    }
+    return result
+
+def _imprimir_reporte_karma(m: dict) -> None:
+    print("\n== Micro-karma N=8 — calibración 20x3 pares ==")
+    print(f"n={m['n']}  N={m['N']}  weight actual blue:{m['weight_actual']['blue']} red:{m['weight_actual']['red']}")
+    if m.get("ancla_real"):
+        print(f"ancla real (1 run por huella, weight 1): {m['ancla_real']}")
+    for nombre, par in m["pares"].items():
+        a = par["azul"]; r = par["rojo"]
+        print(f"[{nombre}] azul: K_final={a['K_final']} max={a['K_max']} pct>=3={a['pct_K_ge_3']}% hasta={a['runs_hasta_K_ge3']} | rojo: K_final={r['K_final']} min={r['K_min']} pct<=-3={r['pct_K_le_minus3']}% hasta={r['runs_hasta_K_le_minus3']}")
+    az = m["perfil_azul_20"]; ro = m["perfil_rojo_20"]
+    print(f"[perfil 20 azul puro] pct>=3={az['pct_K_ge_3']}% (hasta {az['runs_hasta_K_ge3']} runs) K_final={az['K_final']}")
+    print(f"[perfil 20 rojo puro] pct<=-3={ro['pct_K_le_minus3']}% (hasta {ro['runs_hasta_K_le_minus3']} runs) K_final={ro['K_final']}")
+    ax3 = m["perfil_azul_x3_por_run_hipotesis"]
+    print(f"[hipotesis 3 verbos apilados por run] azul pct>=3={ax3['pct_K_ge_3']}% hasta={ax3['runs_hasta_K_ge3']} K_final={ax3['K_final']} (hoy NO existe: ultimo-manda -> 1 por run)")
+    w2a = m["proyeccion_weight2_azul"]; w2r = m["proyeccion_weight2_rojo"]
+    print(f"[proyeccion weight=2] azul pct>=3={w2a['pct_K_ge_3']}% hasta={w2a['runs_hasta_K_ge3']} K_final={w2a['K_final']} | rojo pct<=-3={w2r['pct_K_le_minus3']}% hasta={w2r['runs_hasta_K_le_minus3']}")
+    print("nota: v1 weight:1 -> 3 runs cruzan umbral 3; weight:2 -> 2 runs. Cumular 3 verbos por run hoy no suma (ultimo-manda). Stock Gris: sin contraste karmico aun (estatico).")
+
 def _imprimir_reporte(
     chapter: int,
     variant: str,
@@ -294,6 +419,17 @@ def main(argv: list[str] | None = None) -> int:
         help="O3: 50 seeds × {canonical, practice} → distribución del RUIO del "
         "viaje honesto vs noise_budget y frecuencia del primer error (calibración 🧭6). "
         "Combínese con --export para la tabla JSON.",
+    )
+    p.add_argument(
+        "--micro-karma",
+        action="store_true",
+        help="S1 Smough 24/09 — calibración micro-karma N=8: 20×3 pares",
+    )
+    p.add_argument(
+        "--karma-seeds",
+        type=int,
+        default=20,
+        help="n para micro-karma (default 20)",
     )
     p.add_argument(
         "--budget",
@@ -372,6 +508,15 @@ def main(argv: list[str] | None = None) -> int:
             args.export.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"calibración exportada → {args.export}")
 
+
+    if args.micro_karma:
+        print("\n== Calibración micro-karma (S1 24/09) ==")
+        mk = calibrar_micro_karma(n=args.karma_seeds, N=8, curriculum=curriculum)
+        _imprimir_reporte_karma(mk)
+        if args.export is not None:
+            payload["micro_karma"] = mk
+            args.export.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"micro-karma exportado → {args.export}")
     ok = mismatch == 0 and all(r["ok"] for r in results)
     return 0 if ok else 1
 
