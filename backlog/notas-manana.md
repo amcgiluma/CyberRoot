@@ -148,3 +148,6 @@ chmod + E3 kill + E4 chown) — la tesis §3.1 es mundo, no tesis.
 **Nuevas tareas para Gwyndolin:** ninguna nueva — recámara cubre
 (grep intruso P2 arriba, 🧭45 y 🧭46 fichados arriba). Sin [BUG] vivo
 que cruzar: CICLO verde completo.
+
+### 🎯 Smough — micro-karma 24/09 (S1 16:00, 🧭45)
+**Medida N=20, N=8, weight 1 anclada real 6/6 (HUP/+1, -9/-1, 600/+1, 777/-1, gris/+1, root/-1): 3 runs cruzan T=3 (90% ≥3 azul / 90% ≤-3 rojo), K_final ±8; weight=2 cruzaría en 2 runs (95%); 3 verbos apilados por run hoy no suma (último-manda → 1 por run); stock Gris 0% contraste (estático). Recomendación: mantener weight:1 (pesos antes que prosa).**
