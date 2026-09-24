@@ -9,6 +9,42 @@
 
 ## Activas
 
+### Asignaciones 24/09 (Gwyndolin 11:00 — plan `../planes/2026/09/24.md`)
+
+> Base verificada: main post-cierre 23/09 (**809 passed / 0 failed**, gate
+> 25/31, bundle 50 fresco 484.0 KiB), **sin PRs abiertos, sin ramas
+> huérfanas, sin líneas [EN CURSO] vivas** (verificado 11:00). Día del
+> TERCER DÍA del díptico: E2 «grep del intruso» da a la Subestación su
+> LECTURA (La visita como mirror forense del vigía), 🧭45 deja la MEDIDA
+> del micro-karma a 20 runs (pesos antes que prosa), y la web gana el
+> 5º estado del semáforo (propietario). Subestación 4/4 huellas moral
+> SALDADA (Gwyn 23:09, Artorias verde completo).
+> ALLOWLIST OWNER: Ornstein (nova `DEFAULT_CH5E2_COMMANDS` `({'cat','scp','ps','grep'})`,
+> forma `<= set(...)`, base e2 `{'cat','scp'}` intacta — la nova añade, no
+> reempaza; asserts de las allowlist EXISTENTES (`E1/E3/E4/CH4/CH4E3/CH6`)
+> intocados). GATE OWNER: Ornstein (único que toca `curriculum.json` —
+> requiere `c.grep` en e2; gate 25/31 → 25/32 coherente). Bundle: SOLO
+> Ornstein regenera (toca data). Smough y Seath NO tocan data. Orden de
+> merges: engine → sandbox → meta-ui. postmortem.py INTACTO (sin detectores nuevos hoy).
+
+- `[EN CURSO][P2]` (24/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-24` · E2 «grep del intruso»: `ps aux | grep censo` como lectura del díptico** — nueva nova `DEFAULT_CH5E2_COMMANDS = ("cat","scp","ps","grep")` en `shell.py` (forma `<=`), ramificación `_commands_for(5,'story.ch5.e2')` en `session.py` (patrón cap. 4, NO TOCA asserts de e1/E3/E4), `curriculum.json` requiere `c.grep` en e2 (prereq `c.cat`), `textos.json` hint_2 e2 «el vigilante es del censo — `grep censo` no `ceniza`; `grep -i` como atajo veterano SEVA no canon». AC: e2 abrible con prereqs, `missing ['c.grep']` honesto sin él, `grep censo` exit 0 1 línea vía `abrir_encargo`, `grep ceniza` exit 1, frontera 127 honesta (`chmod`/`kill` en e2 → 127), base e2 `{'cat','scp'}` intacta, suite ≥815, determinismo ×2 seeds byte-idéntico, bundle regen en rama.
+- `[EN CURSO][P3]` (24/09, 🧭45) **S1 — Smough 16:00 · `feat/sandbox-2026-09-24` · calibración micro-karma a 20 runs (pesos antes que prosa)** — `tools/harness/run_seeds.py`: corpus 20×3 pares (20×HUP vs 20×-9 / 20×600 vs 20×777 / 20×gris vs 20×root) sobre e1/e3/e4 kanon con `N=8` (§3.4) y stock de Gris (§4.3). Medir: % de runs con ventana `N=8` que cruzan `K≥+3` vs `K≤-3` por perfil; contraste azul/rojo al cumular 3 verbos (díptico completo) en la misma run; umbral actual de `blue:1`/`red:1` en 20 runs. AC: N=20 corre sin error; tabla de pesos/métricas en `docs/worklog/2026/09/24.md` + nota de 1 línea en `notas-manana.md` (🎯 de Smough); SIN tocar `src/` ni `web/` ni data; delta de suite +0.
+- `[EN CURSO][P3]` (24/09, web) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-24` · lente web chown: 5º estado del semáforo del Grid** — insignia `#ch5-e4-owner` bajo la tabla custodia (`web/app.js`): `operator:operator` neutro / `gris:apagados` azul / `root:root` rojo, leyendo `get_ls_owner()`/`get_chown_history()` (ya expuestos, sin ejecutar); `restartSameSeed` limpia también; SI O1 aterrizó: incluir `grep censo` del intruso como 6º estado de `#custodia-intruso` (censo vs ceniza); SI NO: hueco honesto, delta +0. AC: `node --check` OK; consola limpia en `?chapter=5` en los 4 estados; `CUSTODIA/TRONCAL_STATIC` byte-idénticas; sin tocar `src/core/` ni `src/data/`; sin bundle (regen canónico de Gwyn post-merge).
+
+---
+
+### Asignaciones 23/09 (Gwyndolin 11:00 — plan `../planes/2026/09/23.md`)
+
+> Base verificada: main post-cierre 22/09 (801 passed, gate 25/31, bundle 50 fresco), **sin PRs abiertos ni líneas [EN CURSO] vivas**. Día del DÍPTICO COMPLETO — Subestación 2/4→4/4 con huella (e4 chown propietario). ALLOWLIST OWNER: NADIE. GATE OWNER: NADIE (gate 25/31). Bundle: SOLO Ornstein regenera (toca `src/data/textos.json`); Smough código puro, Seath web puro. Orden: engine→sandbox→meta-ui. Suite esperada 803..811.
+
+> *(cierre 23/09, 23:00 — las 3 líneas `[HECHO]` del día (O1 Ornstein PR #75,
+> S1 Smough PR #76, T1 Seath PR #77) ARCHIVADAS en `../hecho/2026-09.md` §23/09.
+> Mergeados en orden engine→sandbox→meta-ui por Gwyn, suite **809 passed /
+> 0 failed** (801+8+0+0, deltas declarados verificados por aritmética + ensayo
+> pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
+> (484.0 KiB)** regen canónico. NADA retenido. Díptico E1 chmod + E4 chown
+> cierra la Subestación 4/4 con huella moral (Diseño §3.1 saldada).)*
+
 ### Asignaciones 22/09 (Gwyndolin 11:00 — plan `../planes/2026/09/22.md`)
 
 > Base verificada: main post-cierre 21/09 (788 passed, gate 25/31, bundle 50
@@ -81,9 +117,6 @@
 > GATE OWNER: NADIE (no hay quests nuevas — gate no toca).
 > Bundle: solo Smough regenera (toca `src/data/textos.json`).
 
-- `[EN CURSO][P2]` (18/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-18` · mostrar el cap. 5 en la web** — si O1 aterrizó en main: `parseParams` a `[0,2,3,4,5,6]` + hint del cap. 5 (`web/app.js` + `web/index.html`), la lente «Subestación — custodia» hermana del rescate del Faro (SOLO si `volcado: rescatado` en history, falso positivo caducado cazado); si O1 NO aterrizó: hueco honesto declarado delta 0 (`node --check`), sin lente muerta. AC: consola limpia en `?chapter=4`/`?chapter=5`; TRONCAL_STATIC intacta; sin bundle.
-- `[EN CURSO][P3]` (18/09, higiene) **Gwyndolin 11:00 — salud del backlog verificada** — revisado TODO el backlog con ojo de estructura: plan de ayer COMPLETO (PRs #62/#63/#61, ver cierre de Gwyn); `abierto.md`/`propuestas.md`/`aplicadas/` ok (sin marcadores residuales, cero `=======`); el único [BUG] vivo (`grep -v`, 🧭27) sigue P3 recámara — nadie lo toca HOY. Sin cambios de estructura → INDICE.md sin cambios.
-
 **Previsto** (cierre Gwyn 23:00): PRs mergeados en orden
 engine→sandbox→meta-ui, suite esperada **758** (749+6+3+0, deltas
 declarados verificados por Artorias), gate **24/31** flexible
@@ -112,14 +145,10 @@ declarados verificados por Artorias), gate **24/31** flexible
 > `<= set(...)`; base `(cat,scp)` intacta). GATE OWNER: NADIE toca asserts
 > del gate (no hay quests nuevas en curriculum). Bundle: SOLO Seath regenera.
 
-- `[EN CURSO][P1]` (19/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-19` · puerta ch5 completa: `story.ch5.e1/e3/e4` abribles por `abrir_encargo`** — `session.py` quita el guard `e1/e3/e4 → abrible False`; `volcado_del_save(pm)` heredado en TODO el capítulo (el testigo pesa en e1/e3/e4, no solo e2); tests flexibles. AC: los 3 encargos → `abrible True` con requires correctos; e2 intacta (7 tests existentes no rompen); determinismo ×2 seeds; suite 760→≥764. NO toca `shell.py` ni `web/`. **→ 💥 NO ENTREGADO 19/09 — Artorias 21:00: sin rama `feat/engine-2026-09-19` (0 commits ahead de origin/main, sin PR abierto — verificado `gh pr list` sin engine + `git branch -a` sin rama). Criterio no evaluable; replanificar mañana como prioridad 1 con misma spec (quitar guard e1/e3/e4 + volcado_del_save heredado). Sin impacto en S1/T1.**
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-
-**Previsto** (cierre Gwyn 23:00): PRs mergeados engine→sandbox→meta-ui,
-suite esperada **≥768** (deltas declarados verificados por Artorias),
-gate **24/31** (flexible, nadie lo toca hoy), bundle 48+ regenerado
-canónicamente por Seath.
+> **Previsto** (cierre Gwyn 23:00): PRs mergeados engine→sandbox→meta-ui,
+> suite esperada **≥768** (deltas declarados verificados por Artorias),
+> gate **24/31** (flexible, nadie lo toca hoy), bundle 48+ regenerado
+> canónicamente por Seath.
 
 ### Asignaciones 20/09 (Gwyndolin 11:00 — plan `../planes/2026/09/20.md`)
 
@@ -147,8 +176,6 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 > ALLOWLIST OWNER: NADIE · GATE OWNER curriculum: Smough (24/31→24/32) ·
 > Bundle: solo Smough regenera (toca `src/data/`).
 
-- *(17/09, M1 — Manus 03:00, pendiente de confirmar en worklog: mantenimiento post-16/09 según su rutina; sin pieza narrativa nueva agendada — la dirección del día la da Oscar: cap. 5 lee el testigo con verbos ya dominados, sin prosa nueva que integrar.)*
-
 ### Asignaciones 13/09 (awaiting: nada — día CERRADO)
 
 - *(13/09, O1 mergeado por Gwyn como PR #50 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
@@ -164,22 +191,13 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 
 > *(14/09, 23:00 — Gwyn: ADR FIRMADO — rescate azul + disolución roja por 30 ticks sin respuesta; `story.ch4.e3` planificable el 15/09. Ver worklog §23:00 y notas 🎯.)*
 
-- *(14/09, cierre Gwyn 23:00: las 4 líneas `[HECHO]` del día (O1/S2/T1 + M1 de Manus) ARCHIVADAS en `../hecho/2026-09.md` §14/09. PRs #53/#54/#55 mergeados en orden engine→sandbox→meta-ui, suite **714 passed**, gate **24/29**, bundle **47 ficheros (406.2 KiB)** regenerado canónicamente. NADA retenido. Cierre anterior 13/09 — PRs #50/#51/#52, 708/24-29/47.)*
-**ADR-BOSQUEJO de TR-003 EN_COLA escrito en el plan (`../planes/2026/09/14.md`)** — *llevado al plan 15/09; ver abajo.*
-
 ### Asignaciones 15/09 (Gwyndolin 11:00 — plan `../planes/2026/09/15.md`)
 
 > Punto de partida verificado por Gwyndolin: 714/0 en local, `rm` NO existe en el sandbox (127), `_exec_scp` ya copia local→`faro:` sin código nuevo, `_exec_scp` no pregunta host-key. El ADR TR-003 sale a main HOY.
 
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-
 ### Asignaciones 11/09 (Gwyndolin 11:00 — plan `../planes/2026/09/11.md`)
 
 - *(11/09, Gwyn 23:00 — cierre 12/09: O1 `auditor_join` se REPLANIFICÓ AL 12/09 con la misma spec y SALIÓ — PR #47 mergeado. La línea 💥 original queda abajo como constancia histórica del fallo de arranque; la tarea está viva en `hecho/2026-09.md` §12/09.)*
-- `[EN CURSO][P2]` (11/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-11` · `auditor_join`: la cuarta huella del Auditor** — detector `_find_join` en `postmortem.py` (join con `-v` anti-join → 1 línea formulario) + textos SOLO `postmortem.auditor.join*` + tests de los 3 casos (con `-v` / sin `-v` documentado / sin `join` byte-idéntico). Criterio: línea presente con anti-join en history, sin `join` byte-idéntico a hoy, suite +3–5 sobre 680. Costura S↔O sobre `textos.json`: prefijos disjuntos (`postmortem.auditor.join` vs `story.ch4.e2`), unión trivial. NO toca `curriculum.json` (dueño S2 hoy). **→ 💥 Artorias 21:00: NO ENTREGADO — `feat/engine-2026-09-11` 0 commits ahead de origin/main, sin PR abierto (verificado `git log origin/main..feat/engine-2026-09-11` vacío + `gh pr list` sin engine). Criterio no evaluable; replanificado al 12/09 con misma spec, salió en PR #47 por Gwyn 23:00. Sin impacto en S2/T1.**
 
 ### Asignaciones 10/09 (Gwyndolin 11:00 — plan `../planes/2026/09/10.md`)
 
@@ -200,14 +218,6 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
-
-> *(cierre 23/09, 23:00 — las 3 líneas `[HECHO]` del día (O1 Ornstein PR #75,
-> S1 Smough PR #76, T1 Seath PR #77) ARCHIVADAS en `../hecho/2026-09.md` §23/09.
-> Mergeados en orden engine→sandbox→meta-ui por Gwyn, suite **809 passed /
-> 0 failed** (801+8+0+0, deltas declarados verificados por aritmética + ensayo
-> pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
-> (484.0 KiB)** regen canónico. NADA retenido. Díptico E1 chmod + E4 chown
-> cierra la Subestación 4/4 con huella moral (Diseño §3.1 saldada).)*
 
 ### Historial reciente (resumen — el detalle vive en `../hecho/2026-09.md`)
 
@@ -312,7 +322,3 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 > corte/orden/join cubre la voz del Auditor; el eco del espejo añade
 > repertorio, no exige claves de SEÑAL). Vivo de mañana: MODO B de la
 > zona 🔬 (dato6 coma-trampa + eco del espejo + badge TR-003).
-
-### Asignaciones 23/09 (Gwyndolin 11:00 — plan `../planes/2026/09/23.md`)
-
-> Base verificada: main post-cierre 22/09 (801 passed, gate 25/31, bundle 50 fresco), **sin PRs abiertos ni líneas [EN CURSO] vivas**. Día del DÍPTICO COMPLETO — Subestación 2/4→4/4 con huella (e4 chown propietario). ALLOWLIST OWNER: NADIE. GATE OWNER: NADIE (gate 25/31). Bundle: SOLO Ornstein regenera (toca `src/data/textos.json`); Smough código puro, Seath web puro. Orden: engine→sandbox→meta-ui. Suite esperada 803..811.
