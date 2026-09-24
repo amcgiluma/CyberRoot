@@ -93,6 +93,7 @@ DEFAULT_CH5_COMMANDS: tuple[str, ...] = ("cat", "scp")
 #: e1 (puerta que dejaste) → ls,ps,chmod,kill; e3 (la visita) → ps,env,kill;
 #: e4 (el que se queda) → chmod,chown,tail,ls. Base (cat,scp) SIEMPRE incluida
 #: (e2 es base pura). Fuera de su encargo → 127 frontera honesta.
+DEFAULT_CH5E2_COMMANDS: tuple[str, ...] = ("cat", "scp", "ps", "grep")
 DEFAULT_CH5E1_COMMANDS: tuple[str, ...] = ("cat", "chmod", "kill", "ls", "ps", "scp")
 DEFAULT_CH5E3_COMMANDS: tuple[str, ...] = ("cat", "env", "kill", "ps", "scp")
 DEFAULT_CH5E4_COMMANDS: tuple[str, ...] = ("cat", "chmod", "chown", "ls", "scp", "tail")
