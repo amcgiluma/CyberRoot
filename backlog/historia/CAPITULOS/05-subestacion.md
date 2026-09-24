@@ -172,21 +172,26 @@ casa tiene dentro que no puede caer en manos de la Oficina, y lo que la casa
 está dispuesta a perder. Defiendes, no robas; pero decides qué entra en la
 sombra antes de que entren ellos.
 
-- Técnico: cerrar el perímetro con lo aprendido de defensa — `chmod` sobre
-  los accesos, `kill`/`chown` donde la casa se queda a medias, leer los logs
-  de entrada (`cat`/`tail` del acceso) para saber por dónde vienen — en un
-  solo recorrido apretado por el ruido.
+- Técnico: mirar quién es dueño de la sesión que sostiene la puerta
+  (`ls -l /srv/subestacion/sesiones/pts0`) y decidir a quién entregas la
+  casa: `chown gris:apagados /srv/subestacion/sesiones/pts0` se la deja a la
+  Subestación (huella azul: custodia transferida), `chown root:root` la
+  devuelve al Censo (huella roja: casa retomada por Lumen). El permiso se
+  mira antes de tocar: sin `ls -l` previo, el Auditor no registra nada.
+  `-R` aquí no hace nada distinto — `pts0` es un fichero, no un directorio.
 - Beat: en el archivo de fragmentos, los cajones 27 a 31 siguen vacíos (la
   numeración que nadie ha abierto, §ESCENARIOS: Subestación). Uno de ellos,
   el 29, tiene recién una mancha de polvo movida y una sola hoja: el
   expediente. Cae aquí como botín (fragmento 5 — ver `FRAGMENTOS.md`). El
   historial del Muelle que cuelga al lado del de Vela encontrado en el lugar
   que no debería tener nada.
-- Karma: doble salida de cierre. Dejar el expediente donde estaba y exponerlo
-  a lo que pase en el dique (rojo: lo que la Oficina encuentre en la casa es
-  problema de quien lo guardó) o llevarlo contigo lejos del fuego (azul: una
-  prueba del tamaño que la casa ya no puede sostener, y que empequeñece al
-  resto de lo que defiendes).
+- Karma: doble salida por propietario. `chown gris:apagados` deja la puerta en
+  manos de la Subestación — defiendes la casa con su gente (azul: custodia
+  transferida a Gris). `chown root:root` la devuelve al Censo — entregas la
+  llave a quien te quiere borrar (rojo: casa retomada por Lumen). El último
+  verbo manda: si pruebas `chmod` y `chown` en la misma run, el Auditor solo
+  archiva el último. El expediente del cajón 29 viaja aparte — esta puerta
+  decide quién es dueño, no quién carga el papel.
 - Gancho: el cierre del capítulo. Se sobrevive al asalto, pero el coste queda
   escrito en la casa: un transformador que esta vez sí se enfría, la tira de
   LED a 04:40, el repeater de la grúa nueve muerto del todo. Zeta cuenta lo
