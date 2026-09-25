@@ -79,6 +79,8 @@ LINE_KEY_PUERTA_ABIERTA = "postmortem.auditor.puerta_abierta"
 #: O1 23/09 (Ornstein, díptico E4) — huella kármica del propietario: gris vs root sobre pts0.
 LINE_KEY_CHOWN_TRANSFER = "postmortem.auditor.chown_transfer"
 LINE_KEY_CHOWN_RETOMA = "postmortem.auditor.chown_retoma"
+#: O1 25/09 (Ornstein, P2 factura frugal) — vía frugal grep -c.
+LINE_KEY_GREP_C_COUNT = "postmortem.auditor.grep_c_count"
 
 
 def _por_codepoint(entries: dict[str, int]) -> dict[str, int]:
@@ -522,6 +524,117 @@ def _has_volcado_custodia(shell_dict: dict[str, Any]) -> bool:
         if "cat" in line:
             return True
     return False
+
+
+def _extract_greps(shell_dict: dict[str, Any]) -> list[dict[str, Any]]:
+    """ÚNICO punto de lectura de líneas-grep del historial (25/09, Ornstein).
+
+    Extrae todas las entradas cuyo comando es grep (por `data.command` o por
+    argv[0]==\"grep\"), parseando flags líderes -v/-i/-c, patrón y exit_code.
+    Por él pasan los detectores nuevos (grep_c_count) y puede ser usado por
+    los de ayer sin romper byte-idéntico (los viejos siguen con shlex directo
+    para no cambiar su firma). Determinista, sin imports de sandbox.
+    """
+    out: list[dict[str, Any]] = []
+    for entry in shell_dict.get("history", []) or []:
+        line = str(entry.get("line", ""))
+        result = entry.get("result") or {}
+        exit_code = int(result.get("exit_code", 1)) if isinstance(result, dict) else 1
+        # Detectar si es grep por noise command o por argv
+        is_grep = False
+        for ev in result.get("noise", []) or []:
+            if (ev.get("data") or {}).get("command") == "grep":
+                is_grep = True
+                break
+        if not is_grep:
+            try:
+                argv0 = __import__("shlex").split(line)
+            except ValueError:
+                argv0 = line.split()
+            # busca token grep (pipe caso: "ps aux | grep ...")
+            if "grep" not in line:
+                continue
+            # Para líneas con pipe, el grep no es argv[0] pero sí contiene grep
+            # Verifica que haya un token grep
+            tokens = argv0
+            if "grep" not in tokens:
+                # fallback: substring ya filtró, pero sin token exacto igual es grep
+                # (p. ej. "ps aux | grep censo" → tokens incluye grep)
+                continue
+            is_grep = True
+        if not is_grep:
+            continue
+        # Parse flags líderes tras el token grep
+        try:
+            argv = __import__("shlex").split(line)
+        except ValueError:
+            argv = line.split()
+        # localiza índice de grep
+        try:
+            gidx = argv.index("grep")
+        except ValueError:
+            continue
+        args = argv[gidx + 1 :]
+        invert = False
+        ignore_case = False
+        count_mode = False
+        idx = 0
+        while idx < len(args):
+            a = args[idx]
+            if a == "--":
+                idx += 1
+                break
+            if a.startswith("-") and len(a) > 1 and a != "-":
+                for ch in a[1:]:
+                    if ch == "v":
+                        invert = True
+                    elif ch == "i":
+                        ignore_case = True
+                    elif ch == "c":
+                        count_mode = True
+                    else:
+                        # flag desconocido → no es nuestro grep canónico, pero igual lo listamos
+                        pass
+                idx += 1
+                continue
+            break
+        pattern = args[idx] if idx < len(args) else ""
+        out.append({
+            "line": line,
+            "argv": argv,
+            "exit_code": exit_code,
+            "has_c": count_mode,
+            "invert": invert,
+            "ignore_case": ignore_case,
+            "pattern": pattern,
+        })
+    return out
+
+
+def _find_last_grep_c_censo(shell_dict: dict[str, Any]) -> dict[str, Any] | None:
+    """Último grep exit 0 fue -c censo (factura frugal, 25/09).
+
+    Usa _extract_greps como única fuente. Mira el ÚLTIMO grep con exit 0;
+    si ese último tiene -c y patrón censo → factura. Si el último grep exit 0
+    es sin -c o con otro patrón → None. Así respeta "el último grep exit-0
+    fue grep -c censo".
+    """
+    greps_exit0 = [g for g in _extract_greps(shell_dict) if g["exit_code"] == 0]
+    if not greps_exit0:
+        return None
+    last = greps_exit0[-1]
+    if not last["has_c"]:
+        return None
+    pat = last["pattern"]
+    if not pat:
+        return None
+    if last["ignore_case"]:
+        if "censo" not in pat.lower():
+            return None
+    else:
+        if "censo" not in pat:
+            return None
+    return last
 
 
 def _has_sudo(shell_dict: dict[str, Any]) -> bool:
@@ -1041,6 +1154,30 @@ def build_postmortem(
                 base["karma"] = {"delta": 1, "tint": "red"}
                 base["micro_karma"] = {"red": 1}
 
+    # O1 25/09 — factura frugal: último grep -c censo exit 0
+    _grep_c = _find_last_grep_c_censo(shell_dict)
+    if _grep_c is not None:
+        # cuenta = número de líneas seleccionadas → del stdout del último grep -c
+        # pero como _extract_greps no guarda stdout, derivamos count del history real:
+        # buscamos la entrada exacta y leemos su stdout (si pipe, el stdout es del grep)
+        # Fallback: usa "1" si no se puede leer (la factura frugal del e2 siempre es 1)
+        _grep_c_count = "1"
+        for entry in shell_dict.get("history", []) or []:
+            if str(entry.get("line", "")) != _grep_c["line"]:
+                continue
+            res = entry.get("result") or {}
+            out = str(res.get("stdout", ""))
+            # stdout de grep -c es "N\\n"
+            stripped = out.strip()
+            if stripped.isdigit():
+                _grep_c_count = stripped
+            break
+        _grep_c_args: dict[str, Any] = {"count": _grep_c_count, "pattern": "censo"}
+        _grep_c_text = _resolve_auditor_text(LINE_KEY_GREP_C_COUNT, _grep_c_args)
+        base["auditor_grep_c_count"] = {"line_key": LINE_KEY_GREP_C_COUNT, "args": _grep_c_args}
+        base["auditor_grep_c_count_text"] = _grep_c_text
+        base["lines_resolved"] = [*base["lines_resolved"], _grep_c_text]
+
     # O1 04/09 — segunda fuente de verdad: read_marks si hubo sudo
     if _has_sudo(shell_dict):
         read_marks = shell_dict.get("read_marks") or []
@@ -1098,6 +1235,7 @@ __all__ = [
     "LINE_KEY_PUERTA_ABIERTA",
     "LINE_KEY_CHOWN_TRANSFER",
     "LINE_KEY_CHOWN_RETOMA",
+    "LINE_KEY_GREP_C_COUNT",
     "LINE_KEY_VOLCADO_RESCATE",
     "LINE_KEY_VOLCADO_CADUCADO",
 ]
