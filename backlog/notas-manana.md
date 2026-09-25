@@ -10,26 +10,26 @@
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 
-### 🧭 Oscar — dirección 05:00 (24/09, MODO B — DÍPTICO PROPIETARIO + CHMOD -R HONESTO + HINT, save limpio)
+### 🧭 Oscar — dirección 05:00 (25/09, MODO B — E2 «grep del intruso» + 5º estado propietario, save limpio)
 
-**Veredicto de experiencia:** APTO — el camino del novato es APTO de principio a fin y el díptico propietario queda SALDADO como DECISIÓN distinta al díptico permiso. La zona 🔬 24/09 se ejecutó COMPLETA desde save limpio (MODO B, `abrir_encargo` real + `generate` determinista + web hint) y responde a las dos preguntas de sabor de Gwyn: ¿entregar la casa a Gris vs devolverla al Censo se SIENTE distinto a cerrar vs exponer con chmod? → SÍ, DISTINTA Y COMPLEMENTARIA (propietario `chown_transfer` azul con `gris:apagados` vs `chown_retoma` rojo con `root:root` habla de DUEÑO, mientras `cierre` azul 600 vs `puerta_abierta` rojo 777 habla de PUERTA; mismo `pts0 644`, mismo gate `ls -l`, dos verbos técnicos distintos con dos frases del Auditor que pesan distinto); ¿el hint «-R es para directorios — aquí es un fichero…» se siente maestro cálido o manta sobre el puzzle? → MAESTRO CÁLIDO (aclara física GNU — recursivo es para dir, aquí no hace más abierta la puerta — sin regalar karma; el 777/600 ya pesa sin `-R`, el hint solo deshace el stderr mentiroso que Havel midió el 23/09).
+**Veredicto de experiencia:** APTO — el camino del novato es APTO de principio a fin y la Subestación queda 4 huellas + 1 lectura SALDADA. La zona 🔬 25/09 se ejecutó COMPLETA desde save limpio (MODO B, `abrir_encargo` real + `generate` determinista + web lente) y responde a las dos preguntas de sabor de Gwyn: ¿delatar al vigilante con `grep` se SIENTE distinto a condenarlo con `kill` — inteligencia vs fuerza? → SÍ, DISTINTA Y NECESARIA ( `ps aux | grep censo` *lee* el listado y deja 1 línea `censo --vigilar-censo START 03:14` con ruido `ps:1`+`grep:2`, mientras `kill -HUP/-9` *escribe* el mundo — proceso vive con `--reloaded` vs muere; sin karma nuevo en E2 (gris), el jugador aprende a delatar antes de decidir qué hacer con lo delatado); ¿ver el propietario en web (`-R` azul `gris:apagados` vs rojo `root:root`) pesa distinto que en post-mortem? → SÍ, DOS TIEMPOS del mismo veredicto: en web es semáforo INSTANTÁNEO (`#95a5a6`→`#5dade2`→`#e74c3c` por `get_ls_owner()` sin ejecutar), en post-mortem es MEMORIA firmada (`auditor_chown_transfer`/`retoma`).
 
 **Qué se ha jugado (save limpio, sin atajos):**
-- **Prioridad 1 — DÍPTICO PROPIETARIO (5 checks por la puerta):** `abrir_encargo(c,'story.ch5.e4',{'c.ls-la','c.cat','c.chmod','c.chown','c.grep'},42)` → `abrible True` (knowledge completo con `c.grep`; sin `c.grep` → `missing ['c.grep']` honesto); `ls -l /srv/subestacion/sesiones/pts0` → exit 0 `-rw-r--r--` 644; `ls -l` + `chown gris:apagados pts0` → post-mortem `auditor_chown_transfer` + `micro_karma {blue:1}` + `owner gris:apagados`; run limpia aparte `chown root:root` → `auditor_chown_retoma` + `{red:1}`; sin `ls -l` byte-idéntico sin huella/karma (7 vs 9 claves); coexistencia `chmod 600`+`chown root:root` y viceversa → ÚLTIMO verbo manda (chown gana en rojo, chmod gana en azul), sin huellas cruzadas kill/hup.
-- **Prioridad 2 — `chmod -R` HONESTO + hint veterano (5 checks):** `ls -l` + `chmod -R 777 pts0` (fichero) → exit 0 stderr vacío modo 777 `auditor_puerta_abierta` rojo `{red:1}` byte-idéntico a `chmod 777` (antes daba `invalid mode: '-R'` exit 1 con mismo karma — ahora sin stderr mentiroso); `chmod --recursive` y `-Rv` idénticos; `chmod -R 777 <dir>` → recursivo determinista sorted (dir 777 + hijo 777) vs `chmod 777 <dir>` → solo dir (hijo 644 intacto); sin `-R` byte-idéntico cap.1/e1 7 tests; web `src/data/textos.json` `story.ch5.e1.hint_2` visible en `?chapter=5`, `node --check web/app.js` OK, `CUSTODIA/TRONCAL_STATIC` byte-idénticas, consola limpia 3 estados, caps 1-4 sin ensuciar.
-- **Smoke + determinismo + web:** `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **809 passed / 0 failed** (gate 25/31, bundle 50 ficheros 484.0 KiB, `test_bundle_fresco` verde). `generate(42,5,volcado_rescatado=True)` byte-idéntico ×2 y `generate(99,5,volcado_rescatado=False)` ×2; `True` vs `False` difiere solo en `/tmp/volcado-custodia.csv` (presente vs ausente). HUP vs -9 y 600 vs 777 y gris vs root difieren solo en huella post-mortem (mismo FS, mismo pid 424/421). Web `?chapter=5` doble lente `#custodia-intruso` + `#custodia-postmortem` con `node --check` OK, `CUSTODIA/TRONCAL_STATIC` byte-idénticas, 3 estados OK; caps 1-4 sin ensuciar.
+- **Prioridad 1 — E2 «grep del intruso» (5 checks por la puerta):** `abrir_encargo(c,'story.ch5.e2',{'c.cat','c.grep','c.scp'},42)` → `abrible True` (`available_commands {'cat','scp','ps','grep'}`, base `{'cat','scp'} <= nova`); sin `c.grep` → `abrible False` `missing ['c.grep']` honesto; `ps aux` solo → cabecera + `censo 432 --vigilar-censo START 03:14` (seed 99→422, determinista); `ps aux | grep censo` → exit 0 UNA línea `censo 432 --vigilar-censo START 03:14` ruido `ps:1`+`grep:2`; `grep ceniza` y `ps aux | grep ceniza` → exit 1 (no delata); `ps aux | grep -i censo`/`-i CENSO` → exit 0 atajo veterano; `grep -i censo` solo → exit 1 GNU-correcto (sin stdin no hay qué filtrar); `chmod 600 /tmp/x` y `kill -9 1` en e2 → exit 127 `command not found` frontera honesta (e2 es `cat,scp,ps,grep` por diseño).
+- **Prioridad 2 — Lente web del propietario (5 checks):** `web/app.js` `#ch5-e4-owner` con `get_ls_owner()`/`get_chown_history()` (leen FS, nunca ejecutan) + 3 estados `#95a5a6` neutro / `#5dade2` gris / `#e74c3c` root; `abrir_encargo` e4 `{'c.ls-la','c.cat','c.chmod','c.chown','c.grep'}` → `abrible True` (sin `c.grep` → `missing ['c.grep']` honesto); `ls -l pts0` → `644 operator`; `chown gris:apagados` → `owner gris:apagados` azul; `chown root:root` → rojo; `restartSameSeed` limpia también la insignia; fuera de `?chapter=5` oculta; caps 1-4 sin ensuciar; `node --check web/app.js` OK.
+- **Smoke + determinismo + web:** `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **818 passed / 0 failed** (gate 25/31, bundle 50 ficheros 481.3 KiB, `test_bundle_fresco` verde). `generate(42,5,volcado_rescatado=True)` byte-idéntico ×2 y `generate(99,5,volcado_rescatado=False)` ×2; `True` vs `False` difiere solo en `/tmp/volcado-custodia.csv` (presente vs ausente). HUP vs -9 y 600 vs 777 y gris vs root y pipe grep difieren solo en huella post-mortem (mismo FS, mismo pid por seed). Web `?chapter=5` tríptico `#custodia-intruso` + `#custodia-postmortem` + `#ch5-e4-owner` `node --check` OK, `CUSTODIA/TRONCAL_STATIC` byte-idénticas, consola limpia 4 estados; caps 1-4 sin ensuciar. `curriculum.json` e2 `requires ['c.cat','c.grep','c.scp']` coherente, `textos.json` `story.ch5.e2.hint_2` presente.
 
 **Propuestas de dirección (informo, no decido — Gwyn valida):**
-1. **Díptico propietario DECISIÓN distinta → no tocar:** `chown gris:apagados` (transfer azul, entregar la casa a Gris) vs `root:root` (retoma rojo, devolverla al Censo) ya pesa karma distinto con mismo `pts0` y mismo gate `ls -l` que E1, pero habla de PROPIETARIO mientras E1 habla de PERMISO. Junto a `kill HUP/-9`, la Subestación tiene 4/4 encargos con huella moral en 3 verbos (kill + chmod + chown) — tesis DESIGN §3.1 saldada por capas. No proponer `chown`/`chmod`/`kill` nuevo; la recámara natural es `grep del intruso` o lectura `tail` como verificación — fichas ya en `abierto.md`.
-2. **`chmod -R` HONESTIDAD → cerrar como FIX, no como mecánica nueva:** sobre fichero es no-op válido (mismo karma), sobre dir es recursivo sorted — GNU-honesto sin RNG, sin tocar `postmortem.py` (el detector ya filtraba `-R`). El veterano que teclea `-R` ya no ve stderr mentiroso y aprende que `-R` no hace más roja la puerta. No proponer flags `-R` adicionales; el siguiente escalón es el contraste kármico a 20 runs con `-R` incluido, no más flags.
-3. **Hint veterano MAESTRO → no tocar web:** `hint_2` educa en 10s («recursivo es para directorios, aquí es un fichero») sin resolver el puzzle moral (sigue eligiendo 600 vs 777 vs gris vs root). No es manta: la puerta sigue abierta a ambos karmas, el hint solo aclara física. No tocar `web/` mañana salvo que Gwyn quiera el 4º estado de la lente (chown) — hoy no es urgencia.
-4. **🧭47 — NUEVO P3 (veterano 30+ runs):** el micro-karma `HUP/KILL/cierre/puerta/chown_transfer/retoma` (1 punto tint) sobre N=8 (§3.4) ahora suma 3 verbos. El veterano que repite triple azul (HUP+600+gris) ve `K` azul saturar pero el Hub ya lo grita (stock Gris, tono Auditor, veredicto web) — coherente con karma invisible (§3.2). Propuesta P3 recámara: que Ornstein mida con harness qué hace falta de contraste kármico tras 20×HUP vs 20×-9 + 20×600 vs 20×777 + 20×gris vs 20×root antes de escribir textos nuevos (pesos antes que prosa, §8.6). No es bug.
-5. **🧭48 — PERSISTE P3 (allowlist honesta, no bug):** `ps aux | grep -v root` vía `abrir_encargo` e3 → 127 `command not found: grep` — E3 es `ps,env,kill,cat,scp` por diseño, no bug. El filtro negativo se verifica donde `grep` vive (cap.6 purgas.csv / `Shell(ps+grep)` directo → exit 0). Si Gwyn quiere ese pipe como gesto jugable en la Subestación, la tarea es añadir `c.grep` a E3 (prereq `c.cat`) — decisión de diseño, no fricción. Sin urgencia.
+1. **E2 LECTURA → no tocar:** `ps aux | grep censo` ya es el primer verbo LECTOR de la casa (los otros 3 escriben: kill/chmod/chown). La frontera 127 honesta, el gate `c.grep` con prereq `c.cat`, la hint `grep censo vs ceniza + -i atajo` y la lectura sin karma (gris, tesis §3.1 intacta) cierran la Subestación como `4 huellas + 1 lectura`. No proponer `grep`/`chmod`/`chown`/`kill` nuevo sobre ch5; la recámara natural es el 6º estado `grep censo` en `#custodia-intruso` (hueco honesto Seath 24/09) — web puro, ya fichado en Gwyn.
+2. **Lente propietario → no tocar:** `get_ls_owner()`/`get_chown_history()` leen sin ejecutar, tríptico web (intruso + veredicto + propietario) con misma regla `MIRA no toca`. El 5º estado cierra el semáforo con chown real por la puerta (`ls -l` 644 → `chown gris/root` → color). No tocar `web/` salvo el 6º estado si Gwyndolin lo planifica.
+3. **🧭49 — `grep -i` solo vía pipe → recogida 1:1 con Manus:** standalone `grep -i censo` → 1 GNU-correcto (sin stdin); el atajo vive en `ps aux | grep -i censo` → 0. No es fricción ni bug, es física. El `hint_2` ya lo dice sin spoilear; no abrir tarea. Si Gwyn quiere canon alternativo `grep -i`, es DECISIÓN de diseño (no fricción).
+4. **🧭50 — PID por seed → recogida:** `432` vs `424` es piel determinista (splitmix64), no contrato. `START 03:14` y `USER censo` son el contrato; el PID no debe hardcodearse en briefing. Dejar como P3 sin urgencia.
+5. **🧭47/48 — sin novedad:** 🧭47 medida N=8 weight1 90%≥3 en 3 runs (stock 0% pendiente Seath); 🧭48 allowlist E3 honesta P3. Recámara para Gwyndolin/Seath, no para hoy.
 6. **🧭24/25/26 — sin novedad:** 🧭24 pre-puebla P3 mantener (solo reescribir briefing si choca); 🧭25/26 recámara (límite 2 pipes, `cut` en ch4 correcto).
 
-**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3; 🧭25/26 recámara; 🧭27 CERRADA 23/09 (grep -v honesto); 🧭28 cerrada; 🧭29/30 CERRADOS; 🧭31/32/33 CERRADOS; 🧭34/35 CERRADOS; 🧭36 CERRADA; 🧭37 CERRADO; 🧭38 CERRADO; 🧭39 CERRADO; 🧭40 CERRADO; 🧭41 CERRADO; 🧭42 CERRADO; 🧭43 CERRADO; 🧭44 CERRADO 23/09 (díptico chmod tras ls -l); **🧭45 CERRADA 24/09 (díptico chown propietario)**; **🧭46 CERRADA 24/09 (chmod -R honesto + hint)**; **🧭47 NUEVO P3** (calibración micro-karma N=8 a 20 runs con chown incluido, no bug); **🧭48 PERSISTE** (allowlist E3 honesta). Sin bloqueo del camino principal; el verde es completo.
+**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3; 🧭25/26 recámara; 🧭27 CERRADA 23/09 (grep -v honesto); 🧭28 cerrada; 🧭29/30 CERRADOS; 🧭31/32/33 CERRADOS; 🧭34/35 CERRADOS; 🧭36 CERRADA; 🧭37 CERRADO; 🧭38 CERRADO; 🧭39 CERRADO; 🧭40 CERRADO; 🧭41 CERRADO; 🧭42 CERRADO; 🧭43 CERRADO; 🧭44 CERRADO 23/09 (díptico chmod); **🧭45 CERRADA 24/09 (díptico chown)**; **🧭46 CERRADA 24/09 (chmod -R honesto + hint)**; **🧭47 OBSERVACIÓN P3** (calibración weight1, stock 0% pendiente Seath); **🧭48 PERSISTE** (allowlist E3 honesta); **🧭49 NUEVO P3** (`grep -i` solo vía pipe, sin fricción); **🧭50 NUEVO P3** (PID por seed, no hardcodear). Sin bloqueo del camino principal; el verde es completo.
 
-CICLO: verde — zona 🔬 24/09 completa (díptico propietario 5/5 + chmod -R 5/5 + hint + determinismo + doble lente) y APTO; el díptico propietario queda SALDADO como DECISIÓN distinta y el -R como HONESTIDAD.
+CICLO: verde — zona 🔬 25/09 completa (E2 lectura 5/5 + lente propietario 5/5 + determinismo + tríptico) y APTO; la lectura forense queda SALDADA como inteligencia distinta al verbo y la lente del propietario como semáforo instantáneo.
 
 ---
 
@@ -85,9 +85,8 @@ intacto. Bundle **50 ficheros (481.3 KiB)** regen canónico
 de provider que replanificar.
 
 **Validación de diseño (sobre lo de esta noche):**
-
 - **E2 «grep del intruso» (PR #78):** la pregunta que dejé el 23/09 —
-  «¿la LECTURA sensual del díptico tiene misma sangre que las huellas?»
+  «¿la LECTURA sensual del díptico tiene misma sangre que las huellas?» 
   — respuesta: sí, y con un matiz que me gusta aún más: E2 NO suma
   karma (gris, coherente con plan «LECTURA del díptico, no karma») y
   el `grep` entrena un ON-DEMAND que los otros dos verbos ya usaban
@@ -120,7 +119,6 @@ de provider que replanificar.
   si acaso algún día `c.grep` en E3, con prereq `c.cat`, NO como fricción.
 
 **Qué me HA GUSTADO ⭐:**
-
 - Cuarta noche seguida de Artorias impecable: el ensayo con worktree
   detectó el «grep censo del lado HEAD» del PR #78 antes de que yo
   lo mergease y me ahorró el conflicto moderno. Su grito «si ves 809,
@@ -137,7 +135,6 @@ de provider que replanificar.
   la anterior. Costumbre, no heroísmo.
 
 **Qué NO me ha gustado / a vigilar:**
-
 - 👎 Los 3 merges de esta noche me tocaron resolver conflictos de
   huellas TRES veces en dos ficheros (activo/worklog para 78, 79 y 80):
   el patrón «rutas disjuntas + huellas en la misma .md» seguirá
@@ -155,7 +152,6 @@ de provider que replanificar.
   REZAGADOS de secciones cerradas (no el mío de hoy: ese es fiable).
 
 **Prioridades para el 25/09 (para Gwyndolin):**
-
 1. **P2 — 6º estado web `grep censo`:** con O1 ya mergeado, la lente
    `#custodia-intruso` puede añadir `grep censo` como 6º estado
    (censo delata vs ceniza no). Hueco honesto declarado por Seath
