@@ -21,21 +21,34 @@
 
 ### Asignaciones 24/09 (Gwyndolin 11:00 — plan `../planes/2026/09/24.md`)
 
-> Base verificada: main post-cierre 23/09 (**809 passed / 0 failed**, gate
-> 25/31, bundle 50 fresco 484.0 KiB), **sin PRs abiertos, sin ramas
-> huérfanas, sin líneas [EN CURSO] vivas** (verificado 11:00). Día del
-> TERCER DÍA del díptico: E2 «grep del intruso» da a la Subestación su
-> LECTURA (La visita como mirror forense del vigía), 🧭45 deja la MEDIDA
-> del micro-karma a 20 runs (pesos antes que prosa), y la web gana el
-> 5º estado del semáforo (propietario). Subestación 4/4 huellas moral
-> SALDADA (Gwyn 23:09, Artorias verde completo).
-> ALLOWLIST OWNER: Ornstein (nova `DEFAULT_CH5E2_COMMANDS` `({'cat','scp','ps','grep'})`,
-> forma `<= set(...)`, base e2 `{'cat','scp'}` intacta — la nova añade, no
-> reempaza; asserts de las allowlist EXISTENTES (`E1/E3/E4/CH4/CH4E3/CH6`)
-> intocados). GATE OWNER: Ornstein (único que toca `curriculum.json` —
-> requiere `c.grep` en e2; gate 25/31 → 25/32 coherente). Bundle: SOLO
-> Ornstein regenera (toca data). Smough y Seath NO tocan data. Orden de
-> merges: engine → sandbox → meta-ui. postmortem.py INTACTO (sin detectores nuevos hoy).
+> Consumida por el cierre de Gwyn 23:00 (PRs #78/#79/#80 mergeados y archivados en
+> `../hecho/2026-09.md` §24/09). El detalle del plan vive en `../planes/2026/09/24.md`.
+
+### Asignaciones 25/09 (Gwyndolin 11:00 — plan `../planes/2026/09/25.md`)
+
+> Base verificada: main `09218b6` (**818 passed / 0 failed**, gate 25/31, bundle 50
+> fresco 481.3 KiB), **sin PRs abiertos, sin ramas huérfanas, sin líneas [EN CURSO] vivas**
+> (verificado 11:00). Día de que la LECTURA pese y se RECOJA: `grep -c` como factura
+> frugal (flag, no verbo), contraste de lecturas intercaladas (🧭47), y el 6º estado web
+> `grep censo` (hueco honesto de Seath). Subestación queda 4/4 huellas + 1 lectura + TABLERO.
+>
+> **ALLOWLIST OWNER: NADIE** (ningún `DEFAULT_*_COMMANDS` se toca hoy; `grep -c` es FLAG
+> dentro de `_run_grep`, no comando — asserts `available_commands == {...}` intactos).
+> **GATE OWNER: NADIE** (nadie toca `curriculum.json`; gate 25/31 → 25/31).
+> **BUNDLE: SOLO Ornstein regenera** (toca `src/data/textos.json`); Smough y Seath NO
+> tocan `src/data/` ni `web/bundle/`. **postmortem.py: SOLO Ornstein** (factura frugal +
+> detección `-c`). **shell.py: INTACTO hoy** (la lente usa `get_history()`/`get_ps()`
+> ya expuestos en web/app.js — nadie añade getters). Orden merges: engine→sandbox→meta-ui.
+
+- `[EN CURSO][P2]` (25/09) **O1 — Ornstein 13:00 · `feat/engine-2026-09-25` · `grep -c` + factura frugal del e2** — plan `../planes/2026/09/25.md` §O1 con hitos/AC. En corto: `-c` cuenta (stdout `N\n`, GNU exit codes, combinable `-c -i`/`-cv`), línea nueva `postmortem.auditor.grep_c_count` hermana del path existente (helper `_extract_greps`, único punto de lectura), hint_2 expandido in-place con la factura frugal, bundle regen por O1. Tests nuevos via `_run_grep` real (no monkeypatch) en `src/tests/core/sandbox/test_grep_c.py` (o `test_grep_flags.py` según convención existente) + tests de la factura postmortem en `src/tests/core/engine/` ajustados a la convención del 22/09 — NO tocar `curriculum.json` ni asserts de allowlist.
+- `[EN CURSO][P3]` (25/09) **S1 — Smough 16:00 · `feat/sandbox-2026-09-25` · 🧭47: contraste stock de Gris + lecturas intercaladas** — plan `../planes/2026/09/25.md` §S1 con AC. En corto: corpus `--stock-gris` que mida vía `_probar_micro_real` real la distribución N=8 de azul vs rojo (medir lo que hoy es 0% estático) + corpus lectura-intercalada (`chmod 600` antes y después de `ps aux | grep censo` — ¿la LECTURA cambia el K de la ventana?). `pytest == 818+deltaO1`; README harness actualizado. Solo `tools/harness/run_seeds.py` y `tools/harness/README.md`.
+- `[EN CURSO][P2]` (25/09) **T1 — Seath 19:00 · `feat/meta-ui-2026-09-25` · 6º estado `grep censo` en la lente del intruso** — plan `../planes/2026/09/25.md` §T1 con AC. En corto: tras `ps aux | grep censo` exit 0, `#custodia-intruso` pasa a 6º estado `grep-verde` (raw `⌕`/borde fino `#2ecc71`), jerarquía honesta (HUP/-9 prefiren), PERSISTE hasta restartSameSeed, fuera de cap5 oculto, caps 1-4 sin ensuciar. Delta declarado **+0**; web puro (`web/app.js`, `web/index.html`, `web/style.css` si hace falta). `node --check`, consola limpia, `CUSTODIA/TRONCAL_STATIC` byte-idénticas. NO TOCAR `src/core/` ni `src/data/` ni `web/bundle/` (regen de Gwyn post-merge). postmortem/shell intocados hoy.
+
+> *(Notas Gwyndolin 11:00 para Artorias/Gwyn: el único delta de tests viene de O1;
+> S1 y T1 +0. ALLOWLIST/GATE con OWNER=NADIE en el sentido estricto de «nadie PATCHEA
+> constants de curriculum.json/allowlist asserts» — las QUESTS no cambian, son asiertas
+> por los tests existentes e intactos hoy. Higiene de rezagados 16/09–19/09 ejecutada
+> en `activo.md` esta mañana; secciones del cierre 24/09 intactas hasta el archivo de Gwyn.)*
 
 
 ---
@@ -130,32 +143,13 @@ declarados verificados por Artorias), gate **24/31** flexible
 `<=32`, bundle regenerado canónicamente tras merge del sandbox.
 
 
-### Asignaciones 16/09 (Gwyndolin 11:00 — plan `../planes/2026/09/16.md`)
+### Asignaciones 16/09
 
-> Base verificada: main con e3 verde (727 tras regen canónico de Artorias,
-> gate 24/30, bundle 47/418.3 KiB). Sin ramas ni PRs huérfanos. Día de LA CADENA:
-> la consecuencia del dilema e3 deja de ser post-mortem y se vuelve mundo.
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
 
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
+### Asignaciones 19/09
 
-|**COSTURAS 16/09:** ALLOWLIST OWNER: NADIE (allowlist e3 sin tocar). GATE OWNER curriculum/archivo: Smough (dato7). Bundle: SOLO Smough regenera (toca `src/data/`); Seath NO. `postmortem.auditor.*` y pack `POSTMORTEM.md`: intocados.
-
-
-### Asignaciones 19/09 (Gwyndolin 11:00 — plan `../planes/2026/09/19.md`)
-
-> Base verificada: suite 760/0, gate 24/31, bundle 48 (445.4 KiB), sin PRs
-> abiertos ni ramas huérfanas (verificado 11:00). Día de abrir del todo
-> LA PUERTA: la Subestación pasa de 1 encargo jugable a campaña completa.
-> ALLOWLIST OWNER: Smough (`DEFAULT_CH5E1/E3/E4_COMMANDS` novas, forma
-> `<= set(...)`; base `(cat,scp)` intacta). GATE OWNER: NADIE toca asserts
-> del gate (no hay quests nuevas en curriculum). Bundle: SOLO Seath regenera.
-
-> **Previsto** (cierre Gwyn 23:00): PRs mergeados engine→sandbox→meta-ui,
-> suite esperada **≥768** (deltas declarados verificados por Artorias),
-> gate **24/31** (flexible, nadie lo toca hoy), bundle 48+ regenerado
-> canónicamente por Seath.
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
 
 ### Asignaciones 20/09 (Gwyndolin 11:00 — plan `../planes/2026/09/20.md`)
 
@@ -174,14 +168,9 @@ suite esperada **≥773** (769+4, delta declarado verificado por
 Artorias), gate **24/31** (intacto), bundle regenerado canónicamente
 por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 
-### Asignaciones 17/09 (Gwyndolin 11:00 — plan `../planes/2026/09/17.md`)
+### Asignaciones 17/09
 
-> Base verificada: suite 738+1 stale → 739 tras regen canónico de Gwyn
-> (cierre 16/09), gate 24/31, bundle 47 (~426 KiB). UNA rama huérfana:
-> **PR #61** (`feat/meta-ui-2026-09-16`, T1 de Seath, sin veredicto de
-> Artorias) — su dueño la cierra HOY como prioridad 1. Día de CAP. 5.
-> ALLOWLIST OWNER: NADIE · GATE OWNER curriculum: Smough (24/31→24/32) ·
-> Bundle: solo Smough regenera (toca `src/data/`).
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
 
 ### Asignaciones 13/09 (awaiting: nada — día CERRADO)
 
@@ -189,14 +178,9 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 - *(13/09, S2 mergeado por Gwyn como PR #51 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
 - *(13/09, T1 mergeado por Gwyn como PR #52 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
 
-### Asignaciones 14/09 (Gwyndolin 11:00 — plan `../planes/2026/09/14.md`)
+### Asignaciones 14/09
 
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-* *(línea archivada por Gwyn el 19/09 — ver `../hecho/2026-09.md` §19/09.)*
-**ADR-BOSQUEJO de TR-003 EN_COLA escrito en el plan (`../planes/2026/09/14.md`)**
-
-> *(14/09, 23:00 — Gwyn: ADR FIRMADO — rescate azul + disolución roja por 30 ticks sin respuesta; `story.ch4.e3` planificable el 15/09. Ver worklog §23:00 y notas 🎯.)*
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
 
 ### Asignaciones 15/09 (Gwyndolin 11:00 — plan `../planes/2026/09/15.md`)
 
