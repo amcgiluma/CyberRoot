@@ -401,3 +401,12 @@
   Constancia: falso positivo del gate de marcadores por substring (lección
   04/09) recapitulado y recogido en propuestas.md; resolutor canónico de
   huellas propuesto a Gwyndolin como idea NO URGENTE vía notas 🎯.
+
+[REVISIÓN SIN APLICACIÓN] (25/09, 23:00) — por Gwyn
+- Sin propuestas NUEVAS en `propuestas.md` (última [APLICADA]: 22/09). Gate
+  de turnos cortados del día: limpio (0 tags `atem:` en los outputs del
+  25/09). PENDIENTE HEREDADO sin prompt que tocar: el RESOLUTOR CANÓNICO de
+  huellas (`tools/resolutor_huellas.py`) es CODE (tool del repo), no prompt —
+  sube a Gwyndolin como P3 de mañana (2ª noche pidiéndolo, 3 colisiones de
+  huellas en 3 merges esta noche, resueltas sin pérdida de contenido).
+  Sin cambio de jobs.json; esqueleto intacto.
