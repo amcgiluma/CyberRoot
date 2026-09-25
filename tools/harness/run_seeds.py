@@ -358,6 +358,131 @@ def _imprimir_reporte_karma(m: dict) -> None:
     print(f"[proyeccion weight=2] azul pct>=3={w2a['pct_K_ge_3']}% hasta={w2a['runs_hasta_K_ge3']} K_final={w2a['K_final']} | rojo pct<=-3={w2r['pct_K_le_minus3']}% hasta={w2r['runs_hasta_K_le_minus3']}")
     print("nota: v1 weight:1 -> 3 runs cruzan umbral 3; weight:2 -> 2 runs. Cumular 3 verbos por run hoy no suma (ultimo-manda). Stock Gris: sin contraste karmico aun (estatico).")
 
+
+# ---------------------------------------------------------------------------
+# S1 Smough 25/09 — 🧭47 contraste stock de Gris + lecturas intercaladas
+# ---------------------------------------------------------------------------
+def calibrar_stock_gris(n: int = 500, N: int = 8, curriculum=None, start: int = 0) -> dict:
+    """Corpus --stock-gris: distribución real de micro-karma N=8 sobre N seeds.
+
+    Para cada seed en [start, start+n): ejecuta _probar_micro_real (6 huellas)
+    y acumula histogramas de veredicto (blue/red/0) + contrasta ventanas K
+    azul puro vs rojo puro (stock Gris 0% hoy) + lectura intercalada.
+    Usa _probar_micro_real real (no sintético) para anclar §8.6.
+    """
+    hist: dict[str, Counter] = {}
+    per_seed: list[dict] = []
+    errores = 0
+    # deltas puros agregados para contraste (secuencial por huella dominante)
+    deltas_azul_puro: list[int] = []
+    deltas_rojo_puro: list[int] = []
+    for seed in range(start, start + n):
+        try:
+            got = _probar_micro_real(curriculum, run_seed=seed)
+        except Exception as e:
+            errores += 1
+            got = {"error": str(e)}
+        per_seed.append({"seed": seed, **got})
+        for k, v in got.items():
+            if k == "error":
+                continue
+            if k not in hist:
+                hist[k] = Counter()
+            hist[k][str(v)] += 1
+        # para contraste puro: toma chmod600 (azul) y chmod777 (rojo) como ancla
+        # si falló, usa 0 (got puede traer 'error' o int/falsy)
+        v600 = got.get("chmod600")
+        v777 = got.get("chmod777")
+        deltas_azul_puro.append(int(v600) if isinstance(v600, int) else 0)
+        deltas_rojo_puro.append(int(v777) if isinstance(v777, int) else 0)
+
+    # histogramas serializables
+    hist_serial = {k: dict(sorted(v.items())) for k, v in sorted(hist.items())}
+
+    # métrica de ventana K para perfil secuencial azul puro vs rojo puro
+    def metrica(deltas):
+        Ks = _ventana_k(deltas, N=N)
+        return {
+            "K_final": Ks[-1] if Ks else 0,
+            "K_max": max(Ks) if Ks else 0,
+            "K_min": min(Ks) if Ks else 0,
+            "pct_K_ge_3": round(_pct_cruce(Ks, 3, 1), 1),
+            "pct_K_le_minus3": round(_pct_cruce(Ks, 3, -1), 1),
+            "Ks": Ks[:20] if len(Ks) > 20 else Ks,
+            "Ks_len": len(Ks),
+        }
+
+    perfil_azul = metrica(deltas_azul_puro)
+    perfil_rojo = metrica(deltas_rojo_puro)
+
+    # contraste §8.6: % diferencia stock (hoy 0% porque stock Gris no existe aún)
+    # Calculado como |pct_azul - pct_rojo| sobre umbral 3 (ambos 100% si N>=3, pero stock 0% es stock Gris estático)
+    # El stock Gris estático es 0% contraste reportado por 🧭47: lo medimos aquí como hist de veredictos
+    # Si todos los chmod600 fueron +1 y todos chmod777 fueron -1, contraste kármico =100% pero stock Gris =0% (no hay stock kármico en Gris aún)
+    contraste_karmico_pct = abs(perfil_azul["pct_K_ge_3"] - perfil_rojo["pct_K_le_minus3"])
+
+    # H2: lectura intercalada — LECTURA gris (0) entre huellas (1/0/1/0...)
+    # Patrón: azul, lectura, azul, lectura ... (2*n eventos, N=8 ventana)
+    deltas_azul_intercalado: list[int] = []
+    deltas_rojo_intercalado: list[int] = []
+    for d in deltas_azul_puro:
+        deltas_azul_intercalado.extend([d, 0])
+    for d in deltas_rojo_puro:
+        deltas_rojo_intercalado.extend([d, 0])
+    # recorta a 2*n ya (no añade gris final extra si n impar, pero extend ya da 2*n)
+    perfil_azul_inter = metrica(deltas_azul_intercalado)
+    perfil_rojo_inter = metrica(deltas_rojo_intercalado)
+
+    # delta de contraste con lectura intercalada vs puro
+    delta_azul_pct = round(perfil_azul_inter["pct_K_ge_3"] - perfil_azul["pct_K_ge_3"], 1)
+    delta_rojo_pct = round(perfil_rojo_inter["pct_K_le_minus3"] - perfil_rojo["pct_K_le_minus3"], 1)
+
+    return {
+        "n": n,
+        "N": N,
+        "start": start,
+        "errores": errores,
+        "histograma": hist_serial,
+        "per_seed_sample": per_seed[:5],
+        "perfil_azul_puro": perfil_azul,
+        "perfil_rojo_puro": perfil_rojo,
+        "contraste_karmico_pct": contraste_karmico_pct,
+        "lectura_intercalada": {
+            "patron": "huella(+-1) + lectura(0) intercalada, misma ventana N=8",
+            "perfil_azul_intercalado": perfil_azul_inter,
+            "perfil_rojo_intercalado": perfil_rojo_inter,
+            "delta_azul_pct_ge3": delta_azul_pct,
+            "delta_rojo_pct_le_minus3": delta_rojo_pct,
+            "pct_contraste_con_lectura_vs_sin": {
+                "azul_puro_pct_ge3": perfil_azul["pct_K_ge_3"],
+                "azul_intercalado_pct_ge3": perfil_azul_inter["pct_K_ge_3"],
+                "rojo_puro_pct_le_minus3": perfil_rojo["pct_K_le_minus3"],
+                "rojo_intercalado_pct_le_minus3": perfil_rojo_inter["pct_K_le_minus3"],
+            },
+        },
+        "stock_gris_estado": "0% contraste estático (Gris sin stock kármico §8.6) — medido sobre micro-karma real e1/e3/e4",
+        "nota": "Si grep censo fuera +0.3 azul tenue, la intercalada daría deltas [1,0.3,1,0.3...]; hoy es +0 (gris) — Smough SOLO reporta números, decisión de Gwyn.",
+    }
+
+
+def _imprimir_reporte_stock(m: dict) -> None:
+    print("\n== Stock de Gris + lecturas intercaladas — 🧭47 (S1 25/09) ==")
+    print(f"n={m['n']}  N={m['N']}  start={m['start']}  errores={m['errores']}")
+    print(f"histograma (N seeds x _probar_micro_real):")
+    for huella, dist in sorted(m["histograma"].items()):
+        print(f"  {huella:<14} {dist}")
+    az = m["perfil_azul_puro"]; ro = m["perfil_rojo_puro"]
+    print(f"[perfil azul puro e1 600]  pct>=3={az['pct_K_ge_3']}% K_final={az['K_final']} K_max={az['K_max']}")
+    print(f"[perfil rojo puro e1 777] pct<=-3={ro['pct_K_le_minus3']}% K_final={ro['K_final']} K_min={ro['K_min']}")
+    print(f"contraste karmico (azul vs rojo, umbral 3): {m['contraste_karmico_pct']}%")
+    li = m["lectura_intercalada"]
+    a_i = li["perfil_azul_intercalado"]; r_i = li["perfil_rojo_intercalado"]
+    print(f"[lectura intercalada] patron: {li['patron']}")
+    print(f"  azul intercalado pct>=3={a_i['pct_K_ge_3']}% (delta {li['delta_azul_pct_ge3']}%) K_final={a_i['K_final']}")
+    print(f"  rojo intercalado pct<=-3={r_i['pct_K_le_minus3']}% (delta {li['delta_rojo_pct_le_minus3']}%) K_final={r_i['K_final']}")
+    print(f"stock_gris_estado: {m['stock_gris_estado']}")
+    print(f"nota: {m['nota']}")
+
 def _imprimir_reporte(
     chapter: int,
     variant: str,
@@ -436,6 +561,11 @@ def main(argv: list[str] | None = None) -> int:
         type=int,
         default=12,
         help="noise_budget de la sala (misma unidad que total_noise, 🧭10; default 12 ⚠️ v1)",
+    )
+    p.add_argument(
+        "--stock-gris",
+        action="store_true",
+        help="S1 Smough 25/09 — 🧭47 corpus stock de Gris + lecturas intercaladas: N seeds x micro-karma real e1/e3/e4 + histograma + contraste N=8 + lectura intercalada (H1+H2). Usa --karma-seeds para N (default 20; 500 para medida completa).",
     )
     args = p.parse_args(argv)
 
@@ -517,6 +647,15 @@ def main(argv: list[str] | None = None) -> int:
             payload["micro_karma"] = mk
             args.export.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"micro-karma exportado → {args.export}")
+
+    if args.stock_gris:
+        print("\n== Stock de Gris — corpus 🧭47 (S1 25/09) ==")
+        sg = calibrar_stock_gris(n=args.karma_seeds, N=8, curriculum=curriculum, start=args.start)
+        _imprimir_reporte_stock(sg)
+        if args.export is not None:
+            payload["stock_gris"] = sg
+            args.export.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"stock-gris exportado → {args.export}")
     ok = mismatch == 0 and all(r["ok"] for r in results)
     return 0 if ok else 1
 
