@@ -38,8 +38,8 @@ def _run_grep(
 ) -> CommandResult:
     """`grep [flags] PATRON [FICHERO...]`: líneas que contienen el patrón.
 
-    Flags soportados (S1 22/09, BUG 🧭27): `-v` (invertir) y `-i`
-    (insensible a mayúsculas), combinables (`-vi`, `-iv`, `-v -i`) y en
+    Flags soportados (S1 22/09, BUG 🧭27): `-v` (invertir), `-i`
+    (insensible a mayúsculas) y `-c` (contar, 25/09), combinables (`-vi`, `-iv`, `-v -i`, `-c`, `-cv`)
     orden GNU `grep [flags] PATRON [FICHERO]`. `--` termina flags. Sin
     ficheros lee de `stdin` (la tubería). Emite las líneas seleccionadas
     TODAS, en orden, con su `\\n`. Exit codes GNU: 0 si hubo al menos una
@@ -51,9 +51,10 @@ def _run_grep(
         return CommandResult(
             stderr="grep: missing pattern", exit_code=2, noise=noise
         )
-    # --- parse flags líderes -v / -i (combinables) ---
+    # --- parse flags líderes -v / -i / -c (combinables) ---
     invert = False
     ignore_case = False
+    count_mode = False
     idx = 0
     while idx < len(argv):
         arg = argv[idx]
@@ -67,6 +68,8 @@ def _run_grep(
                     invert = True
                 elif ch == "i":
                     ignore_case = True
+                elif ch == "c":
+                    count_mode = True
                 else:
                     return CommandResult(
                         stderr=f"grep: invalid option -- '{ch}'",
@@ -102,6 +105,13 @@ def _run_grep(
         # No hay ficheros: grep lee de stdin (el buffer de la tubería).
         if stdin:
             _scan(stdin)
+        if count_mode:
+            return CommandResult(
+                stdout=f"{len(matched)}\n",
+                stderr="\n".join(err_lines),
+                exit_code=2 if had_error else (1 if not matched else 0),
+                noise=noise,
+            )
         return CommandResult(
             stdout="".join(f"{ln}\n" for ln in matched),
             stderr="\n".join(err_lines),
@@ -116,6 +126,13 @@ def _run_grep(
             had_error = True
             err_lines.append(_grep_fs_message(e.kind, f))
 
+    if count_mode:
+        return CommandResult(
+            stdout=f"{len(matched)}\n",
+            stderr="\n".join(err_lines),
+            exit_code=2 if had_error else (1 if not matched else 0),
+            noise=noise,
+        )
     return CommandResult(
         stdout="".join(f"{ln}\n" for ln in matched),
         stderr="\n".join(err_lines),
