@@ -695,7 +695,22 @@ function updateCustodiaTabla(line) {
 // Verde: censo N intruso --vigilar-censo START 03:14
 // Ámbar: silenciado (-9, sin HUP, sin intruso)
 // Azul: reconfigurado (HUP_* → --reloaded)
+// 25/09 T1 6º estado: grep-verde lectura forense (ps aux | grep censo)
 // ---------------------------------------------------------------------------
+function _hasGrepCensoInHistory() {
+  try {
+    if (!pyodide || !pyodide.globals) return false;
+    let lines = [];
+    try { lines = JSON.parse(pyodide.globals.get("get_history")()); } catch(e) { lines = []; }
+    if (!Array.isArray(lines)) return false;
+    for (const raw of lines) {
+      const l = String(raw || "").toLowerCase();
+      // debe contener grep y censo (no ceniza) — lectura forense e2
+      if (l.includes("grep") && l.includes("censo")) return true;
+    }
+    return false;
+  } catch(e) { return false; }
+}
 function _getIntrusoStatus() {
   try {
     if (!pyodide || !pyodide.globals) return null;
@@ -723,13 +738,23 @@ function _getIntrusoStatus() {
       return { state: "azul", kind: "reconfigurado", pid, cmd: intruso ? String(intruso.cmd) : "intruso --vigilar-censo --reloaded", hupKey, intruso, hasReloaded };
     }
     if (intruso) {
+      // 25/09 T1: si hay lectura forense en el historial, el verde pasa a grep-verde (lectura > vigilante base, pero < HUP/ambar)
+      if (_hasGrepCensoInHistory()) {
+        return { state: "grep-verde", kind: "lectura", pid: String(intruso.pid), cmd: String(intruso.cmd), start: String(intruso.start || "03:14"), intruso, hasGrep: true };
+      }
       return { state: "verde", kind: "vigilante", pid: String(intruso.pid), cmd: String(intruso.cmd), start: String(intruso.start || "03:14"), intruso };
     }
+    // sin intruso -> silenciado prefiere sobre grep-verde (escribir > leer)
     return { state: "ambar", kind: "silenciado", pid: null, cmd: null, hupKey: null, intruso: null };
   } catch(e) { return null; }
 }
 function _intrusoBadgeHtml(s) {
   if (!s) return "";
+  if (s.state === "grep-verde") {
+    const cmdEsc = _escapeHtml(s.cmd || `censo ${s.pid} intruso --vigilar-censo`);
+    const start = _escapeHtml(s.start || "03:14");
+    return `<span title="${_escapeHtml("lectura forense: ps aux | grep censo — has leído al vigilante")}" style="display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(46,204,113,.10);border:1px solid rgba(46,204,113,.45);color:#2ecc71;font-weight:700;font-size:.78rem;cursor:help">⌕ censo ${ _escapeHtml(s.pid)} — lectura forense</span> <span style="color:var(--muted);font-size:.75rem">grep censo registrado</span>`;
+  }
   if (s.state === "verde") {
     const cmdEsc = _escapeHtml(s.cmd || `censo ${s.pid} intruso --vigilar-censo`);
     const start = _escapeHtml(s.start || "03:14");
@@ -836,6 +861,7 @@ function _updateCustodiaPostmortem() {
     let color = "#2ecc71";
     if (st.state === "azul") color = "#5dade2";
     else if (st.state === "ambar") color = "#f39c12";
+    else if (st.state === "grep-verde") color = "#2ecc71";
     else color = "#2ecc71";
     // Intenta leer la frase real del postmortem (datos ya serializados)
     try {
@@ -844,11 +870,13 @@ function _updateCustodiaPostmortem() {
         if (st.state === "azul" && pm.auditor_hup_text) text = pm.auditor_hup_text;
         else if (st.state === "ambar" && pm.auditor_kill_text) text = pm.auditor_kill_text;
         else if (st.state === "verde" && pm.auditor_custodia_text) text = pm.auditor_custodia_text;
+        else if (st.state === "grep-verde" && pm.auditor_custodia_text) text = pm.auditor_custodia_text;
       }
     } catch(e) {}
     if (!text) {
       if (st.state === "azul") text = "Expediente 000: señal de reconfiguración registrada — proceso de vigilancia reconfigurado. Continuidad del ensayo: estable.";
       else if (st.state === "ambar") text = "Expediente 000: proceso de vigilancia eliminado — el testigo queda sin ojos. Continuidad del ensayo: estable.";
+      else if (st.state === "grep-verde") text = "Expediente 000: lectura forense registrada — grep censo. El testigo mantiene ojos en la Subestación. Continuidad del ensayo: estable.";
       else text = "Expediente 000: vigilancia activa — el testigo mantiene ojos en la Subestación. Continuidad del ensayo: estable.";
     }
     el.innerHTML = `<span style="color:${color};font-weight:700">⬥ Veredicto:</span> <span style="color:${color}">${_escapeHtml(text)}</span>`;
@@ -1088,7 +1116,7 @@ function renderCursor() {
 }
 
 // Exponer para tests / consola
-if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._updateIntrusoUI = _updateIntrusoUI; window._updateCustodiaPostmortem = _updateCustodiaPostmortem; window._getOwnerStatus = _getOwnerStatus; window._updateOwnerUI = _updateOwnerUI; }
+if (typeof window !== "undefined") { window._getIntrusoStatus = _getIntrusoStatus; window._hasGrepCensoInHistory = _hasGrepCensoInHistory; window._updateIntrusoUI = _updateIntrusoUI; window._updateCustodiaPostmortem = _updateCustodiaPostmortem; window._getOwnerStatus = _getOwnerStatus; window._updateOwnerUI = _updateOwnerUI; }
 
 // ---------------------------------------------------------------------------
 // Wire-up.
