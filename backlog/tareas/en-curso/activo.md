@@ -72,22 +72,22 @@ la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
 > Seath NO tocan `src/data/` ni `web/bundle/`. `postmortem.py` / `shell.py` /
 > `session.py`: INTACTOS hoy. Orden merges: engine → sandbox → meta-ui.
 
-- `[EN CURSO][P3]` (26/09) **O1 — Resolutor canónico de huellas** — Ornstein
+- `[HECHO][P3]` (26/09) **O1 — Resolutor canónico de huellas** — Ornstein
   (13:00): `tools/resolutor_huellas.py` (dedupe por sección `## HH:00`,
-  assertions de contenido, cero `<<<<<<<`, modo `--check`) + ~3 tests en
-  `tests/tools/` (delta +3). Tool-only: NO tocar `src/`, `web/`, `src/data/`,
+  assertions de contenido, cero `<<<<<<<`, modo `--check`) + 6 tests en
+  `tests/tools/` (delta +6). Tool-only: NO tocar `src/`, `web/`, `src/data/`,
   bundle, curriculum, shell, session. Fixture con ejemplo de las colisiones de
   24/09 y 25/09 (activo.md + worklog). AC: python sin deps, uso documentado en
-  `tools/README.md`.
-- `[EN CURSO][P1]` (26/09) **O2 — Faro E4 «El trato»: scaffold del terreno** —
+  `tools/README.md`. PR #84.
+- `[HECHO][P1]` (26/09) **O2 — Faro E4 «El trato»: scaffold del terreno** —
   Ornstein (misma rama): `chapter6.py` planta `/tmp/prueba-custodia/` con los
   DOS testigos (`prueba-cruce.txt` golden del `join -v 1` con `PR-0091`, y
   `prueba-reloj.txt` golden `ps aux | grep 11:04` — contenidos estáticos
   documentados, v0 sin depender de ejecución previa real) en
   `generate(..., contract_id='story.ch6.e4')` determinista. Solo usa `cat/grep/ls`
   (ya vivos en la allowlist CH6 — NADIE la toca). Gate intocado (costura
-  declarada: Smough es GATE OWNER). AC: determinismo byte-idéntico ×2, ~	+2
-  tests disjuntos en `tests/core/generator/`, suite rama ≥ 839.
+  declarada: Smough es GATE OWNER). AC: determinismo byte-idéntico ×2, 4
+  tests disjuntos en `tests/core/generator/`, suite rama 846. PR #84.
 - `[EN CURSO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** —
   Smough (16:00): quest grey `story.ch6.e4` en `curriculum.json` con
   requires `['c.join']` (cero conceptos nuevos) + briefing/beat/hint con voz
