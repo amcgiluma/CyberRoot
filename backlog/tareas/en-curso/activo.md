@@ -7,18 +7,6 @@
 > (POR QUÉ no se ha mergeado + CÓMO arreglarlo) y la tarea sigue viva.
 > Mapa y estados: `../INDICE.md`.
 
-## Activas
-
-> *(cierre 24/09, 23:00 — las 3 líneas `[HECHO]` del día (O1 Ornstein PR #78,
-> S1 Smough PR #79, T1 Seath PR #80) ARCHIVADAS en `../hecho/2026-09.md` §24/09.
-> Mergeados en orden engine→sandbox→meta-ui por Gwyn, suite **818 passed /
-> 0 failed** (809+9+0+0, deltas declarados verificados por aritmética + ensayo
-> pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
-> (481.3 KiB)** regen canónico tras merges. NADA retenido. E2 «grep del
-> intruso» cierra el díptico con LECTURA — Subestación 4 huellas moral
-> (E1 chmod + E2 lectura + E3 kill + E4 chown) + cerebro del plan 🧭45 con
-> números. Sin turnos cortados (gate `atem:` limpio por 49 outputs 24/09).)*
-
 ### Asignaciones 24/09 (Gwyndolin 11:00 — plan `../planes/2026/09/24.md`)
 
 > Consumida por el cierre de Gwyn 23:00 (PRs #78/#79/#80 mergeados y archivados en
@@ -72,9 +60,9 @@ la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
 > Seath NO tocan `src/data/` ni `web/bundle/`. `postmortem.py` / `shell.py` /
 > `session.py`: INTACTOS hoy. Orden merges: engine → sandbox → meta-ui.
 
-- `[HECHO][P3]` (26/09) **O1 — Resolutor canónico de huellas** — Ornstein — PR #84 ✅ — `tools/resolutor_huellas.py` (dedupe por sección `## HH:00`, assertions, cero `<<<<<<<`, modo `--check`, 6 tests) + `tools/README.md`. Tool-only: NO toca `src/`, `web/`, `src/data/`, bundle, curriculum, shell, session. Suite rama 846 (+9: 6 tools +4 scaffold, 1 bundle stale esperado OWNER Smough — verde tras regen). ✅ VERDE para merge.
-- `[HECHO][P1]` (26/09) **O2 — Faro E4 «El trato»: scaffold del terreno** — Ornstein — PR #84 ✅ — `chapter6.py` planta `/tmp/prueba-custodia/` con DOS testigos (`prueba-cruce.txt` golden `PR-0091|EN BLANCO|…|HOSP-47-C` + `prueba-reloj.txt` `START 11:04`) en `generate(..., contract_id='story.ch6.e4')` determinista. Solo `cat/grep/ls` (ya vivos CH6 — NADIE toca allowlist). Gate intocado (GATE OWNER Smough). 4 tests `test_ch6_e4_scaffold.py` (determinismo, testigos, cat/ls, sin e4 no planta). ✅ VERDE para merge.
-- `[HECHO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** — Smough — PR #85 ✅ — quest grey `story.ch6.e4` requires `['c.join']` (cero conceptos nuevos) + 6 claves `textos.json` voz Auditor «tengo las dos pruebas — cruzo y camino al reloj» + hint_2 `persona` HOME. Gate **25/31→25/32** (solo +1 quest, NOCONCEPT). + `tests/data/test_quest_e4_gate.py` 5 tests + 7 gates flexibles parcheados. Bundle regen 50 ficheros 494.8 KiB. ✅ VERDE para merge.
+- `[HECHO][P3]` (26/09) **O1 — Resolutor canónico de huellas** — Ornstein — PR #84 — `tools/resolutor_huellas.py` (dedupe por sección `## HH:00`, expande anidados, reordena cronológico, `--check`, assertions de contenido, exit 1 si queda marcador; 6/6 tests `tests/tools/`). Tool-only: no toca `src/`, `web/`, `src/data/`, bundle, curriculum, shell, session. + `tools/README.md`. ✅ VERDE para merge.
+- `[HECHO][P1]` (26/09) **O2 — Faro E4 «El trato»: scaffold del terreno** — Ornstein — PR #84 — `chapter6.py` planta `/tmp/prueba-custodia/` con DOS testigos (`prueba-cruce.txt` golden `PR-0091|EN BLANCO|…|HOSP-47-C` + `prueba-reloj.txt` `START 11:04`) en `generate(..., contract_id='story.ch6.e4')` determinista byte-idéntico ×2. Solo `cat/grep/ls` (ya vivos CH6 — allowlist intocada), GATE intocado (OWNER Smough). 4/4 tests `test_ch6_e4_scaffold.py`. Bundle stale aislado declarado OWNER Smough. ✅ VERDE para merge.
+- `[HECHO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** — Smough — PR #85 — quest grey `story.ch6.e4` requires `['c.join']` (cero conceptos nuevos) + 6 claves `textos.json` voz Auditor «tengo las dos pruebas — cruzo y camino al reloj» + hint_2 `persona`. Gate **25/31→25/32**. `tests/data/test_quest_e4_gate.py` 5/5 + 7 gates flexibles. Bundle 50 ficheros 494.8 KiB en SU rama. ✅ VERDE para merge.
 - `[EN CURSO][P3]` (26/09) **T1 — Web `?seed=` compartible** — Seath (19:00):
   `web/app.js` título dinámico `document.title = 'CyberRoot — cap. N — seed M'`
   cuando params traen chapter/seed; verificar seed≠42 regenera mundo distinto
@@ -88,7 +76,6 @@ la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
 > limpiado de señales muertas sin re-clasificar líneas históricas. Colisión
 > esperada de huellas en `activo.md` + `worklog/2026/09/26.md` — Artorias/Gwyn
 > usen `tools/resolutor_huellas.py` de O1 si sale en el día.)*
-
 
 ---
 
@@ -181,15 +168,6 @@ engine→sandbox→meta-ui, suite esperada **758** (749+6+3+0, deltas
 declarados verificados por Artorias), gate **24/31** flexible
 `<=32`, bundle regenerado canónicamente tras merge del sandbox.
 
-
-### Asignaciones 16/09
-
-> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
-
-### Asignaciones 19/09
-
-> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
-
 ### Asignaciones 20/09 (Gwyndolin 11:00 — plan `../planes/2026/09/20.md`)
 
 > Base verificada: main `f912eae`, suite **769/0**, gate **24/31**,
@@ -206,20 +184,6 @@ declarados verificados por Artorias), gate **24/31** flexible
 suite esperada **≥773** (769+4, delta declarado verificado por
 Artorias), gate **24/31** (intacto), bundle regenerado canónicamente
 por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
-
-### Asignaciones 17/09
-
-> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
-
-### Asignaciones 13/09 (awaiting: nada — día CERRADO)
-
-- *(13/09, O1 mergeado por Gwyn como PR #50 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
-- *(13/09, S2 mergeado por Gwyn como PR #51 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
-- *(13/09, T1 mergeado por Gwyn como PR #52 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
-
-### Asignaciones 14/09
-
-> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
 
 ### Asignaciones 15/09 (Gwyndolin 11:00 — plan `../planes/2026/09/15.md`)
 
@@ -239,7 +203,6 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 
 > *(08/09, Gwyndolin — reposición: las 3 tareas de abajo se replanifican ARRIBA (Asignaciones 08/09) con la clave corregida (`e2`); veredictos 💥 de Artorias conservados como constancia.)*
 
-
 > *(07/09, Gwyn 23:00 — cierre: PRs #34/#35 mergeados en orden sandbox→meta-ui,
 > suite **617 passed**, gate 22/23, bundle 45. Las 4 líneas `[HECHO]` del día
 > archivadas en `../hecho/2026-09.md` §07/09. NADA retenido: las 2 ramas del
@@ -248,6 +211,40 @@ por Gwyn post-merge (sin delta de data — nadie toca `src/data/`).
 
 - `[EN CURSO]` (23/08) Crons del **Concilio (Fase 1)** activos desde 27/08
   (gate aprobado el 26/08). Primer día completo de Concilio ejecutado: 27/08.
+
+## Activas
+
+> *(cierre 24/09, 23:00 — las 3 líneas `[HECHO]` del día (O1 Ornstein PR #78,
+> S1 Smough PR #79, T1 Seath PR #80) ARCHIVADAS en `../hecho/2026-09.md` §24/09.
+> Mergeados en orden engine→sandbox→meta-ui por Gwyn, suite **818 passed /
+> 0 failed** (809+9+0+0, deltas declarados verificados por aritmética + ensayo
+> pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
+> (481.3 KiB)** regen canónico tras merges. NADA retenido. E2 «grep del
+> intruso» cierra el díptico con LECTURA — Subestación 4 huellas moral
+> (E1 chmod + E2 lectura + E3 kill + E4 chown) + cerebro del plan 🧭45 con
+> números. Sin turnos cortados (gate `atem:` limpio por 49 outputs 24/09).)*
+
+### Asignaciones 16/09
+
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
+
+### Asignaciones 19/09
+
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
+
+### Asignaciones 17/09
+
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
+
+### Asignaciones 13/09 (awaiting: nada — día CERRADO)
+
+- *(13/09, O1 mergeado por Gwyn como PR #50 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
+- *(13/09, S2 mergeado por Gwyn como PR #51 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
+- *(13/09, T1 mergeado por Gwyn como PR #52 — línea completa archivada en `../hecho/2026-09.md` §13/09.)*
+
+### Asignaciones 14/09
+
+> Sección CERRADA: sus líneas fueron archivadas por Gwyn (ver `../hecho/2026-09.md`). El detalle vive en su plan (`../planes/...`).
 
 ### Historial reciente (resumen — el detalle vive en `../hecho/2026-09.md`)
 

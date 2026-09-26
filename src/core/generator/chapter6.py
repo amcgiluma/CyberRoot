@@ -198,7 +198,7 @@ def _ch6_processes_for_rng(fs_rng: Any) -> tuple[Proceso, ...]:
     return procs
 
 
-def build_chapter6_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSystem:
+def build_chapter6_fs(fs_rng: Any, volcado_rescatado: bool = False, with_e4: bool = False) -> FileSystem:
     """Monta el árbol de la sala-dato del cap. 6 «Faro».
 
     El FS de la sala contiene SIEMPRE:
@@ -209,6 +209,9 @@ def build_chapter6_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSyste
       - E2: `.nota-corte` del operador muerto (boon hallazgo, Bandit).
       - O1 10/09: piel de procesos determinista por seed (3 procesos,
         1 binario compartido, START 11:04 delata PR-0091) + environment.
+      - O2 26/09 (E4 «El trato»): si with_e4, planta ``/tmp/prueba-custodia/``
+        con los DOS testigos (prueba-cruce.txt + prueba-reloj.txt) — contenidos
+        estáticos golden (PR-0091 y START 11:04), deterministas por seed.
 
     La sala concreta se elige de `curriculum.json` (cap. 6) en el generator;
     esta hoja solo aporta la piel.
@@ -267,6 +270,30 @@ def build_chapter6_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSyste
             group="censo",
             mode="644",
         )
+    # E4 — árbol /tmp/prueba-custodia (solo si with_e4)
+    tmp_children: dict[str, DirNode | FileNode] | None = None
+    if with_e4:
+        tmp_children = {
+            "prueba-custodia": DirNode(
+                name="prueba-custodia",
+                children={
+                    PRUEBA_CRUCES_FILE: FileNode(
+                        name=PRUEBA_CRUCES_FILE,
+                        content=PRUEBA_CRUCES_CONTENT,
+                        owner="lumen",
+                        group="censo",
+                        mode="644",
+                    ),
+                    PRUEBA_RELOJ_FILE: FileNode(
+                        name=PRUEBA_RELOJ_FILE,
+                        content=PRUEBA_RELOJ_CONTENT,
+                        owner="lumen",
+                        group="censo",
+                        mode="644",
+                    ),
+                },
+            )
+        }
     return FileSystem(
         root=DirNode(
             name="/",
@@ -292,6 +319,7 @@ def build_chapter6_fs(fs_rng: Any, volcado_rescatado: bool = False) -> FileSyste
                         ),
                     },
                 ),
+                **({"tmp": DirNode(name="tmp", children=tmp_children)} if tmp_children else {}),
             },
         ),
         processes=processes,
@@ -328,6 +356,25 @@ CANON_STEPS_RAW_CH6_E3: tuple[tuple[str, ...], ...] = (
 CANON_STEPS_RAW_CH6_E2_TAIL: tuple[tuple[str, ...], ...] = (
     ("tail", "-n", "+2", PURGAS_PATH, "|", "cut", "-d'|'","-f4", "|", "sort"),
 )
+
+# ---------------------------------------------------------------------------
+# E4 — «El trato» (26/09, Ornstein): los DOS testigos de la confrontación
+# ---------------------------------------------------------------------------
+
+#: Directorio de la custodia del trato (donde Vela ve las pruebas).
+PRUEBA_CUSTODIA_DIR = "/tmp/prueba-custodia"
+PRUEBA_CRUCES_FILE = "prueba-cruce.txt"
+PRUEBA_RELOJ_FILE = "prueba-reloj.txt"
+PRUEBA_CRUCES_PATH = f"{PRUEBA_CUSTODIA_DIR}/{PRUEBA_CRUCES_FILE}"
+PRUEBA_RELOJ_PATH = f"{PRUEBA_CUSTODIA_DIR}/{PRUEBA_RELOJ_FILE}"
+
+#: Contenido golden de prueba-cruce.txt — salida persistida del `join -v 1`
+#: con PR-0091 (la purga de nadie). v0 estático, documentado, determinista.
+PRUEBA_CRUCES_CONTENT = "PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C\n"
+
+#: Contenido golden de prueba-reloj.txt — salida de `ps aux | grep 11:04`
+#: (el faro-sync culpable START 11:04). v0 estático, determinista.
+PRUEBA_RELOJ_CONTENT = "faro  412  0.1  0.2  12784  2104 ?  S  11:04  11:34:02 /usr/sbin/faro-sync --purga PR-0091\n"
 
 #: Resultado esperado de la golden del cap. 6.
 CH6_GREP_WC_EXPECTED = "1"

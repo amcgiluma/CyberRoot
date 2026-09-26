@@ -476,6 +476,47 @@ def validate_incursion(incursion: Incursion) -> None:
                         exit_code=0,
                         stderr=f"volcado-rescate.csv existe cuando debería estar ausente (caducado)",
                     )
+        elif quest_id == "story.ch6.e4":
+            # E4 «El trato» — los DOS testigos en /tmp/prueba-custodia/
+            from core.generator.chapter6 import PRUEBA_CRUCES_PATH as _PRC, PRUEBA_RELOJ_PATH as _PRL, PRUEBA_CRUCES_CONTENT as _PRCC, PRUEBA_RELOJ_CONTENT as _PRLC
+            for path, expected in ((_PRC, _PRCC), (_PRL, _PRLC)):
+                try:
+                    node = shell.fs.resolve(path, "/")
+                except Exception as exc:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps),
+                        argv=("resolve", path),
+                        expect_exit=0,
+                        exit_code=1,
+                        stderr=f"{path} no existe: {exc!r}",
+                    ) from exc
+                if isinstance(node, DirNode):
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps),
+                        argv=("resolve", path),
+                        expect_exit=0,
+                        exit_code=1,
+                        stderr=f"{path} es directorio",
+                    )
+                if node.content != expected:
+                    raise UnsolvableRoomError.from_step(
+                        step_index=len(room.canon.steps) - 1,
+                        argv=("cat", path),
+                        expect_exit=0,
+                        exit_code=0,
+                        stderr=f"{path} contenido inesperado: {node.content[:60]!r} != {expected[:60]!r}",
+                    )
+            # Canon cat debe dar PR-0091
+            last = shell.history[-1]["result"]
+            raw = str(last.get("stdout", ""))
+            if "PR-0091" not in raw:
+                raise UnsolvableRoomError.from_step(
+                    step_index=len(room.canon.steps) - 1,
+                    argv=("cat", _PRC),
+                    expect_exit=0,
+                    exit_code=0,
+                    stderr=f"golden e4 no devolvió PR-0091: {raw.strip()!r}",
+                )
         else:
             # E1 (default) — golden grep ENSAYO
             last = shell.history[-1]["result"]
@@ -944,7 +985,8 @@ def _generate_cap6(
     id_rng = rng.fork("room-id")
     fs_rng = rng.fork("fs")
 
-    fs = build_chapter6_fs(fs_rng, volcado_rescatado=volcado_rescatado)
+    with_e4 = (contract_id == "story.ch6.e4")
+    fs = build_chapter6_fs(fs_rng, volcado_rescatado=volcado_rescatado, with_e4=with_e4)
     room_id = f"room-ch6-{id_rng.below(2**32):08x}-{variant}"
 
     ch_quests = curriculum.quests_for_chapter(chapter)
@@ -989,7 +1031,7 @@ def _generate_cap6(
         karma_hint=_TINT_ES.get(quest.tint, "gris"),
     )
     scaffold = RunScaffold(note=_SCAFFOLD_NOTE, options=_SCAFFOLD_OPTIONS)
-    # Canon por quest: dato2/dato3/e2/dato7 tienen goldens propios.
+    # Canon por quest: dato2/dato3/e2/dato7/e4 tienen goldens propios.
     if quest.id == "story.ch6.dato2":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2))
@@ -999,6 +1041,10 @@ def _generate_cap6(
     elif quest.id == "story.ch6.e2":
         from core.generator.chapter6 import CANON_STEPS_RAW_CH6_E2_TAIL
         canon = CanonSolution(steps=tuple(CanonStep(argv=raw) for raw in CANON_STEPS_RAW_CH6_E2_TAIL))
+    elif quest.id == "story.ch6.e4":
+        from core.generator.chapter6 import PRUEBA_CRUCES_PATH
+        # E4 «El trato»: el canon lee el testigo del cruce (cat exit 0)
+        canon = CanonSolution(steps=(CanonStep(argv=("cat", PRUEBA_CRUCES_PATH)),))
     elif quest.id == "story.ch6.dato7":
         # dato7 — el fantasma que pesa: volcado rescate condicional
         # Si rescatado: cat volcado-rescate.csv | grep TR-003 → TR-003
