@@ -4,7 +4,7 @@
 > encargos como nodos-dato) y responde: ¿qué conceptos tiene desbloqueados
 > este jugador? ¿qué pool de práctica corresponde a este capítulo? No conoce
 > runs ni salas: conocimiento puro (ARCHITECTURE §2.3, DESIGN §6.2/§6.4).
-> **Estado (17/09, Smough — S2 ch5.e2 testigo):** 24 conceptos, 31 quests — `story.ch5.e2` «El testigo que no llegó» reescrita a grey [c.cat, c.scp] (testigo del troncal que viaja al Faro, cat /srv/camara-faro/volcado-rescate.csv → TR-003 si rescate, No such file si caducado), gate 24/32 flexible, 2 tests nuevos.
+> **Estado (26/09, Smough — S1 E4 El trato):** 25 conceptos, 32 quests — `story.ch6.e4` «El trato» grey [c.join] (palanca legal Vela con dos testigos /tmp/prueba-custodia/: cruce PR-0091 + reloj 11:04), gate 25/32, briefing con voz formulario + vuelta a HOME persona en hint_2, 5 tests nuevos, bundle 50 490.1 KiB.
 
 ## Piezas (v0)
 
