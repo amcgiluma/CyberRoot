@@ -88,7 +88,7 @@ la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
   (ya vivos en la allowlist CH6 — NADIE la toca). Gate intocado (costura
   declarada: Smough es GATE OWNER). AC: determinismo byte-idéntico ×2, ~	+2
   tests disjuntos en `tests/core/generator/`, suite rama ≥ 839.
-- `[EN CURSO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** —
+- `[HECHO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** — PR #85 —
   Smough (16:00): quest grey `story.ch6.e4` en `curriculum.json` con
   requires `['c.join']` (cero conceptos nuevos) + briefing/beat/hint con voz
   formulario del Auditor (§3.4.1: «tengo las dos pruebas — cruzo y camino al
