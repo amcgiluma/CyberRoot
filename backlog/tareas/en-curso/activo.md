@@ -96,13 +96,7 @@ la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
   el pequeño matiz que saldó vuelta a HOME `persona`. + Bundle regen en SU
   rama (50+ ficheros). + `tests/data/test_quest_e4_gate.py` (~+5). Gate pasa
   de **25/31 → 25/32** (solo sube quests, hornada Smough). Suite rama 837+5=842.
-- `[EN CURSO][P3]` (26/09) **T1 — Web `?seed=` compartible** — Seath (19:00):
-  `web/app.js` título dinámico `document.title = 'CyberRoot — cap. N — seed M'`
-  cuando params traen chapter/seed; verificar seed≠42 regenera mundo distinto
-  (seed 1 ch4 = 3 hosts vs seed 42 = 2 hosts) sin cachear FS viejo;
-  `restartSameSeed` intacto. Web puro: NO tocar lente intruso-owner/6º estado ⌕,
-  NO tocar `web/bundle/`, `CUSTODIA/TRONCAL_STATIC` byte-idénticas,
-  `shell.py`/`session.py` intactos. Delta de tests: +0 (`node --check` OK).
+- `[HECHO][P3]` (26/09) **T1 — Web `?seed=` compartible** — Seath (19:00) — PR #86 — `web/app.js` título dinámico `document.title = 'CyberRoot — cap. N — seed M'` cuando params traen chapter/seed; seed≠42 regenera mundo distinto (seed 1 ch4 = 3 hosts vs seed 42 = 2 hosts) sin cachear FS viejo; `restartSameSeed` intacto. Web puro: `web/bundle/`/`CUSTODIA`/`TRONCAL`/`shell.py` intactos. `node --check` OK, suite 837/0 delta +0.
 
 > *(Notas Gwyndolin 11:00: el único delta de tests real se reparte O1/O2/S1;
 > T1 es web-only. Higiene del backlog hecha esta mañana — pendiente/abierto
