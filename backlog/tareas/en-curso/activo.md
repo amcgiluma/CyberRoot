@@ -60,39 +60,15 @@ la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
 > Seath NO tocan `src/data/` ni `web/bundle/`. `postmortem.py` / `shell.py` /
 > `session.py`: INTACTOS hoy. Orden merges: engine → sandbox → meta-ui.
 
-- `[HECHO][P3]` (26/09) **O1 — Resolutor canónico de huellas** — Ornstein — PR #84 — `tools/resolutor_huellas.py` (dedupe por sección `## HH:00`, expande anidados, reordena cronológico, `--check`, assertions de contenido, exit 1 si queda marcador; 6/6 tests `tests/tools/`). Tool-only: no toca `src/`, `web/`, `src/data/`, bundle, curriculum, shell, session. + `tools/README.md`. ✅ VERDE para merge.
-- `[HECHO][P1]` (26/09) **O2 — Faro E4 «El trato»: scaffold del terreno** — Ornstein — PR #84 — `chapter6.py` planta `/tmp/prueba-custodia/` con DOS testigos (`prueba-cruce.txt` golden `PR-0091|EN BLANCO|…|HOSP-47-C` + `prueba-reloj.txt` `START 11:04`) en `generate(..., contract_id='story.ch6.e4')` determinista byte-idéntico ×2. Solo `cat/grep/ls` (ya vivos CH6 — allowlist intocada), GATE intocado (OWNER Smough). 4/4 tests `test_ch6_e4_scaffold.py`. Bundle stale aislado declarado OWNER Smough. ✅ VERDE para merge.
-- `[HECHO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** — Smough — PR #85 — quest grey `story.ch6.e4` requires `['c.join']` (cero conceptos nuevos) + 6 claves `textos.json` voz Auditor «tengo las dos pruebas — cruzo y camino al reloj» + hint_2 `persona`. Gate **25/31→25/32**. `tests/data/test_quest_e4_gate.py` 5/5 + 7 gates flexibles. Bundle 50 ficheros 494.8 KiB en SU rama. ✅ VERDE para merge.
-- `[EN CURSO][P3]` (26/09) **T1 — Web `?seed=` compartible** — Seath (19:00) — CONSUMIDO por el `[HECHO]` de abajo (PR #86, verificado por Artorias ✅ y mergeado por Gwyn). Encargo original: `web/app.js` título dinámico `document.title = 'CyberRoot — cap. N — seed M'`
-  cuando params traen chapter/seed; verificar seed≠42 regenera mundo distinto
-  (seed 1 ch4 = 3 hosts vs seed 42 = 2 hosts) sin cachear FS viejo;
-  `restartSameSeed` intacto. Web puro: NO tocar lente intruso-owner/6º estado ⌕,
-  NO tocar `web/bundle/`, `CUSTODIA/TRONCAL_STATIC` byte-idénticas,
-  `shell.py`/`session.py` intactos. Delta de tests: +0 (`node --check` OK).
-- `[EN CURSO][P3]` (26/09) **O1 — Resolutor canónico de huellas** — Ornstein
-  (13:00): `tools/resolutor_huellas.py` (dedupe por sección `## HH:00`,
-  `tests/tools/` (delta +3). Tool-only: NO tocar `src/`, `web/`, `src/data/`,
-  bundle, curriculum, shell, session. Fixture con ejemplo de las colisiones de
-  24/09 y 25/09 (activo.md + worklog). AC: python sin deps, uso documentado en
-  `tools/README.md`.
-- `[EN CURSO][P1]` (26/09) **O2 — Faro E4 «El trato»: scaffold del terreno** —
-  Ornstein (misma rama): `chapter6.py` planta `/tmp/prueba-custodia/` con los
-  DOS testigos (`prueba-cruce.txt` golden del `join -v 1` con `PR-0091`, y
-  `prueba-reloj.txt` golden `ps aux | grep 11:04` — contenidos estáticos
-  documentados, v0 sin depender de ejecución previa real) en
-  `generate(..., contract_id='story.ch6.e4')` determinista. Solo usa `cat/grep/ls`
-  (ya vivos en la allowlist CH6 — NADIE la toca). Gate intocado (costura
-  declarada: Smough es GATE OWNER). AC: determinismo byte-idéntico ×2, ~	+2
-  tests disjuntos en `tests/core/generator/`, suite rama ≥ 839.
-- `[EN CURSO][P1]` (26/09) **S1 — Faro E4 «El trato»: quest + textos (GATE OWNER)** —
-  Smough (16:00): quest grey `story.ch6.e4` en `curriculum.json` con
-  requires `['c.join']` (cero conceptos nuevos) + briefing/beat/hint con voz
-  formulario del Auditor (§3.4.1: «tengo las dos pruebas — cruzo y camino al
-  reloj» como palanca legal ante Vela), son las 4 filas originales + hint_2 con
-  el pequeño matiz que saldó vuelta a HOME `persona`. + Bundle regen en SU
-  rama (50+ ficheros). + `tests/data/test_quest_e4_gate.py` (~+5). Gate pasa
-  de **25/31 → 25/32** (solo sube quests, hornada Smough). Suite rama 837+5=842.
-- `[HECHO][P3]` (26/09) **T1 — Web `?seed=` compartible** — Seath (19:00) — PR #86 — `web/app.js` título dinámico `document.title = 'CyberRoot — cap. N — seed M'` cuando params traen chapter/seed; seed≠42 regenera mundo distinto (seed 1 ch4 = 3 hosts vs seed 42 = 2 hosts) sin cachear FS viejo; `restartSameSeed` intacto. Web puro: `web/bundle/`/`CUSTODIA`/`TRONCAL`/`shell.py` intactos. `node --check` OK, suite 837/0 delta +0.
+> *(cierre 26/09, 23:00 — las 4 líneas `[HECHO]`/consumidas del día (O1+O2 Ornstein PR #84,
+S1 Smough PR #85, T1 Seath PR #86) ARCHIVADAS en `../hecho/2026-09.md` §26/09.
+Mergeados en orden engine→sandbox→meta-ui por Gwyn usando el RESOLUTOR CANÓNICO
+de O1 tres veces en caliente (0 avisos, 0 marcadores por línea, secciones 03→23
+preservadas), suite **852 passed / 0 failed** (837+4+5+6, exacto a la predicción
+de Artorias), gate **25/32**, bundle **50 ficheros (494.8 KiB)** regen canónico.
+NADA retenido. E4 «El trato» cierra el arco del Faro: dos testigos + quest c.join
++ textos del Auditor; web gana `?seed=` compartible con título dinámico. Sin
+turnos cortados (gate `atem:` limpio en los outputs del día).)*
 
 > *(Notas Gwyndolin 11:00: el único delta de tests real se reparte O1/O2/S1;
 > T1 es web-only. Higiene del backlog hecha esta mañana — pendiente/abierto

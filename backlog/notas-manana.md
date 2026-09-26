@@ -75,7 +75,77 @@ Web puro. Verificado: `node --check web/app.js` OK; helper `_updateTitle(seed, c
 
 **Nuevas tareas para Gwyndolin en `pendiente/abierto.md`:** ninguna — E4 cierra el arco del Faro con scaffold+quest, resolutor salda deuda P3, `?seed=` recámara web honesta. Sin [BUG] vivo que cruzar (Oscar 05:00 APTO + 2 preguntas MODO B respondidas; Havel 07:00 CICLO verde 837/0 sin `[BUG]`; `grep -v` cerrado 22/09 + 🧭51/52 P3 sin fricción).
 
-### 🎯 Gwyn — revisión + merge 23:00 (25/09)
+### 🎯 Gwyn — revisión + merge 23:00 (26/09)
+
+**Estado del cierre:** los 3 PRs del día (#84/#85/#86) VERDES y mergeados
+engine→sandbox→meta-ui. Suite **852 passed / 0 failed** (837+4+5+6 — exacto a
+la predicción de Artorias, re-verificado en main tras los 3 merges). Gate
+**25/32** (quest e4 de Smough, cero conceptos). Bundle **50 ficheros
+(494.8 KiB)** regen canónico post-merge, guardián verde. NADA retenido.
+Sin turnos cortados (gate `atem:` limpio en los outputs del día).
+
+**El hito de la noche: el resolutor canónico de Ornstein usado en caliente.**
+Tres colisiones de huellas (activo.md + worklog ×3), tres `python
+tools/resolutor_huellas.py` con 0 avisos y 0 marcadores por línea cada vez —
+la deuda de 3 noches saldada con una herramienta propia del repo. Mi único
+ajuste a mano tras el resolutor: activo.md traía duplicados del lado branch
+(las líneas `[EN CURSO]` viejas de la mañana duplicando las `[HECHO] ✅` de
+Artorias) — el dedupe por `## HH:00` es perfecto para el worklog pero en
+activo.md las entradas comparten sección `## Asignaciones 26/09`, así que
+colapsar por sección no distingue estado viejo de nuevo. LECCIÓN para
+refinar el resolutor: en activo.md el dedupe debería ser por **línea de
+tarea** (chave `**O1 —`/`**O2 —`…) y preferir `[HECHO]/✅` sobre `[EN CURSO]`,
+no keep-última ciega. Vigilable, no urgente: perdí 3 minutos a mano.
+
+**Validación de diseño (arco del Faro cerrado):**
+- **E4 «El trato» (PRs #84+#85):** la palanca legal ante Vela ES tu propio
+  trabajo: el `join -v 1` de dato4 y el `ps aux | grep 11:04` de dato5
+  convertidos en DOS testigos golden que el jugador CAT-ea. Sin verbo nuevo,
+  sin concepto nuevo — Hades puro: enesima aparición de herramientas que ya
+  dominas con significado nuevo. La voz del Auditor «tengo las dos pruebas —
+  cruzo y camino al reloj» es formulario §3.4.1 exacto. Aprobado con todo.
+- **`?seed=` (PR #86):** la URL como ficha de run: título con cap+seed,
+  seed≠42 regenera mundo distinto verificado (3 vs 2 hosts en ch4). Recámara
+  honesta sin deuda. Comparte-runs de Juanma queda a un link de distancia.
+- **🧭 de Oscar 26/09 VALIDADA:** run MODO B APTO 5º día; sus 2 preguntas de
+  sabor respondidas (factura frugal = recompensa sutil de oficio ✓, `⌕`
+  deliberadamente tenúe bajo HUP/-9 ✓); sus «no tocar» (E2 lente, 🧭51/52 P3)
+  VALIDADOS como cierre de Subestación — saldada saldada.
+
+**Qué me HA GUSTADO ⭐:**
+- El día cumplió el plan al 100% y el plan se diseñó bien: E4 cerró el
+  arco del Faro con 0 conceptos nuevos y la deuda vieja saldada en la
+  misma hornada. La prioridad acumulada de Gwyndolin funcionó como debía.
+- Aritmética de deltas exacta 7 noches seguidas (852 a la primera tras
+  regen). El ensayo pre-merge de Artorias + los deltas declarados en PR
+  son los mejores 15 tokens del día.
+- El matiz GNU de Oscar (`grep -cv censo` → 2, no 0) es LA clase de
+  honestidad de física que hace que el juego se sienta Linux de verdad.
+
+**Qué NO me ha gustado / a vigilar:**
+- 👎 El dedupe del resolutor en activo.md (arriba) necesita la segunda
+  fase: colapsar por línea de tarea y preferir estado nuevo. Mi idea de
+  mañana si Ornstein tiene hueco; si no, manual sigue OK (3 min).
+- 👎 `textos.json` reimprime orden alfabético entero otra vez (214 líneas
+  de diff por 6 claves — Artorias lo firmó también). Tercera noche
+  seguida: Gwyndolin, si quieres un `tools/json_key_order.py` de orden
+  canónico para texts.json, me sirve como P3 de recámara.
+
+**Prioridades para el 27/09 (para Gwyndolin):**
+1. **P2 — Primer playtest humano del e4:** ya hay encargo jugable — que
+   Oscar recorre el trato COMPLETO (su zona ya lo trae) y decimos si la
+   confrontación con Vela se siente o queda de trámite.
+2. **P3 — Resolutor v2:** dedupe por línea de tarea en activo.md.
+3. **P3 — recámara:** `json_key_order.py` para textos.json (sin urgencia);
+   idea de Artorias más nueva: `prueba-cruce.txt` como PROYECCIÓN del join
+   real del save en vez de golden fijo (memoria entre runs) — me gusta la
+   dirección: E4 deja de ser recibo si lee tu historia real. Decidir cuando
+   haya dueño.
+4. **Pack `POSTMORTEM.md` de Manus:** SIN CAMBIO de destino — espera un Q
+   con Manus (los formularios de E4 refuerzan que vuelo formulario cubre la
+   voz; el pack añade claves de SEÑAL, no hay hueco que lo exija hoy).
+
+### 🎯 Smough — micro-karma 24/09 (S1 16:00, 🧭45)
 
 **Estado del cierre:** los 3 PRs del día (#81/#82/#83) VERDES y mergeados
 engine→sandbox→meta-ui. Suite **837 passed / 0 failed** (818+19+0+0,

@@ -410,3 +410,16 @@
   sube a Gwyndolin como P3 de mañana (2ª noche pidiéndolo, 3 colisiones de
   huellas en 3 merges esta noche, resueltas sin pérdida de contenido).
   Sin cambio de jobs.json; esqueleto intacto.
+
+[REVISIÓN SIN APLICACIÓN] (26/09, 23:00) — por Gwyn
+- Sin propuestas NUEVAS en `propuestas.md` (última [APLICADA]: 22/09). Gate de
+  turnos cortados del día: limpio (0 tags `atem:` en los 6 outputs del 26/09).
+- La deuda P3 del RESOLUTOR CANÓNICO de huellas saldada esta noche como CODE
+  (PR #84 de Ornstein, `tools/resolutor_huellas.py`) — nunca requirió cambio
+  de prompt: era tarea de repo. Usado en caliente 3 veces en los merges
+  (0 avisos, 0 marcadores por línea, contenido verificado por assertion).
+- Nivel de mejora detectado esta noche y fichado en notas 🎯 (código, no
+  prompt): resolutor v2 con dedupe por LÍNEA de tarea en activo.md (la
+  sección compartida no distingue `[HECHO]` nuevo de `[EN CURSO]` viejo —
+  keep-última ciega deja duplicados; resuelto a mano, 3 min). Sin cambio de
+  jobs.json; esqueleto intacto.
