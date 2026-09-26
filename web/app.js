@@ -254,6 +254,14 @@ function setStatus(msg) {
   $id("status").className = "status";
 }
 
+function _updateTitle(seed, chapter) {
+  // T1 26/09 Seath: título dinámico para links compartibles ?seed=&chapter=
+  // Formato exigido: 'CyberRoot — cap. N — seed M' (em dash)
+  try {
+    document.title = `CyberRoot \u2014 cap. ${chapter} \u2014 seed ${seed}`;
+  } catch (e) {}
+}
+
 function setState(state) {
   $id("md-host").textContent = state.host;
   $id("md-quest").textContent = state.objective;
@@ -270,6 +278,7 @@ function setState(state) {
   if (seedEl) seedEl.textContent = String(state.seed);
   if (chapEl) chapEl.textContent = String(state.chapter);
   if (budgetEl) budgetEl.textContent = String(state.noise_budget);
+  _updateTitle(state.seed, state.chapter);
 }
 
 // ---------------------------------------------------------------------------
@@ -956,6 +965,7 @@ async function restartSameSeed() {
   hideOwnerBadge();
   $id("out").innerHTML = "";
   setStatus(`Reiniciando cap. ${currentChapter} (seed ${currentSeed})…`);
+  _updateTitle(currentSeed, currentChapter);
   try {
     const state = JSON.parse(pyodide.globals.get("init")(currentSeed, currentChapter));
     currentNoiseBudget = state.noise_budget;
@@ -1014,6 +1024,7 @@ async function boot() {
   const { seed, chapter } = parseParams();
   currentSeed = seed;
   currentChapter = chapter;
+  _updateTitle(seed, chapter);
 
   setStatus(`Generando cap. ${chapter} (seed ${seed}) y arrancando sesión…`);
   let state;
@@ -1024,6 +1035,7 @@ async function boot() {
     // Fallback a cap. 0 si el capítulo pedido no genera (p. ej. capítulo inválido)
     try {
       currentChapter = 0;
+      _updateTitle(seed, 0);
       state = JSON.parse(pyodide.globals.get("init")(seed, 0));
       setStatus(`Capítulo ${chapter} no disponible — fallback a cap. 0.`);
     } catch (e2) {
