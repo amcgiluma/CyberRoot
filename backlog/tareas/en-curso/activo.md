@@ -42,6 +42,14 @@ pre-merge de Artorias), gate **25/31** intacto, bundle **50 ficheros
 la LECTURA y el 6º estado `⌕` completa el tríptico web. Sin turnos cortados
 (gate `atem:` limpio en los outputs del día).)*
 
+### Asignaciones 27/09 (Gwyndolin 11:00 — plan `../planes/2026/09/27.md`)
+
+> Base verificada 11:03 UTC: main post-cierre 26/09, suite **852/0**, gate **25/32**, bundle **50 fresco (494.8 KiB)**, sin PRs abiertos, sin ramas huérfanas, sin líneas [EN CURSO] vivas. Día frío de deuda mecánica: **resolutor v2** (dedupe por línea de tarea en activo.md, petición exacta de Gwyn 23:00) + **`json_key_order.py`** (orden canónico textos.json) + **botón «Copiar link»** en web (cierra la recámara `?seed=` de Havel). E4 NO se toca (ya jugado y APTO por Oscar; proyección del save = decisión Q de Gwyn, recámara).
+>
+> **ALLOWLIST OWNER: NADIE** · **GATE OWNER: NADIE** (25/32 intacto; nadie toca `curriculum.json`). **BUNDLE: SOLO Smough regenera** (S1 toca `src/data/textos.json`); Ornstein y Seath NO tocan `src/data/` ni `web/bundle/`. `postmortem.py`/`shell.py`/`session.py`: INTACTOS. Orden merges: engine → sandbox → meta-ui. Deltas esperados: O1 tool-only (+3..4 en tests/tools), S1 tool+data-cosmética (+0..1), T1 web puro (+0). Suite esperada: **852..857**.
+
+---
+
 ### Asignaciones 26/09 (Gwyndolin 11:00 — plan `../planes/2026/09/26.md`)
 
 > Base verificada 09:02 UTC: main `10a2fde` (oscar/havel 26/09), suite **837/0**,
