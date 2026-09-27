@@ -145,30 +145,41 @@ puerta de la cámara hay que decidir antes qué se hace con la cortina.
   a sus propios empleados. La burocracia acumula casos, y esta vez tiene nombre
   de división.
 
-### E4 — «El armario» (gris, `story.ch6.e4`)
+### E4 — «El trato» (gris, `story.ch6.e4`)
 
 La puerta de la cámara se abre con la llave del ascensor y la decisión del
-técnico encima. Dentro, la Lista al alcance (beat 10): dos usos posibles de lo
-que ves, y un tercero que nadie te ha vendido. Los datos están; la pregunta del
-juego ya no es técnica, es qué se hace con un censo que tiene la fila 000 vacía
-y una purga de nadie en el libro.
+técnico encima. Dentro, la Lista al alcance (beat 10) ya no pide que la leas
+entera: pide que enseñes lo que ya sabes leer. Dos testigos te esperan en
+`/tmp/prueba-custodia/` — el cruce que nombra lo que el registro calla
+(`prueba-cruce.txt` con `PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C`,
+huérfana del `join -v 1`) y el reloj que marca la misma noche
+(`prueba-reloj.txt` con `faro 412 START 11:04 /usr/sbin/faro-sync --purga
+PR-0091`). Dos pruebas, un mismo Programa. La pregunta del juego ya no es
+técnica, es qué se hace con un censo que tiene la fila 000 vacía y una purga
+de nadie en el libro.
 
-- Técnico: leer la cámara en limpio — `cat`/`tail` de los dos ficheros de la
-  Lista (`CENSO-LISTA.md`), cifrar con `openssl`/claves lo que decidas llevarte
-  para que no viaje leído, y `shred`/borrado de rastro (la familia de limpieza)
-  antes de salir. Máxima luz: cada segundo en el armario es factura.
+- Técnico: verificar con `cat` los dos testigos en `/tmp/prueba-custodia/`
+  (`prueba-cruce.txt` y `prueba-reloj.txt`) y con `ls` el área; el cruce nombra
+  y el reloj camina a la misma noche — deterministas por seed, byte-idénticos
+  ×2 vía `generate(42,6, contract_id='story.ch6.e4')`. Si te pierdes, `cd` sin
+  args vuelve a HOME y `ls /tmp/prueba-custodia/` sigue allí: la persona que
+  vuelve a casa no pierde la custodia. Solo `cat`/`grep`/`ls` (16 verbos de
+  `DEFAULT_CH6_COMMANDS`, sin tocar allowlist), `requires ['c.join']` — la
+  palanca legal nace de lo que ya dominas (dato4 + dato5).
 - Beat: frente a la fila de nadie, el expediente del cap. 4 (fila 000, estado
   vacío) y la pulsera del cap. 2 (alta sin imprimir) escriben la misma frase
-  tres formatos. Y una puerta trasera, velada por la persiana que decidiste,
+  en tres formatos. Y una puerta trasera, velada por la persiana que decidiste,
   deja ver un armario de informes que no va al ensayo: los logs del propio
   Auditor sobre la Oficina. Esos, leídos juntos, son la única prueba de que el
   Programa de Continuidad es un experimento pilotado sobre la fila 000. La
-  palanca de EL TRATO (§3.4, §9), al alcance por fin.
-- Karma: el uso negociable. Llevarte la prueba íntegra sin tocar el resto
-  (azul: la cadena de custodia nace aquí, intacta, y el armario queda como
-  estaba) o llevarte una copia y dejar la cortina de los informes abierta
-  (rojo: te llevas la palanca y le dejas al Auditor la puerta de mostrar su
-  propio archivo a quien sepa mirar).
+  palanca de EL TRATO (§3.4, §9), al alcance por fin — no es romper la puerta,
+  es enseñarle a Vela que su propio archivo la incrimina.
+- Karma: gris por diseño (DESIGN §3.4.1, banda mixta). No hay azul/rojo aquí:
+  el trato nace de tener las dos pruebas y de saber caminar al reloj sin
+  romper la cadena. Lo que decides con la Lista después (llevarte la prueba
+  íntegra o dejar la cortina abierta) ya lo cobrará la confrontación y el
+  cierre — este encargo solo pone la palanca sobre la mesa, con voz de
+  formulario: dato y hora, no promesa.
 - Gancho: al salir del armario, el rack de informes suena distinto. El Auditor
   no registra la intrusión del modo de siempre: registra la cámara abierta, y
   al final, en lugar de la línea que cierra todos los informes, deja caer que
