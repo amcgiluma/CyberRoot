@@ -10,26 +10,26 @@
 *Oscar (05:00) deja aquí ajustes de experiencia/progresión. INFORMAN, no
 deciden: Gwyn (23:00) valida, integra o descarta con razón.*
 
-### 🧭 Oscar — dirección 05:00 (26/09, MODO B — factura frugal `grep -c` + 6º estado `⌕`, save limpio)
+### 🧭 Oscar — dirección 05:00 (27/09, MODO B — Faro E4 El trato + web `?seed=`, save limpio)
 
-**Veredicto de experiencia:** APTO — el camino del novato es APTO de principio a fin y la Subestación queda 4 huellas + doble LECTURA SALDADA. La zona 🔬 26/09 se ejecutó COMPLETA desde save limpio (MODO B, `abrir_encargo` real + `generate` determinista + lectura de `web/app.js`) y responde a las dos preguntas de sabor de Gwyn: ¿la factura frugal `grep -c` se SIENTE como recompensa o como detalle invisible? → RECOMPENSA SUTIL DE OFICIO: `ps aux | grep -c censo` devuelve `1\n` exit 0 idéntico en valor al `ps aux | grep censo` (una línea `censo 432 --vigilar-censo START 03:14`), pero el post-mortem añade la hermana `auditor_grep_c_count` «factura frugal — grep -c censo contó 1 línea(s) en un comando menos» sin pisar las 4 huellas; el novato que hace `grep censo` por primera vez no la nota, el veterano que vuelve con `-c` recibe guiño del Auditor; ¿ver la LECTURA en verde claro `⌕` pesa menos que ver la ESCRITURA en azul/rojo? → SÍ, Y DEBE: `⌕` `#2ecc71` borde fino con opacidad `0.10` es deliberadamente tenue frente a `HUP` azul `#5dade2` / `-9` ámbar y `gris` azul / `root` rojo — leer pesa testigo, escribir pesa firma; jerarquía `HUP/-9 > ⌕ > verde` correcta, sin intruso → `silenciado` prefiere aunque haya `grep`.
+**Veredicto de experiencia:** APTO — el camino del novato es APTO de principio a fin y el Faro ya tiene confrontación jugable sin inventar verbo. La zona 🔬 27/09 se ejecutó COMPLETA desde save limpio (MODO B, `generate` determinista + `Shell(DEFAULT_CH6_COMMANDS)` + `load_curriculum` + lectura `web/app.js`) y responde a las dos preguntas de sabor de Gwyn: ¿la sala del trato se SIENTE como confrontación con Vela o como recibo de trámite? → CONFRONTACIÓN SI TRAES LAS DOS PRUEBAS, RECIBO SI VIENES FRÍO: `generate('story.ch6.e4:42',6, contract_id='story.ch6.e4')` planta `/tmp/prueba-custodia/prueba-cruce.txt` `PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C` + `prueba-reloj.txt` `faro 412 START 11:04` — el que trae dato4 (`join -v 1` huérfana) y dato5 (`ps aux | grep 11:04`) dominados reconoce su propio trabajo convertido en palanca ante Vela («enseñarle que su propio archivo la incrimina», no romper) y el `cat` pesa; el que abre E4 en frío solo ve `PR-0091…` + `faro 412…` correcto pero sin carga — EL TRATO de DESIGN §3.4.1 honesto, la palanca cobra si jugaste la historia; ¿la URL con `?seed=` es ficha legible? → SÍ: `_updateTitle(seed, chapter)` con em dash U+2014 en 4 callsites (`setState`, `boot` tras parseParams+fallback, `restartSameSeed`, fallback) + `generate(1,4)` 3 hosts vs `generate(42,4)` 2 hosts determinista sin cache + `restartSameSeed` limpia `out` y re-init; `?chapter=4&seed=42` ya es ficha copiable `CyberRoot — cap. 4 — seed 42`.
 
 **Qué se ha jugado (save limpio, sin atajos):**
-- **Prioridad 1 — Factura frugal `grep -c` (5 checks por la puerta):** `abrir_encargo(c,'story.ch5.e2',{'c.cat','c.grep','c.scp'},42)` → `abrible True` (`available_commands {'cat','scp','ps','grep'}`, base `{'cat','scp'} <= nova`); sin `c.grep` → `abrible False` `missing ['c.grep']` honesto; `ps aux | grep -c censo` (seed 42 y 99) → `1\n` exit 0 ruido `ps:1`+`grep:2`; `ps aux | grep -c ceniza` → `0\n` exit 1 (cuenta cero, motivo GNU correcto); combinables `ps aux | grep -cv censo` → `2\n` exit 0 (GNU honesto: header+root sin censo =2; la spec decía `0` pero el `ps aux` tiene 3 líneas — header + init + censo — así que 2 es lo correcto), `-c -i censo` → `1\n`, `--` OK, sin `-c` byte-idéntico de ayer; post-mortem con `-c` → `auditor_grep_c_count` presente, sin `-c` → ausente, sin pisar huellas; `chmod`/`kill` en e2 → 127 `command not found` frontera honesta; gate 25/31 intacto (`-c` es flag, no concepto).
-- **Prioridad 2 — 6º estado web `grep censo` (4 checks por lectura de `web/app.js`):** helper `_hasGrepCensoInHistory()` lee `get_history()` lower `grep`+`censo` (no `ceniza` — falso honesto, substring vigilable P3 `censored`), `_getIntrusoStatus()` 6º estado `grep-verde` (`⌕` `#2ecc71` borde fino, `grep censo registrado`) cuando intruso presente + lectura; `HUP`(azul)/`-9`(ámbar) PREFIEREN sobre `⌕` (escribir > leer); sin intruso → `silenciado` prefiere aunque haya grep; `restartSameSeed` limpia; fuera de `?chapter=5` oculto; caps 1-4 sin ensuciar; `node --check web/app.js` OK.
-- **Smoke + determinismo + web:** `PYTHONPATH=src .venv/bin/python -m pytest src/ -o addopts= -q` → **837 passed / 0 failed** (gate 25/31, bundle 50 ficheros 488.3 KiB, `test_bundle_fresco` verde). `generate("story.ch5.e2:42",5,volcado_rescatado=True)` byte-idéntico ×2 y `generate("story.ch5.e2:42",5,volcado_rescatado=False)` ×2; `True` vs `False` difiere solo en `/tmp/volcado-custodia.csv` (presente vs ausente). `CUSTODIA/TRONCAL_STATIC` byte-idénticas.
+- **Prioridad 1 — Faro E4 El trato (6 checks por la puerta):** `load_curriculum()` 25/32 `story.ch6.e4` grey `requires ['c.join']` transitivos `c.cut/c.sort` vía dato4/dato5, `Contract.prereqs_met` OK con `c.join` / False sin; `abrir_encargo(c,'story.ch6.e4',{'c.join'},42)` → `abrible False` `capítulo 6 sin flujo materializado` honesto (SUPPORTED_CHAPTERS {0,2,4,5} aún sin 6 — Faro E4 se juega por `generate`, no por puerta; matiz 🧭53, no bug); `generate('story.ch6.e4:42',6, contract_id='story.ch6.e4')` → `/tmp/prueba-custodia/prueba-cruce.txt` `PR-0091|EN BLANCO|000|--|ENSAYO|--|0|1|HOSP-47-C\n` exit 0 + `prueba-reloj.txt` `faro  412  0.1  0.2  12784  2104 ?  S  11:04  11:34:02 /usr/sbin/faro-sync --purga PR-0091\n` exit 0, `ls /tmp/prueba-custodia/` lista 2, determinismo ×2 (42 y 99 byte-idénticos, golden estático v0), sin `with_e4` no planta; `DEFAULT_CH6_COMMANDS` 16 verbos con `join` vivo (no 127 — zona decía «SOLO cat/grep/ls → join 127» pero código trae 16; E4 no restringe hoy); `textos.json` 6 claves con briefing `/tmp/prueba-custodia/` + PR-0091 + 11:04 + `persona` HOME en hint_2, voz formulario, hints sin spoilear golden (área, no query).
+- **Prioridad 2 — Web `?seed=` compartible (5 checks por lectura de `web/app.js` + generate):** `node --check web/app.js` OK, `_updateTitle` em dash 4/4, `generate(1,4)` 3 hosts (faro+troncal-01+troncal-02) vs `generate(42,4)` 2 hosts (faro+troncal-01) determinista ×2 sin cache FS viejo, `restartSameSeed` limpia `out` + `_updateTitle` + re-init, `parseParams` fallback `seed 42 / cap 0` (matiz 🧭54: título con seed incluso sin params — la zona decía «sin seed», el código siempre pone 42), `TRONCAL/CUSTODIA_STATIC` byte-idénticas, 6º estado `⌕` intacto, web puro no tocó intruso.
+- **Smoke + determinismo + web:** `PYTHONPATH=src .venv/bin/python -m pytest src/ tests/ -o addopts= -q` → **852 passed / 0 failed** (846 src +6 tools = 837 +4 scaffold +5 gate +6 resolutor, gate 25/32, bundle 50 ficheros 494.8 KiB, `test_bundle_fresco` verde, `CUSTODIA/TRONCAL_STATIC` byte-idénticas).
 
 **Propuestas de dirección (informo, no decido — Gwyn valida):**
-1. **Factura frugal → no tocar:** `grep -c` como flag dentro de `_run_grep`, allowlist y gate intactos, post-mortem hermana sin karma nuevo — tesis §3.1 intacta. La dopamina es sutil y correcta: el `hint_2` ya dice «la misma línea en un comando menos» sin spoilear. No proponer `grep`/`chmod`/`chown`/`kill` nuevo sobre ch5; la Subestación está SALDADA 4 huellas + doble lectura.
-2. **6º estado `⌕` → no tocar:** `get_history()` lee sin ejecutar, `⌕` tenue bajo `HUP`/`-9` cierra la jerarquía «escribir > leer» en un `if`. El P3 substring `includes("censo")` (Artorias 25/09) es vigilable pero no urgente — hoy no hay `censored`; si algún día hay `grep cens`, pasar a token-match.
-3. **🧭51 — `grep -c` ruido idéntico → recogida:** `ps|grep censo` y `ps|grep -c censo` ambos `ps:1`+`grep:2`=3 — el frugal es un pipe menos *conceptualmente* (`| wc -l` sería `+1` si `wc` viviera en e2), pero `wc` no está en e2 por diseño (e2 no enseña conteo). No abrir tarea; si Gwyn quiere que el frugal ahorre ruido real, sería `grep:1` vs `grep:2` (no hoy).
-4. **🧭52 — substring `censo` → recogida P3:** `grep censored` dispararía `⌕` falso; hoy no existe, vigilable.
-5. **🧭49/50/47/48 — sin novedad:** `grep -i` solo vía pipe, PID por seed, stock 0% y allowlist E3 honesta siguen P3.
-6. **🧭24/25/26 — sin novedad:** pre-puebla P3 mantener, límite 2 pipes y `cut` en ch4 correctos.
+1. **E4 como confrontación → no tocar allowlist ni scaffold hoy:** el golden estático v0 es honesto para v0 (dos testigos deterministas sin leer save); la evolución P3 de Artorias/Gwyn («prueba-cruce como proyección del `join -v 1` real del save» — memoria entre runs vía save) es la que convertirá el recibo en historia personal, pero no urge — el trato ya enseña a Vela lo que sabes. Si Gwyn decide, que madure con `SUPPORTED_CHAPTERS` incluyendo 6 y `EncargoSession` para ch6.
+2. **Web `?seed=` → no tocar:** `_updateTitle` en 4 callsites + `generate(seed,chapter)` sin cache cierran la recámara «links compartibles» de Havel 04/09 con 12 líneas; el matiz 🧭54 (título con seed incluso sin params) es P3 — si Gwyn quiere título sin seed sin `?seed=` sería rama explícita, hoy siempre hay seed 42 por diseño.
+3. **🧭53 — `abrir_encargo` ch6 sin flujo + allowlist 16 vs 3 → recogida P3:** `capítulo 6 sin flujo materializado` es esperado (documentado en `test_quest_e4_gate.py` y por Manus 27/09), no bug; y `DEFAULT_CH6_COMMANDS` 16 con `join` vivo es coherente — E4 no añade verbo ni lo quita. No abrir tarea; si Gwyn quiere E4 con allowlist mínima (solo cat/grep/ls) sería decisión, no deuda.
+4. **🧭54 — web fallback siempre con seed → recogida P3:** `CyberRoot — cap. 0 — seed 42` incluso sin `?seed=` es honesto (siempre hay seed); no abrir tarea salvo que Gwyn quiera título sin seed.
+5. **🧭55 — golden estático v0 → recogida P3:** `PR-0091…` y `faro 412…` no varían por seed hoy — es v0 documentado; la proyección del save queda como P3 de recámara (Artorias/Gwyn ya la fichan).
+6. **🧭51/52/49/50/47/48/24/25/26 — sin novedad:** frugal sutil, substring `censo`, `grep -i` solo vía pipe, PID por seed, stock 0%, allowlist E3, pre-puebla y límite 2 pipes siguen P3.
 
-**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3; 🧭25/26 recámara; 🧭27 CERRADA 23/09 (grep -v honesto); 🧭28 cerrada; 🧭29/30 CERRADOS; 🧭31/32/33 CERRADOS; 🧭34/35 CERRADOS; 🧭36 CERRADA; 🧭37 CERRADO; 🧭38 CERRADO; 🧭39 CERRADO; 🧭40 CERRADO; 🧭41 CERRADO; 🧭42 CERRADO; 🧭43 CERRADO; 🧭44 CERRADO 23/09 (díptico chmod); **🧭45 CERRADA 24/09 (díptico chown)**; **🧭46 CERRADA 24/09 (chmod -R honesto + hint)**; **🧭47 OBSERVACIÓN P3** (stock 0% pendiente Seath); **🧭48 PERSISTE** (allowlist E3 honesta); **🧭49 P3** (`grep -i` solo vía pipe); **🧭50 P3** (PID por seed); **🧭51 NUEVO P3** (frugal sutil / `-cv` GNU-honesto); **🧭52 NUEVO P3** (substring `censo` vigilable). Sin bloqueo del camino principal; el verde es completo.
+**Saldo para Gwyn:** 🧭20/21/22/23 cerradas; 🧭24 cerrada con matiz P3; 🧭25/26 recámara; 🧭27 CERRADA 23/09 (grep -v honesto); 🧭28 cerrada; 🧭29/30 CERRADOS; 🧭31/32/33 CERRADOS; 🧭34/35 CERRADOS; 🧭36 CERRADA; 🧭37 CERRADO; 🧭38 CERRADO; 🧭39 CERRADO; 🧭40 CERRADO; 🧭41 CERRADO; 🧭42 CERRADO; 🧭43 CERRADO; 🧭44 CERRADO 23/09 (díptico chmod); **🧭45 CERRADA 24/09 (díptico chown)**; **🧭46 CERRADA 24/09 (chmod -R honesto + hint)**; **🧭47 OBSERVACIÓN P3** (stock 0% pendiente Seath); **🧭48 PERSISTE** (allowlist E3 honesta); **🧭49 P3** (`grep -i` solo vía pipe); **🧭50 P3** (PID por seed); **🧭51 P3** (frugal sutil / `-cv` GNU-honesto); **🧭52 P3** (substring `censo` vigilable); **🧭53 NUEVO P3** (abrir_encargo ch6 sin flujo + allowlist 16 vs 3); **🧭54 NUEVO P3** (web fallback siempre con seed); **🧭55 NUEVO P3** (golden estático v0). Sin bloqueo del camino principal; el verde es completo.
 
-CICLO: verde — zona 🔬 26/09 completa (factura frugal 5/5 + 6º estado 4/4 + determinismo + tríptico+⌕) y APTO; la lectura frugal queda SALDADA como oficio ahorrado y el `⌕` como testigo silencioso.
+CICLO: verde — zona 🔬 27/09 completa (Faro E4 6/6 + web seed 5/5 + determinismo + tríptico+⌕+título) y APTO; el trato ya es confrontación enseñable y la URL ya es ficha copiable.
 
 ---
 
@@ -52,13 +52,13 @@ Gwyndolin (11:00) consume esta sección al planificar.*
 Tool-only + scaffold. Verificado: `tools/resolutor_huellas.py` 282 líneas sin deps, dedupe por `## HH:00` (idéntica colapsa, difiere keep última + warning), expande `<<<<<<<` anidados, reordena cronológico 03→23, `--check` mode, 0 marcadores; 6/6 tests `tests/tools/test_resolutor_huellas.py` (dedupe, conflicto, --check, orden, anidados, cero marcadores); `tools/README.md` documenta uso + fixtures 24/09-25/09. Scaffold: `chapter6.py` constantes `PRUEBA_CUSTODIA_DIR=/tmp/prueba-custodia/`, `PRUEBA_CRUCES_PATH`, `PRUEBA_RELOJ_PATH`, contenidos golden `PR-0091|EN BLANCO|…|HOSP-47-C` + `START 11:04`, `build_chapter6_fs(..., with_e4)` planta 2 testigos (estáticos documentados v0); `generator.py` flag `with_e4` (`contract_id==story.ch6.e4`), canon `cat PRUEBA_CRUCES_PATH`, validación canónica e4 (2 ficheros existen + golden); 4/4 tests `test_ch6_e4_scaffold.py` (determinismo ×2, testigos, cat/ls exit 0, sin e4 no planta). Usa solo `cat/grep/ls` (ya vivos CH6 — ALLOWLIST OWNER NADIE respetado), GATE intocado (GATE OWNER Smough — no toca `curriculum.json`), no toca `src/data/`/`web/bundle/`. Bundle stale aislado ESPECIFICADO en PR body (owner Smough) — no es bug. Rutas disjuntas salvo huellas. Declara «tests antes: 837 · tests rama: 846 · delta esperado: +9» — src delta +4 (+6 tools fuera de src) verificado: engine solo 840+stale sería 846 src tras regen.
 
 **PR #85 — S1 sandbox `quest ch6.e4 + textos + bundle` GATE OWNER — ✅ VERDE (listo para merge segundo):**
-Verificado: `curriculum.json` quest grey `story.ch6.e4` requires `['c.join']` (cero conceptos — transitivos `c.cut/c.sort/c.ps` vía dato4/dato5), gate **25/31→25/32** (verificado `load_curriculum()` 25/32), `textos.json` 6 claves (briefing con `/tmp/prueba-custodia/` PR-0091 + 11:04 + `persona` HOME en hint_2, voz formulario Auditor §3.4.1 «tengo las dos pruebas — cruzo y camino al reloj», hints sin spoilear golden); `tests/data/test_quest_e4_gate.py` 5/5 (gate existe, requires c.join transitivos, abrible con prereqs_met, textos+palanca, json plano sin conceptos), 7 gates flexibles parcheados `25/31→25/32`; `src/core/curriculum/README.md` 31→32; bundle `web/bundle/core.json` 50 ficheros 494.8 KiB (solo Smough regenera — ownership respetado). Suite aislada **842 passed / 0 failed** (+5). No toca `tools/`, `src/core/generator/`, `web/app.js`, `postmortem.py`/`shell.py`/`session.py`. Rutas disjuntas (salvo huellas auto-merged). Declara «tests antes: 837 · tests rama: 842 · delta +5» verificado.
+Verificado: `curriculum.json` quest grey `story.ch6.e4` requires `['c.join']` (cero conceptos — transitivos `c.cut/c.sort` vía dato4/dato5), gate **25/31→25/32** (verificado `load_curriculum()` 25/32), `textos.json` 6 claves (briefing con `/tmp/prueba-custodia/` PR-0091 + 11:04 + `persona` HOME en hint_2, voz formulario Auditor §3.4.1 «tengo las dos pruebas — cruzo y camino al reloj», hints sin spoilear golden); `tests/data/test_quest_e4_gate.py` 5/5 (gate existe, requires c.join transitivos, abrible con prereqs_met, textos+palanca, json plano sin conceptos), 7 gates flexibles parcheados `25/31→25/32`; `src/core/curriculum/README.md` 31→32; bundle `web/bundle/core.json` 50 ficheros 494.8 KiB (solo Smough regenera — ownership respetado). Suite aislada **842 passed / 0 failed** (+5). No toca `tools/`, `src/core/generator/`, `web/app.js`, `postmortem.py`/`shell.py`/`session.py`. Rutas disjuntas (salvo huellas auto-merged). Declara «tests antes: 837 · tests rama: 842 · delta esperado: +5» verificado.
 
 **PR #86 — T1 meta-ui `web ?seed= título + mundo por seed` — ✅ VERDE (listo para merge tercero):**
-Web puro. Verificado: `node --check web/app.js` OK; helper `_updateTitle(seed, chapter)` con em dash U+2014 → `document.title = 'CyberRoot — cap. N — seed M'` en 4 callsites (`setState` tras init, `boot` tras parseParams+fallback, `restartSameSeed`, fallback); `generate(1,4)` 3 hosts vs `generate(42,4)` 2 hosts determinista ×2 sin cache FS viejo; `restartSameSeed` limpia `out` + re-`init`; `TRONCAL_STATIC`/`CUSTODIA_STATIC` byte-idénticas, 6º estado `⌕` + owner intactos, `shell.py`/`session.py`/`web/bundle/` intactos. Suite aislada **837 passed / 0 failed** (+0 web-only). No toca `src/`/`src/data/`. Declara «tests antes: 837 · tests rama: 837 · delta +0» verificado.
+Web puro. Verificado: `node --check web/app.js` OK; helper `_updateTitle(seed, chapter)` con em dash U+2014 → `document.title = 'CyberRoot — cap. N — seed M'` en 4 callsites (`setState` tras init, `boot` tras parseParams+fallback, `restartSameSeed`, fallback); `generate(1,4)` 3 hosts vs `generate(42,4)` 2 hosts determinista ×2 sin cache FS viejo; `restartSameSeed` limpia `out` + re-`init`; `TRONCAL_STATIC`/`CUSTODIA_STATIC` byte-idénticas, 6º estado `⌕` + owner intactos, `shell.py`/`session.py`/`web/bundle/` intactos. Suite aislada **837 passed / 0 failed** (+0 web-only). No toca `src/`/`src/data/`. Declara «tests antes: 837 · tests rama: 837 · delta esperado: +0» verificado.
 
 **⚠️ AVISO CLARO A GWYN — qué NO mergear y qué sí (orden engine→sandbox→meta-ui):**
-**NADA que retener — los 3 PRs están VERDES y listos para merge en orden 84→85→86.** Suite esperada tras merges SIN regen: **845 passed +1 failed bundle stale** (esperado); tras regen canónico `python tools/web/build_bundle.py`: **852 passed / 0 failed** (846 src +6 tools = 837 +4 scaffold +5 gate +6 resolutor). Gate **25/32** (solo S1 sube quests), bundle **50 ficheros** fresco tras regen (S1 ya trae regen pero necesita el de engine; Gwyn regen idempotente). Los 3 PRs declaran correctamente «tests antes: 837 · tests rama: M · delta esperado: +K» (84:+9 837→846 src con 1 bundle stale esperado, 85:+5 837→842, 86:+0 837→837) — aritmética verificada: 837+4+5=846 src; 846+6 tools=852 total. Si Gwyn verifica `852 passed` tras regen, día verde. *Si ve 845+stale sin regen, es esperado — que regenere.*
+**NADA que retener — los 3 PRs están VERDES y listos para merge en orden 84→85→86.** Suite esperada tras merges SIN regen: **845 passed +1 failed bundle stale** (esperado); tras regen canónico `python tools/web/build_bundle.py`: **852 passed / 0 failed** (846 src +6 tools = 837 +4+5+6). Gate **25/32** (solo S1 sube quests), bundle **50 ficheros** fresco tras regen (S1 ya trae regen pero necesita el de engine; Gwyn regen idempotente). Los 3 PRs declaran correctamente «tests antes: 837 · tests rama: M · delta esperado: +K» (84:+9 837→846 src con 1 bundle stale esperado, 85:+5 837→842, 86:+0 837→837) — aritmética verificada: 837+4+5=846 src; 846+6 tools=852 total. Si Gwyn verifica `852 passed` tras regen, día verde. *Si ve 845+stale sin regen, es esperado — que regenere.*
 
 **Qué me ha gustado ⭐:**
 - El resolutor canónico se usó en caliente 3 veces en el mismo ensayo: `tools/resolutor_huellas.py` resolvió `activo.md` + `worklog` ×3 merges sin reimprimir el ad-hoc — 0 avisos, 0 marcadores, sin tocar `src/`. La deuda de dos noches saldada con higiene real.
@@ -78,8 +78,8 @@ Web puro. Verificado: `node --check web/app.js` OK; helper `_updateTitle(seed, c
 ### 🎯 Gwyn — revisión + merge 23:00 (26/09)
 
 **Estado del cierre:** los 3 PRs del día (#84/#85/#86) VERDES y mergeados
-engine→sandbox→meta-ui. Suite **852 passed / 0 failed** (837+4+5+6 — exacto a
-la predicción de Artorias, re-verificado en main tras los 3 merges). Gate
+engine→sandbox→meta-ui. Suite **852 passed / 0 failed** (837+4+5+6 —
+exacto a la predicción de Artorias, re-verificado en main tras los 3 merges). Gate
 **25/32** (quest e4 de Smough, cero conceptos). Bundle **50 ficheros
 (494.8 KiB)** regen canónico post-merge, guardián verde. NADA retenido.
 Sin turnos cortados (gate `atem:` limpio en los outputs del día).
@@ -144,76 +144,3 @@ no keep-última ciega. Vigilable, no urgente: perdí 3 minutos a mano.
 4. **Pack `POSTMORTEM.md` de Manus:** SIN CAMBIO de destino — espera un Q
    con Manus (los formularios de E4 refuerzan que vuelo formulario cubre la
    voz; el pack añade claves de SEÑAL, no hay hueco que lo exija hoy).
-
-### 🎯 Smough — micro-karma 24/09 (S1 16:00, 🧭45)
-
-**Estado del cierre:** los 3 PRs del día (#81/#82/#83) VERDES y mergeados
-engine→sandbox→meta-ui. Suite **837 passed / 0 failed** (818+19+0+0,
-deltas declarados verificados por aritmética + ensayo pre-merge de
-Artorias, re-verificado en main tras los 3 merges). Gate **25/31**
-intacto. Bundle **50 ficheros (488.3 KiB)** regen canónico (O1 ya trajo
-regen en su rama; lo re-hice idempotente post-merge, guardián verde).
-NADA retenido. Sin turnos cortados (gate `atem:` limpio en los outputs
-del día).
-
-**Validación de diseño (sobre lo de esta noche):**
-- **Factura frugal (PR #81):** `grep -c` es la primera mecánica que
-  recompensa el OFICIO (un pipe menos) sin permitir nada nuevo — flag
-  dentro de `_run_grep`, allowlist y gate intactos. La hermana
-  `grep_c_count` vía `_extract_greps` (único punto de lectura) es la
-  higiene que quería: el post-mortem puede hablar de la lectura SIN
-  tocar las 4 huellas kármicas. Aprobada al 100%.
-- **Stock de Gris (PR #82):** Smough midió lo que NO pesa y el dato
-  blinda mi decisión: la lectura NO cruza T=3 (delta 0.0%), solo diluye
-  densidad. Eso confirma el 24/09: `grep censo` queda GRIS (sin karma).
-  Decisión de diseño FIRMADA con números — la Subestación queda
-  «leer es seguro, escribir cobra».
-- **6º estado (PR #83):** `⌕` verde claro bajo HUP/-9 cierra la jerarquía
-  «escribir > leer» en la lente. El P3 de Artorias (substring
-  `includes("censo")` podría dispararse con un futuro `grep censored`)
-  va a mi recámara: hoy no existe, pero si algún día hay `grep cens`,
-  el helper debe pasar a token-match. Vigilable, no urgente.
-- **Integración 🧭 de Oscar (25/09):** run MODO B APTO cuarto día
-  consecutivo. Sus «no tocar» VALIDADOS: E2 lectura y lente propietario
-  saldadas; 🧭49 (`grep -i` solo vía pipe) recogido como física del
-  shell, no fricción — cerrado en recámara sin tarea; 🧭50 (PID por
-  seed) P3 sin urgencia, no hardcodear en briefings.
-
-**Qué me HA GUSTADO ⭐:**
-- El día cerró la arquitectura de la Subestación tal como la dibujé:
-  kill (escribir muerte), chmod/chown (escribir propiedad) y grep (leer)
-  con huellas y lecturas DIFERENCIADAS — y ahora también la web dice
-  las tres cosas (⌕/semáforo/veredicto) sin ejecutar nada.
-- El ensayo de Artorias dio 837 dos noches seguidas a la primera: la
-  aritmética de deltas declarados está siendo fiable 6 días.
-- La resolución de huellas salió SIN pérdida de contenido esta noche
-  (8 secciones en el worklog, verificadas por assertion) pese a 3
-  merges sobre las mismas .md — el gate por LÍNEA evitó el falso
-  positivo de la prosa de Artorias que contiene `grep -c '<<<<<<<'`.
-
-**Qué NO me ha gustado / a vigilar:**
-- 👎 3 merges = 3 colisiones de huellas otra vez (`activo.md` +
-  `worklog`, patrón idéntico al 24/09). El resolutor con assertions
-  aguantó, pero el RESOLUTOR CANÓNICO (`tools/resolutor_huellas.py`,
-  propuesta en mi 🎯 de anoche) pasa de idea a DEUDA VISIBLE: segunda
-  noche consecutiva reimprimiendo el script. Gwyndolin: si lo planificas
-  como P3 de mañana (Ornstein, tool-only, sin tocar src/), me sirve.
-- 👎 En la 3.ª resolución el lado HEAD repetía secciones YA presentes
-  (Ornstein/Smough/Artorias) y el lado branch traía Seath nuevo — el
-  resolutor descartó HEAD por assertions de duplicidad y añadió Seath.
-  Funcionó, pero es lo que el resolutor canónico debe decidir solo.
-
-**Prioridades para el 26/09 (para Gwyndolin):**
-1. **P3 — resolutor canónico de huellas** (`tools/resolutor_huellas.py`):
-   2ª noche pidiéndolo. Debe: recibir fichero(s) + orden cronológico de
-   secciones, expandir marcadores anidados, assertions de contenido
-   (todo `## HH:00` esperado presente), cero marcadores por línea.
-2. **P3 — recámara:** `tail`/`stat` del `pts0`, `?seed=` web (sin dueño
-   ni urgencia — Subestación SALDADA, no proponer verbos ch5).
-3. **Sin [BUG] vivo.** CICLO verde cinco noches seguidas. El siguiente
-   NATURAL es el cap. 6 (premisa en `backlog/historia/` ya Advance) o
-   pulir meta-juego si Juanma pide vertical slice.
-4. **Pack `POSTMORTEM.md` de Manus:** SIN CAMBIO de destino — sigue esperando un Q con Manus.
-
-### 🎯 Smough — micro-karma 24/09 (S1 16:00, 🧭45)
-**Medida N=20, N=8, weight 1 anclada real 6/6 (HUP/+1, -9/-1, 600/+1, 777/-1, gris/+1, root/-1): 3 runs cruzan T=3 (90% ≥3 azul / 90% ≤-3 rojo), K_final ±8; weight=2 cruzaría en 2 runs (95%); 3 verbos apilados por run hoy no suma (último-manda → 1 por run); stock Gris 0% contraste (estático). Recomendación: mantener weight:1 (pesos antes que prosa).**
